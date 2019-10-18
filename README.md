@@ -11,6 +11,10 @@ The app is explicitly designed with user privacy and data ownership in mind:
 * User data remains 100% owned and controlled by the user at all times. 
 * No fine print. No obscure opt-in / opt-out pop-ups of any kind.
 
+# Project Status
+
+Currently in active development to provide an initial UI experience for Ambianic Edge deployments.
+
 ## Installation & Setup
 ### Clone repository
 ```
