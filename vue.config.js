@@ -8,7 +8,7 @@ module.exports = {
     'workboxOptions': {
       'runtimeCaching': [
         {
-          'urlPattern': new RegExp('https://fonts.(?:googleapis|gstatic).com/(.*)'),
+          'urlPattern': {},
           'handler': 'CacheFirst',
           'options': {
             'cacheName': 'google-fonts',
