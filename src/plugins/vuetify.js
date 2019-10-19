@@ -1,6 +1,6 @@
 import Vue from 'vue'
-import 'vuetify/src/stylus/app.styl'
-import manifestJSON from '../public/manifest.json'
+import manifestJSON from '../../public/manifest.json'
+import 'vuetify/dist/vuetify.min.css'
 
 import {
   Vuetify,
@@ -15,9 +15,11 @@ import {
   VList,
   VProgressLinear,
   VTextField
-} from 'vuetify'
+} from 'vuetify/lib'
 
-Vue.use(Vuetify, {
+Vue.use(Vuetify)
+
+const vuetifyOpts = {
   components: {
     VApp,
     VBtn,
@@ -33,5 +35,11 @@ Vue.use(Vuetify, {
   },
   theme: {
     primary: manifestJSON.theme_color
+  },
+  icons: {
+    iconfont: 'mdi'
   }
-})
+  //  theme: appConfig.theme
+}
+
+export default new Vuetify(vuetifyOpts)

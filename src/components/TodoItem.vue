@@ -1,6 +1,6 @@
 <template>
   <v-list-tile class="todo-item" :class="{ 'editing': editing }">
-    <v-list-tile-action>
+    <v-list-item-action>
       <v-checkbox
         :input-value="todo.done"
         @change="toggleTodo(todo)"
@@ -11,15 +11,15 @@
         color="primary"
         v-else
       >edit</v-icon>
-    </v-list-tile-action>
+    </v-list-item-action>
     <template v-if="!editing">
-      <v-list-tile-content
+      <v-list-item-content
         :class="{ 'primary--text': todo.done }"
         @dblclick="editing = true"
       >
         {{ todo.text }}
-      </v-list-tile-content>
-      <v-list-tile-action>
+      </v-list-item-content>
+      <v-list-item-action>
         <v-btn
           @click="removeTodo(todo)"
           color="red lighten-3"
@@ -28,7 +28,7 @@
         >
           <v-icon>close</v-icon>
         </v-btn>
-      </v-list-tile-action>
+      </v-list-item-action>
     </template>
     <v-text-field
       :value="todo.text"
