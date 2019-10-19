@@ -1,14 +1,16 @@
 
 # Ambianic Client UI
 
-Ambianic Client UI is an Offline-first Progressive Web App (PWA) to manage Ambianic Edge deployments. 
+[![Greenkeeper badge](https://badges.greenkeeper.io/ambianic/ambianic-pwa.svg)](https://greenkeeper.io/)
+
+Ambianic Client UI is an Offline-first Progressive Web App (PWA) to manage Ambianic Edge deployments.
 
 The app is explicitly designed with user privacy and data ownership in mind:
 
-* Stores data exclusively on user's own client device (desktop or mobile). 
-* Does not store ANY user information in the cloud. 
-* User may explicitly chose to store a backup of their data on a server of their choice. 
-* User data remains 100% owned and controlled by the user at all times. 
+* Stores data exclusively on user's own client device (desktop or mobile).
+* Does not store ANY user information in the cloud.
+* User may explicitly chose to store a backup of their data on a server of their choice.
+* User data remains 100% owned and controlled by the user at all times.
 * No fine print. No obscure opt-in / opt-out pop-ups of any kind.
 
 # Project Status
