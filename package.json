@@ -21,7 +21,7 @@
     "@vue/cli-service": "^4.0.4",
     "@vue/eslint-config-standard": "^4.0.0",
     "babel-plugin-transform-imports": "^2.0.0",
-    "stylus": "^0.54.5",
+    "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2",
     "vue-template-compiler": "^2.6.10"
   }
