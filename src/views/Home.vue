@@ -1,13 +1,5 @@
 <template>
-  <HelloWorld />
+  <div class="about">
+    <strong>(Home.vue) Home page content goes here...</strong>
+  </div>
 </template>
-
-<script>
-import HelloWorld from '../components/HelloWorld'
-
-export default {
-  components: {
-    HelloWorld
-  }
-}
-</script>
