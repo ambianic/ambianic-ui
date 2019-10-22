@@ -88,7 +88,7 @@
         class="ml-0 pl-4"
       >
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-        <span class="hidden-sm-and-down">Google Contacts</span>
+        <span class="hidden-sm-and-down">Ambianic</span>
       </v-toolbar-title>
       <v-text-field
         flat
@@ -114,7 +114,7 @@
           item
         >
           <v-img
-            src="https://cdn.vuetifyjs.com/images/logos/logo.svg"
+            src="@/assets/logo.svg"
             alt="Vuetify"
           >
           </v-img></v-avatar>
@@ -240,9 +240,9 @@ export default {
     dialog: false,
     drawer: null,
     items: [
-      { icon: 'contacts', text: 'Contacts' },
-      { icon: 'history', text: 'Frequently contacted' },
-      { icon: 'content_copy', text: 'Duplicates' },
+      { icon: 'history', text: 'Timeline' },
+      { icon: 'contacts', text: 'People' },
+      { icon: 'build', text: 'Pipelines' },
       {
         icon: 'keyboard_arrow_up',
         'icon-alt': 'keyboard_arrow_down',
