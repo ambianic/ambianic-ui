@@ -12,6 +12,7 @@
             v-if="item.heading"
             :key="item.heading"
             align="center"
+            :class="item.class"
           >
             <v-col cols="6">
               <v-subheader v-if="item.heading">
@@ -34,6 +35,7 @@
             v-model="item.model"
             :prepend-icon="item.model ? item.icon : item['icon-alt']"
             append-icon=""
+            :class="item.class"
           >
             <template v-slot:activator>
               <v-list-item>
@@ -62,6 +64,7 @@
             v-else
             :key="item.text"
             :to="item.link"
+            :class="item.class"
           >
               <v-list-item-action>
                 <v-icon>{{ item.icon }}</v-icon>
@@ -102,9 +105,18 @@
       <v-btn icon>
         <v-icon>mdi-apps</v-icon>
       </v-btn>
-      <v-btn icon>
-        <v-icon>mdi-bell</v-icon>
-      </v-btn>
+        <v-btn icon>
+          <v-badge
+            top
+            color="error lighten-1"
+            right
+            overlap
+            class="align-self-center"
+          >
+            <template v-slot:badge>2</template>
+            <v-icon>mdi-bell</v-icon>
+          </v-badge>
+        </v-btn>
       <v-btn
         icon
         large
@@ -240,9 +252,12 @@ export default {
     dialog: false,
     drawer: null,
     items: [
-      { icon: 'history', text: 'Timeline' },
-      { icon: 'contacts', text: 'People' },
-      { icon: 'build', text: 'Pipelines' },
+      { icon: 'history', text: 'Timeline', link: '/timeline' },
+      { icon: 'contacts', text: 'People', link: '/people' },
+      // class: 'hidden-sm-and-down' ensures that an item is not shown
+      // on small screens. For example flows are only visible on screens with
+      // enough space for a smooth user experience.
+      { icon: 'gavel', text: 'Build Flows', link: '/flows', class: 'hidden-sm-and-down' },
       {
         icon: 'keyboard_arrow_up',
         'icon-alt': 'keyboard_arrow_down',
@@ -258,18 +273,14 @@ export default {
         text: 'More',
         model: false,
         children: [
-          { text: 'Import' },
-          { text: 'Export' },
-          { text: 'Print' },
-          { text: 'Undo changes' },
-          { text: 'Other contacts' }
+          { text: 'Sources' },
+          { text: 'Components' },
+          { text: 'Integrations' }
         ]
       },
-      { icon: 'settings', text: 'Settings', link: '/home' },
-      { icon: 'chat_bubble', text: 'Send feedback', link: '/home' },
-      { icon: 'help', text: 'Help', link: '/home' },
-      { icon: 'phonelink', text: 'App downloads', link: '/home' },
-      { icon: 'keyboard', text: 'Go to the old version', link: '/home' },
+      { icon: 'settings', text: 'Settings', link: '/settings' },
+      { icon: 'chat_bubble', text: 'Send feedback', link: '/feedback' },
+      { icon: 'help', text: 'Help', link: '/help' },
       { icon: 'info', text: 'About Ambianic', link: '/about' }
     ]
   })

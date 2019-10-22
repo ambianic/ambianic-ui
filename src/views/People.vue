@@ -4,7 +4,7 @@
    justify="center"
   >
   <div class="about">
-    <strong>About page content goes here...</strong>
+    <strong>People page content goes here...</strong>
   </div>
    <v-tooltip right>
      <template v-slot:activator="{ on }">
