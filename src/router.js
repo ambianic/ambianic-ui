@@ -18,7 +18,8 @@ const router = new Router({
       component: About
     },
     { path: '*', redirect: '/home' }
-  ]
+  ],
+  mode: 'history'
 })
 
 export default router

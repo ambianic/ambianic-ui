@@ -61,15 +61,17 @@
           <v-list-item
             v-else
             :key="item.text"
+            :to="item.link"
           >
-            <v-list-item-action>
-              <v-icon>{{ item.icon }}</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>
-                {{ item.text }}
-              </v-list-item-title>
-            </v-list-item-content>
+              <v-list-item-action>
+                <v-icon>{{ item.icon }}</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title
+                >
+                  {{ item.text }}
+                </v-list-item-title>
+              </v-list-item-content>
           </v-list-item>
         </template>
       </v-list>
@@ -263,12 +265,12 @@ export default {
           { text: 'Other contacts' }
         ]
       },
-      { icon: 'settings', text: 'Settings' },
-      { icon: 'chat_bubble', text: 'Send feedback' },
-      { icon: 'help', text: 'Help' },
-      { icon: 'phonelink', text: 'App downloads' },
-      { icon: 'keyboard', text: 'Go to the old version' },
-      { icon: 'info', text: 'About Ambianic' }
+      { icon: 'settings', text: 'Settings', link: '/home' },
+      { icon: 'chat_bubble', text: 'Send feedback', link: '/home' },
+      { icon: 'help', text: 'Help', link: '/home' },
+      { icon: 'phonelink', text: 'App downloads', link: '/home' },
+      { icon: 'keyboard', text: 'Go to the old version', link: '/home' },
+      { icon: 'info', text: 'About Ambianic', link: '/about' }
     ]
   })
 }
