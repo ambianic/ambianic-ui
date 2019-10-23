@@ -37,6 +37,7 @@
 </template>
 
 <script>
+/* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import axios from 'axios'
 import ambianicConf from '../../config.js'
 import InfiniteLoading from 'vue-infinite-loading'
@@ -52,7 +53,7 @@ Vue.use(InfiniteLoading, { /* options */
 
 const API_ROOT = ambianicConf['AMBIANIC_API_URI']
 const API_SAMPLES_PATH = API_ROOT + 'samples'
-console.debug('API_SAMPLES_PATH: ' + API_SAMPLES_PATH)
+// console.debug('API_SAMPLES_PATH: ' + API_SAMPLES_PATH)
 
 export default {
   data () {
@@ -88,11 +89,11 @@ export default {
         }
       }).then(({ data }) => {
         if (data.samples.length) {
-          console.debug('this.page: ' + this.page)
+          // console.debug('this.page: ' + this.page)
           this.page += 1
           this.samples.push(...data.samples)
-          console.debug('data.samples.length: ' + data.samples.length)
-          console.debug('this.samples.length: ' + this.samples.length)
+          // console.debug('data.samples.length: ' + data.samples.length)
+          // console.debug('this.samples.length: ' + this.samples.length)
           $state.loaded()
         } else {
           $state.complete()
@@ -100,8 +101,8 @@ export default {
       })
     },
     imagePath (imageName) {
-      let p = API_ROOT + 'data/faces/' + imageName
-      console.debug('imagePath: ' + p)
+      let p = API_ROOT + 'data/detections/front-door/faces/' + imageName
+      // console.debug('imagePath: ' + p)
       return p
     },
     getSamples () {
