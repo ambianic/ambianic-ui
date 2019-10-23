@@ -1,7 +1,7 @@
 
 # Ambianic Client UI
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/ambianic/ambianic-pwa.svg)](https://greenkeeper.io/)
+[![Greenkeeper badge](https://badges.greenkeeper.io/ambianic/ambianic-ui.svg)](https://greenkeeper.io/)
 
 Ambianic Client UI is an Offline-first Progressive Web App (PWA) to manage Ambianic Edge deployments.
 
@@ -20,8 +20,8 @@ Currently in active development to provide an initial UI experience for Ambianic
 ## Installation & Setup
 ### Clone repository
 ```
-git clone https://github.com/ambianic/ambianic-pwa.git
-cd ambianic-pwa
+git clone https://github.com/ambianic/ambianic-ui.git
+cd ambianic-ui
 ```
 
 ### Install dependencies
