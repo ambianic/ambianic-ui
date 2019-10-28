@@ -10,9 +10,9 @@
           class="white--text mb-12"
           color="orange"
           large
-          v-for="(sample, index) in samples" :key="index">
+          v-for="(sample, index) in timeline" :key="index">
         >
-          <img :src='imagePath(sample.image)'/>
+          <img :src='imagePath(sample.args.rel_dir, sample.args.image_file_name)'/>
           <span>{{ sample.file }}</span>
           <span>{{ sample.id }}</span>
           <span>{{ sample.datetime }}</span>
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+/* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import axios from 'axios'
 import ambianicConf from '../../config.js'
 import InfiniteLoading from 'vue-infinite-loading'
@@ -51,13 +52,13 @@ Vue.use(InfiniteLoading, { /* options */
 })
 
 const API_ROOT = ambianicConf['AMBIANIC_API_URI']
-const API_SAMPLES_PATH = API_ROOT + 'samples'
-console.debug('API_SAMPLES_PATH: ' + API_SAMPLES_PATH)
+const API_TIMELINE_PATH = API_ROOT + 'timeline'
+// console.debug('API_TIMELINE_PATH: ' + API_TIMELINE_PATH)
 
 export default {
   data () {
     return {
-      samples: [],
+      timeline: [],
       // infinite loading attributes
       page: 1,
       infiniteId: +new Date(),
@@ -81,36 +82,38 @@ export default {
   },
   methods: {
     infiniteHandler ($state) {
-      const api = API_SAMPLES_PATH
+      const api = API_TIMELINE_PATH
       axios.get(api, {
         params: {
           page: this.page
         }
       }).then(({ data }) => {
-        if (data.samples.length) {
-          console.debug('this.page: ' + this.page)
+        /* eslint no-console: "off" */
+        console.debug('data: \n' + data)
+        if (data.timeline.length) {
+          // console.debug('this.page: ' + this.page)
           this.page += 1
-          this.samples.push(...data.samples)
-          console.debug('data.samples.length: ' + data.samples.length)
-          console.debug('this.samples.length: ' + this.samples.length)
+          this.timeline.push(...data.timeline)
+          // console.debug('data.timeline.length: ' + data.timeline.length)
+          // console.debug('this.timeline.length: ' + this.timeline.length)
           $state.loaded()
         } else {
           $state.complete()
         }
       })
     },
-    imagePath (imageName) {
-      let p = API_ROOT + 'data/faces/' + imageName
-      console.debug('imagePath: ' + p)
+    imagePath (relDir, imageName) {
+      let p = API_ROOT + 'data/' + relDir + '/' + imageName
+      // console.debug('imagePath: ' + p)
       return p
     },
-    getSamples () {
-      const path = API_SAMPLES_PATH
+    getTimeline () {
+      const path = API_TIMELINE_PATH
       axios.get(path)
         .then((res) => {
-          this.samples = res.data.samples
+          this.timeline = res.data.timeline
           // console.debug('res.data:' + JSON.stringify(res.data));
-          // console.debug('samples:' + JSON.stringify(this.samples));
+          // console.debug('timeline:' + JSON.stringify(this.timeline));
         })
         .catch((error) => {
           // eslint-disable-next-line
@@ -118,32 +121,32 @@ export default {
         })
     },
     addSample (payload) {
-      const path = API_SAMPLES_PATH
+      const path = API_TIMELINE_PATH
       axios.post(path, payload)
         .then(() => {
-          this.getSamples()
+          this.getTimeline()
           this.message = 'Sample added!'
           this.$refs.alert.showAlert()
         })
         .catch((error) => {
           // eslint-disable-next-line
           console.error(error)
-          this.getSamples()
+          this.getTimeline()
         })
     },
     updateSample (payload, sampleID) {
       // console.debug('updating sample id: ' + sampleID + ' paylod: ' + JSON.stringify(payload));
-      const path = API_SAMPLES_PATH + `/${sampleID}`
+      const path = API_TIMELINE_PATH + `/${sampleID}`
       axios.put(path, payload)
         .then(() => {
-          this.getSamples()
+          this.getTimeline()
           this.message = 'Sample updated!'
           this.$refs.alert.showAlert()
         })
         .catch((error) => {
           // eslint-disable-next-line
           console.error(error)
-          this.getSamples()
+          this.getTimeline()
         })
     },
     initForm () {
@@ -193,20 +196,20 @@ export default {
       evt.preventDefault()
       this.$refs.editSampleModal.hide()
       this.initForm()
-      this.getSamples() // update view
+      this.getTimeline() // update view
     },
     deleteSample (sampleID) {
-      const path = API_SAMPLES_PATH + `/${sampleID}`
+      const path = API_TIMELINE_PATH + `/${sampleID}`
       axios.delete(path)
         .then(() => {
-          this.getSamples()
+          this.getTimeline()
           this.message = 'Sample removed!'
           this.$refs.alert.showAlert()
         })
         .catch((error) => {
           // eslint-disable-next-line
           console.error(error)
-          this.getSamples()
+          this.getTimeline()
         })
     },
     onDeleteSample (sample) {
@@ -214,7 +217,7 @@ export default {
     }
   },
   created () {
-    // this.getSamples();
+    // this.getTimeline();
   }
 }
 </script>

@@ -1,7 +1,6 @@
-
 # Ambianic Client UI
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/ambianic/ambianic-pwa.svg)](https://greenkeeper.io/)
+[![Greenkeeper badge](https://badges.greenkeeper.io/ambianic/ambianic-ui.svg)](https://greenkeeper.io/)
 
 Ambianic Client UI is an Offline-first Progressive Web App (PWA) to manage Ambianic Edge deployments.
 
@@ -15,13 +14,17 @@ The app is explicitly designed with user privacy and data ownership in mind:
 
 # Project Status
 
-Currently in active development to provide an initial UI experience for Ambianic Edge deployments.
+An initial primitive version of the web app is available. It pulls live timeline data from the edge device. Here is a screenshot:
+
+<img src="https://raw.githubusercontent.com/ambianic/ambianic-ui/master/screenshot.png" width="600">
+
+Next step: moving forward towards a more polished timeline UI.
 
 ## Installation & Setup
 ### Clone repository
 ```
-git clone https://github.com/ambianic/ambianic-pwa.git
-cd ambianic-pwa
+git clone https://github.com/ambianic/ambianic-ui.git
+cd ambianic-ui
 ```
 
 ### Install dependencies
@@ -48,3 +51,4 @@ npm run lint
 
 This project's initial version was inspired by
 [David Garoro](https://github.com/davidgaroro)'s [PWA example](https://github.com/davidgaroro/vuetify-todo-pwa).
+
