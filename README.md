@@ -16,7 +16,9 @@ The app is explicitly designed with user privacy and data ownership in mind:
 
 An initial primitive version of the web app is available. It pulls live timeline data from the edge device. Here is a screenshot:
 
-Next step: moving forward towards a polished timeline UI.
+<img src="https://raw.githubusercontent.com/ambianic/ambianic-ui/master/screenshot.png" width="600">
+
+Next step: moving forward towards a more polished timeline UI.
 
 ## Installation & Setup
 ### Clone repository
