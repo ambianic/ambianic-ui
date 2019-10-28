@@ -1,4 +1,3 @@
-
 # Ambianic Client UI
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/ambianic/ambianic-ui.svg)](https://greenkeeper.io/)
@@ -15,7 +14,9 @@ The app is explicitly designed with user privacy and data ownership in mind:
 
 # Project Status
 
-Currently in active development to provide an initial UI experience for Ambianic Edge deployments.
+An initial primitive version of the web app is available. It pulls live timeline data from the edge device. Here is a screenshot:
+
+Next step: moving forward towards a polished timeline UI.
 
 ## Installation & Setup
 ### Clone repository
@@ -48,3 +49,4 @@ npm run lint
 
 This project's initial version was inspired by
 [David Garoro](https://github.com/davidgaroro)'s [PWA example](https://github.com/davidgaroro/vuetify-todo-pwa).
+
