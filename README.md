@@ -14,7 +14,11 @@ The app is explicitly designed with user privacy and data ownership in mind:
 
 # Project Status
 
-An initial primitive version of the web app is available. It pulls live timeline data from the edge device. Here is a screenshot:
+An initial primitive version of the web app is available. It pulls live timeline data from the edge device. 
+
+Live pre-release version of the web app is available here: https://ui.ambianic.ai/
+
+Here is a screenshot:
 
 <img src="https://raw.githubusercontent.com/ambianic/ambianic-ui/master/screenshot.png" width="600">
 
