@@ -29,7 +29,7 @@
     "babel-plugin-transform-imports": "^2.0.0",
     "eslint": "^6.5.1",
     "eslint-plugin-vue": "^5.2.3",
-    "sass": "^1.23.1",
+    "sass": "^1.23.2",
     "sass-loader": "^8.0.0",
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2",
