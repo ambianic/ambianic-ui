@@ -1,0 +1,22 @@
+{
+    "id": "affec05ff6164ac699d8f38e525f1859",
+    "datetime": "2019-10-28T00:00:51.849915",
+    "image_file_name": "20191028-000051.849915.jpg",
+    "json_file_name": "20191028-000051.849915.json",
+    "rel_dir": "detections/20191028-000048.475236",
+    "inference_result": [
+        {
+            "label": "person",
+            "confidence": 0.93359375,
+            "box": {
+                "xmin": 0.028514087200164795,
+                "ymin": 0.03755497932434082,
+                "xmax": 0.9176320433616638,
+                "ymax": 0.8490597009658813
+            }
+        }
+    ],
+    "inference_meta": {
+        "display": "Face Detection"
+    }
+}

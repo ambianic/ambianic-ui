@@ -1,0 +1,11 @@
+{
+    "id": "1b03d7cd676e4917a6c5344f042874d5",
+    "datetime": "2019-10-28T00:00:57.693327",
+    "image_file_name": "20191028-000057.693327.jpg",
+    "json_file_name": "20191028-000057.693327.json",
+    "rel_dir": "detections/20191028-000048.475236",
+    "inference_result": [],
+    "inference_meta": {
+        "display": "Face Detection"
+    }
+}
