@@ -1,7 +1,7 @@
 <template>
   <v-row
-   align="stretch"
-   align-content="stretch"
+   align="start"
+   align-content="start"
    justify="center"
    no-gutters
    style="max-width: 100%;"
@@ -29,27 +29,25 @@
         class="pa-0 ma-0"
       >
       <v-list-item
-        three-line
         v-for="(sample, index) in timeline" v-bind:key="index"
         class="pa-0 ma-0"
       >
-        <v-list-item-content>
+        <v-list-item-content
+          class="pa-0 ma-0"
+        >
           <v-img
             :src='imagePath(sample.args.rel_dir, sample.args.image_file_name)'
-            class="white--text align-end"
+            class="white--text align-start"
             alt="Object Detection"
             contain
           >
-            <v-card-title>Front door person detection</v-card-title>
-            <v-container class="fill-height">
-              <v-row align="center">
-                <strong class="display-4 font-weight-regular mr-6">8</strong>
-                <v-row justify="end">
-                  <div class="headline font-weight-light">Monday</div>
-                  <div class="text-uppercase font-weight-light">February 2015</div>
-                </v-row>
-              </v-row>
-            </v-container>
+            <v-avatar
+              :color="eventColor(sample)" size="62" left
+              align="top"
+              class="font-weight-regular pa-4 ma-6 see-thru"
+            >
+              <v-icon dark large>{{ eventIcon(sample) }}</v-icon>
+            </v-avatar>
           </v-img>
           <v-timeline
             align-top
@@ -59,28 +57,56 @@
             <v-timeline-item
               hide-dot
             >
-              <v-card-actions>
-              <v-btn fab
-                color="success lighten-1"
-                class="mx-2"
-              >
-                <v-icon>mdi-check</v-icon>
-              </v-btn>
-              <v-btn
-                color="error"
-                fab
-                class="mx-2"
-                >
-                <v-icon>mdi-bell</v-icon>
-              </v-btn>
-              <v-spacer></v-spacer>
-              <v-btn icon>
-                <v-icon>mdi-pen</v-icon>
-              </v-btn>
-              <v-btn icon>
-                <v-icon>mdi-share-variant</v-icon>
-              </v-btn>
-            </v-card-actions>
+            <v-row
+              class="pt-1"
+            >
+                <v-col cols="7">
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                      <v-btn
+                        fab
+                        color="success lighten-2"
+                        class="mx-2"
+                        v-on="on"
+                      >
+                        <v-icon>mdi-check</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Looks fine</span>
+                  </v-tooltip>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                      <v-btn
+                        color="error lighten-2"
+                        fab
+                        class="mx-2"
+                        v-on="on"
+                        >
+                        <v-icon>mdi-bell</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Raise ALARM!</span>
+                  </v-tooltip>
+                </v-col>
+                <v-col cols="1">
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                      <v-btn icon v-on="on">
+                        <v-icon>mdi-pen</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Edit event details</span>
+                  </v-tooltip>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                      <v-btn icon v-on="on">
+                        <v-icon>mdi-share-variant</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Share event</span>
+                  </v-tooltip>
+                </v-col>
+              </v-row>
             </v-timeline-item>
             <v-timeline-item
                 hide-dot
@@ -184,7 +210,11 @@
     </v-col>
   </v-row>
 </template>
-
+<style lang="stylus" scoped>
+  .see-thru {
+    opacity: 0.7
+  }
+</style>
 <script>
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import axios from 'axios'
@@ -197,7 +227,8 @@ const API_TIMELINE_PATH = API_ROOT + 'timeline.json'
 export default {
   data () {
     return {
-      timeline: []
+      timeline: [],
+      on: true
     }
   },
   methods: {
@@ -218,6 +249,54 @@ export default {
           // eslint-disable-next-line
           console.error(error);
         })
+    },
+    eventColor (event) {
+      let color = 'primary'
+      switch (event.priority) {
+        case 'INFO':
+          color = 'accent'
+          break
+        case 'WARNING':
+          color = 'warning'
+          break
+        case 'CRITICAL':
+          color = 'error'
+          break
+      }
+      color = 'white--text ' + color + ' lighten-2'
+      // eslint-disable-next-line
+      console.log('color: ' + color)
+      return color
+    },
+    eventIcon (event) {
+      let topLabel = 'none'
+      let inf = event.args.inference_result
+      if (inf.length > 0) {
+        topLabel = inf[0].label
+      }
+      let icon = 'mdi-crosshairs-question'
+      // eslint-disable-next-line
+      console.log('label: ' + JSON.stringify(topLabel))
+      switch (topLabel) {
+        case 'person':
+          icon = 'mdi-human'
+          break
+        case 'face':
+          icon = 'mdi-face'
+          break
+        case 'car':
+          icon = 'mdi-car'
+          break
+        case 'cat':
+          icon = 'mdi-cat'
+          break
+        case 'dog':
+          icon = 'mdi-dog'
+          break
+      }
+      // eslint-disable-next-line
+      console.log('icon: ' + icon)
+      return icon
     }
   },
   created () {
