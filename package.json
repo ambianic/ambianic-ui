@@ -1,6 +1,6 @@
 {
   "name": "ambianic-ui",
-  "version": "0.0.0-development",
+  "version": "1.0.1",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
