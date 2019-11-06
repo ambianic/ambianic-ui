@@ -2,6 +2,7 @@
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/ambianic/ambianic-ui.svg)](https://greenkeeper.io/)
 [![NodeJS CI](https://github.com/ambianic/ambianic-ui/workflows/Node%20CI/badge.svg)](https://github.com/ambianic/ambianic-ui/actions?query=workflow%3A%22Node+CI%22)
+[![npm version](https://badge.fury.io/js/ambianic-ui.svg)](https://badge.fury.io/js/ambianic-ui)
 
 Ambianic Client UI is an Offline-first Progressive Web App (PWA) to manage Ambianic Edge deployments.
 
