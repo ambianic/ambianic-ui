@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.4](https://github.com/ambianic/ambianic-ui/compare/v1.0.3...v1.0.4) (2019-11-06)
+
+
+### Bug Fixes
+
+* force readme push to npm ([bc46d11](https://github.com/ambianic/ambianic-ui/commit/bc46d11))
+
 ## [1.0.3](https://github.com/ambianic/ambianic-ui/compare/v1.0.2...v1.0.3) (2019-11-06)
 
 
