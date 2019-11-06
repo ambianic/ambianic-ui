@@ -108,27 +108,6 @@
                 </v-col>
               </v-row>
             </v-timeline-item>
-            <v-timeline-item
-                hide-dot
-            >
-                About this detection...
-                <span>{{ sample.file }}</span>
-                <span>{{ sample.id }}</span>
-                <span>{{ sample.datetime }}</span>
-                <span>
-                  <ul
-                    v-for="(inf, index) in sample.inference_result"
-                    v-bind:key="index"
-                    :data-num="index + 1"
-                  >
-                    <li>
-                      <p>Category: {{inf.category}}</p>
-                      <p>Confidence: {{inf.confidence}}</p>
-                      <p>Box: {{inf.box}}</p>
-                    </li>
-                  </ul>
-                </span>
-              </v-timeline-item>
               <v-timeline-item
                          color="pink"
                          small
@@ -138,8 +117,8 @@
                      <strong>5pm</strong>
                    </v-col>
                    <v-col>
-                     <strong>New Icon</strong>
-                     <div class="caption">Mobile App</div>
+                     <strong>Package Delivery</strong>
+                     <div class="caption">Front Door</div>
                    </v-col>
                  </v-row>
             </v-timeline-item>
@@ -150,11 +129,11 @@
             >
               <v-row class="pt-1">
                 <v-col cols="3">
-                   <strong>3-4pm</strong>
+                   <strong>4pm</strong>
                 </v-col>
                 <v-col>
-                   <strong>Design Stand Up</strong>
-                   <div class="caption mb-2">Hangouts</div>
+                   <strong>Kids returning home</strong>
+                   <div class="caption mb-2">Entry Area</div>
                    <v-avatar>
                      <v-img
                        src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairFrida&accessoriesType=Kurt&hairColor=Red&facialHairType=BeardLight&facialHairColor=BrownDark&clotheType=GraphicShirt&clotheColor=Gray01&graphicType=Skull&eyeType=Wink&eyebrowType=RaisedExcitedNatural&mouthType=Disbelief&skinColor=Brown"

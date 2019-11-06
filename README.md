@@ -14,13 +14,16 @@ The app is explicitly designed with user privacy and data ownership in mind:
 
 # Project Status
 
-An initial primitive version of the web app is available. It pulls live timeline data from the edge device. 
+An initial primitive version of the web app is available. It pulls live timeline data from the edge device.
 
 Live pre-release version of the web app is available here: https://ui.ambianic.ai/
 
-Here is a screenshot:
+Example screenshots on mobile and desktop:
 
-<img src="https://raw.githubusercontent.com/ambianic/ambianic-ui/master/screenshot.png" width="600">
+<img src="public/img/ambianic-ui-mobile-screenshot.png" width="300">
+
+<img src="public/img/ambianic-ui-dekstop-screenshot.png" width="800">
+
 
 Next step: moving forward towards a more polished timeline UI.
 
@@ -55,4 +58,3 @@ npm run lint
 
 This project's initial version was inspired by
 [David Garoro](https://github.com/davidgaroro)'s [PWA example](https://github.com/davidgaroro/vuetify-todo-pwa).
-

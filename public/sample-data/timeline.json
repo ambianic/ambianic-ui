@@ -84,7 +84,7 @@
                 "ymax": 0.4697817265987396
             },
             "confidence": 0.98828125,
-            "label": "unknown"
+            "label": "person"
           }
         ],
         "json_file_name": "20191028-000051.322407.json",
@@ -93,7 +93,7 @@
       "created": 1572220851.3650944,
       "id": "af76b3d2e2ea4b37a1ab191f37ccb068",
       "message": "Detection Event",
-      "priority": "CRITICAL",
+      "priority": "WARNING",
       "source_code": {
         "funcName": "_save_sample",
         "lineno": 110,
@@ -150,7 +150,7 @@
                 "ymax": 0.29970091581344604
             },
             "confidence": 0.98828125,
-            "label": "person"
+            "label": "unknown"
           }
         ],
         "json_file_name": "20191028-000100.609045.json",
@@ -159,7 +159,7 @@
       "created": 1572220860.6538296,
       "id": "a5302f51c5b1410ca6e1fd8c72f33ec7",
       "message": "Detection Event",
-      "priority": "WARNING",
+      "priority": "CRITICAL",
       "source_code": {
         "funcName": "_save_sample",
         "lineno": 110,
