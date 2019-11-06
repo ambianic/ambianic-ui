@@ -20,10 +20,9 @@ Live pre-release version of the web app is available here: https://ui.ambianic.a
 
 Example screenshots on mobile and desktop:
 
-<img src="public/img/ambianic-ui-mobile-screenshot.png" width="300">
+<img src="public/img/ambianic-ui-mobile-screenshot.png" width="300"> <img src="public/img/ambianic-ui-dekstop-screenshot.png" width="600">
 
-<img src="public/img/ambianic-ui-dekstop-screenshot.png" width="800">
-
+&nbsp;
 
 Next step: moving forward towards a more polished timeline UI.
 
