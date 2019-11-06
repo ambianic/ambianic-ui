@@ -18,7 +18,15 @@ The app is explicitly designed with user privacy and data ownership in mind:
 
 # Project Status
 
-An initial primitive version of the web app is available. It pulls live timeline data from the edge device.
+An initial functional version of the web app is available. It pulls live timeline data from the edge device.
+The UI app currently finds the correponding Ambianic Edge timeline feed via [`config.js`](config.js) located in the root app folder. Example config follows:
+```json
+// Ambianic client side configuration
+export default {
+  AMBIANIC_API_URI: 'http://192.168.86.246:8778/api/'
+  // AMBIANIC_API_URI: '/sample-data/'
+}
+```
 
 Live pre-release version of the web app is available here: https://ui.ambianic.ai/
 
