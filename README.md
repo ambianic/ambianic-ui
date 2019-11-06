@@ -1,6 +1,10 @@
 # Ambianic Client UI
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/ambianic/ambianic-ui.svg)](https://greenkeeper.io/)
+[![NodeJS CI](https://github.com/ambianic/ambianic-ui/workflows/Node%20CI/badge.svg)](https://github.com/ambianic/ambianic-ui/actions?query=workflow%3A%22Node+CI%22)
+[![npm version](https://badge.fury.io/js/ambianic-ui.svg)](https://badge.fury.io/js/ambianic-ui)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+
 
 Ambianic Client UI is an Offline-first Progressive Web App (PWA) to manage Ambianic Edge deployments.
 
@@ -14,16 +18,27 @@ The app is explicitly designed with user privacy and data ownership in mind:
 
 # Project Status
 
-An initial primitive version of the web app is available. It pulls live timeline data from the edge device.
+An initial functional version of the web app is available. It pulls live timeline data from the edge device.
+The UI app currently finds the correponding Ambianic Edge timeline feed via [`config.js`](config.js) located in the root app folder. Example config follows:
+```js
+// Ambianic client side configuration
+export default {
+  AMBIANIC_API_URI: 'http://192.168.86.246:8778/api/'
+  // AMBIANIC_API_URI: '/sample-data/'
+}
+```
 
 Live pre-release version of the web app is available here: https://ui.ambianic.ai/
 
 Example screenshots on mobile and desktop:
 
-<img src="public/img/ambianic-ui-mobile-screenshot.png" width="300">
+<img src="public/img/ambianic-ui-mobile-screenshot.png" width="300"> 
 
-<img src="public/img/ambianic-ui-dekstop-screenshot.png" width="800">
+&nbsp;
 
+<img src="public/img/ambianic-ui-dekstop-screenshot.png" width="600">
+
+&nbsp;
 
 Next step: moving forward towards a more polished timeline UI.
 
@@ -38,7 +53,7 @@ cd ambianic-ui
 ```
 npm install
 ```
-
+ 
 ### Compiles and hot-reloads for development
 ```
 npm run serve
@@ -58,3 +73,4 @@ npm run lint
 
 This project's initial version was inspired by
 [David Garoro](https://github.com/davidgaroro)'s [PWA example](https://github.com/davidgaroro/vuetify-todo-pwa).
+  
