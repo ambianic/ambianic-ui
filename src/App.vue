@@ -105,18 +105,29 @@
       <v-btn icon>
         <v-icon>mdi-apps</v-icon>
       </v-btn>
-        <v-btn icon>
-          <v-badge
-            top
-            color="error lighten-1"
-            right
-            overlap
-            class="align-self-center"
-          >
-            <template v-slot:badge>2</template>
-            <v-icon>mdi-bell</v-icon>
-          </v-badge>
-        </v-btn>
+      <v-btn icon>
+        <v-badge
+          top
+          color="error lighten-1"
+          right
+          overlap
+          class="align-self-center"
+        >
+          <v-icon>mdi-heart</v-icon>
+        </v-badge>
+      </v-btn>
+      <v-btn icon>
+        <v-badge
+          top
+          color="error lighten-1"
+          right
+          overlap
+          class="align-self-center"
+        >
+          <template v-slot:badge>2</template>
+          <v-icon>mdi-bell</v-icon>
+        </v-badge>
+      </v-btn>
       <v-btn
         icon
         large

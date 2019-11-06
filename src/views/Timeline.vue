@@ -92,6 +92,14 @@
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
                       <v-btn icon v-on="on">
+                        <v-icon>mdi-heart</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Edit event details</span>
+                  </v-tooltip>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on }">
+                      <v-btn icon v-on="on">
                         <v-icon>mdi-pen</v-icon>
                       </v-btn>
                     </template>
@@ -108,6 +116,27 @@
                 </v-col>
               </v-row>
             </v-timeline-item>
+            <v-timeline-item
+                hide-dot
+            >
+                About this detection...
+                <span>{{ sample.file }}</span>
+                <span>{{ sample.id }}</span>
+                <span>{{ sample.datetime }}</span>
+                <span>
+                  <ul
+                    v-for="(inf, index) in sample.inference_result"
+                    v-bind:key="index"
+                    :data-num="index + 1"
+                  >
+                    <li>
+                      <p>Category: {{inf.category}}</p>
+                      <p>Confidence: {{inf.confidence}}</p>
+                      <p>Box: {{inf.box}}</p>
+                    </li>
+                  </ul>
+                </span>
+              </v-timeline-item>
               <v-timeline-item
                          color="pink"
                          small
@@ -132,7 +161,7 @@
                    <strong>4pm</strong>
                 </v-col>
                 <v-col>
-                   <strong>Kids returning home</strong>
+                   <strong>Kids at home</strong>
                    <div class="caption mb-2">Entry Area</div>
                    <v-avatar>
                      <v-img
@@ -174,11 +203,11 @@
             >
              <v-row class="pt-1">
                <v-col cols="3">
-                 <strong>9-11am</strong>
+                 <strong>6:30am</strong>
                </v-col>
                <v-col>
-                 <strong>Finish Home Screen</strong>
-                 <div class="caption">Web App</div>
+                 <strong>Coffee ready</strong>
+                 <div class="caption">Kitchen</div>
                </v-col>
              </v-row>
             </v-timeline-item>
