@@ -1,7 +1,7 @@
 <template>
   <v-row
-   align="start"
-   align-content="start"
+   align="center"
+   align-content="center"
    justify="center"
    no-gutters
    style="max-width: 100%;"
@@ -13,7 +13,7 @@
       <v-list-item three-line>
         <v-list-item-content>
           <v-list-item-title>This is an example timeline</v-list-item-title>
-          <v-list-item-subtitle>You can setup your own Ambianic timeline.</v-list-item-subtitle>
+          <v-list-item-subtitle>You can setup your own personalized home timeline.</v-list-item-subtitle>
           <v-list-item-subtitle>Go to Settings to begin.</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -212,7 +212,7 @@
 </template>
 <style lang="stylus" scoped>
   .see-thru {
-    opacity: 0.7
+    opacity: 0.8
   }
 </style>
 <script>
