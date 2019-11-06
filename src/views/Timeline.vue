@@ -116,27 +116,6 @@
                 </v-col>
               </v-row>
             </v-timeline-item>
-            <v-timeline-item
-                hide-dot
-            >
-                About this detection...
-                <span>{{ sample.file }}</span>
-                <span>{{ sample.id }}</span>
-                <span>{{ sample.datetime }}</span>
-                <span>
-                  <ul
-                    v-for="(inf, index) in sample.inference_result"
-                    v-bind:key="index"
-                    :data-num="index + 1"
-                  >
-                    <li>
-                      <p>Category: {{inf.category}}</p>
-                      <p>Confidence: {{inf.confidence}}</p>
-                      <p>Box: {{inf.box}}</p>
-                    </li>
-                  </ul>
-                </span>
-              </v-timeline-item>
               <v-timeline-item
                          color="pink"
                          small
