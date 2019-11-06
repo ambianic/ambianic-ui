@@ -1,5 +1,18 @@
 # Semantic Versioning Changelog
 
+# [1.1.0](https://github.com/ambianic/ambianic-ui/compare/v1.0.4...v1.1.0) (2019-11-06)
+
+
+### Bug Fixes
+
+* **merge:** branch 'master' of https://github.com/ambianic/ambianic-ui ([7cce20e](https://github.com/ambianic/ambianic-ui/commit/7cce20e))
+* mobile screenshot ([8f0cc89](https://github.com/ambianic/ambianic-ui/commit/8f0cc89))
+
+
+### Features
+
+* heart badges to mark favorite moments ([341789c](https://github.com/ambianic/ambianic-ui/commit/341789c))
+
 ## [1.0.4](https://github.com/ambianic/ambianic-ui/compare/v1.0.3...v1.0.4) (2019-11-06)
 
 
