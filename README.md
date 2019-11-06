@@ -73,3 +73,4 @@ npm run lint
 
 This project's initial version was inspired by
 [David Garoro](https://github.com/davidgaroro)'s [PWA example](https://github.com/davidgaroro/vuetify-todo-pwa).
+  
