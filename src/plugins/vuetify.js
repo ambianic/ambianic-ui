@@ -23,9 +23,3 @@ const vuetify = new Vuetify({
 })
 
 export default vuetify
-
-mq.addEventListener('change', (e) => {
-  if (vuetify.theme) {
-    vuetify.theme.dark = e.matches
-  }
-})

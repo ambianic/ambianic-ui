@@ -3,30 +3,19 @@
   "timeline": [
     {
       "args": {
-        "datetime": "2019-10-28T00:00:49.282214",
         "id": "2e5d228933b24e4999f9fac479dfe645",
-        "image_file_name": "20191028-000049.282214.jpg",
         "inference_meta": {
-          "display": "Object Detection"
+          "display": "You can create your own personalized timeline. "
         },
-        "inference_result": [
-          {
-            "box": {
-              "xmax": 0.7207813262939453,
-              "xmin": 0.38390135765075684,
-              "ymax": 0.5611861944198608,
-              "ymin": 0.06678210198879242
-            },
-            "confidence": 0.9921875,
-            "label": "person"
-          }
-        ],
+        "inference_result": [],
         "json_file_name": "20191028-000049.282214.json",
         "rel_dir": "detections/20191028-000048.435604"
       },
       "created": 1572220849.3376591,
       "id": "d0f98e3399aa470c99325f32a7c20752",
-      "message": "Detection Event",
+      "message": "This is an example timeline. ",
+      "pipeline_id": "front_door_watch",
+      "pipeline_display_name": "Go to Settings to begin.",
       "priority": "WARNING",
       "source_code": {
         "funcName": "_save_sample",
@@ -38,7 +27,7 @@
       "args": {
         "datetime": "2019-10-28T00:00:49.824046",
         "id": "043f9f9d899143ebbfad7a126bee34db",
-        "image_file_name": "20191028-000049.824046.jpg",
+        "image_file_name": "20191028-000049.282214.jpg",
         "inference_meta": {
           "display": "Face Detection"
         },
@@ -55,11 +44,13 @@
           }
         ],
         "json_file_name": "20191028-000049.824046.json",
-        "rel_dir": "detections/20191028-000048.475236"
+        "rel_dir": "detections/20191028-000048.435604"
       },
       "created": 1572220849.8378634,
       "id": "54b49ec1f414406ea81de12e99d51f65",
       "message": "Detection Event",
+      "pipeline_id": "front_door_watch",
+      "pipeline_display_name": "Front Door Watch",
       "priority": "INFO",
       "source_code": {
         "funcName": "_save_sample",
@@ -149,7 +140,7 @@
                 "xmax": 0.44172248244285583,
                 "ymax": 0.29970091581344604
             },
-            "confidence": 0.98828125,
+            "confidence": 0.38828125,
             "label": "unknown"
           }
         ],

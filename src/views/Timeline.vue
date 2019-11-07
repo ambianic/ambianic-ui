@@ -8,17 +8,6 @@
    class="pa-0 ma-0"
   >
     <v-col
-      cols="12"
-    >
-      <v-list-item three-line>
-        <v-list-item-content>
-          <v-list-item-title>This is an example timeline</v-list-item-title>
-          <v-list-item-subtitle>You can setup your own personalized home timeline.</v-list-item-subtitle>
-          <v-list-item-subtitle>Go to Settings to begin.</v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-    </v-col>
-    <v-col
       align="left"
       justify="left"
       cols="12"
@@ -36,6 +25,7 @@
           class="pa-0 ma-0"
         >
           <v-img
+            v-if="sample.args.image_file_name"
             :src='imagePath(sample.args.rel_dir, sample.args.image_file_name)'
             class="white--text align-start"
             alt="Object Detection"
@@ -56,6 +46,7 @@
           >
             <v-timeline-item
               hide-dot
+              v-if="sample.args.inference_result.length > 0"
             >
             <v-row
               class="pt-1"
@@ -85,7 +76,7 @@
                         <v-icon>mdi-bell</v-icon>
                       </v-btn>
                     </template>
-                    <span>Raise ALARM!</span>
+                    <span>Mark as Suspicious</span>
                   </v-tooltip>
                 </v-col>
                 <v-col cols="1">
@@ -95,7 +86,7 @@
                         <v-icon>mdi-heart</v-icon>
                       </v-btn>
                     </template>
-                    <span>Edit event details</span>
+                    <span>Save to Favorites</span>
                   </v-tooltip>
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
@@ -116,79 +107,48 @@
                 </v-col>
               </v-row>
             </v-timeline-item>
-              <v-timeline-item
-                         color="pink"
-                         small
-              >
+            <v-timeline-item
+              :color="eventColor(sample)"
+              small
+            >
                 <v-row class="pt-1">
                    <v-col cols="3">
-                     <strong>5pm</strong>
+                     <strong>{{ friendlyTime(sample.args.datetime) }}</strong>
                    </v-col>
                    <v-col>
-                     <strong>Package Delivery</strong>
-                     <div class="caption">Front Door</div>
+                     <div class="subtitle-2">{{ sample.message }}</div>
+                     <div class="body-2">
+                       {{ sample.pipeline_display_name }} -
+                       {{ sample.args.inference_meta.display }}
+                     </div>
                    </v-col>
                  </v-row>
             </v-timeline-item>
 
             <v-timeline-item
-             color="teal lighten-3"
-             small
+               color="teal lighten-3"
+               small
+               v-for="(inf, index) in sample.args.inference_result"
+               v-bind:key="index"
+               :data-num="index + 1"
             >
               <v-row class="pt-1">
                 <v-col cols="3">
-                   <strong>4pm</strong>
+                   <strong>{{ inf.label }}</strong>
                 </v-col>
                 <v-col>
-                   <strong>Kids at home</strong>
-                   <div class="caption mb-2">Entry Area</div>
-                   <v-avatar>
-                     <v-img
-                       src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairFrida&accessoriesType=Kurt&hairColor=Red&facialHairType=BeardLight&facialHairColor=BrownDark&clotheType=GraphicShirt&clotheColor=Gray01&graphicType=Skull&eyeType=Wink&eyebrowType=RaisedExcitedNatural&mouthType=Disbelief&skinColor=Brown"
-                     ></v-img>
-                   </v-avatar>
-                   <v-avatar>
-
-                     <v-img
-                       src="https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned"
-                     ></v-img>
-                   </v-avatar>
-                   <v-avatar>
-                     <v-img
-                       src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairMiaWallace&accessoriesType=Sunglasses&hairColor=BlondeGolden&facialHairType=Blank&clotheType=BlazerSweater&eyeType=Surprised&eyebrowType=RaisedExcited&mouthType=Smile&skinColor=Pale"
-                     ></v-img>
-                   </v-avatar>
+                   <strong>{{ asPercentage(inf.confidence) }} confidence</strong>
                 </v-col>
               </v-row>
             </v-timeline-item>
-
             <v-timeline-item
-             color="pink"
-             small
+              hide-dot
+              v-if="sample.args.inference_result.length > 0"
             >
-             <v-row class="pt-1">
-               <v-col cols="3">
-                 <strong>12pm</strong>
-               </v-col>
-               <v-col>
-                 <strong>Lunch break</strong>
-               </v-col>
-             </v-row>
-            </v-timeline-item>
-
-            <v-timeline-item
-             color="teal lighten-3"
-             small
-            >
-             <v-row class="pt-1">
-               <v-col cols="3">
-                 <strong>6:30am</strong>
-               </v-col>
-               <v-col>
-                 <strong>Coffee ready</strong>
-                 <div class="caption">Kitchen</div>
-               </v-col>
-             </v-row>
+              <v-row class="pt-1">
+                <v-col cols="1">
+                </v-col>
+            </v-row>
             </v-timeline-item>
           </v-timeline>
         </v-list-item-content>
@@ -252,7 +212,7 @@ export default {
       }
       color = 'white--text ' + color + ' lighten-2'
       // eslint-disable-next-line
-      console.log('color: ' + color)
+      // console.log('color: ' + color)
       return color
     },
     eventIcon (event) {
@@ -263,7 +223,7 @@ export default {
       }
       let icon = 'mdi-crosshairs-question'
       // eslint-disable-next-line
-      console.log('label: ' + JSON.stringify(topLabel))
+      // console.log('label: ' + JSON.stringify(topLabel))
       switch (topLabel) {
         case 'person':
           icon = 'mdi-human'
@@ -282,8 +242,16 @@ export default {
           break
       }
       // eslint-disable-next-line
-      console.log('icon: ' + icon)
+      // console.log('icon: ' + icon)
       return icon
+    },
+    friendlyTime (datetime) {
+      var moment = require('moment')
+      return moment(datetime).calendar()
+    },
+    asPercentage (number) {
+      let p = Number(number).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 })
+      return p
     }
   },
   created () {
