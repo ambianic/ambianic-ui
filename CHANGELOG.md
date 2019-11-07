@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.2.0](https://github.com/ambianic/ambianic-ui/compare/v1.1.0...v1.2.0) (2019-11-07)
+
+
+### Features
+
+* detection labels and confidence rendering in timeline view ([0a9cdd6](https://github.com/ambianic/ambianic-ui/commit/0a9cdd6))
+
 # [1.1.0](https://github.com/ambianic/ambianic-ui/compare/v1.0.4...v1.1.0) (2019-11-06)
 
 
