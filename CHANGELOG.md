@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.3.1](https://github.com/ambianic/ambianic-ui/compare/v1.3.0...v1.3.1) (2019-11-10)
+
+
+### Bug Fixes
+
+* github changelog push on release ([da96ee8](https://github.com/ambianic/ambianic-ui/commit/da96ee8))
+
 # [1.3.0](https://github.com/ambianic/ambianic-ui/compare/v1.2.0...v1.3.0) (2019-11-10)
 
 
