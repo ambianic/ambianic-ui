@@ -38,6 +38,9 @@
             >
               <v-icon dark large>{{ eventIcon(sample) }}</v-icon>
             </v-avatar>
+            <detection-boxes
+              :detections="sample.args.inference_result">
+            </detection-boxes>
           </v-img>
           <v-timeline
             align-top
@@ -166,6 +169,7 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import axios from 'axios'
 import ambianicConf from '../../config.js'
+import DetectionBoxes from '../components/DetectionBoxes.vue'
 
 const API_ROOT = ambianicConf['AMBIANIC_API_URI']
 const API_TIMELINE_PATH = API_ROOT + 'timeline.json'
@@ -177,6 +181,12 @@ export default {
       timeline: [],
       on: true
     }
+  },
+  created () {
+    this.getTimeline()
+  },
+  components: {
+    DetectionBoxes
   },
   methods: {
     imagePath (relDir, imageName) {
@@ -253,9 +263,6 @@ export default {
       let p = Number(number).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 })
       return p
     }
-  },
-  created () {
-    this.getTimeline()
   }
 }
 </script>

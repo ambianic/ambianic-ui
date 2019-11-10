@@ -3,63 +3,6 @@
   "timeline": [
     {
       "args": {
-        "id": "2e5d228933b24e4999f9fac479dfe645",
-        "inference_meta": {
-          "display": "You can create your own personalized timeline. "
-        },
-        "inference_result": [],
-        "json_file_name": "20191028-000049.282214.json",
-        "rel_dir": "detections/20191028-000048.435604"
-      },
-      "created": 1572220849.3376591,
-      "id": "d0f98e3399aa470c99325f32a7c20752",
-      "message": "This is an example timeline. ",
-      "pipeline_id": "front_door_watch",
-      "pipeline_display_name": "Go to Settings to begin.",
-      "priority": "WARNING",
-      "source_code": {
-        "funcName": "_save_sample",
-        "lineno": 110,
-        "pathname": "/workspace/src/ambianic/pipeline/store.py"
-      }
-    },
-    {
-      "args": {
-        "datetime": "2019-10-28T00:00:49.824046",
-        "id": "043f9f9d899143ebbfad7a126bee34db",
-        "image_file_name": "20191028-000049.282214.jpg",
-        "inference_meta": {
-          "display": "Face Detection"
-        },
-        "inference_result": [
-          {
-            "box": {
-              "xmax": 0.9731205701828003,
-              "xmin": 0.11590111255645752,
-              "ymax": 0.8264211416244507,
-              "ymin": 0.07209983468055725
-            },
-            "confidence": 0.93359375,
-            "label": "face"
-          }
-        ],
-        "json_file_name": "20191028-000049.824046.json",
-        "rel_dir": "detections/20191028-000048.435604"
-      },
-      "created": 1572220849.8378634,
-      "id": "54b49ec1f414406ea81de12e99d51f65",
-      "message": "Detection Event",
-      "pipeline_id": "front_door_watch",
-      "pipeline_display_name": "Front Door Watch",
-      "priority": "INFO",
-      "source_code": {
-        "funcName": "_save_sample",
-        "lineno": 110,
-        "pathname": "/workspace/src/ambianic/pipeline/store.py"
-      }
-    },
-    {
-      "args": {
         "datetime": "2019-10-28T00:00:51.322407",
         "id": "dd6705eb9730450098a5ade4c0af38fd",
         "image_file_name": "20191028-000051.322407.jpg",
@@ -159,6 +102,41 @@
     },
     {
       "args": {
+        "datetime": "2019-10-28T00:00:49.824046",
+        "id": "043f9f9d899143ebbfad7a126bee34db",
+        "image_file_name": "20191028-000049.282214.jpg",
+        "inference_meta": {
+          "display": "Face Detection"
+        },
+        "inference_result": [
+          {
+            "box": {
+              "xmax": 0.9731205701828003,
+              "xmin": 0.11590111255645752,
+              "ymax": 0.8264211416244507,
+              "ymin": 0.07209983468055725
+            },
+            "confidence": 0.93359375,
+            "label": "face"
+          }
+        ],
+        "json_file_name": "20191028-000049.824046.json",
+        "rel_dir": "detections/20191028-000048.435604"
+      },
+      "created": 1572220849.8378634,
+      "id": "54b49ec1f414406ea81de12e99d51f65",
+      "message": "Detection Event",
+      "pipeline_id": "front_door_watch",
+      "pipeline_display_name": "Front Door Watch",
+      "priority": "INFO",
+      "source_code": {
+        "funcName": "_save_sample",
+        "lineno": 110,
+        "pathname": "/workspace/src/ambianic/pipeline/store.py"
+      }
+    },    
+    {
+      "args": {
         "datetime": "2019-10-28T00:01:01.539012",
         "id": "d0576d9846a947f8b03967c50887d440",
         "image_file_name": "20191028-000101.539012.jpg",
@@ -174,7 +152,7 @@
               "ymin": 0.03991469740867615
             },
             "confidence": 0.87890625,
-            "label": "person"
+            "label": "face"
           }
         ],
         "json_file_name": "20191028-000101.539012.json",
