@@ -1,5 +1,18 @@
 # Semantic Versioning Changelog
 
+# [1.3.0](https://github.com/ambianic/ambianic-ui/compare/v1.2.0...v1.3.0) (2019-11-10)
+
+
+### Bug Fixes
+
+* **package:** update node to version 13.0.0 ([3d43e3b](https://github.com/ambianic/ambianic-ui/commit/3d43e3b))
+* console log reduced ([a84666f](https://github.com/ambianic/ambianic-ui/commit/a84666f))
+
+
+### Features
+
+* show detection boxes in images, close [#68](https://github.com/ambianic/ambianic-ui/issues/68) ([9f5618c](https://github.com/ambianic/ambianic-ui/commit/9f5618c))
+
 # [1.2.0](https://github.com/ambianic/ambianic-ui/compare/v1.1.0...v1.2.0) (2019-11-07)
 
 
