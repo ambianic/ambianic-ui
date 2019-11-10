@@ -108,10 +108,10 @@ export default {
 
       this.stageSize.width = width
       this.stageSize.height = height
-      console.log('stage w, h: ', width, height)
+      // console.log('stage w, h: ', width, height)
     },
     onResize: function () {
-      console.log('onResize called')
+      // console.log('onResize called')
       this.changeRect()
     }
   }
