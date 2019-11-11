@@ -18,7 +18,7 @@
               x: inf.box.xmin * stageSize.width,
               y: inf.box.ymin * stageSize.height,
               width: (inf.box.xmax - inf.box.xmin) * stageSize.width,
-              height: (inf.box.ymax -inf.box.ymin) * stageSize.height,
+              height: (inf.box.ymax - inf.box.ymin) * stageSize.height,
               stroke: 'white',
               strokeWidth: 4,
               shadowColor: 'black',
@@ -27,38 +27,6 @@
             }"
         >
         </v-rect>
-        <v-circle
-          :config="{
-            x: 5,
-            y: 5,
-            radius: 5,
-            fill: 'green'
-          }"
-        />
-        <v-circle
-          :config="{
-            x: stageSize.width - 5,
-            y: 5,
-            radius: 5,
-            fill: 'green'
-          }"
-        />
-        <v-circle
-          :config="{
-            x: stageSize.width - 5,
-            y: stageSize.height - 5,
-            radius: 5,
-            fill: 'green'
-          }"
-        />
-        <v-circle
-          :config="{
-            x: 5,
-            y: stageSize.height - 5,
-            radius: 5,
-            fill: 'green'
-          }"
-        />
       </v-layer>
       <v-layer ref="dragLayer"></v-layer>
     </v-stage>
