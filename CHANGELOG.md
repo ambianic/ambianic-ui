@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.4.0](https://github.com/ambianic/ambianic-ui/compare/v1.3.1...v1.4.0) (2019-11-11)
+
+
+### Features
+
+* event timeline infinite scroll, close [#63](https://github.com/ambianic/ambianic-ui/issues/63) ([2729419](https://github.com/ambianic/ambianic-ui/commit/2729419))
+
 ## [1.3.1](https://github.com/ambianic/ambianic-ui/compare/v1.3.0...v1.3.1) (2019-11-10)
 
 
