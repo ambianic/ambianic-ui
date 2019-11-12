@@ -1,11 +1,11 @@
 <template>
   <v-row
-   align="center"
-   align-content="center"
-   justify="center"
-   no-gutters
-   style="max-width: 100%;"
-   class="pa-0 ma-0"
+    align="center"
+    align-content="center"
+    justify="center"
+    no-gutters
+    style="max-width: 100%;"
+    class="pa-0 ma-0"
   >
     <v-col
       align="left"
@@ -18,7 +18,8 @@
         class="pa-0 ma-0"
       >
         <v-list-item
-          v-for="(sample, index) in timeline" v-bind:key="index"
+          v-for="(sample, index) in timeline"
+          :key="index"
           class="pa-0 ma-0"
         >
           <v-list-item-content
@@ -26,21 +27,28 @@
           >
             <v-img
               v-if="sample.args.image_file_name"
-              :src='imagePath(sample.args.rel_dir, sample.args.image_file_name)'
+              :src="imagePath(sample.args.rel_dir, sample.args.image_file_name)"
               class="white--text align-start"
               alt="Object Detection"
               contain
             >
               <v-avatar
-                :color="eventColor(sample)" size="62" left
+                :color="eventColor(sample)"
+                size="62"
+                left
                 align="top"
                 class="font-weight-regular pa-4 ma-6 see-thru"
               >
-                <v-icon dark large>{{ eventIcon(sample) }}</v-icon>
+                <v-icon
+                  dark
+                  large
+                >
+                  {{ eventIcon(sample) }}
+                </v-icon>
               </v-avatar>
               <detection-boxes
-                :detections="sample.args.inference_result">
-              </detection-boxes>
+                :detections="sample.args.inference_result"
+              />
             </v-img>
             <v-timeline
               align-top
@@ -51,9 +59,9 @@
                 hide-dot
                 v-if="sample.args.inference_result.length > 0"
               >
-              <v-row
-                class="pt-1"
-              >
+                <v-row
+                  class="pt-1"
+                >
                   <v-col cols="7">
                     <v-tooltip bottom>
                       <template v-slot:activator="{ on }">
@@ -75,7 +83,7 @@
                           fab
                           class="mx-2"
                           v-on="on"
-                          >
+                        >
                           <v-icon>mdi-bell</v-icon>
                         </v-btn>
                       </template>
@@ -85,7 +93,10 @@
                   <v-col cols="1">
                     <v-tooltip bottom>
                       <template v-slot:activator="{ on }">
-                        <v-btn icon v-on="on">
+                        <v-btn
+                          icon
+                          v-on="on"
+                        >
                           <v-icon>mdi-heart</v-icon>
                         </v-btn>
                       </template>
@@ -93,7 +104,10 @@
                     </v-tooltip>
                     <v-tooltip bottom>
                       <template v-slot:activator="{ on }">
-                        <v-btn icon v-on="on">
+                        <v-btn
+                          icon
+                          v-on="on"
+                        >
                           <v-icon>mdi-pen</v-icon>
                         </v-btn>
                       </template>
@@ -101,7 +115,10 @@
                     </v-tooltip>
                     <v-tooltip bottom>
                       <template v-slot:activator="{ on }">
-                        <v-btn icon v-on="on">
+                        <v-btn
+                          icon
+                          v-on="on"
+                        >
                           <v-icon>mdi-share-variant</v-icon>
                         </v-btn>
                       </template>
@@ -114,33 +131,35 @@
                 :color="eventColor(sample)"
                 small
               >
-                  <v-row class="pt-1">
-                     <v-col cols="3">
-                       <strong>{{ friendlyTime(sample.args.datetime) }}</strong>
-                     </v-col>
-                     <v-col>
-                       <div class="subtitle-2">{{ sample.message }}</div>
-                       <div class="body-2">
-                         {{ sample.pipeline_display_name }} -
-                         {{ sample.args.inference_meta.display }}
-                       </div>
-                     </v-col>
-                   </v-row>
+                <v-row class="pt-1">
+                  <v-col cols="3">
+                    <strong>{{ friendlyTime(sample.args.datetime) }}</strong>
+                  </v-col>
+                  <v-col>
+                    <div class="subtitle-2">
+                      {{ sample.message }}
+                    </div>
+                    <div class="body-2">
+                      {{ sample.pipeline_display_name }} -
+                      {{ sample.args.inference_meta.display }}
+                    </div>
+                  </v-col>
+                </v-row>
               </v-timeline-item>
 
               <v-timeline-item
-                 color="teal lighten-3"
-                 small
-                 v-for="(inf, index) in sample.args.inference_result"
-                 v-bind:key="index"
-                 :data-num="index + 1"
+                color="teal lighten-3"
+                small
+                v-for="(inf, inf_index) in sample.args.inference_result"
+                :key="inf_index"
+                :data-num="inf_index + 1"
               >
                 <v-row class="pt-1">
                   <v-col cols="3">
-                     <strong>{{ inf.label }}</strong>
+                    <strong>{{ inf.label }}</strong>
                   </v-col>
                   <v-col>
-                     <strong>{{ asPercentage(inf.confidence) }} confidence</strong>
+                    <strong>{{ asPercentage(inf.confidence) }} confidence</strong>
                   </v-col>
                 </v-row>
               </v-timeline-item>
@@ -149,9 +168,8 @@
                 v-if="sample.args.inference_result.length > 0"
               >
                 <v-row class="pt-1">
-                  <v-col cols="1">
-                  </v-col>
-              </v-row>
+                  <v-col cols="1" />
+                </v-row>
               </v-timeline-item>
             </v-timeline>
           </v-list-item-content>
