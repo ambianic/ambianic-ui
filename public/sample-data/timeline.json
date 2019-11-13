@@ -6,6 +6,7 @@
         "datetime": "2019-10-28T00:00:51.322407",
         "id": "dd6705eb9730450098a5ade4c0af38fd",
         "image_file_name": "20191028-000051.322407.jpg",
+        "thumbnail_file_name": "20191028-000051.322407-thumbnail.jpg",
         "inference_meta": {
           "display": "Object Detection"
         },
@@ -39,6 +40,7 @@
         "datetime": "2019-10-28T00:00:54.490916",
         "id": "2e713c0d0c344ff8a803c604b10c0565",
         "image_file_name": "20191028-000054.490916.jpg",
+        "thumbnail_file_name": "20191028-000054.490916-thumbnail.jpg",
         "inference_meta": {
           "display": "Face Detection"
         },
@@ -72,6 +74,7 @@
         "datetime": "2019-10-28T00:01:00.609045",
         "id": "9adedc07909c4b5190fa5bba59094c37",
         "image_file_name": "20191028-000100.609045.jpg",
+        "thumbnail_file_name": "20191028-000100.609045-thumbnail.jpg",
         "inference_meta": {
           "display": "Object Detection"
         },
@@ -114,17 +117,18 @@
       "args": {
         "datetime": "2019-10-28T00:00:49.824046",
         "id": "043f9f9d899143ebbfad7a126bee34db",
-        "image_file_name": "20191028-000049.282214.jpg",
+        "image_file_name": "person-face.jpg",
+        "thumbnail_file_name": "person-face-thumbnail.jpg",
         "inference_meta": {
           "display": "Face Detection"
         },
         "inference_result": [
           {
             "box": {
-              "xmax": 0.9731205701828003,
-              "xmin": 0.11590111255645752,
-              "ymax": 0.8264211416244507,
-              "ymin": 0.07209983468055725
+              "xmax": 0.831205701828003,
+              "xmin": 0.41590111255645752,
+              "ymax": 0.2264211416244507,
+              "ymin": 0.027209983468055725
             },
             "confidence": 0.93359375,
             "label": "face"
@@ -150,16 +154,17 @@
         "datetime": "2019-10-28T00:01:01.539012",
         "id": "d0576d9846a947f8b03967c50887d440",
         "image_file_name": "20191028-000101.539012.jpg",
+        "thumbnail_file_name": "20191028-000101.539012-thumbnail.jpg",
         "inference_meta": {
           "display": "Face Detection"
         },
         "inference_result": [
           {
             "box": {
-              "xmax": 0.9281759262084961,
-              "xmin": 0.01360851526260376,
-              "ymax": 0.9885145425796509,
-              "ymin": 0.03991469740867615
+              "xmax": 0.6281759262084961,
+              "xmin": 0.11360851526260376,
+              "ymax": 0.6885145425796509,
+              "ymin": 0.23991469740867615
             },
             "confidence": 0.87890625,
             "label": "face"

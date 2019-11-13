@@ -66,15 +66,14 @@
             :to="item.link"
             :class="item.class"
           >
-              <v-list-item-action>
-                <v-icon>{{ item.icon }}</v-icon>
-              </v-list-item-action>
-              <v-list-item-content>
-                <v-list-item-title
-                >
-                  {{ item.text }}
-                </v-list-item-title>
-              </v-list-item-content>
+            <v-list-item-action>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ item.text }}
+              </v-list-item-title>
+            </v-list-item-content>
           </v-list-item>
         </template>
       </v-list>
@@ -90,7 +89,7 @@
         style="width: 300px"
         class="ml-0 pl-4"
       >
-        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
         <span class="hidden-sm-and-down">Ambianic</span>
       </v-toolbar-title>
       <v-text-field
@@ -100,8 +99,8 @@
         prepend-inner-icon="search"
         label="Search"
         class="hidden-sm-and-down"
-      ></v-text-field>
-      <v-spacer></v-spacer>
+      />
+      <v-spacer />
       <v-btn icon>
         <v-icon>mdi-apps</v-icon>
       </v-btn>
@@ -124,7 +123,9 @@
           overlap
           class="align-self-center"
         >
-          <template v-slot:badge>2</template>
+          <template v-slot:badge>
+            2
+          </template>
           <v-icon>mdi-bell</v-icon>
         </v-badge>
       </v-btn>
@@ -139,8 +140,8 @@
           <v-img
             src="@/assets/logo.svg"
             alt="Vuetify"
-          >
-          </v-img></v-avatar>
+          />
+        </v-avatar>
       </v-btn>
     </v-app-bar>
 
@@ -150,9 +151,8 @@
         class="pa-0 ma-0"
         fluid
       >
-        <router-view></router-view>
-
-       </v-container>
+        <router-view />
+      </v-container>
     </v-content>
 
     <v-footer app>

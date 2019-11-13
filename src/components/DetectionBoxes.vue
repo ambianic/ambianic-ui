@@ -4,17 +4,21 @@
     v-resize.initial="onResize"
     ref="container"
   >
-  <v-overlay
+    <v-overlay
       absolute
-      overlay=true
-      opacity=0
-  >
-    <v-stage ref="stage" :config="stageSize">
-      <v-layer>
-        <v-rect
+      overlay="true"
+      opacity="0"
+      z-index="0"
+    >
+      <v-stage
+        ref="stage"
+        :config="stageSize"
+      >
+        <v-layer>
+          <v-rect
             v-for="(inf, rect_index) in detections"
-            v-bind:key="rect_index"
-            v-bind:config="{
+            :key="rect_index"
+            :config="{
               x: inf.box.xmin * stageSize.width,
               y: inf.box.ymin * stageSize.height,
               width: (inf.box.xmax - inf.box.xmin) * stageSize.width,
@@ -25,12 +29,11 @@
               shadowBlur: 10,
               shadowOpacity: 1
             }"
-        >
-        </v-rect>
-      </v-layer>
-      <v-layer ref="dragLayer"></v-layer>
-    </v-stage>
-  </v-overlay>
+          />
+        </v-layer>
+        <v-layer ref="dragLayer" />
+      </v-stage>
+    </v-overlay>
   </div>
 </template>
 
@@ -51,7 +54,9 @@ export default {
       }
     }
   },
-  props: ['detections'],
+  props: {
+    detections: []
+  },
   directives: {
     resize
   },
