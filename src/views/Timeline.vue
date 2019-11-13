@@ -4,7 +4,7 @@
     align-content="center"
     justify="center"
     no-gutters
-    style="max-width: 100%;"
+    style="max-width: 420px;"
     class="pa-0 ma-0"
   >
     <v-col
@@ -26,12 +26,16 @@
             class="pa-0 ma-0"
           >
             <v-img
-              v-if="sample.args.image_file_name"
-              :src="imagePath(sample.args.rel_dir, sample.args.image_file_name)"
+              v-if="sample.args.thumbnail_file_name"
+              :src="imagePath(sample.args.rel_dir, sample.args.thumbnail_file_name)"
               class="white--text align-start"
               alt="Object Detection"
               contain
             >
+              <detection-boxes
+                :detections="sample.args.inference_result"
+                :tensor_image_size="sample.args.inference_meta.tensor_image_size"
+              />
               <v-avatar
                 :color="eventColor(sample)"
                 size="62"
@@ -46,9 +50,6 @@
                   {{ eventIcon(sample) }}
                 </v-icon>
               </v-avatar>
-              <detection-boxes
-                :detections="sample.args.inference_result"
-              />
             </v-img>
             <v-timeline
               align-top
@@ -235,7 +236,7 @@ export default {
           // eslint-disable-next-line
           console.log('new timeline events: ', data.timeline.length)
           // eslint-disable-next-line
-          console.log('timeline slice: ' + JSON.stringify(data.timeline))
+          // console.log('timeline slice: ' + JSON.stringify(data.timeline))
           this.timeline = this.timeline.concat(data.timeline)
           $state.loaded()
           if (this.timeline.length / PAGE_SIZE === 10) {

@@ -39,7 +39,7 @@ module.exports = {
       // ref: https://medium.com/@aetherus.zhou/vue-cli-3-performance-optimization-55316dcd491c
       config.plugins.delete('prefetch');
 
-      // enable build time compression 
+      // enable build time compression
       config.plugin('CompressionPlugin').use(CompressionPlugin);
   },
 
