@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.6.0](https://github.com/ambianic/ambianic-ui/compare/v1.5.0...v1.6.0) (2019-11-13)
+
+
+### Features
+
+* **pwa:** offline availability ([fbc0ec6](https://github.com/ambianic/ambianic-ui/commit/fbc0ec6))
+
 # [1.5.0](https://github.com/ambianic/ambianic-ui/compare/v1.4.0...v1.5.0) (2019-11-13)
 
 
