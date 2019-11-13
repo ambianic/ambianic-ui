@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.5.0](https://github.com/ambianic/ambianic-ui/compare/v1.4.0...v1.5.0) (2019-11-13)
+
+
+### Features
+
+* **timeline:** render image thumbnails for faster timeline page load and improved PWA score, close [#84](https://github.com/ambianic/ambianic-ui/issues/84) ([853ff16](https://github.com/ambianic/ambianic-ui/commit/853ff16))
+
 # [1.4.0](https://github.com/ambianic/ambianic-ui/compare/v1.3.1...v1.4.0) (2019-11-11)
 
 
