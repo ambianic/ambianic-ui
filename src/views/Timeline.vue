@@ -8,8 +8,8 @@
     class="pa-0 ma-0"
   >
     <v-col
-      align="left"
-      justify="left"
+      align="center"
+      justify="center"
       cols="12"
       class="pa-0 ma-0 fill-height"
     >

@@ -138,7 +138,7 @@
           item
         >
           <v-img
-            src="@/assets/logo.svg"
+            src="@/assets/logo5.svg"
             alt="Vuetify"
           />
         </v-avatar>
