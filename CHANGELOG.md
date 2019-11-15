@@ -1,5 +1,39 @@
 # Semantic Versioning Changelog
 
+# [1.5.0](https://github.com/ambianic/ambianic-ui/compare/v1.4.0...v1.5.0) (2019-11-13)
+
+
+### Features
+
+* **timeline:** render image thumbnails for faster timeline page load and improved PWA score, close [#84](https://github.com/ambianic/ambianic-ui/issues/84) ([853ff16](https://github.com/ambianic/ambianic-ui/commit/853ff16))
+
+# [1.4.0](https://github.com/ambianic/ambianic-ui/compare/v1.3.1...v1.4.0) (2019-11-11)
+
+
+### Features
+
+* event timeline infinite scroll, close [#63](https://github.com/ambianic/ambianic-ui/issues/63) ([2729419](https://github.com/ambianic/ambianic-ui/commit/2729419))
+
+## [1.3.1](https://github.com/ambianic/ambianic-ui/compare/v1.3.0...v1.3.1) (2019-11-10)
+
+
+### Bug Fixes
+
+* github changelog push on release ([da96ee8](https://github.com/ambianic/ambianic-ui/commit/da96ee8))
+
+# [1.3.0](https://github.com/ambianic/ambianic-ui/compare/v1.2.0...v1.3.0) (2019-11-10)
+
+
+### Bug Fixes
+
+* **package:** update node to version 13.0.0 ([3d43e3b](https://github.com/ambianic/ambianic-ui/commit/3d43e3b))
+* console log reduced ([a84666f](https://github.com/ambianic/ambianic-ui/commit/a84666f))
+
+
+### Features
+
+* show detection boxes in images, close [#68](https://github.com/ambianic/ambianic-ui/issues/68) ([9f5618c](https://github.com/ambianic/ambianic-ui/commit/9f5618c))
+
 # [1.2.0](https://github.com/ambianic/ambianic-ui/compare/v1.1.0...v1.2.0) (2019-11-07)
 
 
