@@ -8,6 +8,11 @@
 
 Ambianic Client UI is an Offline-first Progressive Web App (PWA) to manage Ambianic Edge deployments.
 
+
+<img src="public/img/ambianic-pwa-badge.png" width="600">
+
+&nbsp;
+
 The app is explicitly designed with user privacy and data ownership in mind:
 
 * Stores data exclusively on user's own client device (desktop or mobile).
@@ -32,7 +37,7 @@ Live pre-release version of the web app is available here: https://ui.ambianic.a
 
 Example screenshots on mobile and desktop:
 
-<img src="public/img/ambianic-ui-mobile-screenshot.png" width="300"> 
+<img src="public/img/ambianic-ui-mobile-screenshot.png" width="300">
 
 &nbsp;
 
@@ -53,7 +58,7 @@ cd ambianic-ui
 ```
 npm install
 ```
- 
+
 ### Compiles and hot-reloads for development
 ```
 npm run serve
@@ -73,4 +78,3 @@ npm run lint
 
 This project's initial version was inspired by
 [David Garoro](https://github.com/davidgaroro)'s [PWA example](https://github.com/davidgaroro/vuetify-todo-pwa).
-  
