@@ -27,7 +27,8 @@
               strokeWidth: 4,
               shadowColor: 'black',
               shadowBlur: 10,
-              shadowOpacity: 1
+              shadowOpacity: 1,
+              preventDefault: false
             }"
           />
         </v-layer>
@@ -55,7 +56,7 @@ export default {
     }
   },
   props: {
-    detections: []
+    detections: Array
   },
   directives: {
     resize
