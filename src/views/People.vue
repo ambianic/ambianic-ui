@@ -4,41 +4,84 @@
       align="center"
       justify="center"
     >
-      <div class="about">
-        <strong>People page content goes here...</strong>
-      </div>
-      <v-tooltip right>
-        <template v-slot:activator="{ on }">
-          <v-btn
-            href="https://github.com/ambianic"
-            icon
-            large
-            target="_blank"
-            v-on="on"
+      <v-card>
+        <v-card-title class="grey darken-2">
+          Add Person
+        </v-card-title>
+        <v-container grid-list-sm>
+          <v-layout
+            row
+            wrap
           >
-            <v-icon large>
-              mdi-code-tags
-            </v-icon>
-          </v-btn>
-        </template>
-        <span>Source</span>
-      </v-tooltip>
-      <v-tooltip right>
-        <template v-slot:activator="{ on }">
+            <v-flex
+              xs12
+              align-center
+              justify-space-between
+            >
+              <v-layout align-center>
+                <v-avatar
+                  size="40px"
+                  class="mr-3"
+                >
+                  <img
+                    src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png"
+                    alt=""
+                  >
+                </v-avatar>
+                <v-text-field
+                  placeholder="Name"
+                ></v-text-field>
+              </v-layout>
+            </v-flex>
+            <v-flex xs6>
+              <v-text-field
+                prepend-icon="business"
+                placeholder="Company"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs6>
+              <v-text-field
+                placeholder="Job title"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs12>
+              <v-text-field
+                prepend-icon="mail"
+                placeholder="Email"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs12>
+              <v-text-field
+                type="tel"
+                prepend-icon="phone"
+                placeholder="(000) 000 - 0000"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs12>
+              <v-text-field
+                prepend-icon="notes"
+                placeholder="Notes"
+              ></v-text-field>
+            </v-flex>
+          </v-layout>
+        </v-container>
+        <v-card-actions>
           <v-btn
-            icon
-            large
-            href="https://codepen.io/johnjleider/pen/MNYLdL"
-            target="_blank"
-            v-on="on"
-          >
-            <v-icon large>
-              mdi-codepen
-            </v-icon>
-          </v-btn>
-        </template>
-        <span>Codepen</span>
-      </v-tooltip>
+            text
+            color="primary"
+          >More</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn
+            text
+            color="primary"
+            @click="dialog = false"
+          >Cancel</v-btn>
+          <v-btn
+            text
+            @click="dialog = false"
+          >Save</v-btn>
+        </v-card-actions>
+      </v-card>
     </v-row>
   </app-frame>
 </template>
