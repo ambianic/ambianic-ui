@@ -26,13 +26,6 @@
                 />
               </v-layout>
             </v-flex>
-            <v-flex xs12>
-              <v-text-field
-                prepend-icon="mdi-shield-key"
-                placeholder="API Key (e.g. 234SDwersd235efedde)"
-                v-model="settingsForm.apiKey"
-              />
-            </v-flex>
           </v-layout>
         </v-container>
         <v-card-actions>
@@ -63,45 +56,20 @@
 </template>
 <script>
 import AppFrame from '@/components/AppFrame.vue'
-import { openDB } from 'idb'
-
-const dbPromise = openDB('keyval-store', 1, {
-  upgrade (db) {
-    db.createObjectStore('settings')
-  }
-})
-
-const settingsDB = {
-  async get (key) {
-    return (await dbPromise).get('settings', key)
-  },
-  async set (key, val) {
-    return (await dbPromise).put('settings', val, key)
-  },
-  async delete (key) {
-    return (await dbPromise).delete('settings', key)
-  },
-  async clear () {
-    return (await dbPromise).clear('settings')
-  },
-  async keys () {
-    return (await dbPromise).getAllKeys('settings')
-  }
-}
+import { settingsDB } from '@/store/db'
 
 export default {
   data () {
     return {
       settingsForm: {
-        address: '',
-        apiKey: ''
+        address: ''
       }
     }
   },
   components: {
     AppFrame
   },
-  create () {
+  mounted () {
     this.loadSettings()
   },
   methods: {
@@ -111,15 +79,9 @@ export default {
           this.settingsForm.address = address
         }
       )
-      settingsDB.get('ambanic-edge-api-key').then(
-        (apiKey) => {
-          this.settingsForm.apiKey = apiKey
-        }
-      )
     },
     saveSettings () {
       settingsDB.set('ambanic-edge-address', this.settingsForm.address)
-      settingsDB.set('ambanic-edge-api-key', this.settingsForm.apiKey)
     },
     cancel () {
       // load previously saved settings
