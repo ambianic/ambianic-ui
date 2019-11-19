@@ -1,5 +1,25 @@
 # Semantic Versioning Changelog
 
+# [1.7.0](https://github.com/ambianic/ambianic-ui/compare/v1.6.0...v1.7.0) (2019-11-16)
+
+
+### Bug Fixes
+
+* merge branch 'dev' of https://github.com/ambianic/ambianic-ui into dev ([642a949](https://github.com/ambianic/ambianic-ui/commit/642a949))
+
+
+### Features
+
+* new home page, about page, closer to 100% lighthouse PWA score ([2d045b7](https://github.com/ambianic/ambianic-ui/commit/2d045b7))
+* optimized home page, improved Lighthouse PWA score ([a49cb74](https://github.com/ambianic/ambianic-ui/commit/a49cb74))
+
+# [1.6.0](https://github.com/ambianic/ambianic-ui/compare/v1.5.0...v1.6.0) (2019-11-13)
+
+
+### Features
+
+* **pwa:** offline availability ([fbc0ec6](https://github.com/ambianic/ambianic-ui/commit/fbc0ec6))
+
 # [1.5.0](https://github.com/ambianic/ambianic-ui/compare/v1.4.0...v1.5.0) (2019-11-13)
 
 
