@@ -28,7 +28,7 @@
             >
               <v-img
                 v-if="sample.args.thumbnail_file_name"
-                :src="imagePath(sample.args.rel_dir, sample.args.thumbnail_file_name)"
+                :src="getImageURL(sample.args.rel_dir, sample.args.thumbnail_file_name)"
                 class="white--text align-start"
                 alt="Object Detection"
                 contain
@@ -194,15 +194,9 @@
 <script>
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import InfiniteLoading from 'vue-infinite-loading'
-import axios from 'axios'
-import ambianicConf from '../../config.js'
 import DetectionBoxes from '../components/DetectionBoxes.vue'
 import AppFrame from '@/components/AppFrame.vue'
-
-const API_ROOT = ambianicConf['AMBIANIC_API_URI']
-const API_TIMELINE_PATH = API_ROOT + 'timeline.json'
-const PAGE_SIZE = 5
-// console.debug('API_TIMELINE_PATH: ' + API_TIMELINE_PATH)
+import { getTimelinePage, getImageURL } from '@/remote/edgeAPI'
 
 export default {
   data () {
@@ -220,18 +214,8 @@ export default {
     InfiniteLoading
   },
   methods: {
-    imagePath (relDir, imageName) {
-      let p = API_ROOT + 'data/' + relDir + '/' + imageName
-      // console.debug('imagePath: ' + p)
-      return p
-    },
     getTimelineSlice () {
-      const api = API_TIMELINE_PATH
-      return axios.get(api, {
-        params: {
-          page: this.timeline.length / PAGE_SIZE + 1
-        }
-      })
+      return getTimelinePage(this.timeline.length / PAGE_SIZE + 1)
     },
     infiniteHandler ($state) {
       this.getTimelineSlice().then(({ data }) => {
