@@ -1,5 +1,13 @@
 # Semantic Versioning Changelog
 
+# [1.10.0](https://github.com/ambianic/ambianic-ui/compare/v1.9.0...v1.10.0) (2019-11-20)
+
+
+### Features
+
+* PWA certification badge ([aef963c](https://github.com/ambianic/ambianic-ui/commit/aef963c))
+* PWA certification badge, close [#95](https://github.com/ambianic/ambianic-ui/issues/95) ([d1fb916](https://github.com/ambianic/ambianic-ui/commit/d1fb916))
+
 # [1.9.0](https://github.com/ambianic/ambianic-ui/compare/v1.8.0...v1.9.0) (2019-11-20)
 
 
