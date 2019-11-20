@@ -24,8 +24,8 @@ async function getRootURL () {
   Get one page of timeline events.
 */
 export async function getTimelinePage (pageNum = 1) {
-  let apiRoot = await getRootURL()
-  let timelineURL = apiRoot + 'timeline.json'
+  const apiRoot = await getRootURL()
+  const timelineURL = apiRoot + 'timeline.json'
   let timelinePage = []
   try {
     timelinePage = await axios.get(timelineURL, {
@@ -43,8 +43,8 @@ export async function getTimelinePage (pageNum = 1) {
   Return full image URL given an image file name and a relative directory.
 */
 export async function getImageURL (relDir, imageName) {
-  let apiRoot = await getRootURL()
-  let p = apiRoot + 'data/' + relDir + '/' + imageName
+  const apiRoot = await getRootURL()
+  const p = apiRoot + 'data/' + relDir + '/' + imageName
   // console.debug('imagePath: ' + p)
   return p
 }

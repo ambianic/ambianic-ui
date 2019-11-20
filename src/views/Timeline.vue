@@ -49,7 +49,7 @@
                     </v-row>
                   </template>
                   <template
-                    v-if='isImageLoaded[index]'
+                    v-if="isImageLoaded[index]"
                   >
                     <detection-boxes
                       :detections="sample.args.inference_result"
@@ -86,12 +86,11 @@
                   >
                     <v-col cols="7">
                       <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
+                        <template>
                           <v-btn
                             fab
                             color="success lighten-2"
                             class="mx-2"
-                            v-on="on"
                           >
                             <v-icon>mdi-check</v-icon>
                           </v-btn>
@@ -99,12 +98,11 @@
                         <span>Looks fine</span>
                       </v-tooltip>
                       <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
+                        <template>
                           <v-btn
                             color="error lighten-2"
                             fab
                             class="mx-2"
-                            v-on="on"
                           >
                             <v-icon>mdi-bell</v-icon>
                           </v-btn>
@@ -114,10 +112,9 @@
                     </v-col>
                     <v-col cols="1">
                       <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
+                        <template>
                           <v-btn
                             icon
-                            v-on="on"
                           >
                             <v-icon>mdi-heart</v-icon>
                           </v-btn>
@@ -125,10 +122,9 @@
                         <span>Save to Favorites</span>
                       </v-tooltip>
                       <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
+                        <template>
                           <v-btn
                             icon
-                            v-on="on"
                           >
                             <v-icon>mdi-pen</v-icon>
                           </v-btn>
@@ -136,10 +132,9 @@
                         <span>Edit event details</span>
                       </v-tooltip>
                       <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
+                        <template>
                           <v-btn
                             icon
-                            v-on="on"
                           >
                             <v-icon>mdi-share-variant</v-icon>
                           </v-btn>
@@ -259,7 +254,7 @@ export default {
           console.log('new timeline events: ', data.timeline.length)
           // eslint-disable-next-line
           // console.log('timeline slice: ' + JSON.stringify(data.timeline))
-          let startIndex = this.timeline.length
+          const startIndex = this.timeline.length
           // update full image URLs
           data.timeline.map(
             (sample, index) =>
@@ -306,7 +301,7 @@ export default {
     },
     eventIcon (event) {
       let topLabel = 'none'
-      let inf = event.args.inference_result
+      const inf = event.args.inference_result
       if (inf.length > 0) {
         topLabel = inf[0].label
       }
@@ -339,7 +334,7 @@ export default {
       return moment(datetime).calendar()
     },
     asPercentage (number) {
-      let p = Number(number).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 })
+      const p = Number(number).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 })
       return p
     }
   }

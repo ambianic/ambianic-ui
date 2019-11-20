@@ -5,7 +5,7 @@
       justify="center"
     >
       <v-tooltip right>
-        <template v-slot:activator="{ on }">
+        <template>
           <v-card
             max-width="344"
             class="mx-auto"
