@@ -181,7 +181,7 @@ export default {
           switch (status) {
             case EdgeConnectionStatus.OFFLINE:
               this.connectionStatus = 'OFFLINE'
-              this.connectionTip = 'No connection to edge device. '
+              this.connectionTip = 'No connection to edge device.'
               this.statusColor = 'error'
               break
             case EdgeConnectionStatus.UNAVAILABLE:
