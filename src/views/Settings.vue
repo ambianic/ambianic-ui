@@ -32,6 +32,7 @@
           <v-btn
             text
             color="primary"
+            @click="test"
           >
             Test Connection
           </v-btn>
@@ -50,6 +51,77 @@
             Save
           </v-btn>
         </v-card-actions>
+        <v-container
+          v-if="testInProgress"
+        >
+          <v-row
+            class="fill-height"
+            align-content="center"
+            justify="center"
+          >
+            <v-col
+              class="subtitle-1 text-center"
+              cols="12"
+            >
+              Testing your connection
+            </v-col>
+            <v-col cols="6">
+              <v-progress-linear
+                color="info accent-4"
+                indeterminate
+                rounded
+                height="6"
+              />
+            </v-col>
+          </v-row>
+        </v-container>
+        <v-container
+          v-if="testDone"
+        >
+          <v-layout
+            row
+            wrap
+          >
+            <v-flex
+              xs12
+              align-center
+              justify-center
+            >
+              <v-layout
+                align-center
+                justify-center
+                >
+                <v-chip
+                  class="ma-2"
+                  :color="statusColor"
+                  outlined
+                  align-center
+                  justify-center
+                >
+                  <v-icon left>
+                    mdi-server-plus
+                  </v-icon>
+                  Connection Status: {{ connectionStatus }}
+                </v-chip>
+              </v-layout>
+            </v-flex>
+            <v-flex
+              xs12
+              align-center
+              justify-center
+            >
+              <v-layout
+                align-center
+                justify-center
+              >
+                <v-icon left>
+                  mdi-lightbulb
+                </v-icon>
+                <span>{{ connectionTip }}</span>
+              </v-layout>
+            </v-flex>
+          </v-layout>
+        </v-container>
       </v-card>
     </v-row>
   </app-frame>
@@ -57,13 +129,18 @@
 <script>
 import AppFrame from '@/components/AppFrame.vue'
 import { settingsDB } from '@/store/db'
-
+import { testConnection, EdgeConnectionStatus } from '@/remote/edgeAPI'
 export default {
   data () {
     return {
       settingsForm: {
         address: ''
-      }
+      },
+      connectionStatus: '',
+      connectionTip: '',
+      testInProgress: false,
+      testDone: false,
+      statusColor: 'info'
     }
   },
   components: {
@@ -84,12 +161,45 @@ export default {
       settingsDB.set('ambanic-edge-address', this.settingsForm.address)
     },
     cancel () {
+      this.testInProgress = false
+      this.testDone = false
       // load previously saved settings
       this.loadSettings()
     },
     save () {
-      // load previously saved settings
+      this.testInProgress = false
+      this.testDone = false
+      // store settings
       this.saveSettings()
+    },
+    test () {
+      this.testInProgress = true
+      this.testDone = false
+      testConnection(this.settingsForm.address).then(
+        status => {
+          if (!this.testInProgress) return // test cancelled
+          switch (status) {
+            case EdgeConnectionStatus.OFFLINE:
+              this.connectionStatus = 'OFFLINE'
+              this.connectionTip = 'No connection to edge device. '
+              this.statusColor = 'error'
+              break
+            case EdgeConnectionStatus.UNAVAILABLE:
+              this.connectionStatus = 'OFFLINE'
+              this.connectionTip = 'Edge device is not responsive.'
+              this.statusColor = 'error'
+              break
+            case EdgeConnectionStatus.OK:
+              this.connectionStatus = 'OK'
+              this.connectionTip = 'Edge device API available.'
+              this.statusColor = 'success'
+              break
+          }
+          this.testInProgress = false
+          this.testDone = true
+          // console.debug(`Ambianic Edge device connection status ${status}`)
+        }
+      )
     }
   }
 }
