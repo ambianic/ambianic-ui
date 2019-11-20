@@ -1,5 +1,22 @@
 # Semantic Versioning Changelog
 
+# [1.8.0](https://github.com/ambianic/ambianic-ui/compare/v1.7.0...v1.8.0) (2019-11-20)
+
+
+### Bug Fixes
+
+* code cleanup ([ed8810c](https://github.com/ambianic/ambianic-ui/commit/ed8810c))
+* eslint build dep ([b9a8af7](https://github.com/ambianic/ambianic-ui/commit/b9a8af7))
+* package-lock deps ([6c6d3b1](https://github.com/ambianic/ambianic-ui/commit/6c6d3b1))
+* security vulnerability fix ([7e68633](https://github.com/ambianic/ambianic-ui/commit/7e68633))
+
+
+### Features
+
+* new settings page, persist ambianic edge connection settings to browser storage ([e3b70cb](https://github.com/ambianic/ambianic-ui/commit/e3b70cb))
+* save ambianic edge connection settings to persistent browser storage that survives between sessions and browser reloads ([1caee13](https://github.com/ambianic/ambianic-ui/commit/1caee13))
+* settings page now determines timeline feed source ([14c0e21](https://github.com/ambianic/ambianic-ui/commit/14c0e21))
+
 # [1.7.0](https://github.com/ambianic/ambianic-ui/compare/v1.6.0...v1.7.0) (2019-11-16)
 
 
