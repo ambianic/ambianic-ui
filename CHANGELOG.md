@@ -1,5 +1,17 @@
 # Semantic Versioning Changelog
 
+# [1.9.0](https://github.com/ambianic/ambianic-ui/compare/v1.8.0...v1.9.0) (2019-11-20)
+
+
+### Bug Fixes
+
+* test connection to edge device, close [#73](https://github.com/ambianic/ambianic-ui/issues/73) ([39a7af2](https://github.com/ambianic/ambianic-ui/commit/39a7af2))
+
+
+### Features
+
+* **settings:** test edge device connection ([c5f45d5](https://github.com/ambianic/ambianic-ui/commit/c5f45d5))
+
 # [1.8.0](https://github.com/ambianic/ambianic-ui/compare/v1.7.0...v1.8.0) (2019-11-20)
 
 
