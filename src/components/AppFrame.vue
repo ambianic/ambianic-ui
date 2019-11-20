@@ -175,31 +175,31 @@ export default {
     drawer: null,
     items: [
       { icon: 'history', text: 'Timeline', link: '/timeline' },
-      { icon: 'mdi-account-heart-outline', text: 'People', link: '/people' },
+      // { icon: 'mdi-account-heart-outline', text: 'People', link: '/people' },
       // class: 'hidden-sm-and-down' ensures that an item is not shown
       // on small screens. For example flows are only visible on screens with
       // enough space for a smooth user experience.
-      { icon: 'mdi-pipe', text: 'Flows', link: '/flows' },
-      {
-        icon: 'keyboard_arrow_up',
-        'icon-alt': 'keyboard_arrow_down',
-        text: 'Labels',
-        model: true,
-        children: [
-          { icon: 'add', text: 'Create label' }
-        ]
-      },
-      {
-        icon: 'keyboard_arrow_up',
-        'icon-alt': 'keyboard_arrow_down',
-        text: 'More',
-        model: false,
-        children: [
-          { text: 'Sources' },
-          { text: 'Components' },
-          { text: 'Integrations' }
-        ]
-      },
+      // { icon: 'mdi-pipe', text: 'Flows', link: '/flows' },
+      // {
+      //  icon: 'keyboard_arrow_up',
+      //  'icon-alt': 'keyboard_arrow_down',
+      //  text: 'Labels',
+      //  model: true,
+      //  children: [
+      //    { icon: 'add', text: 'Create label' }
+      //  ]
+      // },
+      // {
+      //  icon: 'keyboard_arrow_up',
+      //  'icon-alt': 'keyboard_arrow_down',
+      //  text: 'More',
+      //  model: false,
+      //  children: [
+      //    { text: 'Sources' },
+      //    { text: 'Components' },
+      //    { text: 'Integrations' }
+      //  ]
+      // },
       { icon: 'settings', text: 'Settings', link: '/settings' },
       { icon: 'chat_bubble', text: 'Send feedback', link: '/feedback' },
       { icon: 'help', text: 'Help', link: '/help' },

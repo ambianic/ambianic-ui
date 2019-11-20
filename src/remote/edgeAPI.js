@@ -15,8 +15,11 @@ async function getHostURL (address) {
       address = storedAddress
     }
     // console.debug(`address: ${address}`)
-    const hostURL = `http://${address}:${API_PORT}`
-    // console.debug(`hostURL: ${hostURL}`)
+    let hostURL = ''
+    if (address) {
+      hostURL = `http://${address}:${API_PORT}`
+      // console.debug(`hostURL: ${hostURL}`)
+    }
     return hostURL
   } catch (error) {
     console.log(`Error reading from settingsDB: ${error}`)
