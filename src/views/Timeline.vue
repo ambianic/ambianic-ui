@@ -28,29 +28,49 @@
             >
               <v-img
                 v-if="sample.args.thumbnail_file_name"
-                :src="getImageURL(sample.args.rel_dir, sample.args.thumbnail_file_name)"
+                :src="imageURL[index]"
                 class="white--text align-start"
                 alt="Object Detection"
                 contain
+                @load='setImageLoaded(index)'
               >
-                <detection-boxes
-                  :detections="sample.args.inference_result"
-                  :tensor_image_size="sample.args.inference_meta.tensor_image_size"
-                />
-                <v-avatar
-                  :color="eventColor(sample)"
-                  size="62"
-                  left
-                  align="top"
-                  class="font-weight-regular pa-4 ma-6 see-thru"
+                <v-row
+                  class="fill-height ma-0"
+                  align="start"
+                  justify="start"
                 >
-                  <v-icon
-                    dark
-                    large
+                  <template v-slot:placeholder>
+                    <v-row
+                      class="fill-height ma-0"
+                      align="center"
+                      justify="center"
+                    >
+                      <v-progress-circular indeterminate color="info lighten-2"></v-progress-circular>
+                    </v-row>
+                  </template>
+                  <template
+                    v-if='isImageLoaded[index]'
                   >
-                    {{ eventIcon(sample) }}
-                  </v-icon>
-                </v-avatar>
+                    <detection-boxes
+                      :detections="sample.args.inference_result"
+                      :tensor_image_size="sample.args.inference_meta.tensor_image_size"
+                    />
+                    <v-avatar
+                      :color="eventColor(sample)"
+                      size="62"
+                      left
+                      align="top"
+                      class="font-weight-regular pa-4 ma-6 see-thru"
+                    >
+                      <v-icon
+                        dark
+                        large
+                      >
+                        {{ eventIcon(sample) }}
+                      </v-icon>
+                    </v-avatar>
+                  </template>
+                </v-row>
               </v-img>
               <v-timeline
                 align-top
@@ -198,10 +218,14 @@ import DetectionBoxes from '../components/DetectionBoxes.vue'
 import AppFrame from '@/components/AppFrame.vue'
 import { getTimelinePage, getImageURL } from '@/remote/edgeAPI'
 
+const PAGE_SIZE = 5
+
 export default {
   data () {
     return {
       timeline: [],
+      imageURL: [],
+      isImageLoaded: [],
       on: true
     }
   },
@@ -214,6 +238,16 @@ export default {
     InfiniteLoading
   },
   methods: {
+    setImageLoaded (index) {
+      this.$set(this.isImageLoaded, index, true)
+      // eslint-disable-next-line
+      // console.log(`isImageLoaded[${index}]: ${this.isImageLoaded[index]}`)
+    },
+    updateImageURL (relDir, fileName, index) {
+      getImageURL(relDir, fileName).then(fullImageURL => {
+        this.$set(this.imageURL, index, fullImageURL)
+      })
+    },
     getTimelineSlice () {
       return getTimelinePage(this.timeline.length / PAGE_SIZE + 1)
     },
@@ -225,6 +259,14 @@ export default {
           console.log('new timeline events: ', data.timeline.length)
           // eslint-disable-next-line
           // console.log('timeline slice: ' + JSON.stringify(data.timeline))
+          let startIndex = this.timeline.length
+          // update full image URLs
+          data.timeline.map(
+            (sample, index) =>
+              this.updateImageURL(sample.args.rel_dir,
+                sample.args.thumbnail_file_name,
+                startIndex + index)
+          )
           this.timeline = this.timeline.concat(data.timeline)
           $state.loaded()
           if (this.timeline.length / PAGE_SIZE === 10) {

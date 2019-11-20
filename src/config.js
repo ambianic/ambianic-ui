@@ -1,6 +1,8 @@
 // Ambianic client side configuration
-export default {
+export const ambianicConf = {
   // AMBIANIC_API_URI: 'http://192.168.86.22:8778/api/'
   // AMBIANIC_API_URI: 'http://192.168.86.246:8778/api/'
-  AMBIANIC_API_URI: '/sample-data/'
+  AMBIANIC_API_FALLBACK_URI: '/sample-data/',
+  AMBIANIC_API_PORT: 8778,
+  AMBIANIC_API_ROOT: '/api/'
 }
