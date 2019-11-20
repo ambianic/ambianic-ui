@@ -56,7 +56,10 @@ export default {
     }
   },
   props: {
-    detections: Array
+    detections: {
+      type: Array,
+      default: () => []
+    }
   },
   directives: {
     resize
@@ -76,8 +79,8 @@ export default {
       // console.log('container parent: ', container.parentElement)
 
       // Resize the canvas to fit its parent's width.
-      let width = container.offsetWidth
-      let height = container.offsetHeight
+      const width = container.offsetWidth
+      const height = container.offsetHeight
       // console.log('container w, h: ', width, height)
 
       this.stageSize.width = width

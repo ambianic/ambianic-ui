@@ -28,29 +28,49 @@
             >
               <v-img
                 v-if="sample.args.thumbnail_file_name"
-                :src="imagePath(sample.args.rel_dir, sample.args.thumbnail_file_name)"
+                :src="imageURL[index]"
                 class="white--text align-start"
                 alt="Object Detection"
                 contain
+                @load='setImageLoaded(index)'
               >
-                <detection-boxes
-                  :detections="sample.args.inference_result"
-                  :tensor_image_size="sample.args.inference_meta.tensor_image_size"
-                />
-                <v-avatar
-                  :color="eventColor(sample)"
-                  size="62"
-                  left
-                  align="top"
-                  class="font-weight-regular pa-4 ma-6 see-thru"
+                <v-row
+                  class="fill-height ma-0"
+                  align="start"
+                  justify="start"
                 >
-                  <v-icon
-                    dark
-                    large
+                  <template v-slot:placeholder>
+                    <v-row
+                      class="fill-height ma-0"
+                      align="center"
+                      justify="center"
+                    >
+                      <v-progress-circular indeterminate color="info lighten-2"></v-progress-circular>
+                    </v-row>
+                  </template>
+                  <template
+                    v-if="isImageLoaded[index]"
                   >
-                    {{ eventIcon(sample) }}
-                  </v-icon>
-                </v-avatar>
+                    <detection-boxes
+                      :detections="sample.args.inference_result"
+                      :tensor_image_size="sample.args.inference_meta.tensor_image_size"
+                    />
+                    <v-avatar
+                      :color="eventColor(sample)"
+                      size="62"
+                      left
+                      align="top"
+                      class="font-weight-regular pa-4 ma-6 see-thru"
+                    >
+                      <v-icon
+                        dark
+                        large
+                      >
+                        {{ eventIcon(sample) }}
+                      </v-icon>
+                    </v-avatar>
+                  </template>
+                </v-row>
               </v-img>
               <v-timeline
                 align-top
@@ -66,12 +86,11 @@
                   >
                     <v-col cols="7">
                       <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
+                        <template>
                           <v-btn
                             fab
                             color="success lighten-2"
                             class="mx-2"
-                            v-on="on"
                           >
                             <v-icon>mdi-check</v-icon>
                           </v-btn>
@@ -79,12 +98,11 @@
                         <span>Looks fine</span>
                       </v-tooltip>
                       <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
+                        <template>
                           <v-btn
                             color="error lighten-2"
                             fab
                             class="mx-2"
-                            v-on="on"
                           >
                             <v-icon>mdi-bell</v-icon>
                           </v-btn>
@@ -94,10 +112,9 @@
                     </v-col>
                     <v-col cols="1">
                       <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
+                        <template>
                           <v-btn
                             icon
-                            v-on="on"
                           >
                             <v-icon>mdi-heart</v-icon>
                           </v-btn>
@@ -105,10 +122,9 @@
                         <span>Save to Favorites</span>
                       </v-tooltip>
                       <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
+                        <template>
                           <v-btn
                             icon
-                            v-on="on"
                           >
                             <v-icon>mdi-pen</v-icon>
                           </v-btn>
@@ -116,10 +132,9 @@
                         <span>Edit event details</span>
                       </v-tooltip>
                       <v-tooltip bottom>
-                        <template v-slot:activator="{ on }">
+                        <template>
                           <v-btn
                             icon
-                            v-on="on"
                           >
                             <v-icon>mdi-share-variant</v-icon>
                           </v-btn>
@@ -194,20 +209,18 @@
 <script>
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import InfiniteLoading from 'vue-infinite-loading'
-import axios from 'axios'
-import ambianicConf from '../../config.js'
 import DetectionBoxes from '../components/DetectionBoxes.vue'
 import AppFrame from '@/components/AppFrame.vue'
+import { getTimelinePage, getImageURL } from '@/remote/edgeAPI'
 
-const API_ROOT = ambianicConf['AMBIANIC_API_URI']
-const API_TIMELINE_PATH = API_ROOT + 'timeline.json'
 const PAGE_SIZE = 5
-// console.debug('API_TIMELINE_PATH: ' + API_TIMELINE_PATH)
 
 export default {
   data () {
     return {
       timeline: [],
+      imageURL: [],
+      isImageLoaded: [],
       on: true
     }
   },
@@ -220,18 +233,18 @@ export default {
     InfiniteLoading
   },
   methods: {
-    imagePath (relDir, imageName) {
-      let p = API_ROOT + 'data/' + relDir + '/' + imageName
-      // console.debug('imagePath: ' + p)
-      return p
+    setImageLoaded (index) {
+      this.$set(this.isImageLoaded, index, true)
+      // eslint-disable-next-line
+      // console.log(`isImageLoaded[${index}]: ${this.isImageLoaded[index]}`)
+    },
+    updateImageURL (relDir, fileName, index) {
+      getImageURL(relDir, fileName).then(fullImageURL => {
+        this.$set(this.imageURL, index, fullImageURL)
+      })
     },
     getTimelineSlice () {
-      const api = API_TIMELINE_PATH
-      return axios.get(api, {
-        params: {
-          page: this.timeline.length / PAGE_SIZE + 1
-        }
-      })
+      return getTimelinePage(this.timeline.length / PAGE_SIZE + 1)
     },
     infiniteHandler ($state) {
       this.getTimelineSlice().then(({ data }) => {
@@ -241,6 +254,14 @@ export default {
           console.log('new timeline events: ', data.timeline.length)
           // eslint-disable-next-line
           // console.log('timeline slice: ' + JSON.stringify(data.timeline))
+          const startIndex = this.timeline.length
+          // update full image URLs
+          data.timeline.map(
+            (sample, index) =>
+              this.updateImageURL(sample.args.rel_dir,
+                sample.args.thumbnail_file_name,
+                startIndex + index)
+          )
           this.timeline = this.timeline.concat(data.timeline)
           $state.loaded()
           if (this.timeline.length / PAGE_SIZE === 10) {
@@ -280,7 +301,7 @@ export default {
     },
     eventIcon (event) {
       let topLabel = 'none'
-      let inf = event.args.inference_result
+      const inf = event.args.inference_result
       if (inf.length > 0) {
         topLabel = inf[0].label
       }
@@ -313,7 +334,7 @@ export default {
       return moment(datetime).calendar()
     },
     asPercentage (number) {
-      let p = Number(number).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 })
+      const p = Number(number).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 })
       return p
     }
   }
