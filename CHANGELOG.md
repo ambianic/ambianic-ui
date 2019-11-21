@@ -1,5 +1,13 @@
 # Semantic Versioning Changelog
 
+## [1.10.1](https://github.com/ambianic/ambianic-ui/compare/v1.10.0...v1.10.1) (2019-11-21)
+
+
+### Bug Fixes
+
+* cover key PWA requirements, close [#101](https://github.com/ambianic/ambianic-ui/issues/101) ([05e3029](https://github.com/ambianic/ambianic-ui/commit/05e3029))
+* multiple cosmetic fixes ([c3e71d0](https://github.com/ambianic/ambianic-ui/commit/c3e71d0))
+
 # [1.10.0](https://github.com/ambianic/ambianic-ui/compare/v1.9.0...v1.10.0) (2019-11-20)
 
 
