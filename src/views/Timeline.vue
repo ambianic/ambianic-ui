@@ -86,8 +86,9 @@
                   >
                     <v-col cols="7">
                       <v-tooltip bottom>
-                        <template>
+                        <template v-slot:activator="{ on }">
                           <v-btn
+                            v-on="on"
                             fab
                             color="success lighten-2"
                             class="mx-2"
@@ -98,8 +99,9 @@
                         <span>Looks fine</span>
                       </v-tooltip>
                       <v-tooltip bottom>
-                        <template>
+                        <template v-slot:activator="{ on }">
                           <v-btn
+                            v-on="on"
                             color="error lighten-2"
                             fab
                             class="mx-2"
@@ -112,9 +114,10 @@
                     </v-col>
                     <v-col cols="1">
                       <v-tooltip bottom>
-                        <template>
+                        <template v-slot:activator="{ on }">
                           <v-btn
                             icon
+                            v-on="on"
                           >
                             <v-icon>mdi-heart</v-icon>
                           </v-btn>
@@ -122,9 +125,10 @@
                         <span>Save to Favorites</span>
                       </v-tooltip>
                       <v-tooltip bottom>
-                        <template>
+                        <template v-slot:activator="{ on }">
                           <v-btn
                             icon
+                            v-on="on"
                           >
                             <v-icon>mdi-pen</v-icon>
                           </v-btn>
@@ -132,9 +136,10 @@
                         <span>Edit event details</span>
                       </v-tooltip>
                       <v-tooltip bottom>
-                        <template>
+                        <template v-slot:activator="{ on }">
                           <v-btn
                             icon
+                            v-on="on"
                           >
                             <v-icon>mdi-share-variant</v-icon>
                           </v-btn>
