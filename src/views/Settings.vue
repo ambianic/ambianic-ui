@@ -1,8 +1,8 @@
 <template>
   <app-frame>
     <v-row
-      align="center"
-      justify="center"
+      align="start"
+      justify="space-around"
     >
       <v-card>
         <v-card-title class="grey darken-2">

@@ -37,6 +37,14 @@ const routes = [
     component: () => import(/* webpackChunkName: "flows" */ '../views/Flows.vue')
   },
   {
+    path: '/edge-connect',
+    name: 'edge-connect',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "edge-connect" */ '../views/EdgeConnect.vue')
+  },
+  {
     path: '/settings',
     name: 'settings',
     // route level code-splitting

@@ -1,19 +1,43 @@
 <template>
   <app-frame>
     <v-row
-      align="center"
-      align-content="center"
-      justify="center"
-      no-gutters
-      style="max-width: 420px;"
-      class="pa-0 ma-0"
+      align="start"
+      justify="space-around"
     >
       <v-col
+        style="max-width: 420px;"
         align="center"
         justify="center"
         cols="12"
         class="pa-0 ma-0 fill-height"
       >
+        <v-card
+          class="mx-auto"
+          outlined
+        >
+          <v-card-title>
+            <v-icon
+                  slot="icon"
+                  color="warning"
+                  size="36"
+                >
+                  mdi-timeline-alert-outline
+            </v-icon>
+            <span class="title font-weight-light mx-10">Your Home Timeline</span>
+          </v-card-title>
+
+          <v-card-text>
+            This is where your home timeline will show,
+            but we need to set it up first.
+            Below is just some sample data.
+            Let's connect to your Ambianic Edge device
+            and pull real timeline data.
+          </v-card-text>
+
+          <v-card-actions>
+            <v-btn text>Connection Settings</v-btn>
+          </v-card-actions>
+        </v-card>
         <v-list
           dense
           class="pa-0 ma-0"
@@ -256,7 +280,7 @@ export default {
         // Are there any more timeline events left?
         if (data && data.timeline && data.timeline.length) {
           // eslint-disable-next-line
-          console.log('new timeline events: ', data.timeline.length)
+          // console.debug('new timeline events: ', data.timeline.length)
           // eslint-disable-next-line
           // console.log('timeline slice: ' + JSON.stringify(data.timeline))
           const startIndex = this.timeline.length
