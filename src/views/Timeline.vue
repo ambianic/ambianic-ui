@@ -17,13 +17,13 @@
         >
           <v-card-title>
             <v-icon
-                  slot="icon"
-                  color="warning"
-                  size="36"
-                >
-                  mdi-timeline-alert-outline
+              slot="icon"
+              color="warning"
+              size="36"
+            >
+              mdi-timeline-alert-outline
             </v-icon>
-            <span class="title font-weight-light mx-10">Your Home Timeline</span>
+            <span class="title font-weight-light mx-10">Setup Home Timeline</span>
           </v-card-title>
 
           <v-card-text>
@@ -31,11 +31,16 @@
             but we need to set it up first.
             Below is just some sample data.
             Let's connect to your Ambianic Edge device
-            and pull real timeline data.
+            and pull real data.
           </v-card-text>
 
           <v-card-actions>
-            <v-btn text>Connection Settings</v-btn>
+            <v-btn
+              text
+              to="/edge-connect"
+            >
+              Connection Settings
+            </v-btn>
           </v-card-actions>
         </v-card>
         <v-list
@@ -56,7 +61,7 @@
                 class="white--text align-start"
                 alt="Object Detection"
                 contain
-                @load='setImageLoaded(index)'
+                @load="setImageLoaded(index)"
               >
                 <v-row
                   class="fill-height ma-0"
@@ -69,7 +74,10 @@
                       align="center"
                       justify="center"
                     >
-                      <v-progress-circular indeterminate color="info lighten-2"></v-progress-circular>
+                      <v-progress-circular
+                        indeterminate
+                        color="info lighten-2"
+                      />
                     </v-row>
                   </template>
                   <template

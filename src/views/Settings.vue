@@ -90,7 +90,7 @@
               <v-layout
                 align-center
                 justify-center
-                >
+              >
                 <v-chip
                   class="ma-2"
                   :color="statusColor"

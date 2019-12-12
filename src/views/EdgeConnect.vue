@@ -5,6 +5,7 @@
       justify="space-around"
     >
       <v-col
+        v-if="!isEdgeConnected"
         style="max-width: 420px;"
         align="center"
         justify="center"
@@ -13,65 +14,109 @@
       >
         <v-banner two-line>
           <v-icon
-                slot="icon"
-                color="warning"
-                size="36"
-              >
-                mdi-wifi-strength-alert-outline
+            slot="icon"
+            color="warning"
+            size="36"
+          >
+            mdi-wifi-strength-alert-outline
           </v-icon>
 
           Let's connect to your Ambianic Edge device.
           Make sure its running and has Internet access.
-
         </v-banner>
-        <v-stepper v-model="e6" vertical>
-            <v-stepper-step :complete="e6 > 1" step="1">
-              Discover
-              <small>Looking for your Ambianic Edge device</small>
-            </v-stepper-step>
+        <v-stepper
+          v-model="e6"
+          vertical
+        >
+          <v-stepper-step
+            :complete="e6 > 1"
+            step="1"
+          >
+            Discover
+            <small>Looking for your Ambianic Edge device</small>
+          </v-stepper-step>
 
-            <v-stepper-content step="1">
-              <v-progress-circular
-                :rotate="360"
-                :size="100"
-                :width="15"
-                :value="discoveryProgressValue"
-                color="teal"
-              >
-                {{ discoveryProgressValue }}
-              </v-progress-circular>
-            </v-stepper-content>
+          <v-stepper-content step="1">
+            <v-progress-circular
+              :rotate="360"
+              :size="100"
+              :width="15"
+              :value="discoveryProgressValue"
+              color="teal"
+            >
+              {{ discoveryProgressValue }}
+            </v-progress-circular>
+          </v-stepper-content>
 
-            <v-stepper-step :complete="e6 > 2" step="2">
-              Authenticate
-              <small>Establish secure direct connection</small>
-            </v-stepper-step>
+          <v-stepper-step
+            :complete="e6 > 2"
+            step="2"
+          >
+            Authenticate
+            <small>Establish secure direct connection</small>
+          </v-stepper-step>
 
-            <v-stepper-content step="2">
-              <v-card color="grey lighten-1" class="mb-12" height="200px"></v-card>
-              <v-btn color="primary" @click="e6 = 3">Continue</v-btn>
-              <v-btn text>Cancel</v-btn>
-            </v-stepper-content>
+          <v-stepper-content step="2">
+            <v-card
+              color="grey lighten-1"
+              class="mb-12"
+              height="200px"
+            />
+            <v-btn
+              color="primary"
+              @click="e6 = 3"
+            >
+              Continue
+            </v-btn>
+            <v-btn text>
+              Cancel
+            </v-btn>
+          </v-stepper-content>
 
-            <v-stepper-step :complete="e6 > 3" step="3">
-              Test
-              <small>Check connection quality</small>
-            </v-stepper-step>
+          <v-stepper-step
+            :complete="e6 > 3"
+            step="3"
+          >
+            Test
+            <small>Check connection quality</small>
+          </v-stepper-step>
 
-            <v-stepper-content step="3">
-              <v-card color="grey lighten-1" class="mb-12" height="200px"></v-card>
-              <v-btn color="primary" @click="e6 = 4">Continue</v-btn>
-              <v-btn text>Cancel</v-btn>
-            </v-stepper-content>
+          <v-stepper-content step="3">
+            <v-card
+              color="grey lighten-1"
+              class="mb-12"
+              height="200px"
+            />
+            <v-btn
+              color="primary"
+              @click="e6 = 4"
+            >
+              Continue
+            </v-btn>
+            <v-btn text>
+              Cancel
+            </v-btn>
+          </v-stepper-content>
 
-            <v-stepper-step step="4">
-              Done
-            </v-stepper-step>
-            <v-stepper-content step="4">
-              <v-card color="grey lighten-1" class="mb-12" height="200px"></v-card>
-              <v-btn color="primary" @click="e6 = 1">Continue</v-btn>
-              <v-btn text>Cancel</v-btn>
-            </v-stepper-content>
+          <v-stepper-step step="4">
+            Done
+          </v-stepper-step>
+          <v-stepper-content step="4">
+            <v-card
+              color="grey lighten-1"
+              class="mb-12"
+              height="200px"
+            />
+            <v-btn
+              color="primary"
+              @click="e6 = 1"
+            >
+              Continue
+            </v-btn>
+            <v-btn text>
+              Cancel
+            </v-btn>
+          </v-stepper-content>
         </v-stepper>
       </v-col>
     </v-row>
@@ -81,18 +126,26 @@
 import AppFrame from '@/components/AppFrame.vue'
 import { settingsDB } from '@/store/db'
 import { testConnection, EdgeConnectionStatus } from '@/remote/edgeAPI'
+import { mapState } from 'vuex'
+
 export default {
-  data () {
+  data: function () {
     return {
       edgeAddress: '',
       connectionStatus: '',
       connectionTip: '',
       testInProgress: false,
-      testDone: false,
+      testDone: true,
       statusColor: 'info',
       e6: 0,
       discoveryProgressValue: 0
     }
+  },
+  computed: {
+    ...mapState([
+      // map this.edgeConnected to this.$store.state.edgeConnected
+      'isEdgeConnected'
+    ])
   },
   components: {
     AppFrame

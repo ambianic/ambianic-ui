@@ -30,38 +30,38 @@
                 </v-avatar>
                 <v-text-field
                   placeholder="Name"
-                ></v-text-field>
+                />
               </v-layout>
             </v-flex>
             <v-flex xs6>
               <v-text-field
                 prepend-icon="business"
                 placeholder="Company"
-              ></v-text-field>
+              />
             </v-flex>
             <v-flex xs6>
               <v-text-field
                 placeholder="Job title"
-              ></v-text-field>
+              />
             </v-flex>
             <v-flex xs12>
               <v-text-field
                 prepend-icon="mail"
                 placeholder="Email"
-              ></v-text-field>
+              />
             </v-flex>
             <v-flex xs12>
               <v-text-field
                 type="tel"
                 prepend-icon="phone"
                 placeholder="(000) 000 - 0000"
-              ></v-text-field>
+              />
             </v-flex>
             <v-flex xs12>
               <v-text-field
                 prepend-icon="notes"
                 placeholder="Notes"
-              ></v-text-field>
+              />
             </v-flex>
           </v-layout>
         </v-container>
@@ -69,17 +69,23 @@
           <v-btn
             text
             color="primary"
-          >More</v-btn>
-          <v-spacer></v-spacer>
+          >
+            More
+          </v-btn>
+          <v-spacer />
           <v-btn
             text
             color="primary"
             @click="dialog = false"
-          >Cancel</v-btn>
+          >
+            Cancel
+          </v-btn>
           <v-btn
             text
             @click="dialog = false"
-          >Save</v-btn>
+          >
+            Save
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-row>
