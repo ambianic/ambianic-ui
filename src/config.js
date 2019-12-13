@@ -5,5 +5,5 @@ export const ambianicConf = {
   AMBIANIC_API_FALLBACK_URI: '/sample-data/',
   AMBIANIC_API_PORT: 8778,
   AMBIANIC_API_ROOT: '/api/',
-  AMBIANIC_PNP_SERVICE: 'https://ambianic-pnp.herokuapp.com'
+  AMBIANIC_PNP_HOST: 'ambianic-pnp.herokuapp.com'
 }

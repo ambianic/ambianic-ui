@@ -8,45 +8,8 @@ let lastPeerId = null
 let peer = null // own peer object
 let conn = null
 
-/**
-* Create the Peer object for our end of the connection.
-*
-* Sets up callbacks that handle any events related to our
-* peer object.
-*/
-function initialize () {
-  // Create own peer object with connection to shared PeerJS server
-  peer = new Peer(null, {
-    debug: 2
-  })
-  peer.on('open', function (id) {
-    // Workaround for peer.reconnect deleting previous id
-    if (peer.id === null) {
-      console.log('Received null id from peer open')
-      peer.id = lastPeerId
-    } else {
-      lastPeerId = peer.id
-    }
-    console.log('ID: ' + peer.id)
-  })
-  peer.on('disconnected', function () {
-    status.innerHTML = 'Connection lost. Please reconnect'
-    console.log('Connection lost. Please reconnect')
-    // Workaround for peer.reconnect deleting previous id
-    peer.id = lastPeerId
-    peer._lastServerId = lastPeerId
-    peer.reconnect()
-  })
-  peer.on('close', function() {
-     conn = null
-     status.innerHTML = 'Connection destroyed. Please refresh'
-     console.log('Connection destroyed')
-  })
-  peer.on('error', function (err) {
-     console.log(err)
-     alert('' + err)
-  })
-}
+
+
 /**
 * Create the connection between the two Peers.
 *
@@ -54,29 +17,7 @@ function initialize () {
 * connection and data received on it.
 */
 function join() {
-   // Close old connection
-   if (conn) {
-       conn.close()
-   }
-   // Create connection to destination peer specified in the input field
-   conn = peer.connect(recvIdInput.value, {
-       reliable: true
-   })
-   conn.on('open', function () {
-       status.innerHTML = 'Connected to: ' + conn.peer
-       console.log('Connected to: ' + conn.peer)
-       // Check URL params for comamnds that should be sent immediately
-       var command = getUrlParam('command')
-       if (command)
-           conn.send(command)
-   })
-   // Handle incoming data (messages only since this is the signal sender)
-   conn.on('data', function (data) {
-       addMessage('<span class=\'peerMsg\'>Peer:</span> ' + data)
-   })
-   conn.on('close', function () {
-       status.innerHTML = 'Connection closed'
-   })
+
 }
 /**
 * Get first 'GET style' parameter from href.
@@ -101,7 +42,7 @@ function getUrlParam(name) {
 function signal(sigName) {
    if (conn.open) {
        conn.send(sigName)
-       console.log(sigName + ' signal sent')
+       console.log('pnpRemote', sigName, ' signal sent')
        addMessage(cueString + sigName)
    }
 }

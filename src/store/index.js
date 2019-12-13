@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import PNPStore from './pnpStore.js'
+import PNPStore from './pnp'
+import { PNP_SERVICE_CONNECT } from './action-types.js'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: {
     isPNPInitialized: false,
     isEdgeConnected: false,
@@ -18,3 +19,10 @@ export default new Vuex.Store({
     pnp: PNPStore
   }
 })
+
+/**
+  Begin connection attempt to Ambianic Edge as soon as the app is created
+*/
+store.dispatch(PNP_SERVICE_CONNECT)
+
+export default store
