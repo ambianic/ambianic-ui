@@ -10,7 +10,6 @@ import {
   PNP_SERVICE_CONNECTING,
   PNP_SERVICE_CONNECTED,
   USER_MESSAGE,
-  LAST_PEER_ID,
   NEW_PEER_ID
 } from '../mutation-types.js'
 import {
@@ -18,7 +17,7 @@ import {
   PNP_SERVICE_CONNECT
 } from '../action-types.js'
 import { ambianicConf } from '@/config'
-const STORAGE_KEY = 'ambianic-pnp'
+const STORAGE_KEY = 'ambianic-pnp-settings'
 
 /**
   Reference to the PeerJS instance active
@@ -29,21 +28,25 @@ let conn = null
 
 const state = {
   /**
-    settings store persistent infromation such as
-    ???
-  */
-  settings: JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '{}'),
-  /**
     Reference to the ID of the PeerJS instance active
-    in the current application.
+    in the current application. Persisted in browser localStorage.
   */
-  peerID: String,
-  lastPeerId: String,
+  myPeerId: window.localStorage.getItem(`${STORAGE_KEY}.myPeerId`),
   /**
     Reference to the ID of the remote PeerJS instance
     as registered with the PnP service.
   */
-  remotePeerID: String,
+  remotePeerId: window.localStorage.getItem(`${STORAGE_KEY}.remotePeerId`),
+  /**
+    Helper reference to the ID of the PeerJS instance active
+    in the current application.
+  */
+  lastPeerId: String,
+  /**
+    Reference to the ID of the room where peers in the same LAN
+    with shared public IP can find each other.
+  */
+  roomID: String,
   /**
     Connection status message for user to see
   */
@@ -80,12 +83,9 @@ const mutations = {
   [USER_MESSAGE] (state, newUserMessage) {
     state.userMessage = newUserMessage
   },
-  [LAST_PEER_ID] (state, lastPeerId) {
-    state.lastPeerId = lastPeerId
-  },
   [NEW_PEER_ID] (state, newPeerId) {
-    state.peerID = newPeerId
-    peer.id = newPeerId
+    state.myPeerId = newPeerId
+    window.localStorage.setItem(`${STORAGE_KEY}.myPeerId`, newPeerId)
   }
 }
 
@@ -120,32 +120,41 @@ const actions = {
   [PNP_SERVICE_CONNECT] ({ state, commit }) {
     // Create own peer object with connection to shared PeerJS server
     console.log('pnpRemote: creating peer')
-    peer = new Peer(null, {
+    // If we already have an assigned peerId, we will reuse it forever.
+    // We expect that peerId is crypto secure. No need to replace.
+    // Unless the user explicitly requests a refresh.
+    console.log('pnpRemote: last saved myPeerId', state.myPeerId)
+    peer = new Peer(state.myPeerId, {
       host: ambianicConf.AMBIANIC_PNP_HOST,
       secure: true,
       debug: 2
     })
     console.log('pnpRemote: peer created')
-    state.wrtcPeer = peer
     peer.on('open', function (id) {
       commit(PNP_SERVICE_CONNECTED)
       // Workaround for peer.reconnect deleting previous id
       if (peer.id === null) {
         console.log('pnpRemote: Received null id from peer open')
-        commit(NEW_PEER_ID, state.lastPeerId)
+        peer.id = state.myPeerId
       } else {
-        commit(LAST_PEER_ID, peer.id)
+        if (state.myPeerId !== peer.id) {
+          console.log(
+            'pnpRemote: Service returned new peerId. Old, New',
+            state.myPeerId,
+            peer.id
+          )
+          commit(NEW_PEER_ID, peer.id)
+        }
       }
-      console.log('pnpRemote: my new peer ID: ', peer.id)
+      console.log('pnpRemote: myPeerId: ', peer.id)
     })
     peer.on('disconnected', function () {
       commit(PNP_SERVICE_DISCONNECTED)
       commit(USER_MESSAGE, 'PnP service connection lost. Please check your internet connection.')
-      commit(PNP_SERVICE_DISCONNECTED)
       console.log('pnpRemote: Connection lost. Please reconnect')
       // Workaround for peer.reconnect deleting previous id
-      commit(NEW_PEER_ID, state.lastPeerId)
-      peer._lastServerId = state.lastPeerId
+      peer.id = state.myPeerId
+      peer._lastServerId = state.myPeerId
       commit(PNP_SERVICE_CONNECTING)
       peer.reconnect()
     })
@@ -153,6 +162,7 @@ const actions = {
       conn = null
       commit(USER_MESSAGE, 'PnP service connection destroyed. Please refresh')
       console.log('pnpRemote: Connection destroyed')
+      commit(PNP_SERVICE_DISCONNECTED)
     })
     peer.on('error', function (err) {
       console.log('pnpRemote', err)
@@ -160,7 +170,9 @@ const actions = {
     })
     // remote peer tries to initiate connection
     peer.on('connection', function (conn) {
+      console.log('remote peer trying to establish connection')
       setPeerConnectionHandlers(conn, state, commit)
+      commit(PEER_CONNECTING)
     })
   },
   /**
@@ -177,7 +189,7 @@ const actions = {
     commit(PEER_DISCONNECTED)
     // Create connection to remote peer
     commit(PEER_CONNECTING)
-    conn = peer.connect(state.remotePeerID, {
+    conn = peer.connect(state.remotePeerId, {
       reliable: true
     })
     setPeerConnectionHandlers(conn, state, commit)
@@ -203,7 +215,7 @@ const actions = {
         //     look for remote peer ID in my peer room
         //     if remote peer ID found in room
         //       store new peer ID
-                 commit(SET_REMOTE_PEER_ID, newRemotePeerID)
+                 commit(SET_REMOTE_PEER_ID, newRemotePeerId)
         //       await try to connect to remote peer ID
         //       if that worked, commit connected state and return
                    commit(PEER_CONNECTED)
@@ -221,7 +233,7 @@ const actions = {
               // reuse my peer ID if possible
               //   if not possible, get me a new peer ID
                      // store my newly acquired peer ID
-                     commit(SET_MY_PEER_ID, myNewPeerID)
+                     commit(SET_MY_PEER_ID, myNewPeerId)
               // if PNP service connection succeeded and I have an active peer ID
               //     commit the new state change
                      commit(PNP_SERVICE_CONNECTED)
@@ -229,7 +241,7 @@ const actions = {
                      commit(SET_MY_ROOM_ID, myNewRoomID)
                      // look for remote peer ID
                      // if found, save it
-                        commit(SET_REMOTE_PEER_ID, newRemotePeerID)
+                        commit(SET_REMOTE_PEER_ID, newRemotePeerId)
                         // then try to connect to remote peer
                         // if that worked, commit state change and return
                               commit(PEER_CONNECTED)
@@ -254,20 +266,10 @@ const actions = {
   }
 }
 
-/**
-Persist in local browser storage each time pnp settings change
-*/
-const plugins = [store => {
-  store.subscribe((mutation, { settings }) => {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(settings))
-  })
-}]
-
 const pnpStoreModule = {
   state,
   mutations,
-  actions,
-  plugins
+  actions
 }
 
 export default pnpStoreModule
