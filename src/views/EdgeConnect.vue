@@ -20,7 +20,6 @@
           >
             mdi-wifi-strength-alert-outline
           </v-icon>
-
           Let's connect to your Ambianic Edge device.
           Make sure its running and has Internet access.
         </v-banner>
@@ -31,21 +30,29 @@
           <v-stepper-step
             :complete="e6 > 1"
             step="1"
+            :rules="[() => true]"
           >
             Discover
             <small>Looking for your Ambianic Edge device</small>
           </v-stepper-step>
 
           <v-stepper-content step="1">
-            <v-progress-circular
-              :rotate="360"
-              :size="100"
-              :width="15"
-              :value="discoveryProgressValue"
-              color="teal"
+            <v-progress-linear
+              color="info"
+              indeterminate
+              :size="50"
+              :width="7"
             >
-              {{ discoveryProgressValue }}
-            </v-progress-circular>
+            </v-progress-linear>
+            <v-alert
+              v-if="this.$store.state.pnp.userMessage"
+              outlined
+              type="warning"
+              class="mt-5"
+              dense
+            >
+              {{ this.$store.state.pnp.userMessage }}
+            </v-alert>
           </v-stepper-content>
 
           <v-stepper-step
