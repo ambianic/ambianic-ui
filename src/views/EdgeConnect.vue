@@ -12,7 +12,10 @@
         cols="12"
         class="pa-0 ma-0 fill-height"
       >
-        <v-banner two-line>
+        <v-banner
+          two-line
+          class="text-left"
+        >
           <v-icon
             slot="icon"
             color="warning"
@@ -48,11 +51,12 @@
               v-if="this.$store.state.pnp.userMessage"
               outlined
               type="warning"
-              class="mt-5"
+              class="mt-5 text-left"
               dense
             >
               {{ this.$store.state.pnp.userMessage }}
             </v-alert>
+
           </v-stepper-content>
 
           <v-stepper-step
@@ -134,6 +138,7 @@ import AppFrame from '@/components/AppFrame.vue'
 import { settingsDB } from '@/store/db'
 import { testConnection, EdgeConnectionStatus } from '@/remote/edgeAPI'
 import { mapState } from 'vuex'
+import { PEER_CONNECTION_ERROR } from '@/store/mutation-types'
 
 export default {
   data: function () {
@@ -149,7 +154,12 @@ export default {
     }
   },
   computed: {
+    peerConnectionError: function () {
+      console.log('this.$store.state.pnp.peerConnectionStatus', this.$store.state.pnp.peerConnectionStatus)
+      return this.$store.state.pnp.peerConnectionStatus === PEER_CONNECTION_ERROR
+    },
     ...mapState([
+      'peerConnectionStatus',
       // map this.edgeConnected to this.$store.state.edgeConnected
       'isEdgeConnected'
     ])

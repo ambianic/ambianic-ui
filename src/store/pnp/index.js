@@ -1,11 +1,11 @@
 /**
   Manage plug and play connection status to Ambianic Edge.
 */
-import Peer from 'peerjs'
 import {
   PEER_DISCONNECTED,
   PEER_CONNECTING,
   PEER_CONNECTED,
+  PEER_CONNECTION_ERROR,
   PNP_SERVICE_DISCONNECTED,
   PNP_SERVICE_CONNECTING,
   PNP_SERVICE_CONNECTED,
@@ -19,6 +19,8 @@ import {
   PEER_CONNECT
 } from '../action-types.js'
 import { ambianicConf } from '@/config'
+import Peer from 'peerjs'
+import { PeerRoom } from '@/remote/pnp'
 const STORAGE_KEY = 'ambianic-pnp-settings'
 
 /**
@@ -45,11 +47,6 @@ const state = {
   */
   lastPeerId: String,
   /**
-    Reference to the ID of the room where peers in the same LAN
-    with shared public IP can find each other.
-  */
-  roomID: String,
-  /**
     Connection status message for user to see
   */
   userMessage: '',
@@ -72,6 +69,9 @@ const mutations = {
   },
   [PEER_CONNECTED] (state) {
     state.peerConnectionStatus = PEER_CONNECTED
+  },
+  [PEER_CONNECTION_ERROR] (state) {
+    state.peerConnectionStatus = PEER_CONNECTION_ERROR
   },
   [PNP_SERVICE_DISCONNECTED] (state) {
     state.pnpServiceConnectionStatus = PNP_SERVICE_DISCONNECTED
@@ -105,13 +105,13 @@ const mutations = {
 async function discoverRemotePeerId ({ peer, state, commit }) {
   if (!state.remotePeerId) {
     // first try to find the remote peer ID in the same room
-    //    const roomId = await peer.getRoomId()
-    //    await peer.joinRoom(roomId)
-    const peerIds = [] // await peer.getRoomMembers()
+    const myRoom = new PeerRoom(peer)
+    console.log('Fetching room members', myRoom)
+    const peerIds = [] // await myRoom.getRoomMembers()
+    console.log('myRoom members', peerIds)
     const remotePeerId = peerIds.find(
       pid => pid !== state.myPeerId)
     if (remotePeerId) {
-      commit(NEW_REMOTE_PEER_ID, remotePeerId)
       return remotePeerId
     } else {
       // unable to auto discover
@@ -121,10 +121,13 @@ async function discoverRemotePeerId ({ peer, state, commit }) {
          Please make sure you are are on the same local network.
         `)
     }
+  } else {
+    return state.remotePeerId
   }
 }
 
-function setPnPServiceConnectionHandlers ({ peer, state, commit }) {
+function setPnPServiceConnectionHandlers (
+  { peer, state, commit, dispatch }) {
   peer.on('open', function (id) {
     commit(PNP_SERVICE_CONNECTED)
     // Workaround for peer.reconnect deleting previous id
@@ -164,7 +167,16 @@ function setPnPServiceConnectionHandlers ({ peer, state, commit }) {
   })
   peer.on('error', function (err) {
     console.log('pnpService', err)
-    commit(USER_MESSAGE, `PnP service connection error: ${err}`)
+    commit(USER_MESSAGE,
+      `
+      Still looking...Is the edge device connected?
+      `)
+    commit(PEER_CONNECTION_ERROR)
+    console.log('peerConnectionStatus', state.peerConnectionStatus)
+    // retry peer connection in a few seconds
+    setTimeout(() => {
+      dispatch(PEER_CONNECT)
+    }, 3000)
   })
   // remote peer tries to initiate connection
   peer.on('connection', function (peerConnection) {
@@ -179,6 +191,7 @@ function setPeerConnectionHandlers ({ peerConnection, state, commit }) {
     commit(PEER_CONNECTED)
     commit(USER_MESSAGE, `Connected to: ${peerConnection.peer}`)
     console.log('pnpService: Connected to: ', peerConnection.peer)
+    commit(NEW_REMOTE_PEER_ID, peerConnection.peer.id)
     // Check URL params for commands that should be sent immediately
     // var command = getUrlParam('command')
     // if (command)
@@ -209,7 +222,7 @@ const actions = {
   * Set up callbacks to handle any events related to our
   * peer object.
   */
-  async [PNP_SERVICE_CONNECT] ({ state, commit }) {
+  async [PNP_SERVICE_CONNECT] ({ state, commit, dispatch }) {
     // if connection to pnp service already open, then nothing to do
     if (peer && peer.open) return
     // Create own peer object with connection to shared PeerJS server
@@ -220,11 +233,12 @@ const actions = {
     console.log('pnpService: last saved myPeerId', state.myPeerId)
     peer = new Peer(state.myPeerId, {
       host: ambianicConf.AMBIANIC_PNP_HOST,
-      secure: true,
+      port: ambianicConf.AMBIANIC_PNP_PORT,
+      secure: ambianicConf.AMBIANIC_PNP_SECURE,
       debug: 2
     })
     console.log('pnpService: peer created')
-    setPnPServiceConnectionHandlers({ peer, state, commit })
+    setPnPServiceConnectionHandlers({ peer, state, commit, dispatch })
   },
   /**
   * Create the connection between the two Peers.
@@ -239,21 +253,23 @@ const actions = {
     //   peerConnection.close()
     // }
     // Create connection to remote peer
-    commit(PEER_CONNECTING)
     // we need to have a remote peer Id to proceed
     const discoverLoopId = setInterval(async () => {
       // start a discovery loop
+      console.log('Discovering remote peer...')
       const remotePeerId = await discoverRemotePeerId({ peer, state, commit })
       if (remotePeerId) {
+        console.log('Remote peer Id found', remotePeerId)
         // stop discovery loop as soon as remote peer ID is found
         clearInterval(discoverLoopId)
+        console.log('Connecting to remote peer', remotePeerId)
+        // Remote peer ID found. Connect.
+        const peerConnection = peer.connect(state.remotePeerId, {
+          reliable: true
+        })
+        setPeerConnectionHandlers({ peerConnection, state, commit })
       }
     }, 3000) // repeat discovery loop every 2 seconds
-    // Remote peer ID found. Connect.
-    const peerConnection = peer.connect(state.remotePeerId, {
-      reliable: true
-    })
-    setPeerConnectionHandlers({ peerConnection, state, commit })
   }
 }
 
