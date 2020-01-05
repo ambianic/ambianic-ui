@@ -83,3 +83,7 @@ If you have questions, ideas or cool projects you'd like to share with the Ambia
 
 This project's initial version was inspired by
 [David Garoro](https://github.com/davidgaroro)'s [PWA example](https://github.com/davidgaroro/vuetify-todo-pwa).
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fambianic%2Fambianic-ui.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fambianic%2Fambianic-ui?ref=badge_large)
