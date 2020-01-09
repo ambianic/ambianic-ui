@@ -91,8 +91,8 @@ const mutations = {
     window.localStorage.setItem(`${STORAGE_KEY}.myPeerId`, newPeerId)
   },
   [NEW_REMOTE_PEER_ID] (state, newRemotePeerId) {
-    state.remotePeerId = newRemotePeerId
-    window.localStorage.setItem(`${STORAGE_KEY}.remotePeerId`, newRemotePeerId)
+    // state.remotePeerId = newRemotePeerId
+    // window.localStorage.setItem(`${STORAGE_KEY}.remotePeerId`, newRemotePeerId)
   }
 }
 
@@ -108,8 +108,9 @@ async function discoverRemotePeerId ({ peer, state, commit }) {
     // first try to find the remote peer ID in the same room
     const myRoom = new PeerRoom(peer)
     console.log('Fetching room members', myRoom)
-    const peerIds = await myRoom.getRoomMembers()
-    console.log('myRoom members', peerIds)
+    const { clientsIds } = await myRoom.getRoomMembers()
+    const peerIds = clientsIds
+    console.log('myRoom members', clientsIds)
     const remotePeerId = peerIds.find(
       pid => pid !== state.myPeerId)
     if (remotePeerId) {
@@ -229,7 +230,7 @@ const actions = {
       host: ambianicConf.AMBIANIC_PNP_HOST,
       port: ambianicConf.AMBIANIC_PNP_PORT,
       secure: ambianicConf.AMBIANIC_PNP_SECURE,
-      debug: 2
+      debug: 3
     })
     console.log('pnpService: peer created')
     setPnPServiceConnectionHandlers({ peer, state, commit, dispatch })
@@ -294,7 +295,7 @@ const actions = {
         console.log('Remote peer Id found', remotePeerId)
         console.log('Connecting to remote peer', remotePeerId)
         // Remote peer ID found. Connect.
-        const peerConnection = peer.connect(state.remotePeerId, {
+        const peerConnection = peer.connect(remotePeerId, {
           reliable: true
         })
         setPeerConnectionHandlers({ peerConnection, state, commit })
