@@ -16,6 +16,7 @@ import {
 import {
   INITIALIZE_PNP,
   PNP_SERVICE_CONNECT,
+  PNP_SERVICE_RECONNECT,
   PEER_CONNECT
 } from '../action-types.js'
 import { ambianicConf } from '@/config'
@@ -107,7 +108,7 @@ async function discoverRemotePeerId ({ peer, state, commit }) {
     // first try to find the remote peer ID in the same room
     const myRoom = new PeerRoom(peer)
     console.log('Fetching room members', myRoom)
-    const peerIds = [] // await myRoom.getRoomMembers()
+    const peerIds = await myRoom.getRoomMembers()
     console.log('myRoom members', peerIds)
     const remotePeerId = peerIds.find(
       pid => pid !== state.myPeerId)
@@ -149,15 +150,7 @@ function setPnPServiceConnectionHandlers (
   peer.on('disconnected', function () {
     commit(PNP_SERVICE_DISCONNECTED)
     commit(USER_MESSAGE, 'PnP service connection lost. Please check your internet connection.')
-    console.log('pnpService: Connection lost. Please reconnect')
-    // Workaround for peer.reconnect deleting previous id
-    if (!peer.id) {
-      console.log('BUG WORKAROUND: Peer lost ID. Resetting to last known ID.')
-      peer._id = state.myPeerId
-    }
-    peer._lastServerId = state.myPeerId
-    commit(PNP_SERVICE_CONNECTING)
-    peer.reconnect()
+    console.log('pnpService: Connection lost. Please reconnect.')
   })
   peer.on('close', function () {
     // peerConnection = null
@@ -200,6 +193,7 @@ function setPeerConnectionHandlers ({ peerConnection, state, commit }) {
   // Handle incoming data (messages only since this is the signal sender)
   peerConnection.on('data', function (data) {
     // addMessage('<span class=\'peerMsg\'>Peer:</span> ' + data)
+    console.log('pnpService: Data message received: %s', data)
   })
   peerConnection.on('close', function () {
     commit(PEER_DISCONNECTED)
@@ -241,12 +235,32 @@ const actions = {
     setPnPServiceConnectionHandlers({ peer, state, commit, dispatch })
   },
   /**
+  * Establish connection to PnP Service and
+  * create the Peer object for our end of the connection.
+  *
+  * Set up callbacks to handle any events related to our
+  * peer object.
+  */
+  async [PNP_SERVICE_RECONNECT] ({ state, commit, dispatch }) {
+    // if connection to pnp service already open, then nothing to do
+    if (peer.open) return
+    console.log('pnpService: reconnecting peer...')
+    // Workaround for peer.reconnect deleting previous id
+    if (!peer.id) {
+      console.log('BUG WORKAROUND: Peer lost ID. Resetting to last known ID.')
+      peer._id = state.myPeerId
+    }
+    peer._lastServerId = state.myPeerId
+    commit(PNP_SERVICE_CONNECTING)
+    peer.reconnect()
+  },
+  /**
   * Create the connection between the two Peers.
   *
   * Set up callbacks to handle any events related to the
   * direct peer-to-peer connection and data received on it.
   */
-  async [PEER_CONNECT] ({ state, commit }) {
+  async [PEER_CONNECT] ({ state, commit, dispatch }) {
     // if already connected to peer, then nothing to do
     if (state.peerConnectionStatus === PEER_CONNECTED) return
     // if (peerConnection) {
@@ -254,22 +268,41 @@ const actions = {
     // }
     // Create connection to remote peer
     // we need to have a remote peer Id to proceed
-    const discoverLoopId = setInterval(async () => {
+    const discoveryLoopId = async () => {
       // start a discovery loop
       console.log('Discovering remote peer...')
-      const remotePeerId = await discoverRemotePeerId({ peer, state, commit })
+      // its possible that the PNP signaling server connection was disrupted
+      // while looping in peer discovery mode.
+      if (state.pnpServiceConnectionStatus === PNP_SERVICE_DISCONNECTED) {
+        console.log('PNP Service disconnected. Reconnecting...')
+        await dispatch(PNP_SERVICE_RECONNECT)
+      }
+      let remotePeerId
+      try {
+        if (state.pnpServiceConnectionStatus === PNP_SERVICE_CONNECTED) {
+          remotePeerId = await discoverRemotePeerId({ peer, state, commit })
+        } else {
+          // signaling server connection is still not ready, skip this cycle
+          // and wait for the next scheduled retry
+          console.log('PNP Service still not connected. Will retry shortly.')
+        }
+      } catch (err) {
+        console.log('Error while looking for remote peer. Will retry shortly.',
+          err)
+      }
       if (remotePeerId) {
         console.log('Remote peer Id found', remotePeerId)
-        // stop discovery loop as soon as remote peer ID is found
-        clearInterval(discoverLoopId)
         console.log('Connecting to remote peer', remotePeerId)
         // Remote peer ID found. Connect.
         const peerConnection = peer.connect(state.remotePeerId, {
           reliable: true
         })
         setPeerConnectionHandlers({ peerConnection, state, commit })
+      } else {
+        setTimeout(discoveryLoopId, 10000) // retry in a few seconds
       }
-    }, 3000) // repeat discovery loop every 2 seconds
+    }
+    await discoveryLoopId()
   }
 }
 

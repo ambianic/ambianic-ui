@@ -5,7 +5,7 @@ export const ambianicConf = {
   AMBIANIC_API_FALLBACK_URI: '/sample-data/',
   AMBIANIC_API_PORT: 8778,
   AMBIANIC_API_ROOT: '/api/',
-  AMBIANIC_PNP_HOST: 'localhost', // 'ambianic-pnp.herokuapp.com'
-  AMBIANIC_PNP_PORT: 9779,
-  AMBIANIC_PNP_SECURE: false
+  AMBIANIC_PNP_HOST: 'localhost', // ' ambianic-pnp.herokuapp.com',
+  AMBIANIC_PNP_PORT: 9779, // 443,
+  AMBIANIC_PNP_SECURE: false // true
 }

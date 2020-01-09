@@ -30,7 +30,7 @@ export class PeerRoom {
     return url
   }
 
-  async _restCall ({ method, path }) {
+  async _restCall ({ method = 'GET', path }) {
     console.log('REST Call', method, path)
     const url = this._buildUrl(path)
     try {
@@ -40,7 +40,9 @@ export class PeerRoom {
           REST Error for ${path}.
           HTTP Response Status:${response.status}`)
       }
-      return response.json()
+      const jsonResponse = await response.json()
+      console.log('REST Call response', jsonResponse)
+      return jsonResponse
     } catch (error) {
       const msg = `REST call failed for ${path}`
       console.error(msg, error)
@@ -66,7 +68,7 @@ export class PeerRoom {
     return members
   }
 
-  async getRoomMembers (roomId) {
+  async getRoomMembers () {
     let members
     if (!this._roomId) {
       members = await this.join()
