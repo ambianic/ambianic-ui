@@ -300,7 +300,7 @@ const actions = {
         })
         setPeerConnectionHandlers({ peerConnection, state, commit })
       } else {
-        setTimeout(discoveryLoopId, 10000) // retry in a few seconds
+        setTimeout(discoveryLoopId, 3000) // retry in a few seconds
       }
     }
     await discoveryLoopId()
