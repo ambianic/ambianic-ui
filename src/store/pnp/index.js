@@ -189,7 +189,7 @@ function setPeerConnectionHandlers ({ peerConnection, state, commit }) {
     // Check URL params for commands that should be sent immediately
     // var command = getUrlParam('command')
     // if (command)
-    //     peerConnection.send(command)
+    peerConnection.send({ msg: 'hello', from: 'ambianic-ui', to: 'ambianic-edge' })
   })
   // Handle incoming data (messages only since this is the signal sender)
   peerConnection.on('data', function (data) {
