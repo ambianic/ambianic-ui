@@ -27,16 +27,16 @@
           Make sure its running and has Internet access.
         </v-banner>
         <v-stepper
-          v-model="e6"
+          v-model="connectStep"
           vertical
         >
           <v-stepper-step
-            :complete="e6 > 1"
+            :complete="connectStep > 1"
             step="1"
             :rules="[() => true]"
           >
-            Discover
-            <small>Looking for your Ambianic Edge device</small>
+            Discovering
+            <small>Looking for Ambianic Edge device to pair with.</small>
           </v-stepper-step>
 
           <v-stepper-content step="1">
@@ -60,7 +60,7 @@
           </v-stepper-content>
 
           <v-stepper-step
-            :complete="e6 > 2"
+            :complete="connectStep > 2"
             step="2"
           >
             Authenticate
@@ -75,7 +75,7 @@
             />
             <v-btn
               color="primary"
-              @click="e6 = 3"
+              @click="connectStep = 3"
             >
               Continue
             </v-btn>
@@ -85,7 +85,7 @@
           </v-stepper-content>
 
           <v-stepper-step
-            :complete="e6 > 3"
+            :complete="connectStep > 3"
             step="3"
           >
             Test
@@ -100,7 +100,7 @@
             />
             <v-btn
               color="primary"
-              @click="e6 = 4"
+              @click="connectStep = 4"
             >
               Continue
             </v-btn>
@@ -120,7 +120,7 @@
             />
             <v-btn
               color="primary"
-              @click="e6 = 1"
+              @click="connectStep = 1"
             >
               Continue
             </v-btn>
@@ -149,7 +149,7 @@ export default {
       testInProgress: false,
       testDone: true,
       statusColor: 'info',
-      e6: 0,
+      connectStep: 0,
       discoveryProgressValue: 0
     }
   },
@@ -173,7 +173,7 @@ export default {
       if (this.discoveryProgressValue === 100) {
         return (this.discoveryProgressValue = 0)
       }
-      this.discoveryProgressValue += 10
+      this.discoveryProgressValue += 3
     }, 1000)
   },
   beforeDestroy () {

@@ -189,7 +189,17 @@ function setPeerConnectionHandlers ({ peerConnection, state, commit }) {
     // Check URL params for commands that should be sent immediately
     // var command = getUrlParam('command')
     // if (command)
-    peerConnection.send({ msg: 'hello', from: 'ambianic-ui', to: 'ambianic-edge' })
+    const msg = JSON.stringify({
+      type: 'http-request',
+      method: 'GET',
+      path: '/fingerprint',
+      params: {
+        user: 'ambianic-ui'
+      }
+    })
+    peerConnection.send(msg)
+    console.log('DataChannel transport capabilities',
+      peerConnection.dataChannel)
   })
   // Handle incoming data (messages only since this is the signal sender)
   peerConnection.on('data', function (data) {
@@ -234,6 +244,7 @@ const actions = {
     })
     console.log('pnpService: peer created')
     setPnPServiceConnectionHandlers({ peer, state, commit, dispatch })
+    commit(PNP_SERVICE_CONNECTING)
   },
   /**
   * Establish connection to PnP Service and
@@ -296,7 +307,7 @@ const actions = {
         console.log('Connecting to remote peer', remotePeerId)
         // Remote peer ID found. Connect.
         const peerConnection = peer.connect(remotePeerId, {
-          reliable: true
+          reliable: true, serialization: 'raw', somethingCrazy: 1234
         })
         setPeerConnectionHandlers({ peerConnection, state, commit })
       } else {
