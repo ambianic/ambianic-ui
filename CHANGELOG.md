@@ -1,5 +1,26 @@
 # Semantic Versioning Changelog
 
+# [1.11.0](https://github.com/ambianic/ambianic-ui/compare/v1.10.1...v1.11.0) (2020-01-17)
+
+
+### Bug Fixes
+
+* dataconnection bugs ([c881ad4](https://github.com/ambianic/ambianic-ui/commit/c881ad4))
+* p2p dataconnection fixes ([c232a81](https://github.com/ambianic/ambianic-ui/commit/c232a81))
+* p2p messaging bugs ([12ad67f](https://github.com/ambianic/ambianic-ui/commit/12ad67f))
+* peerjs connection management ([d1cb5b6](https://github.com/ambianic/ambianic-ui/commit/d1cb5b6))
+* polishing signaling server communication and room membership api ([782cd61](https://github.com/ambianic/ambianic-ui/commit/782cd61))
+* progress on pnp service client side ([87f4877](https://github.com/ambianic/ambianic-ui/commit/87f4877))
+* room management ([88e5332](https://github.com/ambianic/ambianic-ui/commit/88e5332))
+
+
+### Features
+
+* ambianic edge connect page draft ([511a791](https://github.com/ambianic/ambianic-ui/commit/511a791))
+* datachannel handshake successful ([5d1b7f9](https://github.com/ambianic/ambianic-ui/commit/5d1b7f9))
+* implement pnpStore as Vuex store to tie webrtc connection management to reactive UI compoenents ([434601b](https://github.com/ambianic/ambianic-ui/commit/434601b))
+* webrtc connection management, early stage, not ready ([a4903d7](https://github.com/ambianic/ambianic-ui/commit/a4903d7))
+
 ## [1.10.1](https://github.com/ambianic/ambianic-ui/compare/v1.10.0...v1.10.1) (2019-11-21)
 
 
