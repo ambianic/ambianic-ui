@@ -1,5 +1,50 @@
 # Semantic Versioning Changelog
 
+## [1.10.1](https://github.com/ambianic/ambianic-ui/compare/v1.10.0...v1.10.1) (2019-11-21)
+
+
+### Bug Fixes
+
+* cover key PWA requirements, close [#101](https://github.com/ambianic/ambianic-ui/issues/101) ([05e3029](https://github.com/ambianic/ambianic-ui/commit/05e3029))
+* multiple cosmetic fixes ([c3e71d0](https://github.com/ambianic/ambianic-ui/commit/c3e71d0))
+
+# [1.10.0](https://github.com/ambianic/ambianic-ui/compare/v1.9.0...v1.10.0) (2019-11-20)
+
+
+### Features
+
+* PWA certification badge ([aef963c](https://github.com/ambianic/ambianic-ui/commit/aef963c))
+* PWA certification badge, close [#95](https://github.com/ambianic/ambianic-ui/issues/95) ([d1fb916](https://github.com/ambianic/ambianic-ui/commit/d1fb916))
+
+# [1.9.0](https://github.com/ambianic/ambianic-ui/compare/v1.8.0...v1.9.0) (2019-11-20)
+
+
+### Bug Fixes
+
+* test connection to edge device, close [#73](https://github.com/ambianic/ambianic-ui/issues/73) ([39a7af2](https://github.com/ambianic/ambianic-ui/commit/39a7af2))
+
+
+### Features
+
+* **settings:** test edge device connection ([c5f45d5](https://github.com/ambianic/ambianic-ui/commit/c5f45d5))
+
+# [1.8.0](https://github.com/ambianic/ambianic-ui/compare/v1.7.0...v1.8.0) (2019-11-20)
+
+
+### Bug Fixes
+
+* code cleanup ([ed8810c](https://github.com/ambianic/ambianic-ui/commit/ed8810c))
+* eslint build dep ([b9a8af7](https://github.com/ambianic/ambianic-ui/commit/b9a8af7))
+* package-lock deps ([6c6d3b1](https://github.com/ambianic/ambianic-ui/commit/6c6d3b1))
+* security vulnerability fix ([7e68633](https://github.com/ambianic/ambianic-ui/commit/7e68633))
+
+
+### Features
+
+* new settings page, persist ambianic edge connection settings to browser storage ([e3b70cb](https://github.com/ambianic/ambianic-ui/commit/e3b70cb))
+* save ambianic edge connection settings to persistent browser storage that survives between sessions and browser reloads ([1caee13](https://github.com/ambianic/ambianic-ui/commit/1caee13))
+* settings page now determines timeline feed source ([14c0e21](https://github.com/ambianic/ambianic-ui/commit/14c0e21))
+
 # [1.7.0](https://github.com/ambianic/ambianic-ui/compare/v1.6.0...v1.7.0) (2019-11-16)
 
 
