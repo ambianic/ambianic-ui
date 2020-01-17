@@ -1,8 +1,8 @@
 <template>
   <app-frame>
     <v-row
-      align="center"
-      justify="center"
+      align="start"
+      justify="space-around"
     >
       <v-card>
         <v-card-title class="grey darken-2">
@@ -90,7 +90,7 @@
               <v-layout
                 align-center
                 justify-center
-                >
+              >
                 <v-chip
                   class="ma-2"
                   :color="statusColor"
