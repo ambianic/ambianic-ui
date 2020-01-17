@@ -135,28 +135,49 @@
 </template>
 <script>
 import AppFrame from '@/components/AppFrame.vue'
-import { settingsDB } from '@/store/db'
+// import { settingsDB } from '@/store/db'
 import { testConnection, EdgeConnectionStatus } from '@/remote/edgeAPI'
 import { mapState } from 'vuex'
-import { PEER_CONNECTION_ERROR } from '@/store/mutation-types'
+import {
+  PEER_DISCONNECTED,
+  PEER_CONNECTING,
+  PEER_CONNECTED,
+  PEER_CONNECTION_ERROR
+} from '@/store/mutation-types.js'
 
 export default {
   data: function () {
     return {
-      edgeAddress: '',
+      // edgeAddress: '',
       connectionStatus: '',
       connectionTip: '',
       testInProgress: false,
       testDone: true,
-      statusColor: 'info',
-      connectStep: 0,
-      discoveryProgressValue: 0
+      statusColor: 'info'
     }
   },
   computed: {
     peerConnectionError: function () {
       console.log('this.$store.state.pnp.peerConnectionStatus', this.$store.state.pnp.peerConnectionStatus)
       return this.$store.state.pnp.peerConnectionStatus === PEER_CONNECTION_ERROR
+    },
+    connectStep: function () {
+      let step = 0
+      switch (this.$store.state.pnp.peerConnectionStatus) {
+        case PEER_DISCONNECTED:
+        case PEER_CONNECTION_ERROR:
+          step = 0
+          break
+        case PEER_CONNECTING:
+          step = 1
+          break
+        case PEER_CONNECTED:
+          step = 2
+          break
+        default:
+          break
+      }
+      return step
     },
     ...mapState([
       'peerConnectionStatus',
@@ -169,26 +190,19 @@ export default {
   },
   mounted () {
     this.loadSettings()
-    this.interval = setInterval(() => {
-      if (this.discoveryProgressValue === 100) {
-        return (this.discoveryProgressValue = 0)
-      }
-      this.discoveryProgressValue += 3
-    }, 1000)
   },
   beforeDestroy () {
-    clearInterval(this.interval)
   },
   methods: {
     loadSettings () {
-      settingsDB.get('ambanic-edge-address').then(
-        (address) => {
-          this.edgeAddress = address
-        }
-      )
+      // settingsDB.get('ambanic-edge-address').then(
+      //   (address) => {
+      //     this.edgeAddress = address
+      //   }
+      // )
     },
     saveSettings () {
-      settingsDB.set('ambanic-edge-address', this.edgeAddress)
+      // settingsDB.set('ambanic-edge-address', this.edgeAddress)
     },
     cancel () {
       this.testInProgress = false

@@ -104,7 +104,9 @@ const mutations = {
   and reused until explicitly reset by the user.
 */
 async function discoverRemotePeerId ({ peer, state, commit }) {
-  if (!state.remotePeerId) {
+  if (state.remotePeerId) {
+    return state.remotePeerId
+  } else {
     // first try to find the remote peer ID in the same room
     const myRoom = new PeerRoom(peer)
     console.log('Fetching room members', myRoom)
@@ -120,11 +122,10 @@ async function discoverRemotePeerId ({ peer, state, commit }) {
       // ask user for help
       commit(USER_MESSAGE,
         `Still looking.
-         Please make sure you are are on the same local network.
+         Please make sure you are on the same local network
+         as the Ambianic Edge device.
         `)
     }
-  } else {
-    return state.remotePeerId
   }
 }
 
