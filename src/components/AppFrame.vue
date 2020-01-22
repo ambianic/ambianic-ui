@@ -201,7 +201,7 @@ export default {
       //  ]
       // },
       { icon: 'mdi-video-input-antenna', text: 'Connect', link: '/edge-connect' },
-      { icon: 'settings', text: 'Settings', link: '/settings' },
+      // { icon: 'settings', text: 'Settings', link: '/settings' },
       { icon: 'chat_bubble', text: 'Send feedback', link: '/feedback' },
       { icon: 'help', text: 'Help', link: '/help' },
       { icon: 'info', text: 'About Ambianic', link: '/about' }
