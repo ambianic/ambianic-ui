@@ -1,5 +1,17 @@
 # Semantic Versioning Changelog
 
+# [1.12.0](https://github.com/ambianic/ambianic-ui/compare/v1.11.0...v1.12.0) (2020-01-22)
+
+
+### Bug Fixes
+
+* pairing progress UI ([9b8a502](https://github.com/ambianic/ambianic-ui/commit/9b8a502))
+
+
+### Features
+
+* edge device Airdrop-like plug and play discovery ([7cba09b](https://github.com/ambianic/ambianic-ui/commit/7cba09b))
+
 # [1.11.0](https://github.com/ambianic/ambianic-ui/compare/v1.10.1...v1.11.0) (2020-01-17)
 
 
