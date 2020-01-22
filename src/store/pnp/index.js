@@ -3,7 +3,9 @@
 */
 import {
   PEER_DISCONNECTED,
+  PEER_DISCOVERED,
   PEER_CONNECTING,
+  PEER_AUTHENTICATING,
   PEER_CONNECTED,
   PEER_CONNECTION_ERROR,
   PNP_SERVICE_DISCONNECTED,
@@ -11,13 +13,17 @@ import {
   PNP_SERVICE_CONNECTED,
   USER_MESSAGE,
   NEW_PEER_ID,
-  NEW_REMOTE_PEER_ID
+  NEW_REMOTE_PEER_ID,
+  REMOTE_PEER_ID_REMOVED
 } from '../mutation-types.js'
 import {
   INITIALIZE_PNP,
   PNP_SERVICE_CONNECT,
   PNP_SERVICE_RECONNECT,
-  PEER_CONNECT
+  PEER_DISCOVER,
+  PEER_CONNECT,
+  PEER_AUTHENTICATE,
+  REMOVE_REMOTE_PEER_ID
 } from '../action-types.js'
 import { ambianicConf } from '@/config'
 import Peer from 'peerjs'
@@ -52,6 +58,10 @@ const state = {
   */
   userMessage: '',
   /**
+    Connection to the remote Ambianic Edge device
+  */
+  peerConnection: null,
+  /**
     Status of current peer connection to remote peer
   */
   peerConnectionStatus: PEER_DISCONNECTED,
@@ -63,12 +73,20 @@ const state = {
 
 const mutations = {
   [PEER_DISCONNECTED] (state) {
+    state.peerConnection = null
     state.peerConnectionStatus = PEER_DISCONNECTED
+  },
+  [PEER_DISCOVERED] (state) {
+    state.peerConnectionStatus = PEER_DISCOVERED
   },
   [PEER_CONNECTING] (state) {
     state.peerConnectionStatus = PEER_CONNECTING
   },
-  [PEER_CONNECTED] (state) {
+  [PEER_AUTHENTICATING] (state) {
+    state.peerConnectionStatus = PEER_AUTHENTICATING
+  },
+  [PEER_CONNECTED] (state, peerConnection) {
+    state.peerConnection = peerConnection
     state.peerConnectionStatus = PEER_CONNECTED
   },
   [PEER_CONNECTION_ERROR] (state) {
@@ -91,8 +109,14 @@ const mutations = {
     window.localStorage.setItem(`${STORAGE_KEY}.myPeerId`, newPeerId)
   },
   [NEW_REMOTE_PEER_ID] (state, newRemotePeerId) {
-    // state.remotePeerId = newRemotePeerId
-    // window.localStorage.setItem(`${STORAGE_KEY}.remotePeerId`, newRemotePeerId)
+    console.log('Setting state.remotePeerId to : ', newRemotePeerId)
+    state.remotePeerId = newRemotePeerId
+    window.localStorage.setItem(`${STORAGE_KEY}.remotePeerId`, newRemotePeerId)
+  },
+  [REMOTE_PEER_ID_REMOVED] (state) {
+    console.log('Removing remote Peer Id from local storage')
+    state.remotePeerId = null
+    window.localStorage.removeItem(`${STORAGE_KEY}.remotePeerId`)
   }
 }
 
@@ -104,7 +128,9 @@ const mutations = {
   and reused until explicitly reset by the user.
 */
 async function discoverRemotePeerId ({ peer, state, commit }) {
-  if (!state.remotePeerId) {
+  if (state.remotePeerId) {
+    return state.remotePeerId
+  } else {
     // first try to find the remote peer ID in the same room
     const myRoom = new PeerRoom(peer)
     console.log('Fetching room members', myRoom)
@@ -120,16 +146,15 @@ async function discoverRemotePeerId ({ peer, state, commit }) {
       // ask user for help
       commit(USER_MESSAGE,
         `Still looking.
-         Please make sure you are are on the same local network.
+         Please make sure you are on the same local network
+         as the Ambianic Edge device.
         `)
     }
-  } else {
-    return state.remotePeerId
   }
 }
 
 function setPnPServiceConnectionHandlers (
-  { peer, state, commit, dispatch }) {
+  { state, commit, dispatch }, peer) {
   peer.on('open', function (id) {
     commit(PNP_SERVICE_CONNECTED)
     // Workaround for peer.reconnect deleting previous id
@@ -147,6 +172,9 @@ function setPnPServiceConnectionHandlers (
       }
     }
     console.log('pnpService: myPeerId: ', peer.id)
+    // signaling server connection established
+    // we can advance to peer discovery
+    dispatch(PEER_DISCOVER)
   })
   peer.on('disconnected', function () {
     commit(PNP_SERVICE_DISCONNECTED)
@@ -160,52 +188,46 @@ function setPnPServiceConnectionHandlers (
     commit(PNP_SERVICE_DISCONNECTED)
   })
   peer.on('error', function (err) {
-    console.log('pnpService', err)
+    console.log('peer connection error', err)
     commit(USER_MESSAGE,
       `
-      Still looking...Is the edge device connected?
+      Error while connecting. Will retry shortly. Is the Internet connection OK?
       `)
     commit(PEER_CONNECTION_ERROR)
     console.log('peerConnectionStatus', state.peerConnectionStatus)
     // retry peer connection in a few seconds
     setTimeout(() => {
-      dispatch(PEER_CONNECT)
+      dispatch(INITIALIZE_PNP)
     }, 3000)
   })
   // remote peer tries to initiate connection
   peer.on('connection', function (peerConnection) {
     console.log('remote peer trying to establish connection')
-    setPeerConnectionHandlers(peerConnection, state, commit)
+    setPeerConnectionHandlers({ state, commit, dispatch }, peerConnection)
     commit(PEER_CONNECTING)
   })
 }
 
-function setPeerConnectionHandlers ({ peerConnection, state, commit }) {
+function setPeerConnectionHandlers ({ state, commit, dispatch }, peerConnection) {
+  // setup connection progress callbacks
   peerConnection.on('open', function () {
-    commit(PEER_CONNECTED)
-    commit(USER_MESSAGE, `Connected to: ${peerConnection.peer}`)
-    console.log('pnpService: Connected to: ', peerConnection.peer)
-    commit(NEW_REMOTE_PEER_ID, peerConnection.peer.id)
-    // Check URL params for commands that should be sent immediately
-    // var command = getUrlParam('command')
-    // if (command)
-    const msg = JSON.stringify({
-      type: 'http-request',
-      method: 'GET',
-      path: '/fingerprint',
-      params: {
-        user: 'ambianic-ui'
-      }
-    })
-    peerConnection.send(msg)
-    console.log('DataChannel transport capabilities',
-      peerConnection.dataChannel)
+    dispatch(PEER_AUTHENTICATE, peerConnection)
   })
   // Handle incoming data (messages only since this is the signal sender)
   peerConnection.on('data', function (data) {
     // addMessage('<span class=\'peerMsg\'>Peer:</span> ' + data)
     console.log('pnpService: Data message received: %s', data)
+    // if data is authentication challenge response, verify it
+    // for now we asume authentication passed
+    const authMessage = true
+    if (authMessage) {
+      const authPassed = true
+      if (authPassed) {
+        commit(PEER_CONNECTED, peerConnection)
+      }
+    }
   })
+
   peerConnection.on('close', function () {
     commit(PEER_DISCONNECTED)
     commit(USER_MESSAGE, 'Connection to remote peer closed')
@@ -218,7 +240,6 @@ const actions = {
   */
   async [INITIALIZE_PNP] ({ state, commit, dispatch }) {
     await dispatch(PNP_SERVICE_CONNECT)
-    await dispatch(PEER_CONNECT)
   },
   /**
   * Establish connection to PnP Service and
@@ -243,7 +264,7 @@ const actions = {
       debug: 3
     })
     console.log('pnpService: peer created')
-    setPnPServiceConnectionHandlers({ peer, state, commit, dispatch })
+    setPnPServiceConnectionHandlers({ state, commit, dispatch }, peer)
     commit(PNP_SERVICE_CONNECTING)
   },
   /**
@@ -267,19 +288,10 @@ const actions = {
     peer.reconnect()
   },
   /**
-  * Create the connection between the two Peers.
+  * Find remotePeerId for Ambianic Edge device to pair with.
   *
-  * Set up callbacks to handle any events related to the
-  * direct peer-to-peer connection and data received on it.
   */
-  async [PEER_CONNECT] ({ state, commit, dispatch }) {
-    // if already connected to peer, then nothing to do
-    if (state.peerConnectionStatus === PEER_CONNECTED) return
-    // if (peerConnection) {
-    //   peerConnection.close()
-    // }
-    // Create connection to remote peer
-    // we need to have a remote peer Id to proceed
+  async [PEER_DISCOVER] ({ state, commit, dispatch }) {
     const discoveryLoopId = async () => {
       // start a discovery loop
       console.log('Discovering remote peer...')
@@ -304,22 +316,84 @@ const actions = {
       }
       if (remotePeerId) {
         console.log('Remote peer Id found', remotePeerId)
-        console.log('Connecting to remote peer', remotePeerId)
-        // Remote peer ID found. Connect.
-        const peerConnection = peer.connect(remotePeerId, {
-          reliable: true, serialization: 'raw', somethingCrazy: 1234
-        })
-        setPeerConnectionHandlers({ peerConnection, state, commit })
+        commit(PEER_DISCOVERED)
+        // remote Edge peer discovered, let's connect to it
+        dispatch(PEER_CONNECT, remotePeerId)
       } else {
         setTimeout(discoveryLoopId, 3000) // retry in a few seconds
       }
     }
     await discoveryLoopId()
+  },
+  /**
+  * Create the connection between the two Peers.
+  *
+  * Set up callbacks to handle any events related to the
+  * direct peer-to-peer connection and data received on it.
+  */
+  async [PEER_CONNECT] ({ state, commit, dispatch }, remotePeerId) {
+    // if already connected to peer, then nothing to do
+    if (state.peerConnectionStatus === PEER_CONNECTED) return
+    console.log('Connecting to remote peer', remotePeerId)
+    commit(PEER_CONNECTING)
+    const peerConnection = peer.connect(remotePeerId, {
+      reliable: true, serialization: 'raw', somethingCrazy: 1234
+    })
+    setPeerConnectionHandlers({ state, commit, dispatch }, peerConnection)
+  },
+  /**
+  * Authenticate remote peer. Make sure its a genuine Ambianic Edge device.
+  *
+  */
+  async [PEER_AUTHENTICATE] ({ state, commit, dispatch }, peerConnection) {
+    commit(PEER_AUTHENTICATING)
+    commit(USER_MESSAGE, `Authenticating remote peer: ${peerConnection.peer}`)
+    console.log('Authenticating remote Peer ID: ', peerConnection.peer)
+    if (state.remotePeerId !== peerConnection.peer) {
+      // remote Peer ID is new
+      commit(NEW_REMOTE_PEER_ID, peerConnection.peer)
+    }
+    // Check URL params for commands that should be sent immediately
+    // var command = getUrlParam('command')
+    // if (command)
+    const msg = JSON.stringify({
+      type: 'http-request',
+      method: 'GET',
+      path: '/fingerprint',
+      params: {
+        user: 'ambianic-ui'
+      }
+    })
+    peerConnection.send(msg)
+    console.log('DataChannel transport capabilities',
+      peerConnection.dataChannel)
+  },
+  /**
+  * Remove remote peer id from local store.
+  * Maybe the edge device is damaged and its id cannot be recovered.
+  * In such cases the user will request removal of the existing device
+  * association and force discovery of a new edge device id.
+  */
+  async [REMOVE_REMOTE_PEER_ID] ({ state, commit, dispatch }) {
+    if (state.peerConnectionStatus !== PEER_DISCONNECTED) {
+      const conn = state.peerConnection
+      conn.close()
+      commit(PEER_DISCONNECTED)
+    }
+    commit(REMOTE_PEER_ID_REMOVED)
+    dispatch(PEER_DISCOVER)
+  }
+}
+
+const getters = {
+  isEdgeConnected: state => {
+    return state.peerConnectionStatus === PEER_CONNECTED
   }
 }
 
 const pnpStoreModule = {
   state,
+  getters,
   mutations,
   actions
 }

@@ -7,9 +7,6 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    isPNPInitialized: false,
-    isEdgeConnected: false,
-    isPNPServiceConnected: false
   },
   mutations: {
   },

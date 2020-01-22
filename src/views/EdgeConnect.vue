@@ -5,7 +5,98 @@
       justify="space-around"
     >
       <v-col
-        v-if="!isEdgeConnected"
+        v-if="edgePeerId"
+        style="max-width: 420px;"
+        align="center"
+        justify="center"
+        cols="12"
+        class="pa-0 ma-0 fill-height"
+      >
+        <v-banner
+          v-if="isEdgeConnected"
+          two-line
+          class="text-left"
+        >
+          <v-icon
+            slot="icon"
+            size="36"
+          >
+            mdi-wifi
+          </v-icon>
+          Ambianic Edge device connected!
+        </v-banner>
+        <v-banner
+          v-else
+          two-line
+          class="text-left"
+        >
+          <v-icon
+            slot="icon"
+            size="36"
+          >
+            mdi-wifi-off
+          </v-icon>
+          Connecting to Ambianic Edge device...
+          <v-progress-linear
+            color="info"
+            indeterminate
+            :size="50"
+            :width="7"
+          >
+          </v-progress-linear>
+        </v-banner>
+
+        <v-card
+          class="mx-auto text-left"
+        >
+          <v-list two-line
+          >
+              <v-list-item>
+                <v-list-item-icon>
+                  <v-icon>mdi-tag</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title>My Ambianic Edge Device</v-list-item-title>
+                  <v-list-item-subtitle>Display Name</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+
+              <v-divider inset></v-divider>
+
+              <v-list-item>
+                <v-list-item-icon>
+                  <v-icon>mdi-identifier</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title>{{ edgePeerId }}</v-list-item-title>
+                  <v-list-item-subtitle>Peer ID</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+
+              <v-list-item>
+                <v-list-item-icon>
+                  <v-icon>mdi-alpha-v</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title>1.21.2020</v-list-item-title>
+                  <v-list-item-subtitle>Release Version</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+
+          </v-list>
+          <v-btn text
+          >
+            Rename
+          </v-btn>
+          <v-btn text
+            @click.stop="removeEdgeDialog = true"
+          >
+            Remove
+          </v-btn>
+        </v-card>
+      </v-col>
+      <v-col
+        v-else
         style="max-width: 420px;"
         align="center"
         justify="center"
@@ -18,14 +109,13 @@
         >
           <v-icon
             slot="icon"
-            color="warning"
             size="36"
           >
-            mdi-wifi-strength-alert-outline
+            mdi-wifi-off
           </v-icon>
-          Let's connect to your Ambianic Edge device.
-          Make sure its running and has Internet access.
+          Let's find your Ambianic Edge device and connect to it...
         </v-banner>
+
         <v-stepper
           v-model="connectStep"
           vertical
@@ -63,94 +153,84 @@
             :complete="connectStep > 2"
             step="2"
           >
-            Authenticate
-            <small>Establish secure direct connection</small>
+            Authenticating
+            <small>Establishing secure peer-to-peer connection.</small>
           </v-stepper-step>
 
           <v-stepper-content step="2">
-            <v-card
-              color="grey lighten-1"
-              class="mb-12"
-              height="200px"
-            />
-            <v-btn
-              color="primary"
-              @click="connectStep = 3"
+            <v-progress-linear
+              color="info"
+              indeterminate
+              :size="50"
+              :width="7"
             >
-              Continue
-            </v-btn>
-            <v-btn text>
-              Cancel
-            </v-btn>
+            </v-progress-linear>
           </v-stepper-content>
 
-          <v-stepper-step
-            :complete="connectStep > 3"
-            step="3"
-          >
-            Test
-            <small>Check connection quality</small>
-          </v-stepper-step>
-
-          <v-stepper-content step="3">
-            <v-card
-              color="grey lighten-1"
-              class="mb-12"
-              height="200px"
-            />
-            <v-btn
-              color="primary"
-              @click="connectStep = 4"
-            >
-              Continue
-            </v-btn>
-            <v-btn text>
-              Cancel
-            </v-btn>
-          </v-stepper-content>
-
-          <v-stepper-step step="4">
+          <v-stepper-step step="3">
             Done
           </v-stepper-step>
-          <v-stepper-content step="4">
-            <v-card
-              color="grey lighten-1"
-              class="mb-12"
-              height="200px"
-            />
-            <v-btn
-              color="primary"
-              @click="connectStep = 1"
-            >
-              Continue
-            </v-btn>
-            <v-btn text>
-              Cancel
-            </v-btn>
+          <v-stepper-content step="3">
           </v-stepper-content>
         </v-stepper>
       </v-col>
+      <v-dialog
+        v-model="removeEdgeDialog"
+      >
+        <v-card>
+          <v-card-title class="headline">Remove device connection?</v-card-title>
+
+          <v-card-text>
+            If you remove the connection to this Ambianic Edge device,
+            you will not be able to connect to it remotely.
+            In order to reconnect to the same device, you will have to
+            go near it and connect on the same WiFi/LAN network
+            so it can be re-discovered.
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn
+              text
+              @click="removeEdgeDialog = false"
+            >
+              Cancel
+            </v-btn>
+
+            <v-btn
+              text
+              @click="removeEdgeConnection()"
+            >
+              Yes, Remove
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-row>
   </app-frame>
 </template>
 <script>
 import AppFrame from '@/components/AppFrame.vue'
-import { settingsDB } from '@/store/db'
-import { testConnection, EdgeConnectionStatus } from '@/remote/edgeAPI'
-import { mapState } from 'vuex'
-import { PEER_CONNECTION_ERROR } from '@/store/mutation-types'
+// import { settingsDB } from '@/store/db'
+import { mapState, mapActions } from 'vuex'
+import {
+  PEER_DISCONNECTED,
+  PEER_CONNECTING,
+  PEER_CONNECTED,
+  PEER_CONNECTION_ERROR
+} from '@/store/mutation-types.js'
 
 export default {
   data: function () {
     return {
-      edgeAddress: '',
+      // edgeAddress: '',
       connectionStatus: '',
       connectionTip: '',
       testInProgress: false,
       testDone: true,
       statusColor: 'info',
-      connectStep: 0,
-      discoveryProgressValue: 0
+      removeEdgeDialog: false
     }
   },
   computed: {
@@ -158,79 +238,58 @@ export default {
       console.log('this.$store.state.pnp.peerConnectionStatus', this.$store.state.pnp.peerConnectionStatus)
       return this.$store.state.pnp.peerConnectionStatus === PEER_CONNECTION_ERROR
     },
-    ...mapState([
-      'peerConnectionStatus',
+    ...mapState({
+      peerConnectionStatus: state => state.pnp.peerConnectionStatus,
       // map this.edgeConnected to this.$store.state.edgeConnected
-      'isEdgeConnected'
-    ])
+      isEdgeConnected: state =>
+        state.pnp.peerConnectionStatus === PEER_CONNECTED,
+      edgePeerId: state => state.pnp.remotePeerId
+    }),
+    connectStep: function () {
+      let step = 1
+      switch (this.peerConnectionStatus) {
+        case PEER_DISCONNECTED:
+        case PEER_CONNECTION_ERROR:
+          step = 1
+          break
+        case PEER_CONNECTING:
+          step = 2
+          break
+        case PEER_CONNECTED:
+          step = 3
+          break
+        default:
+          break
+      }
+      return step
+    }
   },
   components: {
     AppFrame
   },
   mounted () {
     this.loadSettings()
-    this.interval = setInterval(() => {
-      if (this.discoveryProgressValue === 100) {
-        return (this.discoveryProgressValue = 0)
-      }
-      this.discoveryProgressValue += 3
-    }, 1000)
   },
   beforeDestroy () {
-    clearInterval(this.interval)
   },
   methods: {
+    removeEdgeConnection () {
+      this.removeEdgeDialog = false
+      this.removeEdgeId()
+    },
     loadSettings () {
-      settingsDB.get('ambanic-edge-address').then(
-        (address) => {
-          this.edgeAddress = address
-        }
-      )
+      // settingsDB.get('ambanic-edge-address').then(
+      //   (address) => {
+      //     this.edgeAddress = address
+      //   }
+      // )
     },
     saveSettings () {
-      settingsDB.set('ambanic-edge-address', this.edgeAddress)
+      // settingsDB.set('ambanic-edge-address', this.edgeAddress)
     },
-    cancel () {
-      this.testInProgress = false
-      this.testDone = false
-      // load previously saved settings
-      this.loadSettings()
-    },
-    save () {
-      this.testInProgress = false
-      this.testDone = false
-      // store settings
-      this.saveSettings()
-    },
-    test () {
-      this.testInProgress = true
-      this.testDone = false
-      testConnection(this.settingsForm.address).then(
-        status => {
-          if (!this.testInProgress) return // test cancelled
-          switch (status) {
-            case EdgeConnectionStatus.OFFLINE:
-              this.connectionStatus = 'OFFLINE'
-              this.connectionTip = 'No connection to edge device.'
-              this.statusColor = 'error'
-              break
-            case EdgeConnectionStatus.UNAVAILABLE:
-              this.connectionStatus = 'OFFLINE'
-              this.connectionTip = 'Edge device is not responsive.'
-              this.statusColor = 'error'
-              break
-            case EdgeConnectionStatus.OK:
-              this.connectionStatus = 'OK'
-              this.connectionTip = 'Edge device API available.'
-              this.statusColor = 'success'
-              break
-          }
-          this.testInProgress = false
-          this.testDone = true
-          // console.debug(`Ambianic Edge device connection status ${status}`)
-        }
-      )
-    }
+    ...mapActions({
+      removeEdgeId: 'removeRemotePeerId' // map `this.add()` to `this.$store.dispatch('increment')`
+    })
   }
 }
 
