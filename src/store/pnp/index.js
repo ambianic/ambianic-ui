@@ -216,14 +216,25 @@ function setPeerConnectionHandlers ({ state, commit, dispatch }, peerConnection)
   // Handle incoming data (messages only since this is the signal sender)
   peerConnection.on('data', function (data) {
     // addMessage('<span class=\'peerMsg\'>Peer:</span> ' + data)
-    console.log('pnpService: Data message received: %s', data)
+    console.debug('Remote Peer Data message received (type %s): %s',
+      typeof (data), data)
     // if data is authentication challenge response, verify it
     // for now we asume authentication passed
-    const authMessage = true
+    let authMessage
+    if (typeof (data) === 'string') {
+      try {
+        authMessage = JSON.parse(data)
+      } catch (e) {
+        console.error('Error while JSON parsing data message', data)
+      }
+    }
     if (authMessage) {
-      const authPassed = true
+      const authPassed = authMessage.name === 'Ambianic-Edge'
       if (authPassed) {
+        console.debug('Remote peer authenticated as:', authMessage.name)
         commit(PEER_CONNECTED, peerConnection)
+      } else {
+        commit(USER_MESSAGE, 'Remote peer authentication failed.')
       }
     }
   })
@@ -231,6 +242,11 @@ function setPeerConnectionHandlers ({ state, commit, dispatch }, peerConnection)
   peerConnection.on('close', function () {
     commit(PEER_DISCONNECTED)
     commit(USER_MESSAGE, 'Connection to remote peer closed')
+  })
+
+  peerConnection.on('error', function (err) {
+    commit(PEER_CONNECTION_ERROR, err)
+    console.debug('Error from peer DataConnection', err)
   })
 }
 
@@ -356,6 +372,7 @@ const actions = {
     // Check URL params for commands that should be sent immediately
     // var command = getUrlParam('command')
     // if (command)
+    console.log('Preparing to send message via peer DataConnection')
     const msg = JSON.stringify({
       type: 'http-request',
       method: 'GET',
@@ -365,6 +382,7 @@ const actions = {
       }
     })
     peerConnection.send(msg)
+    console.log('Peer DataConnection sending message', msg)
     console.log('DataChannel transport capabilities',
       peerConnection.dataChannel)
   },
@@ -377,7 +395,13 @@ const actions = {
   async [REMOVE_REMOTE_PEER_ID] ({ state, commit, dispatch }) {
     if (state.peerConnectionStatus !== PEER_DISCONNECTED) {
       const conn = state.peerConnection
-      conn.close()
+      if (conn) {
+        try {
+          conn.close()
+        } catch (err) {
+          console.debug('Error while closing peer DataConnection.', err)
+        }
+      }
       commit(PEER_DISCONNECTED)
     }
     commit(REMOTE_PEER_ID_REMOVED)
