@@ -178,7 +178,7 @@
         v-model="removeEdgeDialog"
       >
         <v-card>
-          <v-card-title class="headline">Remove device connection?</v-card-title>
+          <v-card-title class="headline">Remove device?</v-card-title>
 
           <v-card-text>
             If you remove the connection to this Ambianic Edge device,
