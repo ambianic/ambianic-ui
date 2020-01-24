@@ -14,7 +14,8 @@ import {
   USER_MESSAGE,
   NEW_PEER_ID,
   NEW_REMOTE_PEER_ID,
-  REMOTE_PEER_ID_REMOVED
+  REMOTE_PEER_ID_REMOVED,
+  PEER_FETCH
 } from '../mutation-types.js'
 import {
   INITIALIZE_PNP,
@@ -27,7 +28,8 @@ import {
 } from '../action-types.js'
 import { ambianicConf } from '@/config'
 import Peer from 'peerjs'
-import { PeerRoom } from '@/remote/pnp'
+import { PeerRoom } from '@/remote/peer-room'
+import { PeerFetch } from '@/remote/peer-fetch'
 const STORAGE_KEY = 'ambianic-pnp-settings'
 
 /**
@@ -68,13 +70,18 @@ const state = {
   /**
     Status of current peer connection to remote pnp service
   */
-  pnpServiceConnectionStatus: PNP_SERVICE_DISCONNECTED
+  pnpServiceConnectionStatus: PNP_SERVICE_DISCONNECTED,
+  /**
+    PeerFetch instance
+  */
+  peerFetch: PeerFetch
 }
 
 const mutations = {
   [PEER_DISCONNECTED] (state) {
     state.peerConnection = null
     state.peerConnectionStatus = PEER_DISCONNECTED
+    state.peerFetch = null
   },
   [PEER_DISCOVERED] (state) {
     state.peerConnectionStatus = PEER_DISCOVERED
@@ -117,6 +124,10 @@ const mutations = {
     console.log('Removing remote Peer Id from local storage')
     state.remotePeerId = null
     window.localStorage.removeItem(`${STORAGE_KEY}.remotePeerId`)
+  },
+  [PEER_FETCH] (state, peerFetch) {
+    console.debug('Setting PeerFetch instance.')
+    state.peerFetch = peerFetch
   }
 }
 
@@ -211,32 +222,10 @@ function setPnPServiceConnectionHandlers (
 function setPeerConnectionHandlers ({ state, commit, dispatch }, peerConnection) {
   // setup connection progress callbacks
   peerConnection.on('open', function () {
+    const peerFetch = new PeerFetch(peerConnection)
+    console.debug('Peer DataConnection is now open. Creating PeerFetch wrapper.')
+    commit(PEER_FETCH, peerFetch)
     dispatch(PEER_AUTHENTICATE, peerConnection)
-  })
-  // Handle incoming data (messages only since this is the signal sender)
-  peerConnection.on('data', function (data) {
-    // addMessage('<span class=\'peerMsg\'>Peer:</span> ' + data)
-    console.debug('Remote Peer Data message received (type %s): %s',
-      typeof (data), data)
-    // if data is authentication challenge response, verify it
-    // for now we asume authentication passed
-    let authMessage
-    if (typeof (data) === 'string') {
-      try {
-        authMessage = JSON.parse(data)
-      } catch (e) {
-        console.error('Error while JSON parsing data message', data)
-      }
-    }
-    if (authMessage) {
-      const authPassed = authMessage.name === 'Ambianic-Edge'
-      if (authPassed) {
-        console.debug('Remote peer authenticated as:', authMessage.name)
-        commit(PEER_CONNECTED, peerConnection)
-      } else {
-        commit(USER_MESSAGE, 'Remote peer authentication failed.')
-      }
-    }
   })
 
   peerConnection.on('close', function () {
@@ -353,7 +342,7 @@ const actions = {
     console.log('Connecting to remote peer', remotePeerId)
     commit(PEER_CONNECTING)
     const peerConnection = peer.connect(remotePeerId, {
-      reliable: true, serialization: 'raw', somethingCrazy: 1234
+      reliable: true, serialization: 'raw'
     })
     setPeerConnectionHandlers({ state, commit, dispatch }, peerConnection)
   },
@@ -365,23 +354,36 @@ const actions = {
     commit(PEER_AUTHENTICATING)
     commit(USER_MESSAGE, `Authenticating remote peer: ${peerConnection.peer}`)
     console.log('Authenticating remote Peer ID: ', peerConnection.peer)
-    if (state.remotePeerId !== peerConnection.peer) {
-      // remote Peer ID is new
-      commit(NEW_REMOTE_PEER_ID, peerConnection.peer)
-    }
-    // Check URL params for commands that should be sent immediately
-    // var command = getUrlParam('command')
-    // if (command)
-    console.log('Preparing to send message via peer DataConnection')
-    const msg = JSON.stringify({
-      type: 'http-request',
-      method: 'GET',
-      path: '/fingerprint',
+    const msg = {
+      url: '/fingerprint',
       params: {
         user: 'ambianic-ui'
       }
-    })
-    peerConnection.send(msg)
+    }
+    const response = await state.peerFetch.get(msg)
+    console.log('peerFetch.get returned response', { response })
+    // if data is authentication challenge response, verify it
+    // for now we asume authentication passed
+    let authMessage
+    if (typeof (response) === 'string') {
+      try {
+        authMessage = JSON.parse(response)
+      } catch (e) {
+        console.error('Error while JSON parsing response', response)
+      }
+    }
+    if (authMessage) {
+      const authPassed = authMessage.name === 'Ambianic-Edge'
+      if (authPassed) {
+        console.debug('Remote peer authenticated as:', authMessage.name)
+        commit(PEER_CONNECTED, peerConnection)
+        // remote Peer ID authenticated,
+        // lets store it for future (re)connections
+        commit(NEW_REMOTE_PEER_ID, peerConnection.peer)
+      } else {
+        commit(USER_MESSAGE, 'Remote peer authentication failed.')
+      }
+    }
     console.log('Peer DataConnection sending message', msg)
     console.log('DataChannel transport capabilities',
       peerConnection.dataChannel)
