@@ -113,6 +113,24 @@ export class PeerFetch {
     this._dataConnection.send(jsonRequest)
   }
 
+  textDecode (arrayBuffer) {
+    var response
+    if ('TextDecoder' in window) {
+      // Decode as UTF-8
+      var dataView = new DataView(arrayBuffer)
+      var decoder = new TextDecoder('utf8')
+      var decodedString = decoder.decode(dataView)
+      console.debug({ decodedString })
+      response = JSON.parse(decodedString)
+    } else {
+      // Fallback decode as ASCII
+      decodedString = String.fromCharCode.apply(null,
+        new Uint8Array(arrayBuffer))
+      response = JSON.parse(decodedString)
+    }
+    return response
+  }
+
   async _receiveResponse (ticket) {
     const timeout = 30 * 1000 // 30 seconds
     const timerStart = Date.now()
@@ -126,7 +144,7 @@ export class PeerFetch {
         console.debug('Received response', { ticket, request, response })
         return response
       }
-      timeElapsed = Date.now() - timeElapsed
+      timeElapsed = Date.now() - timerStart
       await sleep(100)
     } while (!response && timeElapsed < timeout)
     if (!response) {

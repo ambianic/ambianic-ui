@@ -354,39 +354,39 @@ const actions = {
     commit(PEER_AUTHENTICATING)
     commit(USER_MESSAGE, `Authenticating remote peer: ${peerConnection.peer}`)
     console.log('Authenticating remote Peer ID: ', peerConnection.peer)
-    const msg = {
-      url: '/fingerprint',
+    const request = {
+      url: 'https://hacker-news.firebaseio.com/v0/item/8863.json',
       params: {
-        user: 'ambianic-ui'
+        print: 'pretty'
       }
     }
-    const response = await state.peerFetch.get(msg)
-    console.log('peerFetch.get returned response', { response })
+    const response = await state.peerFetch.get(request)
+    const text = state.peerFetch.textDecode(response)
+    console.log('peerFetch.get returned response', { request, response, text })
     // if data is authentication challenge response, verify it
     // for now we asume authentication passed
-    let authMessage
-    if (typeof (response) === 'string') {
-      try {
-        authMessage = JSON.parse(response)
-      } catch (e) {
-        console.error('Error while JSON parsing response', response)
-      }
+    const authPassed = true // authMessage.name === 'Ambianic-Edge'
+    if (authPassed) {
+      // console.debug('Remote peer authenticated as:', authMessage.name)
+      commit(PEER_CONNECTED, peerConnection)
+      // remote Peer ID authenticated,
+      // lets store it for future (re)connections
+      commit(NEW_REMOTE_PEER_ID, peerConnection.peer)
+    } else {
+      commit(USER_MESSAGE, 'Remote peer authentication failed.')
     }
-    if (authMessage) {
-      const authPassed = authMessage.name === 'Ambianic-Edge'
-      if (authPassed) {
-        console.debug('Remote peer authenticated as:', authMessage.name)
-        commit(PEER_CONNECTED, peerConnection)
-        // remote Peer ID authenticated,
-        // lets store it for future (re)connections
-        commit(NEW_REMOTE_PEER_ID, peerConnection.peer)
-      } else {
-        commit(USER_MESSAGE, 'Remote peer authentication failed.')
-      }
-    }
-    console.log('Peer DataConnection sending message', msg)
-    console.log('DataChannel transport capabilities',
+    console.debug('Peer DataConnection sending message', request)
+    console.debug('DataChannel transport capabilities',
       peerConnection.dataChannel)
+
+    const request2 = {
+      url: 'https://jsonplaceholder.typicode.com/todos/1'
+    }
+    console.debug('peerFetch.get', { request2 })
+    const response2 = await state.peerFetch.get(request2)
+    const text2 = state.peerFetch.textDecode(response2)
+    console.debug('peerFetch.get returned response', { request, response, text2 })
+    console.debug('peerFetch.get returned response', { request2, response2 })
   },
   /**
   * Remove remote peer id from local store.
