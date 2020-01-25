@@ -5,7 +5,7 @@
       justify="space-around"
     >
       <v-col
-        v-if="isEdgeConnected"
+        v-if="!isEdgeConnected"
         style="max-width: 420px;"
         align="center"
         justify="center"
@@ -19,20 +19,24 @@
           <v-card-title>
             <v-icon
               slot="icon"
-              color="warning"
               size="36"
             >
-              mdi-timeline-alert-outline
+              mdi-wifi-off
             </v-icon>
-            <span class="title font-weight-light mx-10">Setup Home Timeline</span>
+            Connecting to Ambianic Edge device...
+            <v-progress-linear
+              color="info"
+              indeterminate
+              :size="50"
+              :width="7"
+            >
+            </v-progress-linear>
           </v-card-title>
 
           <v-card-text>
-            This is where your home timeline will show,
-            but we need to set it up first.
-            Below is just some sample data.
-            Let's connect to your Ambianic Edge device
-            and pull real data.
+            In most cases, connecting to your edge device is automatic.
+            If you are not connected within a few moments, click the
+            button below to review settings.
           </v-card-text>
 
           <v-card-actions>
@@ -44,6 +48,15 @@
             </v-btn>
           </v-card-actions>
         </v-card>
+      </v-col>
+      <v-col
+        v-else
+        style="max-width: 420px;"
+        align="center"
+        justify="center"
+        cols="12"
+        class="pa-0 ma-0 fill-height"
+      >
         <v-list
           dense
           class="pa-0 ma-0"
