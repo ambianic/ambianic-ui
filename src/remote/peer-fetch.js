@@ -46,15 +46,27 @@ export class PeerFetch {
     // Handle incoming data (messages only since this is the signal sender)
     const peerFetch = this
     this._dataConnection.on('data', function (data) {
-      console.debug('Remote Peer Data message received (type %s): %s',
+      console.debug('Remote 11111 Peer Data message received (type %s): %s',
         typeof (data), data)
       // we expect data to be a response to a previously sent request message
       const response = data
       const ticket = peerFetch._nextTicketInLine
       console.debug(peerFetch, peerFetch._requestMap, ticket, response)
+      // const blah = {
+      //   url: 'http://localhost:8778/?from=_dataConnection.on_data'
+      // }
+      // const msg = JSON.stringify(blah)
+      // const dc = peerFetch._dataConnection
+      // console.error('>>>>>>>>>>>>>>>>>> Sending msg', { dc, msg })
+      // peerFetch._dataConnection.send(msg)
       // update request map entry with this response
       const pair = peerFetch._requestMap.get(ticket)
-      pair.response = response
+      if (pair) {
+        pair.response = response
+      } else {
+        console.error('No entry found in pending requestMap for ticket',
+          { ticket })
+      }
     })
   }
 
@@ -110,7 +122,11 @@ export class PeerFetch {
     const requestMap = this._requestMap
     console.debug('Sending request to remote peer',
       { requestMap, ticket, request })
-    this._dataConnection.send(jsonRequest)
+    try {
+      this._dataConnection.send(jsonRequest)
+    } catch (error) {
+      console.error('Error sending message via Peer DataConnection', { error })
+    }
   }
 
   _processNextTicketInLine () {
@@ -160,6 +176,7 @@ export class PeerFetch {
         return response
       } else {
         console.debug('Waiting for response', { ticket, request })
+        // this._processNextTicketInLine()
       }
       timeElapsed = Date.now() - timerStart
       await sleep(1000)

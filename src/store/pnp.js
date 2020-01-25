@@ -225,7 +225,12 @@ function setPeerConnectionHandlers ({ state, commit, dispatch }, peerConnection)
     const peerFetch = new PeerFetch(peerConnection)
     console.debug('Peer DataConnection is now open. Creating PeerFetch wrapper.')
     commit(PEER_FETCH, peerFetch)
-    dispatch(PEER_AUTHENTICATE, peerConnection)
+    setTimeout(() => dispatch(PEER_AUTHENTICATE, peerConnection), 1000)
+    try {
+      peerConnection.send('HELLO from peerConnection.on_open')
+    } catch (error) {
+      console.error('Error sending message via webrtc datachannel', { error })
+    }
   })
 
   peerConnection.on('close', function () {
@@ -342,7 +347,7 @@ const actions = {
     console.log('Connecting to remote peer', remotePeerId)
     commit(PEER_CONNECTING)
     const peerConnection = peer.connect(remotePeerId, {
-      reliable: true, serialization: 'raw'
+      label: 'http-proxy', reliable: true, serialization: 'raw'
     })
     setPeerConnectionHandlers({ state, commit, dispatch }, peerConnection)
   },
