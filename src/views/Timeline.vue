@@ -5,6 +5,7 @@
       justify="space-around"
     >
       <v-col
+        v-if="isEdgeConnected"
         style="max-width: 420px;"
         align="center"
         justify="center"
@@ -248,7 +249,11 @@
 import InfiniteLoading from 'vue-infinite-loading'
 import DetectionBoxes from '../components/DetectionBoxes.vue'
 import AppFrame from '@/components/AppFrame.vue'
-import { getTimelinePage, getImageURL } from '@/remote/edgeAPI'
+import { EdgeAPI } from '@/remote/edgeAPI'
+import { mapState } from 'vuex'
+import {
+  PEER_CONNECTED
+} from '@/store/mutation-types'
 
 const PAGE_SIZE = 5
 
@@ -262,29 +267,47 @@ export default {
     }
   },
   created () {
-    this.getTimelineSlice()
+    this.initEdgeAPI()
   },
   components: {
     AppFrame,
     DetectionBoxes,
     InfiniteLoading
   },
+  computed: {
+    ...mapState({
+      peerConnectionStatus: state => state.pnp.peerConnectionStatus,
+      // map this.edgeConnected to this.$store.state.edgeConnected
+      isEdgeConnected: state =>
+        state.pnp.peerConnectionStatus === PEER_CONNECTED,
+      edgePeerId: state => state.pnp.remotePeerId,
+      peerFetch: state => state.pnp.peerFetch,
+      pnp: state => state.pnp
+    })
+  },
   methods: {
+    initEdgeAPI () {
+      this.edgeAPI = new EdgeAPI(this.pnp)
+    },
     setImageLoaded (index) {
       this.$set(this.isImageLoaded, index, true)
       // eslint-disable-next-line
       // console.log(`isImageLoaded[${index}]: ${this.isImageLoaded[index]}`)
     },
     updateImageURL (relDir, fileName, index) {
-      getImageURL(relDir, fileName).then(fullImageURL => {
+      this.edgeAPI.getImageURL(relDir, fileName).then(fullImageURL => {
         this.$set(this.imageURL, index, fullImageURL)
       })
     },
-    getTimelineSlice () {
-      return getTimelinePage(this.timeline.length / PAGE_SIZE + 1)
+    async getTimelineSlice () {
+      const timelineEvents = await this.edgeAPI.getTimelinePage(this.timeline.length / PAGE_SIZE + 1)
+      console.debug('getTimelineSlice received data', { timelineEvents }) // eslint-disable-line no-console
+      return timelineEvents
     },
-    infiniteHandler ($state) {
-      this.getTimelineSlice().then(({ data }) => {
+    async infiniteHandler ($state) {
+      try {
+        const data = await this.getTimelineSlice()
+        console.debug('Infinite handler received timeline slice', { data }) // eslint-disable-line no-console
         // Are there any more timeline events left?
         if (data && data.timeline && data.timeline.length) {
           // eslint-disable-next-line
@@ -311,12 +334,12 @@ export default {
           // no more timeline events left
           $state.complete()
         }
-      }).catch((error) => {
+      } catch (error) {
         // display some kind of error to the user that
         // the backend API call returned an error
         // eslint-disable-next-line
         console.error(error)
-      })
+      }
     },
     eventColor (event) {
       let color = 'primary'

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import PNPStore from './pnp'
+import PNPStore from './pnp.js'
 import { INITIALIZE_PNP } from './action-types.js'
 
 Vue.use(Vuex)

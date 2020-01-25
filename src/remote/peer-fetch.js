@@ -62,7 +62,7 @@ export class PeerFetch {
   * REST API over HTTP GET
   */
   async get ({ url = '/', params = {} }) {
-    console.debug('PeerFetch.get', url, params)
+    console.debug('PeerFetch.get', { url, params })
     if (params.size > 0) {
       var esc = encodeURIComponent
       var query = Object.keys(params)
@@ -77,12 +77,12 @@ export class PeerFetch {
     // get a ticket that matches the request
     // and use it to claim the corresponding
     // response when availably
-    const ticket = this._pushRequest(request)
+    const ticket = this._queueRequest(request)
     const response = await this._receiveResponse(ticket)
     return response
   }
 
-  _pushRequest (request) {
+  _queueRequest (request) {
     const ticket = this._drawNewTicket()
     console.debug(this._requestMap)
     this._requestMap.set(ticket, { request })
@@ -113,26 +113,39 @@ export class PeerFetch {
     this._dataConnection.send(jsonRequest)
   }
 
+  _processNextTicketInLine () {
+    const ticket = this._nextTicketInLine
+    // check if there is a pending ticket
+    // and process it
+    if (this._nextTicketInLine < this._nextAvailableTicket) {
+      this._sendNextRequest(ticket)
+    }
+  }
+
   textDecode (arrayBuffer) {
-    var response
+    let decodedString
     if ('TextDecoder' in window) {
       // Decode as UTF-8
       var dataView = new DataView(arrayBuffer)
       var decoder = new TextDecoder('utf8')
-      var decodedString = decoder.decode(dataView)
-      console.debug({ decodedString })
-      response = JSON.parse(decodedString)
+      decodedString = decoder.decode(dataView)
     } else {
       // Fallback decode as ASCII
       decodedString = String.fromCharCode.apply(null,
         new Uint8Array(arrayBuffer))
-      response = JSON.parse(decodedString)
     }
+    console.debug({ decodedString })
+    return decodedString
+  }
+
+  jsonify (arrayBuffer) {
+    const decodedString = this.textDecode(arrayBuffer)
+    const response = JSON.parse(decodedString)
     return response
   }
 
   async _receiveResponse (ticket) {
-    const timeout = 30 * 1000 // 30 seconds
+    const timeout = 300 * 1000 // 30 seconds
     const timerStart = Date.now()
     let timeElapsed = timerStart
     let request, response
@@ -142,10 +155,14 @@ export class PeerFetch {
         // if (typeof(response) === 'string') {
         this._ticketProcessed(ticket)
         console.debug('Received response', { ticket, request, response })
+        // schedule processing of next request shortly
+        setTimeout(() => this._processNextTicketInLine(), 50)
         return response
+      } else {
+        console.debug('Waiting for response', { ticket, request })
       }
       timeElapsed = Date.now() - timerStart
-      await sleep(100)
+      await sleep(1000)
     } while (!response && timeElapsed < timeout)
     if (!response) {
       throw Error('PeerFetch Timeout while waiting for response.')

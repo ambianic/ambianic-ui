@@ -16,7 +16,7 @@ import {
   NEW_REMOTE_PEER_ID,
   REMOTE_PEER_ID_REMOVED,
   PEER_FETCH
-} from '../mutation-types.js'
+} from './mutation-types.js'
 import {
   INITIALIZE_PNP,
   PNP_SERVICE_CONNECT,
@@ -25,7 +25,7 @@ import {
   PEER_CONNECT,
   PEER_AUTHENTICATE,
   REMOVE_REMOTE_PEER_ID
-} from '../action-types.js'
+} from './action-types.js'
 import { ambianicConf } from '@/config'
 import Peer from 'peerjs'
 import { PeerRoom } from '@/remote/peer-room'
@@ -355,17 +355,14 @@ const actions = {
     commit(USER_MESSAGE, `Authenticating remote peer: ${peerConnection.peer}`)
     console.log('Authenticating remote Peer ID: ', peerConnection.peer)
     const request = {
-      url: 'https://hacker-news.firebaseio.com/v0/item/8863.json',
-      params: {
-        print: 'pretty'
-      }
+      url: 'http://localhost:8778'
     }
     const response = await state.peerFetch.get(request)
     const text = state.peerFetch.textDecode(response)
     console.log('peerFetch.get returned response', { request, response, text })
     // if data is authentication challenge response, verify it
-    // for now we asume authentication passed
-    const authPassed = true // authMessage.name === 'Ambianic-Edge'
+    // for now we naively check for Ambianic in the response.
+    const authPassed = text.includes('Ambianic')
     if (authPassed) {
       // console.debug('Remote peer authenticated as:', authMessage.name)
       commit(PEER_CONNECTED, peerConnection)
@@ -374,19 +371,20 @@ const actions = {
       commit(NEW_REMOTE_PEER_ID, peerConnection.peer)
     } else {
       commit(USER_MESSAGE, 'Remote peer authentication failed.')
+      commit(PEER_CONNECTION_ERROR)
     }
     console.debug('Peer DataConnection sending message', request)
     console.debug('DataChannel transport capabilities',
       peerConnection.dataChannel)
-
-    const request2 = {
-      url: 'https://jsonplaceholder.typicode.com/todos/1'
-    }
-    console.debug('peerFetch.get', { request2 })
-    const response2 = await state.peerFetch.get(request2)
-    const text2 = state.peerFetch.textDecode(response2)
-    console.debug('peerFetch.get returned response', { request, response, text2 })
-    console.debug('peerFetch.get returned response', { request2, response2 })
+    //
+    // const request2 = {
+    //   url: 'http://192.168.86.22:8778/api/timeline.json'
+    // }
+    // console.debug('peerFetch.get', { request2 })
+    // const response2 = await state.peerFetch.get(request2)
+    // const text2 = state.peerFetch.jsonify(response2)
+    // console.debug('peerFetch.get returned response', { request, response, text2 })
+    // console.debug('peerFetch.get returned response', { request2, response2 })
   },
   /**
   * Remove remote peer id from local store.

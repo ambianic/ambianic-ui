@@ -226,7 +226,7 @@ import {
   PEER_CONNECTING,
   PEER_CONNECTED,
   PEER_CONNECTION_ERROR
-} from '@/store/mutation-types.js'
+} from '@/store/mutation-types'
 
 export default {
   data: function () {
@@ -250,7 +250,8 @@ export default {
       // map this.edgeConnected to this.$store.state.edgeConnected
       isEdgeConnected: state =>
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
-      edgePeerId: state => state.pnp.remotePeerId
+      edgePeerId: state => state.pnp.remotePeerId,
+      peerFetch: state => state.pnp.peerFetch
     }),
     connectStep: function () {
       let step = 1
