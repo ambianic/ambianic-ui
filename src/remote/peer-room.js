@@ -1,8 +1,4 @@
 /**
-Manage plug and play connection to Ambianic Edge.
-*/
-
-/**
  * Local room management for a peer
 */
 export class PeerRoom {

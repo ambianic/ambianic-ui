@@ -176,16 +176,23 @@
       </v-col>
       <v-dialog
         v-model="removeEdgeDialog"
+        max-width="500"
       >
         <v-card>
           <v-card-title class="headline">Remove device?</v-card-title>
 
           <v-card-text>
-            If you remove the connection to this Ambianic Edge device,
+            <p>
+            Are you switching to a new Ambianic Edge device?
+            Removing a device association is usually done when switching to
+            a new edge device with a different Peer ID.
+            </p>
+            <p>
+            If you remove the connection to the current Ambianic Edge device,
             you will not be able to connect to it remotely.
             In order to reconnect to the same device, you will have to
-            go near it and connect on the same WiFi/LAN network
-            so it can be re-discovered.
+            join the same local network.
+            </p>
           </v-card-text>
 
           <v-card-actions>
@@ -219,7 +226,7 @@ import {
   PEER_CONNECTING,
   PEER_CONNECTED,
   PEER_CONNECTION_ERROR
-} from '@/store/mutation-types.js'
+} from '@/store/mutation-types'
 
 export default {
   data: function () {
@@ -243,7 +250,8 @@ export default {
       // map this.edgeConnected to this.$store.state.edgeConnected
       isEdgeConnected: state =>
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
-      edgePeerId: state => state.pnp.remotePeerId
+      edgePeerId: state => state.pnp.remotePeerId,
+      peerFetch: state => state.pnp.peerFetch
     }),
     connectStep: function () {
       let step = 1
