@@ -1,5 +1,15 @@
 # Semantic Versioning Changelog
 
+## [2.0.1](https://github.com/ambianic/ambianic-ui/compare/v2.0.0...v2.0.1) (2020-01-26)
+
+
+### Bug Fixes
+
+* cleanup peer handshake ([7940a54](https://github.com/ambianic/ambianic-ui/commit/7940a5477024b9081d9c68fa23da142c66c0b3ca))
+* edge pairing UX ([d48541b](https://github.com/ambianic/ambianic-ui/commit/d48541bc0d27fb1fe7966fefa26809bc9d1fd51a))
+* PWA name ([8ce6d17](https://github.com/ambianic/ambianic-ui/commit/8ce6d170ef0dc6f07f1a8dcc9864e8da02ae547c))
+* pwa startup screen blank after close ([3c36907](https://github.com/ambianic/ambianic-ui/commit/3c369079486222f8c587d87dcae3bf308f4d2017))
+
 # [2.0.0](https://github.com/ambianic/ambianic-ui/compare/v1.12.0...v2.0.0) (2020-01-26)
 
 
