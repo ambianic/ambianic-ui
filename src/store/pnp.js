@@ -226,11 +226,11 @@ function setPeerConnectionHandlers ({ state, commit, dispatch }, peerConnection)
     console.debug('Peer DataConnection is now open. Creating PeerFetch wrapper.')
     commit(PEER_FETCH, peerFetch)
     setTimeout(() => dispatch(PEER_AUTHENTICATE, peerConnection), 1000)
-    try {
-      peerConnection.send('HELLO from peerConnection.on_open')
-    } catch (error) {
-      console.error('Error sending message via webrtc datachannel', { error })
-    }
+    // try {
+    //   peerConnection.send('HELLO from peerConnection.on_open')
+    // } catch (error) {
+    //   console.error('Error sending message via webrtc datachannel', { error })
+    // }
   })
 
   peerConnection.on('close', function () {
