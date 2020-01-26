@@ -25,6 +25,6 @@
         ["@semantic-release/github", {
           "assets": [
           ]
-    }],        
+    }],
     ]
 }

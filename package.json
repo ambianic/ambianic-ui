@@ -14,8 +14,8 @@
   ],
   "private": false,
   "engines": {
-      "node": ">=12.10.0"
-   },
+    "node": ">=12.10.0"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -64,7 +64,7 @@
     "eslint-plugin-vue": "^6.0.1",
     "sass": "^1.23.3",
     "sass-loader": "^8.0.0",
-    "semantic-release": "^16.0.0",
+    "semantic-release": "^16.0.3",
     "semantic-release-docker": "^2.2.0",
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2",
