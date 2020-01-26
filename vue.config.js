@@ -3,7 +3,7 @@ const CompressionPlugin = require('compression-webpack-plugin')
 
 module.exports = {
   pwa: {
-    name: 'Ambianic UI',
+    name: 'Ambianic  UI',
     themeColor: '#179aff',
     msTileColor: '#179aff',
     appleMobileWebAppCapable: 'yes',

@@ -10,7 +10,11 @@ const routes = [
     name: 'home',
     // component: Home
     component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
-    // component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+  },
+  {
+    path: '/index.html',
+    name: 'pwahome',
+    component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue') // Fix for PWA at /index.html
   },
   {
     path: '/timeline',
