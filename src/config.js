@@ -2,7 +2,7 @@
 export const ambianicConf = {
   // AMBIANIC_API_URI: 'http://192.168.86.22:8778/api/'
   AMBIANIC_API_FALLBACK_URI: '/sample-data/',
-  AMBIANIC_EDGE_HOST: '192.168.86.22',
+  AMBIANIC_EDGE_HOST: 'localhost',
   AMBIANIC_EDGE_API_PORT: 8778,
   AMBIANIC_EDGE_API_ROOT: 'api',
   AMBIANIC_PNP_HOST: 'ambianic-pnp.herokuapp.com', // 'localhost'

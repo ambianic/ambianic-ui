@@ -107,10 +107,13 @@
       <v-btn icon>
         <v-badge
           top
-          color="error lighten-1"
           right
           overlap
+          color="error lighten-1"
           class="align-self-center"
+          :content="newFavorites"
+          :value="newFavorites"
+          show=false
         >
           <v-icon>mdi-heart</v-icon>
         </v-badge>
@@ -118,14 +121,13 @@
       <v-btn icon>
         <v-badge
           top
-          color="error lighten-1"
           right
           overlap
+          color="error lighten-1"
           class="align-self-center"
+          :content="newAlerts"
+          :value="newAlerts"
         >
-          <template v-slot:badge>
-            2
-          </template>
           <v-icon>mdi-bell</v-icon>
         </v-badge>
       </v-btn>
@@ -173,6 +175,8 @@ export default {
   data: () => ({
     dialog: false,
     drawer: null,
+    newFavorites: 0,
+    newAlerts: 2,
     items: [
       { icon: 'history', text: 'Timeline', link: '/timeline' },
       // { icon: 'mdi-account-heart-outline', text: 'People', link: '/people' },

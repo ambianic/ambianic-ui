@@ -85,13 +85,14 @@
 
           </v-list>
           <v-btn text
+            :to="'timeline'"
           >
-            Rename
+            OK
           </v-btn>
           <v-btn text
-            @click.stop="removeEdgeDialog = true"
+            @click.stop="resetEdgeDialog = true"
           >
-            Remove
+            Reset
           </v-btn>
         </v-card>
       </v-col>
@@ -175,23 +176,17 @@
         </v-stepper>
       </v-col>
       <v-dialog
-        v-model="removeEdgeDialog"
+        v-model="resetEdgeDialog"
         max-width="500"
       >
         <v-card>
-          <v-card-title class="headline">Remove device?</v-card-title>
+          <v-card-title class="headline">Reset device pairing?</v-card-title>
 
           <v-card-text>
             <p>
             Are you switching to a new Ambianic Edge device?
-            Removing a device association is usually done when switching to
+            Resetting a device association is usually done when switching to
             a new edge device with a different Peer ID.
-            </p>
-            <p>
-            If you remove the connection to the current Ambianic Edge device,
-            you will not be able to connect to it remotely.
-            In order to reconnect to the same device, you will have to
-            join the same local network.
             </p>
           </v-card-text>
 
@@ -200,16 +195,16 @@
 
             <v-btn
               text
-              @click="removeEdgeDialog = false"
+              @click="resetEdgeDialog = false"
             >
               Cancel
             </v-btn>
 
             <v-btn
               text
-              @click="removeEdgeConnection()"
+              @click="resetEdgeConnection()"
             >
-              Yes, Remove
+              Yes, Reset
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -237,7 +232,7 @@ export default {
       testInProgress: false,
       testDone: true,
       statusColor: 'info',
-      removeEdgeDialog: false
+      resetEdgeDialog: false
     }
   },
   computed: {
@@ -281,8 +276,8 @@ export default {
   beforeDestroy () {
   },
   methods: {
-    removeEdgeConnection () {
-      this.removeEdgeDialog = false
+    resetEdgeConnection () {
+      this.resetEdgeDialog = false
       this.removeEdgeId()
     },
     loadSettings () {
