@@ -1,5 +1,31 @@
 # Semantic Versioning Changelog
 
+# [2.0.0](https://github.com/ambianic/ambianic-ui/compare/v1.12.0...v2.0.0) (2020-01-26)
+
+
+### Bug Fixes
+
+* client side http tunnel over webrtc datachannel ([55ae5bd](https://github.com/ambianic/ambianic-ui/commit/55ae5bd2aaf8b969e46be90ae616468d241905e1))
+* issues with Safari and iOS ([47f098c](https://github.com/ambianic/ambianic-ui/commit/47f098cde7dddee54a36fee732ecba05338a83c5))
+* merge branch 'master' into dev ([ffc50c7](https://github.com/ambianic/ambianic-ui/commit/ffc50c73703f1a204411d515d4c1b3112b51a0f6))
+* peer authentication ([9a1c24c](https://github.com/ambianic/ambianic-ui/commit/9a1c24cff4b78ce202b66546f4b73dd1ae47dc9f))
+* sem release script ([be0047c](https://github.com/ambianic/ambianic-ui/commit/be0047c0e84fca004298ba809078529259abe9b4))
+* Timeline UX related to edge connectivity ([95d5c59](https://github.com/ambianic/ambianic-ui/commit/95d5c591f92f3b14895f0ad064d960ec8e31382a))
+
+
+* Merge pull request #199 from ambianic/dev ([b797f3c](https://github.com/ambianic/ambianic-ui/commit/b797f3c4e235b8f47293cd621e557d13dd45f370)), closes [#199](https://github.com/ambianic/ambianic-ui/issues/199)
+
+
+### Features
+
+* http fetch tunnel over webrtc datachannel ([be18440](https://github.com/ambianic/ambianic-ui/commit/be18440bd7030bd60c5e9546e21a397d5f4dc5df))
+* PeerFetch http client over webrtc datachannel ([05932f3](https://github.com/ambianic/ambianic-ui/commit/05932f3181e0c87ebf2f94b93d32fe2c948a2538))
+
+
+### BREAKING CHANGES
+
+* Move from public HTTP to P2P WebRTC connectivity to Ambianic Edge
+
 # [1.12.0](https://github.com/ambianic/ambianic-ui/compare/v1.11.0...v1.12.0) (2020-01-22)
 
 
