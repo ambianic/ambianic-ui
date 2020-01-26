@@ -13,6 +13,9 @@
     "Workspace Automation"
   ],
   "private": false,
+  "engines": {
+    "node": ">=12.10.0"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
