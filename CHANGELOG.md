@@ -1,5 +1,13 @@
 # Semantic Versioning Changelog
 
+## [2.0.2](https://github.com/ambianic/ambianic-ui/compare/v2.0.1...v2.0.2) (2020-01-28)
+
+
+### Bug Fixes
+
+* added robotx.txt ([70129ee](https://github.com/ambianic/ambianic-ui/commit/70129ee26f82639caedb4bfdfb8c404826df22b2))
+* PWA audit recommendations ([3ffb690](https://github.com/ambianic/ambianic-ui/commit/3ffb6904d943c755d403bcd90e5c07a4578ce7cc))
+
 ## [2.0.1](https://github.com/ambianic/ambianic-ui/compare/v2.0.0...v2.0.1) (2020-01-26)
 
 
