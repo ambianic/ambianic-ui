@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.0.4](https://github.com/ambianic/ambianic-ui/compare/v2.0.3...v2.0.4) (2020-01-28)
+
+
+### Bug Fixes
+
+* sem rel scripts moved to CI to minimize dep bumps on repo ([2b824aa](https://github.com/ambianic/ambianic-ui/commit/2b824aa90ee0b408ef7af452c4521911f2c3c9c1))
+
 ## [2.0.3](https://github.com/ambianic/ambianic-ui/compare/v2.0.2...v2.0.3) (2020-01-28)
 
 
