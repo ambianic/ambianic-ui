@@ -2,6 +2,14 @@
 const CompressionPlugin = require('compression-webpack-plugin')
 
 module.exports = {
+  configureWebpack: {
+    optimization: {
+      splitChunks: {
+        minSize: 10000,
+        maxSize: 250000
+      }
+    }
+  },
   pwa: {
     name: 'Ambianic  UI',
     themeColor: '#179aff',
