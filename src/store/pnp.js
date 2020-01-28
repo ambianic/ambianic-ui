@@ -194,9 +194,13 @@ function setPnPServiceConnectionHandlers (
   })
   peer.on('close', function () {
     // peerConnection = null
-    commit(USER_MESSAGE, 'PnP service connection destroyed. Please refresh')
-    console.log('pnpService: Connection destroyed')
+    commit(USER_MESSAGE, 'PnP service connection closed. Will attempt to reconnect in a moment.')
+    console.log('Connection to PnP server destroyed')
+    console.log('Reconnecting to PnP server...')
     commit(PNP_SERVICE_DISCONNECTED)
+    setTimeout(() => { // give the network a few moments to recover
+      dispatch(INITIALIZE_PNP)
+    }, 3000)
   })
   peer.on('error', function (err) {
     console.log('peer connection error', err)
@@ -205,9 +209,10 @@ function setPnPServiceConnectionHandlers (
       Error while connecting. Will retry shortly. Is the Internet connection OK?
       `)
     commit(PEER_CONNECTION_ERROR)
-    console.log('peerConnectionStatus', state.peerConnectionStatus)
+    console.log('peerConnection error', state.peerConnectionStatus)
+    console.log('Trying to reconnect to PnP server...')
     // retry peer connection in a few seconds
-    setTimeout(() => {
+    setTimeout(() => { // give the network a few moments to recover
       dispatch(INITIALIZE_PNP)
     }, 3000)
   })
@@ -236,11 +241,21 @@ function setPeerConnectionHandlers ({ state, commit, dispatch }, peerConnection)
   peerConnection.on('close', function () {
     commit(PEER_DISCONNECTED)
     commit(USER_MESSAGE, 'Connection to remote peer closed')
+    console.debug('Opening new peer connection.')
+    setTimeout( // give the network a few moments to recover
+      () => dispatch(PEER_CONNECT),
+      3000
+    )
   })
 
   peerConnection.on('error', function (err) {
     commit(PEER_CONNECTION_ERROR, err)
-    console.debug('Error from peer DataConnection', err)
+    console.debug('Error from peer DataConnection.', err)
+    console.debug('Will try a new connection.')
+    setTimeout( // give the network a few moments to recover
+      () => dispatch(PEER_CONNECT),
+      3000
+    )
   })
 }
 
