@@ -1,5 +1,56 @@
 # Semantic Versioning Changelog
 
+## [2.0.3](https://github.com/ambianic/ambianic-ui/compare/v2.0.2...v2.0.3) (2020-01-28)
+
+
+### Bug Fixes
+
+* semantic release moved to CI ([4868056](https://github.com/ambianic/ambianic-ui/commit/4868056f9b536bccde34463e017e1be447b58cfa))
+
+## [2.0.2](https://github.com/ambianic/ambianic-ui/compare/v2.0.1...v2.0.2) (2020-01-28)
+
+
+### Bug Fixes
+
+* added robotx.txt ([70129ee](https://github.com/ambianic/ambianic-ui/commit/70129ee26f82639caedb4bfdfb8c404826df22b2))
+* PWA audit recommendations ([3ffb690](https://github.com/ambianic/ambianic-ui/commit/3ffb6904d943c755d403bcd90e5c07a4578ce7cc))
+
+## [2.0.1](https://github.com/ambianic/ambianic-ui/compare/v2.0.0...v2.0.1) (2020-01-26)
+
+
+### Bug Fixes
+
+* cleanup peer handshake ([7940a54](https://github.com/ambianic/ambianic-ui/commit/7940a5477024b9081d9c68fa23da142c66c0b3ca))
+* edge pairing UX ([d48541b](https://github.com/ambianic/ambianic-ui/commit/d48541bc0d27fb1fe7966fefa26809bc9d1fd51a))
+* PWA name ([8ce6d17](https://github.com/ambianic/ambianic-ui/commit/8ce6d170ef0dc6f07f1a8dcc9864e8da02ae547c))
+* pwa startup screen blank after close ([3c36907](https://github.com/ambianic/ambianic-ui/commit/3c369079486222f8c587d87dcae3bf308f4d2017))
+
+# [2.0.0](https://github.com/ambianic/ambianic-ui/compare/v1.12.0...v2.0.0) (2020-01-26)
+
+
+### Bug Fixes
+
+* client side http tunnel over webrtc datachannel ([55ae5bd](https://github.com/ambianic/ambianic-ui/commit/55ae5bd2aaf8b969e46be90ae616468d241905e1))
+* issues with Safari and iOS ([47f098c](https://github.com/ambianic/ambianic-ui/commit/47f098cde7dddee54a36fee732ecba05338a83c5))
+* merge branch 'master' into dev ([ffc50c7](https://github.com/ambianic/ambianic-ui/commit/ffc50c73703f1a204411d515d4c1b3112b51a0f6))
+* peer authentication ([9a1c24c](https://github.com/ambianic/ambianic-ui/commit/9a1c24cff4b78ce202b66546f4b73dd1ae47dc9f))
+* sem release script ([be0047c](https://github.com/ambianic/ambianic-ui/commit/be0047c0e84fca004298ba809078529259abe9b4))
+* Timeline UX related to edge connectivity ([95d5c59](https://github.com/ambianic/ambianic-ui/commit/95d5c591f92f3b14895f0ad064d960ec8e31382a))
+
+
+* Merge pull request #199 from ambianic/dev ([b797f3c](https://github.com/ambianic/ambianic-ui/commit/b797f3c4e235b8f47293cd621e557d13dd45f370)), closes [#199](https://github.com/ambianic/ambianic-ui/issues/199)
+
+
+### Features
+
+* http fetch tunnel over webrtc datachannel ([be18440](https://github.com/ambianic/ambianic-ui/commit/be18440bd7030bd60c5e9546e21a397d5f4dc5df))
+* PeerFetch http client over webrtc datachannel ([05932f3](https://github.com/ambianic/ambianic-ui/commit/05932f3181e0c87ebf2f94b93d32fe2c948a2538))
+
+
+### BREAKING CHANGES
+
+* Move from public HTTP to P2P WebRTC connectivity to Ambianic Edge
+
 # [1.12.0](https://github.com/ambianic/ambianic-ui/compare/v1.11.0...v1.12.0) (2020-01-22)
 
 
