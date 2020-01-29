@@ -218,7 +218,9 @@ import AppFrame from '@/components/AppFrame.vue'
 import { mapState, mapActions } from 'vuex'
 import {
   PEER_DISCONNECTED,
+  PEER_DISCOVERED,
   PEER_CONNECTING,
+  PEER_AUTHENTICATING,
   PEER_CONNECTED,
   PEER_CONNECTION_ERROR
 } from '@/store/mutation-types'
@@ -255,7 +257,9 @@ export default {
         case PEER_CONNECTION_ERROR:
           step = 1
           break
+        case PEER_DISCOVERED:
         case PEER_CONNECTING:
+        case PEER_AUTHENTICATING:
           step = 2
           break
         case PEER_CONNECTED:
