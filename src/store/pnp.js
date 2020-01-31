@@ -243,7 +243,7 @@ function setPeerConnectionHandlers ({ state, commit, dispatch }, peerConnection)
     commit(USER_MESSAGE, 'Connection to remote peer closed')
     console.debug('Opening new peer connection.')
     setTimeout( // give the network a few moments to recover
-      () => dispatch(PEER_CONNECT),
+      () => dispatch(PEER_DISCOVER),
       3000
     )
   })
@@ -253,7 +253,7 @@ function setPeerConnectionHandlers ({ state, commit, dispatch }, peerConnection)
     console.debug('Error from peer DataConnection.', err)
     console.debug('Will try a new connection.')
     setTimeout( // give the network a few moments to recover
-      () => dispatch(PEER_CONNECT),
+      () => dispatch(PEER_DISCOVER),
       3000
     )
   })

@@ -179,7 +179,9 @@ export class PeerFetch {
         // this._processNextTicketInLine()
       }
       timeElapsed = Date.now() - timerStart
-      await sleep(1000)
+      if (!response) {
+        await sleep(3000)
+      }
     } while (!response && timeElapsed < timeout)
     if (!response) {
       throw Error('PeerFetch Timeout while waiting for response.')
