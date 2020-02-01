@@ -1,5 +1,13 @@
 # Semantic Versioning Changelog
 
+## [2.0.5](https://github.com/ambianic/ambianic-ui/compare/v2.0.4...v2.0.5) (2020-02-01)
+
+
+### Bug Fixes
+
+* polish p2p connect UI ([30f4e86](https://github.com/ambianic/ambianic-ui/commit/30f4e869d3ef442ef6abf6f44d309454533e8ae5))
+* polish pnp reconnect after edge restart ([e83eb2c](https://github.com/ambianic/ambianic-ui/commit/e83eb2c7dafe5df2c1ce117124cd13deae07f57a))
+
 ## [2.0.4](https://github.com/ambianic/ambianic-ui/compare/v2.0.3...v2.0.4) (2020-01-28)
 
 
