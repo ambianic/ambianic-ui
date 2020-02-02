@@ -74,14 +74,14 @@ export class PeerFetch {
   * REST API over HTTP GET
   */
   async get ({ url = '/', params = {} }) {
-    console.debug('PeerFetch.get', { url, params })
-    if (params.size > 0) {
-      var esc = encodeURIComponent
-      var query = Object.keys(params)
-        .map(k => esc(k) + '=' + esc(params[k]))
-        .join('&')
-      url += '?' + query
-    }
+    console.debug('PeerFetch.get enter', { url, params })
+    var esc = encodeURIComponent
+    var query = Object.keys(params)
+      .map(k => esc(k) + '=' + esc(params[k]))
+      .join('&')
+    url += '?' + query
+    console.debug('PeerFetch.get', { url, query })
+    console.debug('PeerFetch.get post process', { url })
     const request = {
       url,
       method: 'GET'
