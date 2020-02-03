@@ -404,7 +404,16 @@ export default {
     },
     friendlyTime (datetime) {
       var moment = require('moment')
-      return moment(datetime).calendar()
+      const dt = new Date()
+      var tz = dt.getTimezoneOffset()
+      // eslint-disable-next-line
+      console.debug('event time before local timezone adjustment', { datetime })
+      // eslint-disable-next-line
+      console.debug('timezone offset', { tz })
+      const adjustedLocalTime = moment.utc(datetime).subtract(tz, 'minutes').calendar()
+      // eslint-disable-next-line
+      console.debug('local timezone adjusted time of event', { adjustedLocalTime })
+      return adjustedLocalTime
     },
     asPercentage (number) {
       const p = Number(number).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 })
