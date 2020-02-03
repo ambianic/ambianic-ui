@@ -322,7 +322,7 @@ export default {
         const data = await this.getTimelineSlice()
         console.debug('Infinite handler received timeline slice', { data }) // eslint-disable-line no-console
         // Are there any more timeline events left?
-        if (data && data.timeline && data.timeline.length) {
+        if (data && data.timeline && data.timeline.length === PAGE_SIZE) {
           // eslint-disable-next-line
           // console.debug('new timeline events: ', data.timeline.length)
           // eslint-disable-next-line
