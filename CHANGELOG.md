@@ -1,5 +1,13 @@
 # Semantic Versioning Changelog
 
+## [2.0.6](https://github.com/ambianic/ambianic-ui/compare/v2.0.5...v2.0.6) (2020-02-03)
+
+
+### Bug Fixes
+
+* dependency tree ([66795ed](https://github.com/ambianic/ambianic-ui/commit/66795ed0822f071a794730a8d807ffcef34b3d9b))
+* timezone adjusted event time display ([054f071](https://github.com/ambianic/ambianic-ui/commit/054f07139db6af376f544bfe40c4604e1d5e1b29))
+
 ## [2.0.5](https://github.com/ambianic/ambianic-ui/compare/v2.0.4...v2.0.5) (2020-02-01)
 
 
