@@ -3,8 +3,9 @@
 */
 import {
   PEER_DISCONNECTED,
-  PEER_DISCOVERED,
   PEER_CONNECTING,
+  PEER_DISCOVERING,
+  PEER_DISCOVERED,
   PEER_AUTHENTICATING,
   PEER_CONNECTED,
   PEER_CONNECTION_ERROR,
@@ -85,6 +86,9 @@ const mutations = {
   },
   [PEER_DISCOVERED] (state) {
     state.peerConnectionStatus = PEER_DISCOVERED
+  },
+  [PEER_DISCOVERING] (state) {
+    state.peerConnectionStatus = PEER_DISCOVERING
   },
   [PEER_CONNECTING] (state) {
     state.peerConnectionStatus = PEER_CONNECTING
@@ -241,7 +245,7 @@ function setPeerConnectionHandlers ({ state, commit, dispatch }, peerConnection)
   peerConnection.on('close', function () {
     commit(PEER_DISCONNECTED)
     commit(USER_MESSAGE, 'Connection to remote peer closed')
-    console.debug('Opening new peer connection.')
+    console.debug('Will try to open a new peer connection shortly.')
     setTimeout( // give the network a few moments to recover
       () => dispatch(PEER_DISCOVER),
       3000
@@ -251,7 +255,8 @@ function setPeerConnectionHandlers ({ state, commit, dispatch }, peerConnection)
   peerConnection.on('error', function (err) {
     commit(PEER_CONNECTION_ERROR, err)
     console.debug('Error from peer DataConnection.', err)
-    console.debug('Will try a new connection.')
+    console.debug('Will try a new connection shortly.')
+    commit(PEER_DISCONNECTED)
     setTimeout( // give the network a few moments to recover
       () => dispatch(PEER_DISCOVER),
       3000
@@ -317,6 +322,12 @@ const actions = {
   *
   */
   async [PEER_DISCOVER] ({ state, commit, dispatch }) {
+    if (state.peerConnectionStatus !== PEER_DISCONNECTED) {
+      // avoid redundant discovery loop
+      // in cases like multiple error events on the same connection
+      return
+    }
+    commit(PEER_DISCOVERING)
     const discoveryLoopId = async () => {
       // start a discovery loop
       console.log('Discovering remote peer...')
@@ -358,9 +369,20 @@ const actions = {
   */
   async [PEER_CONNECT] ({ state, commit, dispatch }, remotePeerId) {
     // if already connected to peer, then nothing to do
-    if (state.peerConnectionStatus === PEER_CONNECTED) return
+    if (state.peerConnectionStatus === PEER_CONNECTING ||
+        state.peerConnectionStatus === PEER_CONNECTED) {
+      // avoid redundant connect looping
+      // in case of multiple connection errors
+      return
+    }
     console.log('Connecting to remote peer', remotePeerId)
     commit(PEER_CONNECTING)
+    if (state.peerConnection) {
+      // make sure any previous connection is closed and cleaned up
+      console.warn('>>>>>>> Closing and cleaning up existing peer connection.')
+      state.peerConnection.close()
+    }
+    console.warn('>>>>>> Opening new peer connection.')
     const peerConnection = peer.connect(remotePeerId, {
       label: 'http-proxy', reliable: true, serialization: 'raw'
     })
