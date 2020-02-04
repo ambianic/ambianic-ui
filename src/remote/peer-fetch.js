@@ -163,7 +163,7 @@ export class PeerFetch {
   async _receiveResponse (ticket) {
     const timeout = 300 * 1000 // 30 seconds
     const timerStart = Date.now()
-    let timeElapsed = timerStart
+    let timeElapsed
     let request, response
     do {
       ({ request, response } = this._requestMap.get(ticket))
@@ -179,13 +179,9 @@ export class PeerFetch {
         // this._processNextTicketInLine()
       }
       timeElapsed = Date.now() - timerStart
-      if (!response) {
-        await sleep(3000)
-      }
+      await sleep(3000)
     } while (!response && timeElapsed < timeout)
-    if (!response) {
-      throw Error('PeerFetch Timeout while waiting for response.')
-    }
+    throw Error('PeerFetch Timeout while waiting for response.')
   }
 }
 
