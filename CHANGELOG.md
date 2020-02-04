@@ -1,5 +1,16 @@
 # Semantic Versioning Changelog
 
+## [2.0.7](https://github.com/ambianic/ambianic-ui/compare/v2.0.6...v2.0.7) (2020-02-04)
+
+
+### Bug Fixes
+
+* code cleanup based on recommendations by LGTM ([0596ab2](https://github.com/ambianic/ambianic-ui/commit/0596ab22954ebed75aad61fe105d1d3c43506785))
+* detect end of event stream ([ff326c9](https://github.com/ambianic/ambianic-ui/commit/ff326c92ca6ecd08848203eb1f650a274d52a37e))
+* move semantic release dependencies out of UI backage build process ([2294297](https://github.com/ambianic/ambianic-ui/commit/229429762c6a8257d910f10922024e33b0663e7f))
+* plug and play connectivity UX edge cases ([e3543f5](https://github.com/ambianic/ambianic-ui/commit/e3543f5b84db7ec64dfdcaa5507f220037a55cd9))
+* update package-lock.json to reflect removal of semantic release dependency ([2709972](https://github.com/ambianic/ambianic-ui/commit/2709972194f64c4a9e38c980c41da55676b905f1))
+
 ## [2.0.6](https://github.com/ambianic/ambianic-ui/compare/v2.0.5...v2.0.6) (2020-02-03)
 
 
