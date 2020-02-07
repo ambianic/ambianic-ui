@@ -333,7 +333,7 @@ const actions = {
       console.log('Discovering remote peer...')
       // its possible that the PNP signaling server connection was disrupted
       // while looping in peer discovery mode.
-      if (state.pnpServiceConnectionStatus === PNP_SERVICE_DISCONNECTED) {
+      if (state.pnpServiceConnectionStatus !== PNP_SERVICE_CONNECTED) {
         console.log('PNP Service disconnected. Reconnecting...')
         await dispatch(PNP_SERVICE_RECONNECT)
       }
