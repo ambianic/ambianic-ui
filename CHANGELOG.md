@@ -1,5 +1,19 @@
 # Semantic Versioning Changelog
 
+# [2.1.0](https://github.com/ambianic/ambianic-ui/compare/v2.0.9...v2.1.0) (2020-02-12)
+
+
+### Bug Fixes
+
+* merge branch 'master' into dev ([2752453](https://github.com/ambianic/ambianic-ui/commit/275245352463363b714290f09ce9d95b8f3c42af))
+* package deps ([ed12763](https://github.com/ambianic/ambianic-ui/commit/ed1276391710b975a6516271f430a6578b4645d2))
+* remove so dev branch can replace fresh ([3b1e3f8](https://github.com/ambianic/ambianic-ui/commit/3b1e3f851ab3e41dff238089afbf9cec9779d5bf))
+
+
+### Features
+
+* more robust datachannel management ([72aa169](https://github.com/ambianic/ambianic-ui/commit/72aa169c6095676514a907fc2de05bb00e754753))
+
 ## [2.0.9](https://github.com/ambianic/ambianic-ui/compare/v2.0.8...v2.0.9) (2020-02-07)
 
 
