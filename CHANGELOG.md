@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.1.1](https://github.com/ambianic/ambianic-ui/compare/v2.1.0...v2.1.1) (2020-02-12)
+
+
+### Bug Fixes
+
+* package-lock.js ([8c0d82a](https://github.com/ambianic/ambianic-ui/commit/8c0d82ad9fa0704d00c9f4e5daf013db9863e049))
+
 # [2.1.0](https://github.com/ambianic/ambianic-ui/compare/v2.0.9...v2.1.0) (2020-02-12)
 
 
