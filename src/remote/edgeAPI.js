@@ -26,7 +26,7 @@ export class EdgeAPI {
 
   async _getJSON (request) {
     const response = await this._get(request)
-    const jsn = this.pnp.peerFetch.jsonify(response)
+    const jsn = this.pnp.peerFetch.jsonify(response.content)
     return jsn
   }
 
@@ -64,7 +64,7 @@ export class EdgeAPI {
     var imageUrl
     try {
       const response = await this._get(request)
-      var arrayBufferView = new Uint8Array(response)
+      var arrayBufferView = new Uint8Array(response.content)
       var blob = new Blob([arrayBufferView])
       var urlCreator = window.URL || window.webkitURL
       imageUrl = urlCreator.createObjectURL(blob)
