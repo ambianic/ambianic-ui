@@ -400,11 +400,16 @@ const actions = {
       url: 'http://localhost:8778'
     }
     const response = await state.peerFetch.get(request)
-    const text = state.peerFetch.textDecode(response)
-    console.log('peerFetch.get returned response', { request, response, text })
-    // if data is authentication challenge response, verify it
-    // for now we naively check for Ambianic in the response.
-    const authPassed = text.includes('Ambianic')
+    console.log('PEER_AUTHENTICATE', { request, response })
+    let authPassed = false
+    if (response.header.status === 200) {
+      console.log('PEER_AUTHENTICATE status OK')
+      const text = state.peerFetch.textDecode(response.content)
+      // if data is authentication challenge response, verify it
+      // for now we naively check for Ambianic in the response.
+      authPassed = text.includes('Ambianic')
+      console.log(`PEER_AUTHENTICATE response body OK = ${authPassed}`)
+    }
     if (authPassed) {
       // console.debug('Remote peer authenticated as:', authMessage.name)
       commit(PEER_CONNECTED, peerConnection)
@@ -415,7 +420,6 @@ const actions = {
       commit(USER_MESSAGE, 'Remote peer authentication failed.')
       commit(PEER_CONNECTION_ERROR)
     }
-    console.debug('Peer DataConnection sending message', request)
     console.debug('DataChannel transport capabilities',
       peerConnection.dataChannel)
     //

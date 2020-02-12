@@ -17,6 +17,36 @@ export class PeerFetch {
     // Requests are processed in FIFO order.
     this._nextTicketInLine = 0
     this._configureDataConnection()
+    this._schedulePing()
+  }
+
+  /**
+   * Schedule periodic pings to keep the datachannel alive.
+   * Some routers and firewalls close open ports within seconds
+   * without data packets flowing through.
+   */
+  _schedulePing () {
+    this._keepAlive = setInterval(
+      async () => {
+        // check if there are any pending requests
+        // no ping needed as long as there is traffic on the channel
+        if (!this._pendingRequests()) {
+          // request top page
+          const request = {
+            url: 'ping'
+          }
+          await this.get(request)
+        }
+      },
+      1000 // every second
+    )
+  }
+
+  /**
+  * Stop keepalive pings.
+  */
+  _stopPing () {
+    clearInterval(this._keepAlive)
   }
 
   /**
@@ -46,27 +76,47 @@ export class PeerFetch {
     // Handle incoming data (messages only since this is the signal sender)
     const peerFetch = this
     this._dataConnection.on('data', function (data) {
-      console.debug('Remote 11111 Peer Data message received (type %s): %s',
-        typeof (data), data)
+      console.debug('Remote Peer Data message received (type %s)',
+        typeof (data), { data })
       // we expect data to be a response to a previously sent request message
-      const response = data
       const ticket = peerFetch._nextTicketInLine
-      console.debug(peerFetch, peerFetch._requestMap, ticket, response)
-      // const blah = {
-      //   url: 'http://localhost:8778/?from=_dataConnection.on_data'
-      // }
-      // const msg = JSON.stringify(blah)
-      // const dc = peerFetch._dataConnection
-      // console.error('>>>>>>>>>>>>>>>>>> Sending msg', { dc, msg })
-      // peerFetch._dataConnection.send(msg)
-      // update request map entry with this response
+      console.debug(peerFetch, peerFetch._requestMap, ticket, data)
+      // update request-response map entry with this response
       const pair = peerFetch._requestMap.get(ticket)
       if (pair) {
-        pair.response = response
+        if (!pair.response) {
+          console.debug('Processing response header')
+          // this is the first data message from the responses
+          const header = peerFetch.jsonify(data)
+          if (header.status === 202) {
+            console.debug('Received keepalive ping')
+            // server accepted the request but still working
+            // ignore and keep waiting until result or timeout
+          } else {
+            console.debug('Received web server final response header')
+            // save header part of the response
+            // and wait for the p2p data messages with the content body
+            const receivedAll = false
+            pair.response = { header, receivedAll }
+          }
+        } else {
+          console.debug('Processing response content')
+          // response content body arrived
+          pair.response.content = data
+          // assume for now that all response content can fit
+          // in a single 64KB data message
+          pair.response.receivedAll = true
+        }
       } else {
         console.error('No entry found in pending requestMap for ticket',
           { ticket })
       }
+    })
+    this._dataConnection.on('open', function () {
+      peerFetch._schedulePing()
+    })
+    this._dataConnection.on('close', function () {
+      peerFetch._stopPing()
     })
   }
 
@@ -133,8 +183,17 @@ export class PeerFetch {
     const ticket = this._nextTicketInLine
     // check if there is a pending ticket
     // and process it
-    if (this._nextTicketInLine < this._nextAvailableTicket) {
+    if (this._pendingRequests()) {
       this._sendNextRequest(ticket)
+    }
+  }
+
+  /**
+  * Check if there are any pending requests waiting in line.
+  */
+  _pendingRequests () {
+    if (this._nextTicketInLine < this._nextAvailableTicket) {
+      return true
     }
   }
 
@@ -154,8 +213,13 @@ export class PeerFetch {
     return decodedString
   }
 
-  jsonify (arrayBuffer) {
-    const decodedString = this.textDecode(arrayBuffer)
+  jsonify (data) {
+    let decodedString
+    if (typeof data === 'string') {
+      decodedString = data
+    } else {
+      decodedString = this.textDecode(data)
+    }
     const response = JSON.parse(decodedString)
     return response
   }
@@ -167,18 +231,16 @@ export class PeerFetch {
     let request, response
     do {
       ({ request, response } = this._requestMap.get(ticket))
-      if (response) {
+      if (response && response.receivedAll) {
         // if (typeof(response) === 'string') {
         this._ticketProcessed(ticket)
         console.debug('Received response', { ticket, request, response })
         // schedule processing of next request shortly
         setTimeout(() => this._processNextTicketInLine(), 50)
         return response
-      } else {
-        console.debug('Waiting for response', { ticket, request })
-        // this._processNextTicketInLine()
       }
       timeElapsed = Date.now() - timerStart
+      console.debug('Waiting for response', { ticket, request, timeElapsed })
       await sleep(3000)
     } while (!response && timeElapsed < timeout)
     throw Error('PeerFetch Timeout while waiting for response.')
