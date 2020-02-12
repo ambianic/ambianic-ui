@@ -25,17 +25,9 @@ The app is explicitly designed with user privacy and data ownership in mind:
 
 # Project Status
 
-An initial functional version of the web app is available. It pulls live timeline data from the edge device.
-The UI app currently finds the correponding Ambianic Edge timeline feed via [`config.js`](config.js) located in the root app folder. Example config follows:
-```js
-// Ambianic client side configuration
-export default {
-  AMBIANIC_API_URI: 'http://192.168.86.246:8778/api/'
-  // AMBIANIC_API_URI: '/sample-data/'
-}
-```
+A Beta version of the app is available to install here: [https://ui.ambianic.ai/](https://ui.ambianic.ai/)
 
-Live pre-release version of the web app is available here: https://ui.ambianic.ai/
+See the [5 Minute Quick Start](https://docs.ambianic.ai/users/quickstart/) guide for instructions how to connect Ambianic UI to Ambianic Edge for secure and private data access.
 
 Example screenshots on mobile and desktop:
 
@@ -49,7 +41,8 @@ Example screenshots on mobile and desktop:
 
 Next step: moving forward towards a more polished timeline UI.
 
-## Installation & Setup
+## Local Installation & Setup
+
 ### Clone repository
 ```
 git clone https://github.com/ambianic/ambianic-ui.git
@@ -82,8 +75,9 @@ If you have questions, ideas or cool projects you'd like to share with the Ambia
 
 # Acknowledgements
 
-This project's initial version was inspired by
+*  This project's initial version was inspired by
 [David Garoro](https://github.com/davidgaroro)'s [PWA example](https://github.com/davidgaroro/vuetify-todo-pwa).
+*  The project relies heavily on the awesome [Vue.js](https://vuejs.org/) framework with [Vuetify](https://vuetifyjs.com/en/) material design components.
 
 
 ## License
