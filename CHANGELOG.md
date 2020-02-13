@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.1.4](https://github.com/ambianic/ambianic-ui/compare/v2.1.3...v2.1.4) (2020-02-13)
+
+
+### Bug Fixes
+
+* p2p http wrapper bugs ([9667106](https://github.com/ambianic/ambianic-ui/commit/96671067d4df6befaf05c8018d455201a5716ef1))
+
 ## [2.1.3](https://github.com/ambianic/ambianic-ui/compare/v2.1.2...v2.1.3) (2020-02-13)
 
 
