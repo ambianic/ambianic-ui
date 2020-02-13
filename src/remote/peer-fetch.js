@@ -93,7 +93,8 @@ export class PeerFetch {
             // server accepted the request but still working
             // ignore and keep waiting until result or timeout
           } else {
-            console.debug('Received web server final response header')
+            console.debug('Received web server final response header',
+              { header })
             // save header part of the response
             // and wait for the p2p data messages with the content body
             const receivedAll = false
@@ -139,12 +140,12 @@ export class PeerFetch {
     // get a ticket that matches the request
     // and use it to claim the corresponding
     // response when availably
-    const ticket = this._queueRequest(request)
+    const ticket = this._enqueueRequest(request)
     const response = await this._receiveResponse(ticket)
     return response
   }
 
-  _queueRequest (request) {
+  _enqueueRequest (request) {
     const ticket = this._drawNewTicket()
     console.debug(this._requestMap)
     this._requestMap.set(ticket, { request })
@@ -224,26 +225,44 @@ export class PeerFetch {
     return response
   }
 
+  _checkResponseReady (ticket) {
+    let request = null
+    let response = null;
+    ({ request, response } = this._requestMap.get(ticket))
+    if (response && response.receivedAll) {
+      this._ticketProcessed(ticket)
+      console.debug('Received full response', { ticket, request, response })
+      // schedule processing of next request shortly
+      setTimeout(() => this._processNextTicketInLine(), 50)
+      return response
+    } else {
+      console.debug('Waiting for response...', { ticket, request })
+      return null
+    }
+  }
+
   async _receiveResponse (ticket) {
     const timeout = 10 * 60 * 1000 // 10 minutes
     const timerStart = Date.now()
     let timeElapsed = 0
-    let request, response
+    let response = null
     do {
-      ({ request, response } = this._requestMap.get(ticket))
-      if (response && response.receivedAll) {
-        // if (typeof(response) === 'string') {
-        this._ticketProcessed(ticket)
-        console.debug('Received response', { ticket, request, response })
-        // schedule processing of next request shortly
-        setTimeout(() => this._processNextTicketInLine(), 50)
-        return response
-      }
+      response = this._checkResponseReady(ticket)
       timeElapsed = Date.now() - timerStart
-      console.debug('Waiting for response', { ticket, request, timeElapsed })
-      await sleep(3000)
+      await sleep(200)
+      console.debug('Response time elapsed:', { ticket, timeElapsed })
     } while (!response && timeElapsed < timeout)
-    throw Error('PeerFetch Timeout while waiting for response.')
+    if (!response) {
+      // check if response came in after the last sleep
+      // before timeout.
+      response = this._checkResponseReady(ticket)
+    }
+    if (response) {
+      console.debug('Returning full response', { response })
+      return response
+    } else {
+      throw Error('PeerFetch Timeout while waiting for response.')
+    }
   }
 }
 
