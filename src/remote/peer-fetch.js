@@ -225,9 +225,9 @@ export class PeerFetch {
   }
 
   async _receiveResponse (ticket) {
-    const timeout = 300 * 1000 // 30 seconds
+    const timeout = 10 * 60 * 1000 // 10 minutes
     const timerStart = Date.now()
-    let timeElapsed
+    let timeElapsed = 0
     let request, response
     do {
       ({ request, response } = this._requestMap.get(ticket))
