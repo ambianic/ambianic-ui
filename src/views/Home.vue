@@ -20,7 +20,7 @@
             >
               <v-list-item-content>
                 <v-list-item-title class="headline">
-                  Cozy at Home
+                  News from Home
                 </v-list-item-title>
                 <v-list-item-subtitle>
                   via Ambient Intelligence
@@ -34,11 +34,10 @@
             />
 
             <v-card-text>
-              Ambianic's mission is to make your home a little cozier.
-              Review your home timeline for notable moments. Configure input sensors and
-              camers for Ambianic to observe.
-              Share, purge
-              or backup your data - it never slips out of your control.
+              Review your home timeline for notable moments.
+              Configure input sensors and camers for Ambianic to observe.
+              Share, purge or backup your data
+               - it never slips out of your control.
             </v-card-text>
 
             <v-card-actions>
