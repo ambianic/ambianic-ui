@@ -174,19 +174,19 @@ function setPnPServiceConnectionHandlers (
     commit(PNP_SERVICE_CONNECTED)
     // Workaround for peer.reconnect deleting previous id
     if (peer.id === null) {
-      console.log('pnpService: Received null id from peer open')
+      console.log('pnp client: Received null id from peer open')
       peer.id = state.myPeerId
     } else {
       if (state.myPeerId !== peer.id) {
         console.log(
-          'pnpService: Service returned new peerId. Old, New',
+          'pnp client: Service returned new peerId. Old, New',
           state.myPeerId,
           peer.id
         )
         commit(NEW_PEER_ID, peer.id)
       }
     }
-    console.log('pnpService: myPeerId: ', peer.id)
+    console.log('pnp client: myPeerId: ', peer.id)
     // signaling server connection established
     // we can advance to peer discovery
     dispatch(PEER_DISCOVER)
@@ -194,7 +194,7 @@ function setPnPServiceConnectionHandlers (
   peer.on('disconnected', function () {
     commit(PNP_SERVICE_DISCONNECTED)
     commit(USER_MESSAGE, 'PnP service connection lost. Please check your internet connection.')
-    console.log('pnpService: Connection lost. Please reconnect.')
+    console.log('pnp client: Connection lost. Please reconnect.')
   })
   peer.on('close', function () {
     // peerConnection = null
@@ -202,19 +202,21 @@ function setPnPServiceConnectionHandlers (
     console.log('Connection to PnP server destroyed')
     console.log('Reconnecting to PnP server...')
     commit(PNP_SERVICE_DISCONNECTED)
+    commit(PEER_DISCONNECTED)
     setTimeout(() => { // give the network a few moments to recover
       dispatch(INITIALIZE_PNP)
     }, 3000)
   })
   peer.on('error', function (err) {
-    console.log('peer connection error', err)
+    console.log('PnP service connection error', err)
     commit(USER_MESSAGE,
       `
       Error while connecting. Will retry shortly. Is the Internet connection OK?
       `)
-    commit(PEER_CONNECTION_ERROR)
-    console.log('peerConnection error', state.peerConnectionStatus)
-    console.log('Trying to reconnect to PnP server...')
+    commit(PNP_SERVICE_DISCONNECTED)
+    commit(PEER_DISCONNECTED)
+    console.log('pnp service connection error', { err })
+    console.log('Will try to reconnect to PnP server...')
     // retry peer connection in a few seconds
     setTimeout(() => { // give the network a few moments to recover
       dispatch(INITIALIZE_PNP)
@@ -222,15 +224,22 @@ function setPnPServiceConnectionHandlers (
   })
   // remote peer tries to initiate connection
   peer.on('connection', function (peerConnection) {
-    console.log('remote peer trying to establish connection')
-    setPeerConnectionHandlers({ state, commit, dispatch }, peerConnection)
+    console.debug('#####>>>>> remote peer trying to establish connection')
+    setPeerConnectionHandlers({ state, commit, dispatch, peerConnection })
     commit(PEER_CONNECTING)
   })
 }
 
-function setPeerConnectionHandlers ({ state, commit, dispatch }, peerConnection) {
+function setPeerConnectionHandlers ({
+  state,
+  commit,
+  dispatch,
+  peerConnection,
+  hungupConnectionResetTimer
+}) {
   // setup connection progress callbacks
   peerConnection.on('open', function () {
+    clearTimeout(hungupConnectionResetTimer)
     const peerFetch = new PeerFetch(peerConnection)
     console.debug('Peer DataConnection is now open. Creating PeerFetch wrapper.')
     commit(PEER_FETCH, peerFetch)
@@ -243,8 +252,10 @@ function setPeerConnectionHandlers ({ state, commit, dispatch }, peerConnection)
   })
 
   peerConnection.on('close', function () {
+    clearTimeout(hungupConnectionResetTimer)
     commit(PEER_DISCONNECTED)
     commit(USER_MESSAGE, 'Connection to remote peer closed')
+    console.debug('#########>>>>>>>>> p2p connection closed')
     console.debug('Will try to open a new peer connection shortly.')
     setTimeout( // give the network a few moments to recover
       () => dispatch(PEER_DISCOVER),
@@ -253,8 +264,10 @@ function setPeerConnectionHandlers ({ state, commit, dispatch }, peerConnection)
   })
 
   peerConnection.on('error', function (err) {
+    clearTimeout(hungupConnectionResetTimer)
     commit(PEER_CONNECTION_ERROR, err)
-    console.debug('Error from peer DataConnection.', err)
+    commit(USER_MESSAGE, 'Error in connection to remote peer.')
+    console.debug('######>>>>>>> p2p connection error', { err })
     console.debug('Will try a new connection shortly.')
     commit(PEER_DISCONNECTED)
     setTimeout( // give the network a few moments to recover
@@ -282,18 +295,18 @@ const actions = {
     // if connection to pnp service already open, then nothing to do
     if (peer && peer.open) return
     // Create own peer object with connection to shared PeerJS server
-    console.log('pnpService: creating peer')
+    console.log('pnp client: creating peer')
     // If we already have an assigned peerId, we will reuse it forever.
     // We expect that peerId is crypto secure. No need to replace.
     // Unless the user explicitly requests a refresh.
-    console.log('pnpService: last saved myPeerId', state.myPeerId)
+    console.log('pnp client: last saved myPeerId', state.myPeerId)
     peer = new Peer(state.myPeerId, {
       host: ambianicConf.AMBIANIC_PNP_HOST,
       port: ambianicConf.AMBIANIC_PNP_PORT,
       secure: ambianicConf.AMBIANIC_PNP_SECURE,
       debug: 3
     })
-    console.log('pnpService: peer created')
+    console.log('pnp client: peer created')
     setPnPServiceConnectionHandlers({ state, commit, dispatch }, peer)
     commit(PNP_SERVICE_CONNECTING)
   },
@@ -307,7 +320,7 @@ const actions = {
   async [PNP_SERVICE_RECONNECT] ({ state, commit, dispatch }) {
     // if connection to pnp service already open, then nothing to do
     if (peer.open) return
-    console.log('pnpService: reconnecting peer...')
+    console.log('pnp client: reconnecting peer...')
     // Workaround for peer.reconnect deleting previous id
     if (!peer.id) {
       console.log('BUG WORKAROUND: Peer lost ID. Resetting to last known ID.')
@@ -322,6 +335,7 @@ const actions = {
   *
   */
   async [PEER_DISCOVER] ({ state, commit, dispatch }) {
+    console.log(`######## >>>>> peerConnectionStatus = ${state.peerConnectionStatus}`)
     if (state.peerConnectionStatus !== PEER_DISCONNECTED) {
       // avoid redundant discovery loop
       // in cases like multiple error events on the same connection
@@ -368,6 +382,12 @@ const actions = {
   * direct peer-to-peer connection and data received on it.
   */
   async [PEER_CONNECT] ({ state, commit, dispatch }, remotePeerId) {
+    // Its possible that the PNP signaling server connection was disrupted
+    // We need the signaling server to negotiate p2p connection terms.
+    if (state.pnpServiceConnectionStatus !== PNP_SERVICE_CONNECTED) {
+      console.log('PNP Service disconnected. Reconnecting...')
+      await dispatch(PNP_SERVICE_RECONNECT)
+    }
     // if already connected to peer, then nothing to do
     if (state.peerConnectionStatus === PEER_CONNECTING ||
         state.peerConnectionStatus === PEER_CONNECTED) {
@@ -375,18 +395,37 @@ const actions = {
       // in case of multiple connection errors
       return
     }
-    console.log('Connecting to remote peer', remotePeerId)
-    commit(PEER_CONNECTING)
+    console.log(`#####>>>> PNP Service connection status: ${state.pnpServiceConnectionStatus}`)
+    console.debug('#####>>>>>>> Connecting to remote peer', remotePeerId)
     if (state.peerConnection) {
       // make sure any previous connection is closed and cleaned up
-      console.warn('>>>>>>> Closing and cleaning up existing peer connection.')
+      console.info('>>>>>>> Closing and cleaning up existing peer connection.')
       state.peerConnection.close()
     }
-    console.warn('>>>>>> Opening new peer connection.')
+    console.info('>>>>>> Opening new peer connection.')
     const peerConnection = peer.connect(remotePeerId, {
       label: 'http-proxy', reliable: true, serialization: 'raw'
     })
-    setPeerConnectionHandlers({ state, commit, dispatch }, peerConnection)
+    commit(PEER_CONNECTING)
+    // If we don't connect within a minute, there is a good chance
+    // the networking stack got corrupted. Let's reset it.
+    const hungupConnectionResetTimer = setTimeout(() => {
+      try {
+        peer.destroy()
+      } catch (err) {
+        console.warning('Error destroying peer.')
+      } finally {
+        console.info('It took too long to setup a connection. Resetting peer.')
+        dispatch(INITIALIZE_PNP)
+      }
+    }, 60 * 1000)
+    setPeerConnectionHandlers({
+      state,
+      commit,
+      dispatch,
+      peerConnection,
+      hungupConnectionResetTimer
+    })
   },
   /**
   * Authenticate remote peer. Make sure its a genuine Ambianic Edge device.

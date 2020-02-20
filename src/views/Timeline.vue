@@ -322,7 +322,7 @@ export default {
         const data = await this.getTimelineSlice()
         console.debug('Infinite handler received timeline slice', { data }) // eslint-disable-line no-console
         // Are there any more timeline events left?
-        if (data && data.timeline && data.timeline.length === PAGE_SIZE) {
+        if (data && data.timeline && data.timeline.length > 0) {
           // eslint-disable-next-line
           // console.debug('new timeline events: ', data.timeline.length)
           // eslint-disable-next-line
@@ -337,10 +337,14 @@ export default {
           )
           this.timeline = this.timeline.concat(data.timeline)
           $state.loaded()
-          if (this.timeline.length / PAGE_SIZE === 10) {
+          if (this.timeline.length / PAGE_SIZE === 10 ||
+              data.timeline.length < PAGE_SIZE) {
             // 20 pages of timeline events is all we will show
             // in the default view.
             // More historical data can be found via search.
+            // Also if the result did not fill up a page
+            // then we are at the end of the current newsfeed.
+            // User can fefresh in a few moments or we can update automatically.
             $state.complete()
           }
         } else {
