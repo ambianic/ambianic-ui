@@ -109,8 +109,8 @@ export class PeerFetch {
           pair.response.receivedAll = true
         }
       } else {
-        console.error('No entry found in pending requestMap for ticket',
-          { ticket })
+        console.error('Data received as response for ticket but no entry found in pending request map',
+          { ticket, data })
       }
     })
     this._dataConnection.on('open', function () {
