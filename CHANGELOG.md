@@ -1,5 +1,18 @@
 # Semantic Versioning Changelog
 
+# [2.2.0](https://github.com/ambianic/ambianic-ui/compare/v2.1.4...v2.2.0) (2020-02-20)
+
+
+### Bug Fixes
+
+* iOS icon background ([93a1e84](https://github.com/ambianic/ambianic-ui/commit/93a1e840dc26adebe32b01ee54c97554bd694eab))
+* netlify redirects ([9d79e48](https://github.com/ambianic/ambianic-ui/commit/9d79e483ea8c0b4ca71c8c94b67236462fae3206))
+
+
+### Features
+
+* edge connect icon in the top app bar ([ee4afd0](https://github.com/ambianic/ambianic-ui/commit/ee4afd03d5f23ab89b6bf126bfd57b7ac9dedb19))
+
 ## [2.1.4](https://github.com/ambianic/ambianic-ui/compare/v2.1.3...v2.1.4) (2020-02-13)
 
 
