@@ -139,7 +139,7 @@ export class PeerFetch {
     }
     // get a ticket that matches the request
     // and use it to claim the corresponding
-    // response when availably
+    // response when available
     const ticket = this._enqueueRequest(request)
     const response = await this._receiveResponse(ticket)
     return response
@@ -236,7 +236,7 @@ export class PeerFetch {
       setTimeout(() => this._processNextTicketInLine(), 50)
       return response
     } else {
-      console.debug('Waiting for response...', { ticket, request })
+      // console.debug('Waiting for response...', { ticket, request })
       return null
     }
   }
@@ -250,7 +250,7 @@ export class PeerFetch {
       response = this._checkResponseReady(ticket)
       timeElapsed = Date.now() - timerStart
       await sleep(200)
-      console.debug('Response time elapsed:', { ticket, timeElapsed })
+      // console.debug('Response time elapsed:', { ticket, timeElapsed })
     } while (!response && timeElapsed < timeout)
     if (!response) {
       // check if response came in after the last sleep

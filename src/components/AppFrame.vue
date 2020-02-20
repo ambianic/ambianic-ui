@@ -101,10 +101,18 @@
         class="hidden-sm-and-down"
       />
       <v-spacer />
-      <v-btn icon>
-        <v-icon>mdi-apps</v-icon>
+      <v-btn
+        icon
+        v-if="!isEdgeConnected"
+        @click="$router.push('edge-connect')"
+      >
+        <v-icon>
+          mdi-download-off
+        </v-icon>
       </v-btn>
-      <v-btn icon>
+      <v-btn
+        icon
+      >
         <v-badge
           top
           right
@@ -113,7 +121,7 @@
           class="align-self-center"
           :content="newFavorites"
           :value="newFavorites"
-          show=false
+          show="false"
         >
           <v-icon>mdi-heart</v-icon>
         </v-badge>
@@ -133,7 +141,6 @@
       </v-btn>
       <v-btn
         icon
-        large
       >
         <v-avatar
           size="32px"
@@ -141,7 +148,7 @@
         >
           <v-img
             src="@/assets/logo5.svg"
-            alt="Vuetify"
+            alt="Ambianic.ai logo"
           />
         </v-avatar>
       </v-btn>
@@ -166,6 +173,11 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import {
+  PEER_CONNECTED
+} from '@/store/mutation-types'
+
 export default {
   name: 'AppFrame',
   components: {
@@ -177,6 +189,7 @@ export default {
     drawer: null,
     newFavorites: 0,
     newAlerts: 2,
+    on: true,
     items: [
       { icon: 'history', text: 'Timeline', link: '/timeline' },
       // { icon: 'mdi-account-heart-outline', text: 'People', link: '/people' },
@@ -210,6 +223,14 @@ export default {
       { icon: 'help', text: 'Help', link: '/help' },
       { icon: 'info', text: 'About Ambianic', link: '/about' }
     ]
-  })
+  }),
+  computed: {
+    ...mapState({
+      isEdgeConnected: function (state) {
+        console.debug(`app frame: state.pnp.peerConnectionStatus: ${state.pnp.peerConnectionStatus}`)
+        return state.pnp.peerConnectionStatus === PEER_CONNECTED
+      }
+    })
+  }
 }
 </script>
