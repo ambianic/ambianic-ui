@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.2.1](https://github.com/ambianic/ambianic-ui/compare/v2.2.0...v2.2.1) (2020-02-29)
+
+
+### Bug Fixes
+
+* minor bug fixes ([b356e22](https://github.com/ambianic/ambianic-ui/commit/b356e22dbd814eed616a2681ee298d438e31f85f))
+
 # [2.2.0](https://github.com/ambianic/ambianic-ui/compare/v2.1.4...v2.2.0) (2020-02-20)
 
 
