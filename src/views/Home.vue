@@ -20,7 +20,7 @@
             >
               <v-list-item-content>
                 <v-list-item-title class="headline">
-                  News from Your Home and Workspace
+                  Cozier Home and Workspace
                 </v-list-item-title>
                 <v-list-item-subtitle>
                   via Ambient Intelligence
