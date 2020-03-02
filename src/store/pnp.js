@@ -293,7 +293,9 @@ const actions = {
   */
   async [PNP_SERVICE_CONNECT] ({ state, commit, dispatch }) {
     // if connection to pnp service already open, then nothing to do
-    if (peer && peer.open) return
+    if (peer && peer.open) { return }
+    // if in the middle of pnp server connection cycle, skip
+    if (state.pnpServiceConnectionStatus === PNP_SERVICE_CONNECTING) { return }
     // Create own peer object with connection to shared PeerJS server
     console.log('pnp client: creating peer')
     // If we already have an assigned peerId, we will reuse it forever.
@@ -320,6 +322,8 @@ const actions = {
   async [PNP_SERVICE_RECONNECT] ({ state, commit, dispatch }) {
     // if connection to pnp service already open, then nothing to do
     if (peer.open) return
+    // if in the middle of pnp server connection cycle, skip
+    if (state.pnpServiceConnectionStatus === PNP_SERVICE_CONNECTING) { return }
     console.log('pnp client: reconnecting peer...')
     // Workaround for peer.reconnect deleting previous id
     if (!peer.id) {
