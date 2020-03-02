@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.2.2](https://github.com/ambianic/ambianic-ui/compare/v2.2.1...v2.2.2) (2020-03-02)
+
+
+### Bug Fixes
+
+* improve resilience to conectivity issues ([a70d921](https://github.com/ambianic/ambianic-ui/commit/a70d921b1828fc4e87e38bcb4bde32d13ca919c4))
+
 ## [2.2.1](https://github.com/ambianic/ambianic-ui/compare/v2.2.0...v2.2.1) (2020-02-29)
 
 
