@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.2.3](https://github.com/ambianic/ambianic-ui/compare/v2.2.2...v2.2.3) (2020-03-03)
+
+
+### Bug Fixes
+
+* race condition causing intermittent http over webrtc fetch errors ([d205609](https://github.com/ambianic/ambianic-ui/commit/d2056090200f171e733fb6059f3c43077ede00a7))
+
 ## [2.2.2](https://github.com/ambianic/ambianic-ui/compare/v2.2.1...v2.2.2) (2020-03-02)
 
 
