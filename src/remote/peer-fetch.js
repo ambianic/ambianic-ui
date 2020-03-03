@@ -54,7 +54,14 @@ export class PeerFetch {
     and simultaneously increment the ticket counter.
   */
   _drawNewTicket () {
-    return this._nextAvailableTicket++
+    const nextAvailable = this._nextAvailableTicket
+    this._nextAvailableTicket++
+    const nextInLine = this._nextTicketInLine
+    console.assert(
+      nextInLine <= nextAvailable,
+      { nextInLine, nextAvailable }
+    )
+    return nextAvailable
   }
 
   /**
@@ -70,6 +77,12 @@ export class PeerFetch {
     // remove entry from pending request map
     this._requestMap.delete(ticket)
     this._nextTicketInLine++
+    const nextInLine = this._nextTicketInLine
+    const nextAvailable = this._nextAvailableTicket
+    console.assert(
+      nextInLine <= nextAvailable,
+      { nextInLine, nextAvailable }
+    )
   }
 
   _configureDataConnection () {
@@ -114,9 +127,11 @@ export class PeerFetch {
       }
     })
     this._dataConnection.on('open', function () {
+      console.debug('Peer connection is now open.')
       peerFetch._schedulePing()
     })
     this._dataConnection.on('close', function () {
+      console.debug('Peer connection is now closed.')
       peerFetch._stopPing()
     })
   }
@@ -147,12 +162,13 @@ export class PeerFetch {
 
   _enqueueRequest (request) {
     const ticket = this._drawNewTicket()
-    console.debug(this._requestMap)
+    const requestMap = this._requestMap
+    console.debug('_enqueueRequest: ', { requestMap })
     this._requestMap.set(ticket, { request })
     if (this._requestMap.size === 1) {
       // there are no other pending requests
       // let's send this one on the wire
-      this._sendNextRequest(ticket)
+      this._sendNextRequest()
     }
     return ticket
   }
@@ -167,8 +183,18 @@ export class PeerFetch {
     and responses in parallel over the same data connection or
     even a pool of connections.
   */
-  _sendNextRequest (ticket) {
-    const { request } = this._requestMap.get(ticket)
+  _sendNextRequest () {
+    const ticket = this._nextTicketInLine
+    let { request, requestSent } = this._requestMap.get(ticket)
+    if (requestSent) {
+      // A request was sent and is waiting its response.
+      // Wait for the full respones before sending another request.
+      return
+    } else {
+      requestSent = true
+      this._requestMap.set(ticket, { request, requestSent })
+    }
+    console.assert(request != null, { ticket, request })
     const jsonRequest = JSON.stringify(request)
     const requestMap = this._requestMap
     console.debug('Sending request to remote peer',
@@ -181,11 +207,10 @@ export class PeerFetch {
   }
 
   _processNextTicketInLine () {
-    const ticket = this._nextTicketInLine
     // check if there is a pending ticket
     // and process it
     if (this._pendingRequests()) {
-      this._sendNextRequest(ticket)
+      this._sendNextRequest()
     }
   }
 
@@ -193,7 +218,7 @@ export class PeerFetch {
   * Check if there are any pending requests waiting in line.
   */
   _pendingRequests () {
-    if (this._nextTicketInLine < this._nextAvailableTicket) {
+    if (this._requestMap.size > 0) {
       return true
     }
   }
