@@ -19,6 +19,3 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
-
-# Cypress.io E2E local files
-cypress/videos/
