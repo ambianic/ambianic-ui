@@ -1,5 +1,54 @@
 # Semantic Versioning Changelog
 
+## [2.2.3](https://github.com/ambianic/ambianic-ui/compare/v2.2.2...v2.2.3) (2020-03-03)
+
+
+### Bug Fixes
+
+* race condition causing intermittent http over webrtc fetch errors ([d205609](https://github.com/ambianic/ambianic-ui/commit/d2056090200f171e733fb6059f3c43077ede00a7))
+
+## [2.2.2](https://github.com/ambianic/ambianic-ui/compare/v2.2.1...v2.2.2) (2020-03-02)
+
+
+### Bug Fixes
+
+* improve resilience to conectivity issues ([a70d921](https://github.com/ambianic/ambianic-ui/commit/a70d921b1828fc4e87e38bcb4bde32d13ca919c4))
+
+## [2.2.1](https://github.com/ambianic/ambianic-ui/compare/v2.2.0...v2.2.1) (2020-02-29)
+
+
+### Bug Fixes
+
+* minor bug fixes ([b356e22](https://github.com/ambianic/ambianic-ui/commit/b356e22dbd814eed616a2681ee298d438e31f85f))
+
+# [2.2.0](https://github.com/ambianic/ambianic-ui/compare/v2.1.4...v2.2.0) (2020-02-20)
+
+
+### Bug Fixes
+
+* iOS icon background ([93a1e84](https://github.com/ambianic/ambianic-ui/commit/93a1e840dc26adebe32b01ee54c97554bd694eab))
+* netlify redirects ([9d79e48](https://github.com/ambianic/ambianic-ui/commit/9d79e483ea8c0b4ca71c8c94b67236462fae3206))
+
+
+### Features
+
+* edge connect icon in the top app bar ([ee4afd0](https://github.com/ambianic/ambianic-ui/commit/ee4afd03d5f23ab89b6bf126bfd57b7ac9dedb19))
+
+## [2.1.4](https://github.com/ambianic/ambianic-ui/compare/v2.1.3...v2.1.4) (2020-02-13)
+
+
+### Bug Fixes
+
+* p2p http wrapper bugs ([9667106](https://github.com/ambianic/ambianic-ui/commit/96671067d4df6befaf05c8018d455201a5716ef1))
+
+## [2.1.3](https://github.com/ambianic/ambianic-ui/compare/v2.1.2...v2.1.3) (2020-02-13)
+
+
+### Bug Fixes
+
+* package-lock.js ([3105603](https://github.com/ambianic/ambianic-ui/commit/3105603fe50705466693269bf8566611e9e80db5))
+* sem rel script ([dbc1a2d](https://github.com/ambianic/ambianic-ui/commit/dbc1a2de9e37059abe2636a57826e9e771bed729))
+
 ## [2.1.2](https://github.com/ambianic/ambianic-ui/compare/v2.1.1...v2.1.2) (2020-02-13)
 
 
