@@ -1,0 +1,5 @@
+{
+  "projectId": "w3wgo1",
+  "baseUrl": "http://localhost:8080",
+  "testFiles": "ambianic-tests/**/*"
+}

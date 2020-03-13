@@ -1,4 +1,4 @@
-name: Node CI
+name: CI for Ambianic UI 
 
 on: [push]
 
@@ -24,6 +24,15 @@ jobs:
         npm test
       env:
         CI: true
+    - name: End-to-end tests with Cypress
+      uses: cypress-io/github-action@v1
+      with: 
+        start: npm run serve
+        record: true
+        wait-on: 'http://localhost:8080'
+      env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Semantic Release
       run: npx semantic-release
       env:
