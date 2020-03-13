@@ -30,7 +30,7 @@ A Beta version of the app is available to install here: [https://ui.ambianic.ai/
 See the [5 Minute Quick Start](https://docs.ambianic.ai/users/quickstart/) guide for instructions how to connect Ambianic UI to Ambianic Edge for secure and private data access.
 
 Example screenshots on mobile and desktop:
-
+ 
 <img src="public/img/ambianic-ui-mobile-screenshot.png" width="300">
 
 &nbsp;
