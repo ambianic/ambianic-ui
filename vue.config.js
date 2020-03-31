@@ -24,6 +24,7 @@ module.exports = {
     },
     workboxPluginMode: 'GenerateSW',
     workboxOptions: {
+      exclude: ['/\.map$/', '/_redirects/'],
       runtimeCaching: [
         {
           urlPattern: new RegExp('https://fonts.(?:googleapis|gstatic).com/(.*)'),
