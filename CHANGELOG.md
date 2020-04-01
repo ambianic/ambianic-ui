@@ -1,5 +1,15 @@
 # Semantic Versioning Changelog
 
+## [2.2.5](https://github.com/ambianic/ambianic-ui/compare/v2.2.4...v2.2.5) (2020-04-01)
+
+
+### Bug Fixes
+
+* dependency tree ([c2e9215](https://github.com/ambianic/ambianic-ui/commit/c2e921521221eb894b7547ec252714ff6bb85f5b))
+* home and about page titles ([36546f1](https://github.com/ambianic/ambianic-ui/commit/36546f1d8b4ed60011757891b6ff5763d80c49d1))
+* merge branch 'master' into dev ([7dc36ac](https://github.com/ambianic/ambianic-ui/commit/7dc36ac20fe416d5556ca6d816dbfb20dd594fde))
+* workbox precaching issue with netlify resources ([64db6db](https://github.com/ambianic/ambianic-ui/commit/64db6db6551489ca8b58f80ccd5a27043a77aa63))
+
 ## [2.2.4](https://github.com/ambianic/ambianic-ui/compare/v2.2.3...v2.2.4) (2020-03-13)
 
 
