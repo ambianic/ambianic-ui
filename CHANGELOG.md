@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.2.6](https://github.com/ambianic/ambianic-ui/compare/v2.2.5...v2.2.6) (2020-04-02)
+
+
+### Bug Fixes
+
+* netlify precaching issue with pwa ([63a3970](https://github.com/ambianic/ambianic-ui/commit/63a3970bc2bb8f7d6b041e1a9398bdbf15886f1a))
+
 ## [2.2.5](https://github.com/ambianic/ambianic-ui/compare/v2.2.4...v2.2.5) (2020-04-01)
 
 
