@@ -2,6 +2,9 @@
 
 import { register } from 'register-service-worker'
 
+import store from './store/index'
+import { UPDATE_AVAILABLE } from './store/mutation-types'
+
 if (process.env.NODE_ENV === 'production') {
   register(`${process.env.BASE_URL}service-worker.js`, {
     ready () {
@@ -13,7 +16,8 @@ if (process.env.NODE_ENV === 'production') {
     cached () {
       console.log('Content has been cached for offline use.')
     },
-    updated () {
+    updated (reg) {
+      store.commit(UPDATE_AVAILABLE, reg.waiting)
       console.log('New content is available; please refresh.')
     },
     offline () {

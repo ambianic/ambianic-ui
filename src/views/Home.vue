@@ -75,7 +75,21 @@
             </v-card-actions>
           </v-card>
         </v-row>
+        <v-row class="mt-4">
+          <update-notification class="mx-auto" />
+        </v-row>
       </v-container>
     </v-content>
   </v-app>
 </template>
+
+<script>
+import UpdateNotification from '../components/UpdateNotification'
+
+export default {
+  name: 'Home',
+  components: {
+    UpdateNotification
+  }
+}
+</script>

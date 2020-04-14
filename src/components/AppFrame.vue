@@ -166,8 +166,11 @@
       </v-container>
     </v-content>
 
-    <v-footer app>
-      <!-- -->
+    <v-footer
+      app
+      inset
+    >
+      <update-notification class="mx-auto" />
     </v-footer>
   </v-app>
 </template>
@@ -177,10 +180,12 @@ import { mapState } from 'vuex'
 import {
   PEER_CONNECTED
 } from '@/store/mutation-types'
+import UpdateNotification from './UpdateNotification'
 
 export default {
   name: 'AppFrame',
   components: {
+    UpdateNotification
   },
   props: {
   },
