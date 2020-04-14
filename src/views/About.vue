@@ -36,6 +36,19 @@
              - it never slips out of your control.
           </v-card-text>
 
+          <v-list-item
+                  align="center"
+                  justify="center"
+          >
+            <v-list-item-content>
+              <v-list-item-title>
+                <v-icon class="mx-n2">mdi-alpha-v</v-icon>
+                {{ version }}
+              </v-list-item-title>
+              <v-list-item-subtitle>Release Version</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+
           <v-card-actions>
             <v-btn
               text
@@ -60,10 +73,16 @@
 </template>
 <script>
 import AppFrame from '@/components/AppFrame.vue'
+import { mapState } from 'vuex'
 
 export default {
   components: {
     AppFrame
+  },
+  computed: {
+    ...mapState({
+      version: state => state.version
+    })
   }
 }
 

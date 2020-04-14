@@ -7,6 +7,7 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
+    version: require('@/../package.json').version
   },
   mutations: {
   },
