@@ -1,5 +1,19 @@
 # Semantic Versioning Changelog
 
+## [2.2.8](https://github.com/ambianic/ambianic-ui/compare/v2.2.7...v2.2.8) (2020-04-14)
+
+
+### Bug Fixes
+
+* link app bar logo icon to about page, closes [#301](https://github.com/ambianic/ambianic-ui/issues/301) ([ade402e](https://github.com/ambianic/ambianic-ui/commit/ade402e37f9903e71cebeaea76761656da810e3d))
+
+## [2.2.7](https://github.com/ambianic/ambianic-ui/compare/v2.2.6...v2.2.7) (2020-04-14)
+
+
+### Bug Fixes
+
+* Show version info in About page ([f6f6cdd](https://github.com/ambianic/ambianic-ui/commit/f6f6cdddceb6dcc08296c1f6bf63a5f8034a91dd))
+
 ## [2.2.6](https://github.com/ambianic/ambianic-ui/compare/v2.2.5...v2.2.6) (2020-04-02)
 
 

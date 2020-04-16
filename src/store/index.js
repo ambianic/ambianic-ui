@@ -8,7 +8,8 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    updateToBeInstalled: undefined
+    updateToBeInstalled: undefined,
+    version: require('@/../package.json').version
   },
   mutations: {
     [UPDATE_AVAILABLE] (state, updateToBeInstalled) {

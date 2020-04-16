@@ -141,6 +141,7 @@
       </v-btn>
       <v-btn
         icon
+        to="about"
       >
         <v-avatar
           size="32px"

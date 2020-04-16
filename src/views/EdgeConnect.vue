@@ -78,7 +78,7 @@
                   <v-icon>mdi-alpha-v</v-icon>
                 </v-list-item-icon>
                 <v-list-item-content>
-                  <v-list-item-title>1.21.2020</v-list-item-title>
+                  <v-list-item-title>{{ version }}</v-list-item-title>
                   <v-list-item-subtitle>Release Version</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
@@ -249,7 +249,8 @@ export default {
       isEdgeConnected: state =>
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
       edgePeerId: state => state.pnp.remotePeerId,
-      peerFetch: state => state.pnp.peerFetch
+      peerFetch: state => state.pnp.peerFetch,
+      version: state => state.version
     }),
     connectStep: function () {
       let step = 1
