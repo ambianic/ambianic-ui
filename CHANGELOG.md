@@ -1,5 +1,13 @@
 # Semantic Versioning Changelog
 
+## [2.2.9](https://github.com/ambianic/ambianic-ui/compare/v2.2.8...v2.2.9) (2020-04-18)
+
+
+### Bug Fixes
+
+* installed pwa does not pick up new version, closes [#298](https://github.com/ambianic/ambianic-ui/issues/298) ([128fa2f](https://github.com/ambianic/ambianic-ui/commit/128fa2fa62857c5286ddec3617ed1659d2724e62))
+* merge branch 'master' into 'pick-up-new-version' ([d8765d1](https://github.com/ambianic/ambianic-ui/commit/d8765d1d537b232b0e1f2ec3e22cf1ef019e9f4c))
+
 ## [2.2.8](https://github.com/ambianic/ambianic-ui/compare/v2.2.7...v2.2.8) (2020-04-14)
 
 
