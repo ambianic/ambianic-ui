@@ -46,6 +46,12 @@
             >
               Connection Settings
             </v-btn>
+            <v-btn
+              text
+              to="/edge-connect-remote"
+            >
+              Connect to Remote Network
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
