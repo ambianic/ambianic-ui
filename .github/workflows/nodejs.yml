@@ -26,7 +26,7 @@ jobs:
       env:
         CI: true
     - name: End-to-end Tests with Cypress
-      uses: cypress-io/github-action@v1
+      uses: cypress-io/github-action@master
       with: 
         start: npm run serve
         record: true
