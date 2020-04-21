@@ -10,7 +10,7 @@ coverage:
           - unit
         paths:
           - "src"
-        # Advanced
+        # advanced
         # branches:
         #  - master
         if_not_found: error
