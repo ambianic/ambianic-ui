@@ -17,17 +17,16 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and test
+    - name: npm install, build
       run: |
         npm version
         npm install -g npm
         npm version
         npm ci
         npm run build --if-present
-        npm test
       env:
         CI: true
-    - name: End-to-end tests with Cypress
+    - name: End-to-end Tests with Cypress
       uses: cypress-io/github-action@v1
       with: 
         start: npm run serve
