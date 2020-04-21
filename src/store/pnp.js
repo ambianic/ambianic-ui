@@ -29,7 +29,7 @@ import {
 } from './action-types.js'
 import { ambianicConf } from '@/config'
 import Peer from 'peerjs'
-// import { PeerRoom } from '@/remote/peer-room'
+import { PeerRoom } from '@/remote/peer-room'
 import { PeerFetch } from '@/remote/peer-fetch'
 const STORAGE_KEY = 'ambianic-pnp-settings'
 
@@ -144,30 +144,30 @@ const mutations = {
   Hardcoded id from backend
 */
 async function discoverRemotePeerId ({ peer, state, commit }) {
-  return 'da498ccd-ee52-4e53-92ef-8c57ed6003c1'
-  // if (state.remotePeerId) {
-  //   return state.remotePeerId
-  // } else {
-  //   // first try to find the remote peer ID in the same room
-  //   const myRoom = new PeerRoom(peer)
-  //   console.log('Fetching room members', myRoom)
-  //   const { clientsIds } = await myRoom.getRoomMembers()
-  //   const peerIds = clientsIds
-  //   console.log('myRoom members', clientsIds)
-  //   const remotePeerId = peerIds.find(
-  //     pid => pid !== state.myPeerId)
-  //   if (remotePeerId) {
-  //     return remotePeerId
-  //   } else {
-  //     // unable to auto discover
-  //     // ask user for help
-  //     commit(USER_MESSAGE,
-  //       `Still looking.
-  //        Please make sure you are on the same local network
-  //        as the Ambianic Edge device.
-  //       `)
-  //   }
-  // }
+  // return 'da498ccd-ee52-4e53-92ef-8c57ed6003c1'
+  if (state.remotePeerId) {
+    return state.remotePeerId
+  } else {
+    // first try to find the remote peer ID in the same room
+    const myRoom = new PeerRoom(peer)
+    console.log('Fetching room members', myRoom)
+    const { clientsIds } = await myRoom.getRoomMembers()
+    const peerIds = clientsIds
+    console.log('myRoom members', clientsIds)
+    const remotePeerId = peerIds.find(
+      pid => pid !== state.myPeerId)
+    if (remotePeerId) {
+      return remotePeerId
+    } else {
+      // unable to auto discover
+      // ask user for help
+      commit(USER_MESSAGE,
+        `Still looking.
+         Please make sure you are on the same local network
+         as the Ambianic Edge device.
+        `)
+    }
+  }
 }
 
 function setPnPServiceConnectionHandlers (
@@ -311,6 +311,7 @@ const actions = {
       debug: 3
     })
     console.log('pnp client: peer created')
+    console.log('PEER', peer)
     setPnPServiceConnectionHandlers({ state, commit, dispatch }, peer)
     commit(PNP_SERVICE_CONNECTING)
   },
@@ -438,6 +439,7 @@ const actions = {
   *
   */
   async [PEER_AUTHENTICATE] ({ state, commit, dispatch }, peerConnection) {
+    console.log('PEER AUTHENTICATE')
     commit(PEER_AUTHENTICATING)
     commit(USER_MESSAGE, `Authenticating remote peer: ${peerConnection.peer}`)
     console.log('Authenticating remote Peer ID: ', peerConnection.peer)

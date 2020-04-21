@@ -43,6 +43,7 @@ const routes = [
   {
     path: '/edge-connect',
     name: 'edge-connect',
+    props: true,
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -81,12 +82,12 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/edge-connect-remote',
-    name: 'edge-connect-remote',
+    path: '/choose-edge-connection',
+    name: 'choose-edge-connection',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "edge-connect-remote" */ '../views/EdgeConnectRemote.vue')
+    component: () => import(/* webpackChunkName: "choose-edge-connection" */ '../views/ChooseEdgeConnection.vue')
   }
 ]
 

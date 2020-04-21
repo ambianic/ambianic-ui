@@ -104,7 +104,7 @@
       <v-btn
         icon
         v-if="!isEdgeConnected"
-        @click="$router.push('edge-connect')"
+        @click="$router.push('choose-edge-connection')"
       >
         <v-icon>
           mdi-download-off
@@ -223,7 +223,7 @@ export default {
       //    { text: 'Integrations' }
       //  ]
       // },
-      { icon: 'mdi-video-input-antenna', text: 'Connect', link: '/edge-connect' },
+      { icon: 'mdi-video-input-antenna', text: 'Connect', link: '/choose-edge-connection' },
       // { icon: 'settings', text: 'Settings', link: '/settings' },
       { icon: 'chat_bubble', text: 'Send feedback', link: '/feedback' },
       { icon: 'help', text: 'Help', link: '/help' },
