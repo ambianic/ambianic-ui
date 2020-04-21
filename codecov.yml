@@ -5,13 +5,13 @@ coverage:
         # basic
         target: auto
         threshold: 0%
-        base: auto 
-        flags: 
+        base: auto
+        flags:
           - unit
-        paths: 
+        paths:
           - "src"
        # advanced
-        branches: 
+        branches:
           - master
         if_not_found: error
         if_ci_failed: error
