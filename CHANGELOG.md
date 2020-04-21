@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.2.13](https://github.com/ambianic/ambianic-ui/compare/v2.2.12...v2.2.13) (2020-04-21)
+
+
+### Bug Fixes
+
+* coverage report upload ([137b0fe](https://github.com/ambianic/ambianic-ui/commit/137b0fe7620222a0a7c6c29ab9ec6b58fa319a42))
+
 ## [2.2.12](https://github.com/ambianic/ambianic-ui/compare/v2.2.11...v2.2.12) (2020-04-21)
 
 
