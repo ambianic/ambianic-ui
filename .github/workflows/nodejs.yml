@@ -12,7 +12,7 @@ jobs:
         node-version: [12.x]
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@master
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
@@ -36,6 +36,14 @@ jobs:
       env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Codecov.io
+      uses: codecov/codecov-action@v1
+      with:
+        # token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+        file: ./coverage/coverage-final.json # optional
+        flags: pwa-tests # optional
+        name: codecov-umbrella # optional
+        fail_ci_if_error: true # optional (default = false)
     - name: Semantic Release
       run: npx semantic-release
       env:
