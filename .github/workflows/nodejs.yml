@@ -26,14 +26,21 @@ jobs:
       env:
         CI: true
     - name: End-to-end Tests with Cypress
-      uses: cypress-io/github-action@master
-      with: 
+      uses: cypress-io/github-action@v1
+      with:
         start: npm run serve
         record: true
         wait-on: 'http://localhost:8080'
       env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: codecov/codecov-action@v1.0.6
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+        file: ./coverage/coverage-final.json # optional
+        flags: unittests # optional
+        name: codecov-umbrella # optional
+        fail_ci_if_error: true # optional (default = false)        
     - name: Build PWA distribution for production
       run: |
         npm run build --if-present
