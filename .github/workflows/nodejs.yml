@@ -37,7 +37,7 @@ jobs:
     - name: Upload coverage report to Codecov.io
       uses: codecov/codecov-action@v1
       with:
-        # token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+        token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
         file: ./coverage/coverage-final.json # optional
         flags: pwa-tests # optional
         name: codecov-umbrella # optional
