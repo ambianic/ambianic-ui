@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.2.14](https://github.com/ambianic/ambianic-ui/compare/v2.2.13...v2.2.14) (2020-04-21)
+
+
+### Bug Fixes
+
+* codecov commit comments ([e83f78a](https://github.com/ambianic/ambianic-ui/commit/e83f78a01c480cee6b615d6a440b30c867efee62))
+
 ## [2.2.13](https://github.com/ambianic/ambianic-ui/compare/v2.2.12...v2.2.13) (2020-04-21)
 
 
