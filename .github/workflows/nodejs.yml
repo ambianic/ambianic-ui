@@ -26,8 +26,8 @@ jobs:
       env:
         CI: true
     - name: End-to-end Tests with Cypress
-      uses: cypress-io/github-action@master
-      with: 
+      uses: cypress-io/github-action@v1
+      with:
         start: npm run serve
         record: true
         wait-on: 'http://localhost:8080'
