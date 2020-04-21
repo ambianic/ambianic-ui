@@ -17,13 +17,12 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: npm install, build
+    - name: npm install
       run: |
         npm version
         npm install -g npm
         npm version
         npm ci
-        npm run build --if-present
       env:
         CI: true
     - name: End-to-end Tests with Cypress
@@ -35,7 +34,7 @@ jobs:
       env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Codecov.io
+    - name: Upload coverage report to Codecov.io
       uses: codecov/codecov-action@v1
       with:
         # token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
@@ -43,6 +42,11 @@ jobs:
         flags: pwa-tests # optional
         name: codecov-umbrella # optional
         fail_ci_if_error: true # optional (default = false)
+    - name: Build PWA distribution for production
+      run: |
+        npm run build --if-present
+      env:
+        CI: true
     - name: Semantic Release
       run: npx semantic-release
       env:
