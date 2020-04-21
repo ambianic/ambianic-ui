@@ -1,5 +1,14 @@
 # Semantic Versioning Changelog
 
+## [2.2.10](https://github.com/ambianic/ambianic-ui/compare/v2.2.9...v2.2.10) (2020-04-21)
+
+
+### Bug Fixes
+
+* ci script ([4fd6135](https://github.com/ambianic/ambianic-ui/commit/4fd6135dbb80f075ca3364957c3dc74beda98a3b))
+* ci script ([c5b448a](https://github.com/ambianic/ambianic-ui/commit/c5b448a4806ec86426862071c968392beef033ea))
+* code coverage report ([911cfd4](https://github.com/ambianic/ambianic-ui/commit/911cfd48fe9980059a5ac6d8e9f44efd02ef5881))
+
 ## [2.2.9](https://github.com/ambianic/ambianic-ui/compare/v2.2.8...v2.2.9) (2020-04-18)
 
 
