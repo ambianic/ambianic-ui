@@ -22,3 +22,8 @@ yarn-error.log*
 
 # Cypress.io E2E local files
 cypress/videos/
+cypress/screenshots/
+
+# Test coverage reports
+.nyc_output/
+coverage/
