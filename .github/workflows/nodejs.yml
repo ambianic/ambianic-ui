@@ -34,14 +34,6 @@ jobs:
       env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Upload coverage report to Codecov.io
-      uses: codecov/codecov-action@master
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-        file: ./coverage/coverage-final.json # optional
-        flags: pwa-tests # optional
-        name: codecov-umbrella # optional
-        fail_ci_if_error: true # optional (default = false)
     - name: Build PWA distribution for production
       run: |
         npm run build --if-present
@@ -52,5 +44,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-    - name: Semantic release flow completed
-      run: echo Semantic release flow completed
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
