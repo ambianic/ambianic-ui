@@ -33,11 +33,11 @@
               height="194"
             />
 
-            <v-card-text id='welcome-text'>
+            <v-card-text id="welcome-text">
               Review your home timeline for notable moments.
               Configure input sensors and camers for Ambianic to observe.
               Share, purge or backup your data
-               - it never slips out of your control.
+              - it never slips out of your control.
             </v-card-text>
 
             <v-card-actions>
@@ -47,7 +47,7 @@
                 dark
                 class="ma-2 white--text"
                 :to="'timeline'"
-                id='btn-timeline'
+                id="btn-timeline"
               >
                 View Timeline
                 <v-icon
@@ -63,7 +63,7 @@
                 dark
                 class="ma-2 white--text"
                 :to="'settings'"
-                id='btn-settings'
+                id="btn-settings"
               >
                 Settings
                 <v-icon

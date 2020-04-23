@@ -42,54 +42,55 @@
             indeterminate
             :size="50"
             :width="7"
-          >
-          </v-progress-linear>
+          />
         </v-banner>
 
         <v-card
           class="mx-auto text-left"
         >
-          <v-list two-line
+          <v-list
+            two-line
           >
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon>mdi-tag</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>My Ambianic Edge Device</v-list-item-title>
-                  <v-list-item-subtitle>Display Name</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon>mdi-tag</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>My Ambianic Edge Device</v-list-item-title>
+                <v-list-item-subtitle>Display Name</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
 
-              <v-divider inset></v-divider>
+            <v-divider inset />
 
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon>mdi-identifier</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>{{ edgePeerId }}</v-list-item-title>
-                  <v-list-item-subtitle>Peer ID</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon>mdi-identifier</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>{{ edgePeerId }}</v-list-item-title>
+                <v-list-item-subtitle>Peer ID</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
 
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon>mdi-alpha-v</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>{{ version }}</v-list-item-title>
-                  <v-list-item-subtitle>Release Version</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon>mdi-alpha-v</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>{{ version }}</v-list-item-title>
+                <v-list-item-subtitle>Release Version</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
           </v-list>
-          <v-btn text
+          <v-btn
+            text
             :to="'timeline'"
           >
             OK
           </v-btn>
-          <v-btn text
+          <v-btn
+            text
             @click.stop="resetEdgeDialog = true"
           >
             Reset
@@ -136,8 +137,7 @@
               indeterminate
               :size="50"
               :width="7"
-            >
-            </v-progress-linear>
+            />
             <v-alert
               v-if="this.$store.state.pnp.userMessage"
               outlined
@@ -147,7 +147,6 @@
             >
               {{ this.$store.state.pnp.userMessage }}
             </v-alert>
-
           </v-stepper-content>
 
           <v-stepper-step
@@ -164,15 +163,13 @@
               indeterminate
               :size="50"
               :width="7"
-            >
-            </v-progress-linear>
+            />
           </v-stepper-content>
 
           <v-stepper-step step="3">
             Done
           </v-stepper-step>
-          <v-stepper-content step="3">
-          </v-stepper-content>
+          <v-stepper-content step="3" />
         </v-stepper>
       </v-col>
       <v-dialog
@@ -180,18 +177,20 @@
         max-width="500"
       >
         <v-card>
-          <v-card-title class="headline">Reset device pairing?</v-card-title>
+          <v-card-title class="headline">
+            Reset device pairing?
+          </v-card-title>
 
           <v-card-text>
             <p>
-            Are you switching to a new Ambianic Edge device?
-            Resetting a device association is usually done when switching to
-            a new edge device with a different Peer ID.
+              Are you switching to a new Ambianic Edge device?
+              Resetting a device association is usually done when switching to
+              a new edge device with a different Peer ID.
             </p>
           </v-card-text>
 
           <v-card-actions>
-            <v-spacer></v-spacer>
+            <v-spacer />
 
             <v-btn
               text
