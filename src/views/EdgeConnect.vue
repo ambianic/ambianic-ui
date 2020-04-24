@@ -4,15 +4,15 @@
       align="start"
       justify="space-around"
     >
-    Hellow
-        {{edgeAddress}}
+      Hello
+      {{ edgeAddress }}
     </v-row>
   </app-frame>
 </template>
 <script>
 import AppFrame from '@/components/AppFrame.vue'
 // import { settingsDB } from '@/store/db'
-// import { mapState, mapActions } from 'vuex'
+import { INITIALIZE_PNP } from '../store/action-types.js'
 import {
   PEER_DISCONNECTED,
   PEER_DISCOVERING,
@@ -87,11 +87,14 @@ export default {
       this.removeEdgeId()
     },
     loadSettings () {
-      // settingsDB.get('ambanic-edge-address').then(
-      //   (address) => {
-      //     this.edgeAddress = address
-      //   }
-      // )
+      /**
+       Send the IP to state so pnp.js can handle all connection
+       */
+      this.$store.state.pnp.edgeNetwork = this.edgeAddress
+      /**
+        Begin connection attempt to Ambianic Edge as soon as the app is created
+       */
+      this.$store.dispatch(INITIALIZE_PNP)
     },
     saveSettings () {
       // settingsDB.set('ambanic-edge-address', this.edgeAddress)

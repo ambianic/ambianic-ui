@@ -8,7 +8,7 @@
       <form>
         Connect to a
         <router-link :to="{name: 'edge-connect', params: {edgeAddress: 'localhost'}}">
-          <v-btn @click="localhostConnection">
+          <v-btn>
             Local Network
           </v-btn>
         </router-link>
@@ -24,7 +24,6 @@
         >
         <router-link :to="{name: 'edge-connect', params: {edgeAddress: ipAddress}}">
           <v-btn
-            @click="remoteNetworkConnection"
             :disabled="!ipAddress"
           >
             Connect
@@ -50,12 +49,6 @@ export default {
   },
   computed: {},
   methods: {
-    localhostConnection () {
-      console.log('localhost')
-    },
-    remoteNetworkConnection () {
-      console.log(this.ipAddress)
-    }
   },
   components: {
     AppFrame
@@ -63,15 +56,11 @@ export default {
 }
 </script>
 <style scoped>
-.inputbox {
-  border: 1px solid gray;
-}
 .container {
   width: 50%;
   display: flex;
   flex-direction: row;
   margin: 0 auto;
-  border: 1px solid red;
 }
 hr {
   margin: 1rem 0;
