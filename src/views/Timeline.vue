@@ -29,7 +29,8 @@
               indeterminate
               :size="50"
               :width="7"
-            />
+            >
+            </v-progress-linear>
           </v-card-title>
 
           <v-card-text>
