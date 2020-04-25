@@ -52,3 +52,9 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+    - name: Lighthouse CI
+      uses: treosh/lighthouse-ci-action@v2
+      with:
+        configPath: '../../lighthouserc.json'
+        temporaryPublicStorage: true
