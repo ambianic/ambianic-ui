@@ -31,7 +31,7 @@
 
           <v-card-text>
             Review your home timeline for notable moments.
-            Configure input sensors and camers for Ambianic to observe.
+            Configure input sensors and cameras for Ambianic to observe.
             Share, purge or backup your data
              - it never slips out of your control.
           </v-card-text>
