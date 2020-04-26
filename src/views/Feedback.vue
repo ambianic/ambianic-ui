@@ -22,7 +22,7 @@
                 </v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title>Send Feedback</v-list-item-title>
-                  <v-list-item-subtitle>We currently use github to gather user feedbaack.</v-list-item-subtitle>
+                  <v-list-item-subtitle>We currently use Github to gather user feedback.</v-list-item-subtitle>
                   <v-list-item-subtitle>Your time is greatly appreciated!</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
