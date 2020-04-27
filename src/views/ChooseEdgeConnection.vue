@@ -5,31 +5,43 @@
       justify="space-around"
       class="container"
     >
-      <form>
-        Connect to a
+      <div class="local">
+        <p class="text">
+          Connect to local network
+        </p>
         <router-link :to="{name: 'edge-connect', params: {edgeAddress: 'localhost'}}">
-          <v-btn>
+          <v-btn class="localButton">
             Local Network
           </v-btn>
         </router-link>
-        <hr>
-        <p>Enter details for Remote Network</p>
-        <label for="ambianicIPAddress">IP to Ambianic Network</label>
+      </div>
+      <div class="middleLine">OR</div>
+      <div class="remote">
+          <form class="text">
+        Connect to remote network
+        <h6 class="fineDetails">(must enter room ID to Ambianic network)</h6>
+        <p></p>
+        <label for="ambianicIPAddress" class="fineDetails">Room ID to Ambianic Network</label>
+        <p>
         <input
           type="text"
           id="ambianicIPAddress"
           class="inputbox"
-          placeholder="Enter IP"
+          placeholder="Enter Room ID"
           v-model="ipAddress"
         >
+        </p>
+        <p>
         <router-link :to="{name: 'edge-connect', params: {edgeAddress: ipAddress}}">
           <v-btn
             :disabled="!ipAddress"
           >
-            Connect
+            REMOTE NETWORK
           </v-btn>
         </router-link>
+        </p>
       </form>
+      </div>
     </v-row>
   </app-frame>
 </template>
@@ -68,5 +80,37 @@ hr {
 
 a {
   text-decoration: none;
+}
+
+.localButton {
+  margin: 35px 0 0 20px;
+}
+
+.text {
+  font-size: 18px;
+}
+
+.fineDetails {
+  font-size: 10px;
+}
+
+.local {
+  display: inline-block;
+  margin: 50px 0;
+  padding: 30px;
+}
+
+.remote {
+  display: inline-block;
+  margin: 50px 0;
+  padding: 30px;
+}
+
+.middleLine {
+  display: inline-block;
+  margin: 40px 0;
+  padding: 30px 0 0 0;
+  font-weight: bolder;
+  font-size: 28px;
 }
 </style>

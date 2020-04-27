@@ -4,8 +4,9 @@
       align="start"
       justify="space-around"
     >
-      Hello
-      {{ edgeAddress }}
+      Connected to
+      {{ edgeAddress==='localhost' ? ' home network.' : ' remote network' }}
+      Room id: {{ this.$store.state.pnp.remotePeerId }}
     </v-row>
   </app-frame>
 </template>
@@ -14,12 +15,12 @@ import AppFrame from '@/components/AppFrame.vue'
 // import { settingsDB } from '@/store/db'
 import { INITIALIZE_PNP } from '../store/action-types.js'
 import {
-  PEER_DISCONNECTED,
-  PEER_DISCOVERING,
-  PEER_DISCOVERED,
-  PEER_CONNECTING,
-  PEER_AUTHENTICATING,
-  PEER_CONNECTED,
+//   PEER_DISCONNECTED,
+//   PEER_DISCOVERING,
+//   PEER_DISCOVERED,
+//   PEER_CONNECTING,
+//   PEER_AUTHENTICATING,
+//   PEER_CONNECTED,
   PEER_CONNECTION_ERROR
 } from '@/store/mutation-types'
 
@@ -41,7 +42,7 @@ export default {
     peerConnectionError: function () {
       console.log('this.$store.state.pnp.peerConnectionStatus', this.$store.state.pnp.peerConnectionStatus)
       return this.$store.state.pnp.peerConnectionStatus === PEER_CONNECTION_ERROR
-    },
+    }
     // ...mapState({
     //   peerConnectionStatus: state => state.pnp.peerConnectionStatus,
     //   // map this.edgeConnected to this.$store.state.edgeConnected
@@ -51,27 +52,27 @@ export default {
     //   peerFetch: state => state.pnp.peerFetch,
     //   version: state => state.version
     // }),
-    connectStep: function () {
-      let step = 1
-      switch (this.peerConnectionStatus) {
-        case PEER_DISCONNECTED:
-        case PEER_CONNECTION_ERROR:
-          step = 1
-          break
-        case PEER_DISCOVERING:
-        case PEER_DISCOVERED:
-        case PEER_CONNECTING:
-        case PEER_AUTHENTICATING:
-          step = 2
-          break
-        case PEER_CONNECTED:
-          step = 3
-          break
-        default:
-          break
-      }
-      return step
-    }
+    // connectStep: function () {
+    //   let step = 1
+    //   switch (this.peerConnectionStatus) {
+    //     case PEER_DISCONNECTED:
+    //     case PEER_CONNECTION_ERROR:
+    //       step = 1
+    //       break
+    //     case PEER_DISCOVERING:
+    //     case PEER_DISCOVERED:
+    //     case PEER_CONNECTING:
+    //     case PEER_AUTHENTICATING:
+    //       step = 2
+    //       break
+    //     case PEER_CONNECTED:
+    //       step = 3
+    //       break
+    //     default:
+    //       break
+    //   }
+    //   return step
+    // }
   },
   components: {
     AppFrame

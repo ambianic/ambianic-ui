@@ -29,7 +29,7 @@ import {
 } from './action-types.js'
 import { ambianicConf } from '@/config'
 import Peer from 'peerjs'
-import { PeerRoom } from '@/remote/peer-room'
+// import { PeerRoom } from '@/remote/peer-room'
 import { PeerFetch } from '@/remote/peer-fetch'
 const STORAGE_KEY = 'ambianic-pnp-settings'
 
@@ -75,7 +75,11 @@ const state = {
   /**
     PeerFetch instance
   */
-  peerFetch: PeerFetch
+  peerFetch: PeerFetch,
+  /**
+   Local network or Remote network
+  */
+  edgeNetwork: String
 }
 
 const mutations = {
@@ -144,29 +148,33 @@ const mutations = {
   Hardcoded id from backend
 */
 async function discoverRemotePeerId ({ peer, state, commit }) {
-  // return 'da498ccd-ee52-4e53-92ef-8c57ed6003c1'
+  if (state.edgeNetwork !== 'localhost') {
+    return state.edgeNetwork
+  }
   if (state.remotePeerId) {
     return state.remotePeerId
   } else {
+    return '5568ec87-42d8-47b0-aeea-01a125db0623'
     // first try to find the remote peer ID in the same room
-    const myRoom = new PeerRoom(peer)
-    console.log('Fetching room members', myRoom)
-    const { clientsIds } = await myRoom.getRoomMembers()
-    const peerIds = clientsIds
-    console.log('myRoom members', clientsIds)
-    const remotePeerId = peerIds.find(
-      pid => pid !== state.myPeerId)
-    if (remotePeerId) {
-      return remotePeerId
-    } else {
-      // unable to auto discover
-      // ask user for help
-      commit(USER_MESSAGE,
-        `Still looking.
-         Please make sure you are on the same local network
-         as the Ambianic Edge device.
-        `)
-    }
+    // console.log(peer)
+    // const myRoom = new PeerRoom(peer)
+    // console.log('Fetching room members', myRoom)
+    // const { clientsIds } = await myRoom.getRoomMembers()
+    // const peerIds = clientsIds
+    // console.log('myRoom members', clientsIds)
+    // const remotePeerId = peerIds.find(
+    //   pid => pid !== state.myPeerId)
+    // if (remotePeerId) {
+    //   return remotePeerId
+    // } else {
+    //   // unable to auto discover
+    //   // ask user for help
+    //   commit(USER_MESSAGE,
+    //     `Still looking.
+    //      Please make sure you are on the same local network
+    //      as the Ambianic Edge device.
+    //     `)
+    // }
   }
 }
 
@@ -284,6 +292,10 @@ const actions = {
   * Initialize PnP Service and Peer Connection
   */
   async [INITIALIZE_PNP] ({ state, commit, dispatch }) {
+    // Might not need to clear the localstorage in the future. For debugging only with remote this is needed to make sure
+    // no cached ID will be tried
+    window.localStorage.clear()
+    state.remotePeerId = undefined
     await dispatch(PNP_SERVICE_CONNECT)
   },
   /**
@@ -294,6 +306,7 @@ const actions = {
   * peer object.
   */
   async [PNP_SERVICE_CONNECT] ({ state, commit, dispatch }) {
+    console.log('SERVICE_CONNECT')
     // if connection to pnp service already open, then nothing to do
     if (peer && peer.open) { return }
     // if in the middle of pnp server connection cycle, skip
@@ -304,12 +317,14 @@ const actions = {
     // We expect that peerId is crypto secure. No need to replace.
     // Unless the user explicitly requests a refresh.
     console.log('pnp client: last saved myPeerId', state.myPeerId)
-    peer = new Peer(state.myPeerId, {
-      host: ambianicConf.AMBIANIC_PNP_HOST,
-      port: ambianicConf.AMBIANIC_PNP_PORT,
-      secure: ambianicConf.AMBIANIC_PNP_SECURE,
-      debug: 3
-    })
+    peer = new Peer(state.myPeerId,
+      {
+        host: ambianicConf.AMBIANIC_PNP_HOST,
+        port: ambianicConf.AMBIANIC_PNP_PORT,
+        secure: ambianicConf.AMBIANIC_PNP_SECURE,
+        debug: 3
+      }
+    )
     console.log('pnp client: peer created')
     console.log('PEER', peer)
     setPnPServiceConnectionHandlers({ state, commit, dispatch }, peer)
@@ -439,7 +454,6 @@ const actions = {
   *
   */
   async [PEER_AUTHENTICATE] ({ state, commit, dispatch }, peerConnection) {
-    console.log('PEER AUTHENTICATE')
     commit(PEER_AUTHENTICATING)
     commit(USER_MESSAGE, `Authenticating remote peer: ${peerConnection.peer}`)
     console.log('Authenticating remote Peer ID: ', peerConnection.peer)
