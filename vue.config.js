@@ -1,5 +1,6 @@
 // Compress static text assets at build time
 const CompressionPlugin = require('compression-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = {
   configureWebpack: {
@@ -57,6 +58,7 @@ module.exports = {
 
     // enable build time compression
     config.plugin('CompressionPlugin').use(CompressionPlugin)
+    config.plugin('BundleAnalyzerPlugin').use(BundleAnalyzerPlugin)
   },
 
   productionSourceMap: false
