@@ -61,4 +61,3 @@ jobs:
 
     - name: Lighthouse Check
       uses: foo-software/lighthouse-check-action@v1.0.11
-  
