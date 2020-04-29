@@ -3,7 +3,7 @@
     <v-row align="start" justify="space-around" class="container">
       <div class="local">
         <p class="text">Connect to local network</p>
-        <router-link :to="{name: 'edge-connect', params: {edgeAddress: 'localhost'}}">
+        <router-link :to="'edge-connect'">
           <v-btn class="localButton">Local Network</v-btn>
         </router-link>
       </div>
@@ -13,19 +13,19 @@
           Connect to remote network
           <h6 class="fineDetails">(must enter IP to Ambianic network)</h6>
           <p></p>
-          <label for="ambianicIPAddress" class="fineDetails">IP to Ambianic Network*</label>
+          <label for="ambianicEdgeAddress" class="fineDetails">IP to Ambianic Network*</label>
           <p>
             <input
               type="text"
-              id="ambianicIPAddress"
+              id="ambianicEdgeAddress"
               class="inputbox"
               placeholder="Enter IP"
-              v-model="ipAddress"
+              v-model="edgeAddress"
             />
           </p>
           <p>
-            <router-link v-if="correctIP" :to="{name: 'edge-connect', params: {edgeAddress: ipAddress}}">
-              <v-btn>REMOTE NETWORK</v-btn>
+            <router-link v-if="correctEdgeAddress" :to="'edge-connect'">
+              <v-btn @click="sendEdgeAddress">REMOTE NETWORK</v-btn>
             </router-link>
           </p>
         </form>
@@ -35,11 +35,14 @@
 </template>
 <script>
 import AppFrame from '@/components/AppFrame.vue'
+import { REMOVE_REMOTE_PEER_ID } from '../store/action-types'
+import { PEER_CONNECTED } from '../store/mutation-types'
+
 export default {
   data: () => {
     return {
-      ipAddress: '',
-      correctIP: false
+      edgeAddress: '',
+      correctEdgeAddress: false
       // connectionStatus: '',
       // connectionTip: '',
       // testInProgress: false,
@@ -51,20 +54,27 @@ export default {
   computed: {},
   methods: {
     validateIP (value) {
-      if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(value)) {
-        this.correctIP = true
-        return this.correctIP
+      if (/^([a-zA-Z0-9]{8})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{12})$/.test(value)) {
+        this.correctEdgeAddress = true
+        return this.correctEdgeAddress
       } else {
-        console.log('Error')
       }
+    },
+    sendEdgeAddress () {
+      this.$store.state.pnp.edgeRoom = this.edgeAddress
+    }
+  },
+  mounted () {
+    if (this.$store.state.pnp.peerConnectionStatus === PEER_CONNECTED) {
+      this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
     }
   },
   components: {
     AppFrame
   },
   watch: {
-    ipAddress (value) {
-      this.ipAddress = value
+    edgeAddress (value) {
+      this.edgeAddress = value
       this.validateIP(value)
     }
   }
@@ -78,7 +88,7 @@ export default {
   margin: 0 auto;
 }
 
-#ambianicIPAddress {
+#ambianicEdgeAddress {
   border: 2px ridge lightgray;
   padding: 6px;
   border-radius: 5px;

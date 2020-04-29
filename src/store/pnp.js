@@ -29,7 +29,7 @@ import {
 } from './action-types.js'
 import { ambianicConf } from '@/config'
 import Peer from 'peerjs'
-// import { PeerRoom } from '@/remote/peer-room'
+import { PeerRoom } from '@/remote/peer-room'
 import { PeerFetch } from '@/remote/peer-fetch'
 const STORAGE_KEY = 'ambianic-pnp-settings'
 
@@ -77,9 +77,9 @@ const state = {
   */
   peerFetch: PeerFetch,
   /**
-   Local network or Remote network
-  */
-  edgeNetwork: String
+    Edgeroom ID when connecting to remote network
+   */
+  edgeRoom: String
 }
 
 const mutations = {
@@ -148,33 +148,32 @@ const mutations = {
   Hardcoded id from backend
 */
 async function discoverRemotePeerId ({ peer, state, commit }) {
-  if (state.edgeNetwork !== 'localhost') {
-    return state.edgeNetwork
+  if (state.edgeRoom !== undefined) {
+    return state.edgeRoom
   }
   if (state.remotePeerId) {
     return state.remotePeerId
   } else {
-    return '5568ec87-42d8-47b0-aeea-01a125db0623'
-    // first try to find the remote peer ID in the same room
-    // console.log(peer)
-    // const myRoom = new PeerRoom(peer)
-    // console.log('Fetching room members', myRoom)
-    // const { clientsIds } = await myRoom.getRoomMembers()
-    // const peerIds = clientsIds
-    // console.log('myRoom members', clientsIds)
-    // const remotePeerId = peerIds.find(
-    //   pid => pid !== state.myPeerId)
-    // if (remotePeerId) {
-    //   return remotePeerId
-    // } else {
-    //   // unable to auto discover
-    //   // ask user for help
-    //   commit(USER_MESSAGE,
-    //     `Still looking.
-    //      Please make sure you are on the same local network
-    //      as the Ambianic Edge device.
-    //     `)
-    // }
+  // first try to find the remote peer ID in the same room
+    console.log(peer)
+    const myRoom = new PeerRoom(peer)
+    console.log('Fetching room members', myRoom)
+    const { clientsIds } = await myRoom.getRoomMembers()
+    const peerIds = clientsIds
+    console.log('myRoom members', clientsIds)
+    const remotePeerId = peerIds.find(
+      pid => pid !== state.myPeerId)
+    if (remotePeerId) {
+      return remotePeerId
+    } else {
+      // unable to auto discover
+      // ask user for help
+      commit(USER_MESSAGE,
+        `Still looking.
+         Please make sure you are on the same local network
+         as the Ambianic Edge device.
+        `)
+    }
   }
 }
 
@@ -292,10 +291,7 @@ const actions = {
   * Initialize PnP Service and Peer Connection
   */
   async [INITIALIZE_PNP] ({ state, commit, dispatch }) {
-    // Might not need to clear the localstorage in the future. For debugging only with remote this is needed to make sure
-    // no cached ID will be tried
-    window.localStorage.clear()
-    state.remotePeerId = undefined
+    // state.remotePeerId = undefined
     await dispatch(PNP_SERVICE_CONNECT)
   },
   /**
@@ -306,7 +302,6 @@ const actions = {
   * peer object.
   */
   async [PNP_SERVICE_CONNECT] ({ state, commit, dispatch }) {
-    console.log('SERVICE_CONNECT')
     // if connection to pnp service already open, then nothing to do
     if (peer && peer.open) { return }
     // if in the middle of pnp server connection cycle, skip
@@ -326,7 +321,6 @@ const actions = {
       }
     )
     console.log('pnp client: peer created')
-    console.log('PEER', peer)
     setPnPServiceConnectionHandlers({ state, commit, dispatch }, peer)
     commit(PNP_SERVICE_CONNECTING)
   },
@@ -368,7 +362,7 @@ const actions = {
       // start a discovery loop
       console.log('Discovering remote peer...')
       // its possible that the PNP signaling server connection was disrupted
-      // while looping in peer discovery mode.
+      // while looping in peer discovery mode
       if (state.pnpServiceConnectionStatus !== PNP_SERVICE_CONNECTED) {
         console.log('PNP Service disconnected. Reconnecting...')
         await dispatch(PNP_SERVICE_RECONNECT)
