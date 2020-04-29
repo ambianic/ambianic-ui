@@ -25,6 +25,9 @@
         ["@semantic-release/github", {
           "assets": [
           ]
-    }],
+        }],
+        ["@semantic-release/exec", {
+          "publishCmd": "npm run codecov"
+        }],    
     ]
 }

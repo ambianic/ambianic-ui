@@ -1,5 +1,42 @@
 # Semantic Versioning Changelog
 
+## [2.2.14](https://github.com/ambianic/ambianic-ui/compare/v2.2.13...v2.2.14) (2020-04-21)
+
+
+### Bug Fixes
+
+* codecov commit comments ([e83f78a](https://github.com/ambianic/ambianic-ui/commit/e83f78a01c480cee6b615d6a440b30c867efee62))
+
+## [2.2.13](https://github.com/ambianic/ambianic-ui/compare/v2.2.12...v2.2.13) (2020-04-21)
+
+
+### Bug Fixes
+
+* coverage report upload ([137b0fe](https://github.com/ambianic/ambianic-ui/commit/137b0fe7620222a0a7c6c29ab9ec6b58fa319a42))
+
+## [2.2.12](https://github.com/ambianic/ambianic-ui/compare/v2.2.11...v2.2.12) (2020-04-21)
+
+
+### Bug Fixes
+
+* codecov report upload ([6226566](https://github.com/ambianic/ambianic-ui/commit/6226566e216e04a98d2e00257db2e33a75901eed))
+
+## [2.2.11](https://github.com/ambianic/ambianic-ui/compare/v2.2.10...v2.2.11) (2020-04-21)
+
+
+### Bug Fixes
+
+* codecov report upload ([bf849e1](https://github.com/ambianic/ambianic-ui/commit/bf849e19ed0e2b53c43ed637e6fd01a395d4043e))
+
+## [2.2.10](https://github.com/ambianic/ambianic-ui/compare/v2.2.9...v2.2.10) (2020-04-21)
+
+
+### Bug Fixes
+
+* ci script ([4fd6135](https://github.com/ambianic/ambianic-ui/commit/4fd6135dbb80f075ca3364957c3dc74beda98a3b))
+* ci script ([c5b448a](https://github.com/ambianic/ambianic-ui/commit/c5b448a4806ec86426862071c968392beef033ea))
+* code coverage report ([911cfd4](https://github.com/ambianic/ambianic-ui/commit/911cfd48fe9980059a5ac6d8e9f44efd02ef5881))
+
 ## [2.2.9](https://github.com/ambianic/ambianic-ui/compare/v2.2.8...v2.2.9) (2020-04-18)
 
 
