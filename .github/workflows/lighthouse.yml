@@ -37,6 +37,10 @@ jobs:
       uses: treosh/lighthouse-ci-action@v2
       with:
         # List of URL(s) to analyze
+        urls: |
+          'http://localhost:8080'
+        budgetPath: '../lighthouse/budget.json' # test performance budgets
+        configPath: '../lighthouse/lighthouserc.json'
         # Path to a LHCI lighthouserc.json file
         # Opt-out of saving Lighthouse results as an action artifacts
         uploadArtifacts: true
