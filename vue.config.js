@@ -1,10 +1,13 @@
 // Compress static text assets at build time
 const CompressionPlugin = require('compression-webpack-plugin')
+const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = {
   configureWebpack: {
     optimization: {
       splitChunks: {
+        chunks: 'all',
         minSize: 10000,
         maxSize: 250000
       }
@@ -57,6 +60,10 @@ module.exports = {
 
     // enable build time compression
     config.plugin('CompressionPlugin').use(CompressionPlugin)
+    // vuetify
+    config.plugin('VuetifyLoaderPlugin').use(VuetifyLoaderPlugin)
+    // bundle build analyzer
+    config.plugin('BundleAnalyzerPlugin').use(BundleAnalyzerPlugin)
   },
 
   productionSourceMap: false
