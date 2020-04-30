@@ -47,9 +47,7 @@
         <v-card
           class="mx-auto text-left"
         >
-          <v-list
-            two-line
-          >
+          <v-list two-line>
             <v-list-item>
               <v-list-item-icon>
                 <v-icon>mdi-tag</v-icon>
@@ -142,9 +140,7 @@
             >
               {{ this.$store.state.pnp.userMessage }}
             </v-alert>
-
           </v-stepper-content>
-
           <v-stepper-step
             :complete="connectStep > 2"
             step="2"
@@ -152,22 +148,18 @@
             Authenticating
             <small>Establishing secure peer-to-peer connection.</small>
           </v-stepper-step>
-
           <v-stepper-content step="2">
             <v-progress-linear
               color="info"
               indeterminate
               :size="50"
               :width="7"
-            >
-            </v-progress-linear>
+            />
           </v-stepper-content>
-
           <v-stepper-step step="3">
             Done
           </v-stepper-step>
-          <v-stepper-content step="3">
-          </v-stepper-content>
+          <v-stepper-content step="3" />
         </v-stepper>
       </v-col>
     </v-row>
@@ -242,7 +234,7 @@ export default {
     this.loadSettings()
   },
   destroyed () {
-    //Disconnect yourself when leaving this component
+    // Disconnect yourself when leaving this component
     if (this.$store.state.pnp.peerConnectionStatus === PEER_CONNECTED) {
       this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
       this.$store.state.pnp.remotePeerId = null
