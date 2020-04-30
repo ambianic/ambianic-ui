@@ -181,7 +181,8 @@ import { mapState } from 'vuex'
 import {
   PEER_CONNECTED
 } from '@/store/mutation-types'
-import UpdateNotification from './UpdateNotification'
+
+const UpdateNotification = () => import('./UpdateNotification')
 
 export default {
   name: 'AppFrame',

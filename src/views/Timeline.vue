@@ -29,8 +29,7 @@
               indeterminate
               :size="50"
               :width="7"
-            >
-            </v-progress-linear>
+            />
           </v-card-title>
 
           <v-card-text>
@@ -259,14 +258,15 @@
 </style>
 <script>
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
-import InfiniteLoading from 'vue-infinite-loading'
-import DetectionBoxes from '../components/DetectionBoxes.vue'
-import AppFrame from '@/components/AppFrame.vue'
-import { EdgeAPI } from '@/remote/edgeAPI'
 import { mapState } from 'vuex'
+import { EdgeAPI } from '@/remote/edgeAPI'
 import {
   PEER_CONNECTED
 } from '@/store/mutation-types'
+
+const InfiniteLoading = () => import('vue-infinite-loading')
+const DetectionBoxes = () => import('../components/DetectionBoxes.vue')
+const AppFrame = () => import('@/components/AppFrame.vue')
 
 const PAGE_SIZE = 5
 

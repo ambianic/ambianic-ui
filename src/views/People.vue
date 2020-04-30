@@ -92,7 +92,7 @@
   </app-frame>
 </template>
 <script>
-import AppFrame from '@/components/AppFrame.vue'
+const AppFrame = () => import('@/components/AppFrame.vue')
 
 export default {
   components: {

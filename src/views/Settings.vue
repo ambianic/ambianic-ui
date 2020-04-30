@@ -127,9 +127,10 @@
   </app-frame>
 </template>
 <script>
-import AppFrame from '@/components/AppFrame.vue'
-import { settingsDB } from '@/store/db'
-import { testConnection, EdgeConnectionStatus } from '@/remote/edgeAPI'
+const { testConnection, EdgeConnectionStatus } = () => import('@/remote/edgeAPI')
+const { settingsDB } = () => import('@/store/db')
+const AppFrame = () => import('@/components/AppFrame.vue')
+
 export default {
   data () {
     return {
