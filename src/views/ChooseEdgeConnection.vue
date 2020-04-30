@@ -81,6 +81,7 @@ export default {
         this.correctEdgeAddress = true
         return this.correctEdgeAddress
       } else {
+        // if value is not matching regex, remove button
         this.correctEdgeAddress = false
         return this.correctEdgeAddress
       }
