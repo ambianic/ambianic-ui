@@ -170,41 +170,6 @@
           </v-stepper-content>
         </v-stepper>
       </v-col>
-      <!-- <v-dialog
-        v-model="resetEdgeDialog"
-        max-width="500"
-      >
-        <v-card>
-          <v-card-title class="headline">Reset device pairing?</v-card-title>
-
-          <v-card-text>
-            <p>
-            Are you switching to a new Ambianic Edge device?
-            Resetting a device association is usually done when switching to
-            a new edge device with a different Peer ID.
-            </p>
-          </v-card-text>
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-
-            <v-btn
-              text
-              @click="resetEdgeDialog = false"
-            >
-              Cancel
-            </v-btn>
-
-            <v-btn
-              text
-              @click="resetEdgeConnection()"
-              :to="'choose-edge-connection'"
-            >
-              Yes, Reset
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog> -->
     </v-row>
   </app-frame>
 </template>
@@ -277,6 +242,7 @@ export default {
     this.loadSettings()
   },
   destroyed () {
+    //Disconnect yourself when leaving this component
     if (this.$store.state.pnp.peerConnectionStatus === PEER_CONNECTED) {
       this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
       this.$store.state.pnp.remotePeerId = null

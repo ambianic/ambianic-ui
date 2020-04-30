@@ -22,21 +22,21 @@
         <form class="text">
           Connect to remote network
           <h6 class="fineDetails">
-            (must enter IP to Ambianic network)
+            (must enter room ID to Ambianic network)
           </h6>
           <p />
           <label
             for="ambianicEdgeAddress"
             class="fineDetails"
           >
-            IP to Ambianic Network*
+            Room ID to Ambianic Network*
           </label>
           <p>
             <input
               type="text"
               id="ambianicEdgeAddress"
               class="inputbox"
-              placeholder="Enter IP"
+              placeholder="Enter ID"
               v-model="edgeAddress"
             >
           </p>
@@ -90,6 +90,7 @@ export default {
     }
   },
   mounted () {
+    //If you route back to this page, disconnect so you can reconnect to another ID
     if (this.$store.state.pnp.peerConnectionStatus === PEER_CONNECTED) {
       this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
     }
