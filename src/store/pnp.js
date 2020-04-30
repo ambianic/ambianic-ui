@@ -145,9 +145,9 @@ const mutations = {
   Otherwise try to discover it automatically or with user's help.
   Once discovered, the remote peer Id will be saved
   and reused until explicitly reset by the user.
-  Hardcoded id from backend
 */
 async function discoverRemotePeerId ({ peer, state, commit }) {
+  // first see if we got a remote Edge ID entered to connect to
   if (state.edgeRoom !== undefined) {
     return state.edgeRoom
   }

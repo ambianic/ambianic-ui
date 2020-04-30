@@ -1,19 +1,36 @@
 <template>
   <app-frame>
-    <v-row align="start" justify="space-around" class="container">
+    <v-row
+      align="start"
+      justify="space-around"
+      class="container"
+    >
       <div class="local">
-        <p class="text">Connect to local network</p>
+        <p class="text">
+          Connect to local network
+        </p>
         <router-link :to="'edge-connect'">
-          <v-btn class="localButton">Local Network</v-btn>
+          <v-btn class="localButton">
+            Local Network
+          </v-btn>
         </router-link>
       </div>
-      <div class="middleLine">OR</div>
+      <div class="middleLine">
+        OR
+      </div>
       <div class="remote">
         <form class="text">
           Connect to remote network
-          <h6 class="fineDetails">(must enter IP to Ambianic network)</h6>
-          <p></p>
-          <label for="ambianicEdgeAddress" class="fineDetails">IP to Ambianic Network*</label>
+          <h6 class="fineDetails">
+            (must enter IP to Ambianic network)
+          </h6>
+          <p />
+          <label
+            for="ambianicEdgeAddress"
+            class="fineDetails"
+          >
+            IP to Ambianic Network*
+          </label>
           <p>
             <input
               type="text"
@@ -21,11 +38,16 @@
               class="inputbox"
               placeholder="Enter IP"
               v-model="edgeAddress"
-            />
+            >
           </p>
           <p>
-            <router-link v-if="correctEdgeAddress" :to="'edge-connect'">
-              <v-btn @click="sendEdgeAddress">REMOTE NETWORK</v-btn>
+            <router-link
+              v-if="correctEdgeAddress"
+              :to="'edge-connect'"
+            >
+              <v-btn @click="sendEdgeAddress">
+                REMOTE NETWORK
+              </v-btn>
             </router-link>
           </p>
         </form>
@@ -53,11 +75,14 @@ export default {
   },
   computed: {},
   methods: {
+    // Validate the user input so the ID has the correct format before showing the connect button
     validateIP (value) {
       if (/^([a-zA-Z0-9]{8})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{12})$/.test(value)) {
         this.correctEdgeAddress = true
         return this.correctEdgeAddress
       } else {
+        this.correctEdgeAddress = false
+        return this.correctEdgeAddress
       }
     },
     sendEdgeAddress () {

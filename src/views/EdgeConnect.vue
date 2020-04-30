@@ -42,55 +42,53 @@
             indeterminate
             :size="50"
             :width="7"
-          >
-          </v-progress-linear>
+          />
         </v-banner>
-
         <v-card
           class="mx-auto text-left"
         >
-          <v-list two-line
+          <v-list
+            two-line
           >
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon>mdi-tag</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>My Ambianic Edge Device</v-list-item-title>
-                  <v-list-item-subtitle>Display Name</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-divider inset></v-divider>
-
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon>mdi-identifier</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>{{ edgePeerId }}</v-list-item-title>
-                  <v-list-item-subtitle>Peer ID</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon>mdi-alpha-v</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>{{ version }}</v-list-item-title>
-                  <v-list-item-subtitle>Release Version</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon>mdi-tag</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>My Ambianic Edge Device</v-list-item-title>
+                <v-list-item-subtitle>Display Name</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+            <v-divider
+              inset
+            />
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon>mdi-identifier</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>{{ edgePeerId }}</v-list-item-title>
+                <v-list-item-subtitle>Peer ID</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon>mdi-alpha-v</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>{{ version }}</v-list-item-title>
+                <v-list-item-subtitle>Release Version</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
           </v-list>
-          <v-btn text
+          <v-btn
+            text
             :to="'timeline'"
           >
             OK
           </v-btn>
           <router-link :to="'choose-edge-connection'">
-          <v-btn>Disconnect</v-btn>
+            <v-btn>Disconnect</v-btn>
           </router-link>
         </v-card>
       </v-col>
@@ -134,8 +132,7 @@
               indeterminate
               :size="50"
               :width="7"
-            >
-            </v-progress-linear>
+            />
             <v-alert
               v-if="this.$store.state.pnp.userMessage"
               outlined
