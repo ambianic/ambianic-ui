@@ -1,5 +1,5 @@
 <template>
-  <app-frame>
+  <amb-app-frame>
     <v-row
       align="start"
       justify="space-around"
@@ -12,77 +12,47 @@
         cols="12"
         class="pa-0 ma-0 fill-height"
       >
-        <v-banner
+        <amb-banner
           v-if="isEdgeConnected"
-          two-line
-          class="text-left"
-        >
-          <v-icon
-            slot="icon"
-            size="36"
-          >
-            mdi-wifi
-          </v-icon>
-          Ambianic Edge device connected!
-        </v-banner>
-        <v-banner
+          banner-class="text-left"
+          icon="wifi"
+          text="Ambianic Edge device connected!"
+        />
+
+        <amb-banner
           v-else
-          two-line
-          class="text-left"
-        >
-          <v-icon
-            slot="icon"
-            size="36"
-          >
-            mdi-wifi-off
-          </v-icon>
-          Connecting to Ambianic Edge device...
-          <v-progress-linear
-            color="info"
-            indeterminate
-            :size="50"
-            :width="7"
-          />
-        </v-banner>
+          progress
+          banner-class="text-left"
+          icon="wifi-off"
+          text="Connecting to Ambianic Edge device..."
+        />
 
         <v-card
           class="mx-auto text-left"
         >
-          <v-list
-            two-line
-          >
-            <v-list-item>
-              <v-list-item-icon>
-                <v-icon>mdi-tag</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title>My Ambianic Edge Device</v-list-item-title>
-                <v-list-item-subtitle>Display Name</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
+          <v-list two-line>
+            <!-- refactored list items -->
+            <amb-list-item
+              title="My Ambianic Edge Device"
+              subtitle="Display Name"
+              icon-name="tag"
+            />
 
             <v-divider inset />
 
-            <v-list-item>
-              <v-list-item-icon>
-                <v-icon>mdi-identifier</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title>{{ edgePeerId }}</v-list-item-title>
-                <v-list-item-subtitle>Peer ID</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
+            <amb-list-item
+              :title="edgePeerId"
+              subtitle="Peer ID"
+              icon-name="identifier"
+            />
 
-            <v-list-item>
-              <v-list-item-icon>
-                <v-icon>mdi-alpha-v</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title>{{ version }}</v-list-item-title>
-                <v-list-item-subtitle>Release Version</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
+            <amb-list-item
+              :title="version"
+              subtitle="Release Version"
+              icon-name="alpha-v-circle-outline"
+            />
           </v-list>
+
           <v-btn
             text
             :to="'timeline'"
@@ -105,18 +75,11 @@
         cols="12"
         class="pa-0 ma-0 fill-height"
       >
-        <v-banner
-          two-line
-          class="text-left"
-        >
-          <v-icon
-            slot="icon"
-            size="36"
-          >
-            mdi-wifi-off
-          </v-icon>
-          Let's find your Ambianic Edge device and connect to it...
-        </v-banner>
+        <amb-banner
+          banner-class="text-left"
+          icon="wifi-off"
+          text="Let's find your Ambianic Edge device and connect to it..."
+        />
 
         <v-stepper
           v-model="connectStep"
@@ -209,7 +172,7 @@
         </v-card>
       </v-dialog>
     </v-row>
-  </app-frame>
+  </amb-app-frame>
 </template>
 <script>
 // import { settingsDB } from '@/store/db'
@@ -224,7 +187,9 @@ import {
   PEER_CONNECTION_ERROR
 } from '@/store/mutation-types'
 
-const AppFrame = () => import('@/components/AppFrame.vue')
+const AmbAppFrame = () => import('@/components/AppFrame.vue')
+const AmbListItem = () => import('../components/shared/ListItem.vue')
+const AmbBanner = () => import('../components/shared/Banner.vue')
 
 export default {
   data: function () {
@@ -275,7 +240,7 @@ export default {
     }
   },
   components: {
-    AppFrame
+    AmbAppFrame, AmbBanner, AmbListItem
   },
   mounted () {
     this.loadSettings()

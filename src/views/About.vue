@@ -1,27 +1,20 @@
 <template>
   <app-frame>
     <v-row
-      align="start"
+      align="center"
       justify="center"
-      align-content="space-around"
     >
       <template>
         <v-card
           max-width="344"
         >
-          <v-list-item
-            align="center"
-            justify="center"
-          >
-            <v-list-item-content>
-              <v-list-item-title class="headline">
-                Cozy at Home
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                via Ambient Intelligence
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
+          <v-card-title>
+            <!-- refactored list 1 -->
+            <ListItem
+              title="Cozy at Home"
+              subtitle="via Ambient Intelligence"
+            />
+          </v-card-title>
 
           <v-img
             max-width="300"
@@ -30,26 +23,22 @@
           />
 
           <v-card-text>
-            Review your home timeline for notable moments.
-            Configure input sensors and camers for Ambianic to observe.
-            Share, purge or backup your data
-            - it never slips out of your control.
+            {{ subheader }}
           </v-card-text>
 
-          <v-list-item
-            align="center"
-            justify="center"
+          <v-layout
+            column
+            wrap
+            align-center
           >
-            <v-list-item-content>
-              <v-list-item-title>
-                <v-icon class="mx-n2">
-                  mdi-alpha-v
-                </v-icon>
-                {{ version }}
-              </v-list-item-title>
-              <v-list-item-subtitle>Release Version</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
+            <v-flex>
+              <list-item
+                :title="version"
+                icon-name="alpha-v-circle-outline"
+                subtitle="Release Version"
+              />
+            </v-flex>
+          </v-layout>
 
           <v-card-actions>
             <v-btn
@@ -76,11 +65,20 @@
 <script>
 import { mapState } from 'vuex'
 const AppFrame = () => import('@/components/AppFrame.vue')
+const ListItem = () => import('../components/shared/ListItem.vue')
 
 export default {
   components: {
-    AppFrame
+    AppFrame, ListItem
   },
+  data: () => ({
+    subheader: `
+      Review your home timeline for notable moments.
+      Configure input sensors and camers for Ambianic to observe.
+      Share, purge or backup your data
+      - it never slips out of your control.
+      `
+  }),
   computed: {
     ...mapState({
       version: state => state.version
