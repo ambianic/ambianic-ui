@@ -57,8 +57,6 @@
 </template>
 <script>
 import AppFrame from '@/components/AppFrame.vue'
-import { REMOVE_REMOTE_PEER_ID } from '../store/action-types'
-import { PEER_CONNECTED } from '../store/mutation-types'
 
 export default {
   data: () => {
@@ -88,12 +86,6 @@ export default {
     },
     sendEdgeAddress () {
       this.$store.state.pnp.edgeRoom = this.edgeAddress
-    }
-  },
-  mounted () {
-    // If you route back to this page, disconnect so you can reconnect to another ID
-    if (this.$store.state.pnp.peerConnectionStatus === PEER_CONNECTED) {
-      this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
     }
   },
   components: {

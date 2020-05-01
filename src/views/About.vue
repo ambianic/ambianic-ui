@@ -33,16 +33,18 @@
             Review your home timeline for notable moments.
             Configure input sensors and cameras for Ambianic to observe.
             Share, purge or backup your data
-             - it never slips out of your control.
+            - it never slips out of your control.
           </v-card-text>
 
           <v-list-item
-                  align="center"
-                  justify="center"
+            align="center"
+            justify="center"
           >
             <v-list-item-content>
               <v-list-item-title>
-                <v-icon class="mx-n2">mdi-alpha-v</v-icon>
+                <v-icon class="mx-n2">
+                  mdi-alpha-v
+                </v-icon>
                 {{ version }}
               </v-list-item-title>
               <v-list-item-subtitle>Release Version</v-list-item-subtitle>

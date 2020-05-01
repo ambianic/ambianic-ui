@@ -168,7 +168,6 @@
 <script>
 import AppFrame from '@/components/AppFrame.vue'
 // import { settingsDB } from '@/store/db'
-import { INITIALIZE_PNP, REMOVE_REMOTE_PEER_ID } from '../store/action-types.js'
 import { mapState } from 'vuex'
 import {
   PEER_DISCONNECTED,
@@ -235,11 +234,11 @@ export default {
   },
   destroyed () {
     // Disconnect yourself when leaving this component
-    if (this.$store.state.pnp.peerConnectionStatus === PEER_CONNECTED) {
-      this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
-      this.$store.state.pnp.remotePeerId = null
-      this.$store.state.pnp.edgeRoom = undefined
-    }
+    // if (this.$store.state.pnp.peerConnectionStatus === PEER_CONNECTED) {
+    //   this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
+    //   this.$store.state.pnp.remotePeerId = null
+    //   this.$store.state.pnp.edgeRoom = undefined
+    // }
   },
   methods: {
     // resetEdgeConnection () {
@@ -247,10 +246,6 @@ export default {
     //   this.removeEdgeId()
     // },
     loadSettings () {
-      /**
-        Begin connection attempt to Ambianic Edge as soon as the app is created
-       */
-      this.$store.dispatch(INITIALIZE_PNP)
     },
     saveSettings () {
       // settingsDB.set('ambanic-edge-address', this.edgeAddress)
