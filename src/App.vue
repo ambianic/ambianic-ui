@@ -1,10 +1,12 @@
 <!-- App.vue -->
 <template>
   <v-app>
-    <AppFrame v-if="!$route.meta.isHome">
-      <router-view />
-    </AppFrame>
-    <router-view v-else />
+    <keep-alive>
+      <AppFrame v-if="!$route.meta.isHome">
+        <router-view />
+      </AppFrame>
+      <router-view v-else />
+    </keep-alive>
   </v-app>
 </template>
 
