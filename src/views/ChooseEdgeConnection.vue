@@ -22,21 +22,21 @@
         <form class="text">
           Connect to remote network
           <h6 class="fineDetails">
-            (must enter room ID to Ambianic network)
+            (must enter Peer ID to Ambianic network)
           </h6>
           <p />
           <label
             for="ambianicEdgeAddress"
             class="fineDetails"
           >
-            Room ID to Ambianic Network*
+            Peer ID to Ambianic Network*
           </label>
           <p>
             <input
               type="text"
               id="ambianicEdgeAddress"
               class="inputbox"
-              placeholder="Enter ID"
+              placeholder="Enter Peer ID"
               v-model="edgeAddress"
             >
           </p>
