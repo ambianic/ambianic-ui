@@ -9,7 +9,10 @@ const routes = [
     path: '/',
     name: 'home',
     // component: Home
-    component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
+    component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue'),
+    meta: {
+      isHome: true
+    }
   },
   {
     path: '/index.html',
