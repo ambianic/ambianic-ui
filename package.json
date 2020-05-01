@@ -33,7 +33,7 @@
     "idb": "^5.0.2",
     "konva": "^4.2.2",
     "moment": "^2.24.0",
-    "node": "^13.12.0",
+    "node": "^14.0.0",
     "peerjs": "^1.1.0",
     "register-service-worker": "^1.7.1",
     "vue": "^2.5.16",
