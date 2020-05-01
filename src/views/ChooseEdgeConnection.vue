@@ -57,6 +57,7 @@
 </template>
 <script>
 import AppFrame from '@/components/AppFrame.vue'
+import { REMOVE_REMOTE_PEER_ID } from '../store/action-types.js'
 
 export default {
   data: () => {
@@ -86,6 +87,7 @@ export default {
     },
     sendEdgeAddress () {
       this.$store.state.pnp.edgeRoom = this.edgeAddress
+      this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
     }
   },
   components: {
