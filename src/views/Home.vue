@@ -84,12 +84,10 @@
 </template>
 
 <script>
-const UpdateNotification = () => import('../components/UpdateNotification')
-
 export default {
   name: 'Home',
   components: {
-    UpdateNotification
+    UpdateNotification: () => import('../components/UpdateNotification')
   }
 }
 </script>

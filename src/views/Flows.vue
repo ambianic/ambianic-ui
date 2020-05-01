@@ -42,13 +42,11 @@
     </v-row>
   </app-frame>
 </template>
-<script>
-const AppFrame = () => import('@/components/AppFrame.vue')
 
+<script>
 export default {
   components: {
-    AppFrame
+    AppFrame: () => import('@/components/AppFrame.vue')
   }
 }
-
 </script>

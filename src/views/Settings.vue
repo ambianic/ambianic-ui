@@ -129,9 +129,11 @@
 <script>
 const { testConnection, EdgeConnectionStatus } = () => import('@/remote/edgeAPI')
 const { settingsDB } = () => import('@/store/db')
-const AppFrame = () => import('@/components/AppFrame.vue')
 
 export default {
+  components: {
+    AppFrame: () => import('@/components/AppFrame.vue')
+  },
   data () {
     return {
       settingsForm: {
@@ -143,9 +145,6 @@ export default {
       testDone: false,
       statusColor: 'info'
     }
-  },
-  components: {
-    AppFrame
   },
   mounted () {
     this.loadSettings()

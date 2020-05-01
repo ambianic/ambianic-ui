@@ -182,12 +182,10 @@ import {
   PEER_CONNECTED
 } from '@/store/mutation-types'
 
-const UpdateNotification = () => import('./UpdateNotification')
-
 export default {
   name: 'AppFrame',
   components: {
-    UpdateNotification
+    UpdateNotification: () => import('./UpdateNotification')
   },
   props: {
   },

@@ -264,13 +264,14 @@ import {
   PEER_CONNECTED
 } from '@/store/mutation-types'
 
-const InfiniteLoading = () => import('vue-infinite-loading')
-const DetectionBoxes = () => import('../components/DetectionBoxes.vue')
-const AppFrame = () => import('@/components/AppFrame.vue')
-
 const PAGE_SIZE = 5
 
 export default {
+  components: {
+    AppFrame: () => import('@/components/AppFrame.vue'),
+    DetectionBoxes: () => import('../components/DetectionBoxes.vue'),
+    InfiniteLoading: () => import('vue-infinite-loading')
+  },
   data () {
     return {
       timeline: [],
@@ -281,11 +282,6 @@ export default {
   },
   created () {
     this.initEdgeAPI()
-  },
-  components: {
-    AppFrame,
-    DetectionBoxes,
-    InfiniteLoading
   },
   computed: {
     ...mapState({

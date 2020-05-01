@@ -64,12 +64,11 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-const AppFrame = () => import('@/components/AppFrame.vue')
-const ListItem = () => import('../components/shared/ListItem.vue')
 
 export default {
   components: {
-    AppFrame, ListItem
+    AppFrame: () => import('@/components/AppFrame.vue'),
+    ListItem: () => import('../components/shared/ListItem.vue')
   },
   data: () => ({
     subheader: `

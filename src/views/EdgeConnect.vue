@@ -187,11 +187,12 @@ import {
   PEER_CONNECTION_ERROR
 } from '@/store/mutation-types'
 
-const AmbAppFrame = () => import('@/components/AppFrame.vue')
-const AmbListItem = () => import('../components/shared/ListItem.vue')
-const AmbBanner = () => import('../components/shared/Banner.vue')
-
 export default {
+  components: {
+    AmbAppFrame: () => import('@/components/AppFrame.vue'),
+    AmbBanner: () => import('../components/shared/Banner.vue'),
+    AmbListItem: () => import('../components/shared/ListItem.vue')
+  },
   data: function () {
     return {
       // edgeAddress: '',
@@ -238,9 +239,6 @@ export default {
       }
       return step
     }
-  },
-  components: {
-    AmbAppFrame, AmbBanner, AmbListItem
   },
   mounted () {
     this.loadSettings()
