@@ -4,12 +4,15 @@
     :class="bannerClass"
   >
     <v-icon
+      v-if="icon"
       slot="icon"
       size="36"
     >
       mdi-{{ icon }}
     </v-icon>
-    {{ text }}
+    <v-flex v-if="text">
+      {{ text }}
+    </v-flex>
     <v-progress-linear
       v-if="progress"
       color="info"

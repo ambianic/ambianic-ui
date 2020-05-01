@@ -1,15 +1,18 @@
 <template>
   <v-list-item :two-line="twoLine">
     <v-list-item-icon>
-      <v-icon>
+      <v-icon v-if="iconName">
         mdi-{{ iconName }}
       </v-icon>
     </v-list-item-icon>
     <v-list-item-content>
-      <v-list-item-title class="headline">
+      <v-list-item-title
+        v-if="title"
+        class="headline"
+      >
         {{ title }}
       </v-list-item-title>
-      <v-list-item-subtitle>
+      <v-list-item-subtitle v-if="subtitle">
         {{ subtitle }}
       </v-list-item-subtitle>
     </v-list-item-content>
