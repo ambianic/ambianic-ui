@@ -1,73 +1,70 @@
 <template>
-  <app-frame>
-    <v-row
-      align="center"
-      justify="center"
-    >
-      <template>
-        <v-card
-          max-width="344"
-        >
-          <v-card-title>
-            <!-- refactored list 1 -->
-            <ListItem
-              title="Cozy at Home"
-              subtitle="via Ambient Intelligence"
-            />
-          </v-card-title>
-
-          <v-img
-            max-width="300"
-            class="mx-auto"
-            src="@/assets/home-screen-logo.png"
+  <v-row
+    align="center"
+    justify="center"
+  >
+    <template>
+      <v-card
+        max-width="344"
+      >
+        <v-card-title>
+          <!-- refactored list 1 -->
+          <ListItem
+            title="Cozy at Home"
+            subtitle="via Ambient Intelligence"
           />
+        </v-card-title>
 
-          <v-card-text>
-            {{ subheader }}
-          </v-card-text>
+        <v-img
+          max-width="300"
+          class="mx-auto"
+          src="@/assets/home-screen-logo.png"
+        />
 
-          <v-layout
-            column
-            wrap
-            align-center
+        <v-card-text>
+          {{ subheader }}
+        </v-card-text>
+
+        <v-layout
+          column
+          wrap
+          align-center
+        >
+          <v-flex>
+            <list-item
+              :title="version"
+              icon-name="alpha-v-circle-outline"
+              subtitle="Release Version"
+            />
+          </v-flex>
+        </v-layout>
+
+        <v-card-actions>
+          <v-btn
+            text
+            color="info"
+            :to="'timeline'"
           >
-            <v-flex>
-              <list-item
-                :title="version"
-                icon-name="alpha-v-circle-outline"
-                subtitle="Release Version"
-              />
-            </v-flex>
-          </v-layout>
-
-          <v-card-actions>
-            <v-btn
-              text
-              color="info"
-              :to="'timeline'"
-            >
-              View Timeline
-            </v-btn>
-            <v-spacer />
-            <v-btn
-              text
-              color="info"
-              :to="'settings'"
-            >
-              Settings
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </template>
-    </v-row>
-  </app-frame>
+            View Timeline
+          </v-btn>
+          <v-spacer />
+          <v-btn
+            text
+            color="info"
+            :to="'settings'"
+          >
+            Settings
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </template>
+  </v-row>
 </template>
 <script>
 import { mapState } from 'vuex'
 
 export default {
   components: {
-    AppFrame: () => import('@/components/AppFrame.vue'),
     ListItem: () => import('../components/shared/ListItem.vue')
   },
   data: () => ({

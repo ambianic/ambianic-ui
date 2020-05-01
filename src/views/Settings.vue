@@ -1,139 +1,134 @@
 <template>
-  <app-frame>
-    <v-row
-      align="start"
-      justify="space-around"
-    >
-      <v-card>
-        <v-card-title class="grey darken-2">
-          Settings
-        </v-card-title>
-        <v-container grid-list-sm>
-          <v-layout
-            row
-            wrap
-          >
-            <v-flex
-              xs12
-              align-center
-              justify-space-between
-            >
-              <v-layout align-center>
-                <v-text-field
-                  prepend-icon="mdi-web"
-                  placeholder="Ambianic Edge Device IP Address (e.g. 192.168.68.31) or host name (e.g. ambianic-edge.lan)"
-                  v-model="settingsForm.address"
-                />
-              </v-layout>
-            </v-flex>
-          </v-layout>
-        </v-container>
-        <v-card-actions>
-          <v-btn
-            text
-            color="primary"
-            @click="test"
-          >
-            Test Connection
-          </v-btn>
-          <v-spacer />
-          <v-btn
-            text
-            color="primary"
-            @click="cancel"
-          >
-            Cancel
-          </v-btn>
-          <v-btn
-            text
-            @click="save"
-          >
-            Save
-          </v-btn>
-        </v-card-actions>
-        <v-container
-          v-if="testInProgress"
+  <v-row
+    align="start"
+    justify="space-around"
+  >
+    <v-card>
+      <v-card-title class="grey darken-2">
+        Settings
+      </v-card-title>
+      <v-container grid-list-sm>
+        <v-layout
+          row
+          wrap
         >
-          <v-row
-            class="fill-height"
-            align-content="center"
-            justify="center"
+          <v-flex
+            xs12
+            align-center
+            justify-space-between
           >
-            <v-col
-              class="subtitle-1 text-center"
-              cols="12"
-            >
-              Testing your connection
-            </v-col>
-            <v-col cols="6">
-              <v-progress-linear
-                color="info accent-4"
-                indeterminate
-                rounded
-                height="6"
+            <v-layout align-center>
+              <v-text-field
+                prepend-icon="mdi-web"
+                placeholder="Ambianic Edge Device IP Address (e.g. 192.168.68.31) or host name (e.g. ambianic-edge.lan)"
+                v-model="settingsForm.address"
               />
-            </v-col>
-          </v-row>
-        </v-container>
-        <v-container
-          v-if="testDone"
+            </v-layout>
+          </v-flex>
+        </v-layout>
+      </v-container>
+      <v-card-actions>
+        <v-btn
+          text
+          color="primary"
+          @click="test"
         >
-          <v-layout
-            row
-            wrap
+          Test Connection
+        </v-btn>
+        <v-spacer />
+        <v-btn
+          text
+          color="primary"
+          @click="cancel"
+        >
+          Cancel
+        </v-btn>
+        <v-btn
+          text
+          @click="save"
+        >
+          Save
+        </v-btn>
+      </v-card-actions>
+      <v-container
+        v-if="testInProgress"
+      >
+        <v-row
+          class="fill-height"
+          align-content="center"
+          justify="center"
+        >
+          <v-col
+            class="subtitle-1 text-center"
+            cols="12"
           >
-            <v-flex
-              xs12
+            Testing your connection
+          </v-col>
+          <v-col cols="6">
+            <v-progress-linear
+              color="info accent-4"
+              indeterminate
+              rounded
+              height="6"
+            />
+          </v-col>
+        </v-row>
+      </v-container>
+      <v-container
+        v-if="testDone"
+      >
+        <v-layout
+          row
+          wrap
+        >
+          <v-flex
+            xs12
+            align-center
+            justify-center
+          >
+            <v-layout
               align-center
               justify-center
             >
-              <v-layout
-                align-center
-                justify-center
-              >
-                <v-chip
-                  class="ma-2"
-                  :color="statusColor"
-                  outlined
-                  align-center
-                  justify-center
-                >
-                  <v-icon left>
-                    mdi-server-plus
-                  </v-icon>
-                  Connection Status: {{ connectionStatus }}
-                </v-chip>
-              </v-layout>
-            </v-flex>
-            <v-flex
-              xs12
-              align-center
-              justify-center
-            >
-              <v-layout
+              <v-chip
+                class="ma-2"
+                :color="statusColor"
+                outlined
                 align-center
                 justify-center
               >
                 <v-icon left>
-                  mdi-lightbulb
+                  mdi-server-plus
                 </v-icon>
-                <span>{{ connectionTip }}</span>
-              </v-layout>
-            </v-flex>
-          </v-layout>
-        </v-container>
-      </v-card>
-    </v-row>
-  </app-frame>
+                Connection Status: {{ connectionStatus }}
+              </v-chip>
+            </v-layout>
+          </v-flex>
+          <v-flex
+            xs12
+            align-center
+            justify-center
+          >
+            <v-layout
+              align-center
+              justify-center
+            >
+              <v-icon left>
+                mdi-lightbulb
+              </v-icon>
+              <span>{{ connectionTip }}</span>
+            </v-layout>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-card>
+  </v-row>
 </template>
 <script>
 const { testConnection, EdgeConnectionStatus } = () => import('@/remote/edgeAPI')
 const { settingsDB } = () => import('@/store/db')
 
 export default {
-  components: {
-    AppFrame: () => import('@/components/AppFrame.vue')
-  },
   data () {
     return {
       settingsForm: {
