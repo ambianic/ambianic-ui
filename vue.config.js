@@ -1,7 +1,8 @@
 // Compress static text assets at build time
 const CompressionPlugin = require('compression-webpack-plugin')
-const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const path = require('path')
+const PrerenderSPAPlugin = require('prerender-spa-plugin')
 
 module.exports = {
   configureWebpack: {
@@ -11,7 +12,31 @@ module.exports = {
         minSize: 10000,
         maxSize: 250000
       }
-    }
+    },
+    plugins: [
+      new PrerenderSPAPlugin({
+        // Required - The path to the webpack-outputted app to prerender.
+        staticDir: path.join(__dirname, 'dist'),
+        // Required - Routes to render.
+        routes: [
+          '/',
+          '/about',
+          '/edge-connect',
+          '/feedback',
+          '/help',
+          '/people',
+          '/settings',
+          '/timeline'
+        ],
+        minify: {
+          collapseBooleanAttributes: true,
+          collapseWhitespace: true,
+          decodeEntities: true,
+          keepClosingSlash: true,
+          sortAttributes: true
+        }
+      })
+    ]
   },
   pwa: {
     name: 'Ambianic  UI',
@@ -60,8 +85,6 @@ module.exports = {
 
     // enable build time compression
     config.plugin('CompressionPlugin').use(CompressionPlugin)
-    // vuetify
-    config.plugin('VuetifyLoaderPlugin').use(VuetifyLoaderPlugin)
     // bundle build analyzer
     config.plugin('BundleAnalyzerPlugin').use(BundleAnalyzerPlugin)
   },
