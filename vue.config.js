@@ -3,6 +3,7 @@ const CompressionPlugin = require('compression-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const path = require('path')
 const PrerenderSPAPlugin = require('prerender-spa-plugin')
+const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 
 module.exports = {
   configureWebpack: {
@@ -87,6 +88,8 @@ module.exports = {
     config.plugin('CompressionPlugin').use(CompressionPlugin)
     // bundle build analyzer
     config.plugin('BundleAnalyzerPlugin').use(BundleAnalyzerPlugin)
+    // vuetify
+    config.plugin('VuetifyLoaderPlugin').use(VuetifyLoaderPlugin)
   },
 
   productionSourceMap: false
