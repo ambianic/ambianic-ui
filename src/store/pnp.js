@@ -75,7 +75,11 @@ const state = {
   /**
     PeerFetch instance
   */
-  peerFetch: PeerFetch
+  peerFetch: PeerFetch,
+  /**
+    Edgeroom ID when connecting to remote network
+   */
+  edgeRoom: String
 }
 
 const mutations = {
@@ -143,10 +147,15 @@ const mutations = {
   and reused until explicitly reset by the user.
 */
 async function discoverRemotePeerId ({ peer, state, commit }) {
+  // first see if we got a remote Edge ID entered to connect to
+  if (state.edgeRoom !== undefined) {
+    return state.edgeRoom
+  }
   if (state.remotePeerId) {
     return state.remotePeerId
   } else {
-    // first try to find the remote peer ID in the same room
+  // first try to find the remote peer ID in the same room
+    console.log(peer)
     const myRoom = new PeerRoom(peer)
     console.log('Fetching room members', myRoom)
     const { clientsIds } = await myRoom.getRoomMembers()
@@ -282,6 +291,7 @@ const actions = {
   * Initialize PnP Service and Peer Connection
   */
   async [INITIALIZE_PNP] ({ state, commit, dispatch }) {
+    // state.remotePeerId = undefined
     await dispatch(PNP_SERVICE_CONNECT)
   },
   /**
@@ -302,12 +312,14 @@ const actions = {
     // We expect that peerId is crypto secure. No need to replace.
     // Unless the user explicitly requests a refresh.
     console.log('pnp client: last saved myPeerId', state.myPeerId)
-    peer = new Peer(state.myPeerId, {
-      host: ambianicConf.AMBIANIC_PNP_HOST,
-      port: ambianicConf.AMBIANIC_PNP_PORT,
-      secure: ambianicConf.AMBIANIC_PNP_SECURE,
-      debug: 3
-    })
+    peer = new Peer(state.myPeerId,
+      {
+        host: ambianicConf.AMBIANIC_PNP_HOST,
+        port: ambianicConf.AMBIANIC_PNP_PORT,
+        secure: ambianicConf.AMBIANIC_PNP_SECURE,
+        debug: 3
+      }
+    )
     console.log('pnp client: peer created')
     setPnPServiceConnectionHandlers({ state, commit, dispatch }, peer)
     commit(PNP_SERVICE_CONNECTING)
@@ -350,7 +362,7 @@ const actions = {
       // start a discovery loop
       console.log('Discovering remote peer...')
       // its possible that the PNP signaling server connection was disrupted
-      // while looping in peer discovery mode.
+      // while looping in peer discovery mode
       if (state.pnpServiceConnectionStatus !== PNP_SERVICE_CONNECTED) {
         console.log('PNP Service disconnected. Reconnecting...')
         await dispatch(PNP_SERVICE_RECONNECT)

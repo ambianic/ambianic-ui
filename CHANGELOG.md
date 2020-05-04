@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.2.15](https://github.com/ambianic/ambianic-ui/compare/v2.2.14...v2.2.15) (2020-05-02)
+
+
+### Bug Fixes
+
+* adds config files ([a0fc02c](https://github.com/ambianic/ambianic-ui/commit/a0fc02c14d6938a35743fba3a27c29e471c0331e))
+
 ## [2.2.14](https://github.com/ambianic/ambianic-ui/compare/v2.2.13...v2.2.14) (2020-04-21)
 
 

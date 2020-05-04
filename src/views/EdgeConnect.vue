@@ -42,58 +42,54 @@
             indeterminate
             :size="50"
             :width="7"
-          >
-          </v-progress-linear>
+          />
         </v-banner>
-
         <v-card
           class="mx-auto text-left"
         >
-          <v-list two-line
-          >
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon>mdi-tag</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>My Ambianic Edge Device</v-list-item-title>
-                  <v-list-item-subtitle>Display Name</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-divider inset></v-divider>
-
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon>mdi-identifier</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>{{ edgePeerId }}</v-list-item-title>
-                  <v-list-item-subtitle>Peer ID</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon>mdi-alpha-v</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>{{ version }}</v-list-item-title>
-                  <v-list-item-subtitle>Release Version</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-
+          <v-list two-line>
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon>mdi-tag</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>My Ambianic Edge Device</v-list-item-title>
+                <v-list-item-subtitle>Display Name</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+            <v-divider
+              inset
+            />
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon>mdi-identifier</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>{{ edgePeerId }}</v-list-item-title>
+                <v-list-item-subtitle>Peer ID</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon>mdi-alpha-v</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>{{ version }}</v-list-item-title>
+                <v-list-item-subtitle>Release Version</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
           </v-list>
-          <v-btn text
+          <v-btn
+            text
             :to="'timeline'"
           >
             OK
           </v-btn>
-          <v-btn text
-            @click.stop="resetEdgeDialog = true"
-          >
-            Reset
-          </v-btn>
+          <router-link :to="'choose-edge-connection'">
+            <v-btn @click="disconnectEdge">
+              Disconnect
+            </v-btn>
+          </router-link>
         </v-card>
       </v-col>
       <v-col
@@ -136,8 +132,7 @@
               indeterminate
               :size="50"
               :width="7"
-            >
-            </v-progress-linear>
+            />
             <v-alert
               v-if="this.$store.state.pnp.userMessage"
               outlined
@@ -147,9 +142,7 @@
             >
               {{ this.$store.state.pnp.userMessage }}
             </v-alert>
-
           </v-stepper-content>
-
           <v-stepper-step
             :complete="connectStep > 2"
             step="2"
@@ -157,65 +150,28 @@
             Authenticating
             <small>Establishing secure peer-to-peer connection.</small>
           </v-stepper-step>
-
           <v-stepper-content step="2">
             <v-progress-linear
               color="info"
               indeterminate
               :size="50"
               :width="7"
-            >
-            </v-progress-linear>
+            />
           </v-stepper-content>
-
           <v-stepper-step step="3">
             Done
           </v-stepper-step>
-          <v-stepper-content step="3">
-          </v-stepper-content>
+          <v-stepper-content step="3" />
         </v-stepper>
       </v-col>
-      <v-dialog
-        v-model="resetEdgeDialog"
-        max-width="500"
-      >
-        <v-card>
-          <v-card-title class="headline">Reset device pairing?</v-card-title>
-
-          <v-card-text>
-            <p>
-            Are you switching to a new Ambianic Edge device?
-            Resetting a device association is usually done when switching to
-            a new edge device with a different Peer ID.
-            </p>
-          </v-card-text>
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-
-            <v-btn
-              text
-              @click="resetEdgeDialog = false"
-            >
-              Cancel
-            </v-btn>
-
-            <v-btn
-              text
-              @click="resetEdgeConnection()"
-            >
-              Yes, Reset
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
     </v-row>
   </app-frame>
 </template>
 <script>
 import AppFrame from '@/components/AppFrame.vue'
 // import { settingsDB } from '@/store/db'
-import { mapState, mapActions } from 'vuex'
+import { /* CLEAR_CONNECTION */ REMOVE_REMOTE_PEER_ID } from '../store/action-types.js'
+import { mapState } from 'vuex'
 import {
   PEER_DISCONNECTED,
   PEER_DISCOVERING,
@@ -229,13 +185,12 @@ import {
 export default {
   data: function () {
     return {
-      // edgeAddress: '',
-      connectionStatus: '',
-      connectionTip: '',
-      testInProgress: false,
-      testDone: true,
-      statusColor: 'info',
-      resetEdgeDialog: false
+      // connectionStatus: '',
+      // connectionTip: '',
+      // testInProgress: false,
+      // testDone: true,
+      // statusColor: 'info',
+      // resetEdgeDialog: false
     }
   },
   computed: {
@@ -277,30 +232,24 @@ export default {
   components: {
     AppFrame
   },
-  mounted () {
-    this.loadSettings()
-  },
-  beforeDestroy () {
+  destroyed () {
+    // Disconnect yourself when leaving this component
+    // if (this.$store.state.pnp.peerConnectionStatus === PEER_CONNECTED) {
+    //   this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
+    // }
   },
   methods: {
-    resetEdgeConnection () {
-      this.resetEdgeDialog = false
-      this.removeEdgeId()
-    },
-    loadSettings () {
-      // settingsDB.get('ambanic-edge-address').then(
-      //   (address) => {
-      //     this.edgeAddress = address
-      //   }
-      // )
-    },
-    saveSettings () {
-      // settingsDB.set('ambanic-edge-address', this.edgeAddress)
-    },
-    ...mapActions({
-      removeEdgeId: 'removeRemotePeerId' // map `this.add()` to `this.$store.dispatch('increment')`
-    })
+    disconnectEdge () {
+      this.$store.state.pnp.remotePeerId = null
+      this.$store.state.pnp.edgeRoom = undefined
+      this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
+    }
   }
 }
 
 </script>
+<style scoped>
+a {
+  text-decoration: none;
+}
+</style>
