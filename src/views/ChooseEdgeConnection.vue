@@ -2,56 +2,78 @@
   <app-frame>
     <v-row
       align="start"
-      justify="space-around"
-      class="container"
+      justify="center"
     >
-      <div class="local">
-        <p class="text">
-          Connect to local network
-        </p>
-        <router-link :to="'edge-connect'">
-          <v-btn class="localButton">
-            Local Network
-          </v-btn>
-        </router-link>
-      </div>
-      <div class="middleLine">
-        OR
-      </div>
-      <div class="remote">
-        <form class="text">
-          Connect to remote network
-          <h6 class="fineDetails">
-            (must enter Peer ID to Ambianic network)
-          </h6>
-          <p />
-          <label
-            for="ambianicEdgeAddress"
-            class="fineDetails"
-          >
-            Peer ID to Ambianic Network*
-          </label>
-          <p>
-            <input
-              type="text"
-              id="ambianicEdgeAddress"
-              class="inputbox"
-              placeholder="Enter Peer ID"
-              v-model="edgeAddress"
-            >
-          </p>
-          <p>
-            <router-link
-              v-if="correctEdgeAddress"
-              :to="'edge-connect'"
-            >
-              <v-btn @click="sendEdgeAddress">
-                REMOTE NETWORK
+      <!-- top column -->
+      <v-col cols="6">
+        <v-card min-width="100">
+          <v-card-text class="text-center">
+            <p class="text">
+              Connect to local network
+            </p>
+          </v-card-text>
+          <v-card-actions>
+            <v-row justify="center">
+              <v-btn
+                :to="'edge-connect'"
+                color="primary"
+                :small="$vuetify.breakpoint.mdAndUp"
+              >
+                <v-icon v-if="$vuetify.breakpoint.xsOnly">
+                  mdi-wifi
+                </v-icon>
+                <span v-if="$vuetify.breakpoint.smAndUp">
+                  Local Network
+                </span>
               </v-btn>
-            </router-link>
+            </v-row>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+      <!-- middle column -->
+      <v-col cols="12">
+        <v-row justify="center">
+          <v-card flat>
+            <v-card-title>
+              OR
+            </v-card-title>
+          </v-card>
+        </v-row>
+      </v-col>
+      <!-- third column -->
+      <v-card
+        max-width="500"
+        class="text-center"
+      >
+        <v-card-text>
+          <p class="text">
+            Connect to remote network
           </p>
-        </form>
-      </div>
+          <v-subheader>
+            (must enter Peer ID to Ambianic network)
+          </v-subheader>
+          <v-text-field
+            v-model="edgeAddress"
+            type="text"
+            label="Peer ID to Ambianic Network*"
+            placeholder="Enter Peer ID"
+            outlined
+            dense
+            class="mt-4"
+          />
+        </v-card-text>
+
+        <v-card-actions>
+          <v-btn
+            :disabled="!correctEdgeAddress"
+            :to="'edge-connect'"
+            @click="sendEdgeAddress"
+            color="primary"
+          >
+            REMOTE NETWORK
+          </v-btn>
+        </v-card-actions>
+      </v-card>
     </v-row>
   </app-frame>
 </template>
@@ -102,13 +124,6 @@ export default {
 }
 </script>
 <style scoped>
-.container {
-  width: 50%;
-  display: flex;
-  flex-direction: row;
-  margin: 0 auto;
-}
-
 #ambianicEdgeAddress {
   border: 2px ridge lightgray;
   padding: 6px;
@@ -116,43 +131,7 @@ export default {
   width: 81%;
 }
 
-hr {
-  margin: 1rem 0;
-}
-
-a {
-  text-decoration: none;
-}
-
-.localButton {
-  margin: 35px 0 0 20px;
-}
-
 .text {
   font-size: 18px;
-}
-
-.fineDetails {
-  font-size: 10px;
-}
-
-.local {
-  display: inline-block;
-  margin: 50px 0;
-  padding: 30px;
-}
-
-.remote {
-  display: inline-block;
-  margin: 50px 0;
-  padding: 30px;
-}
-
-.middleLine {
-  display: inline-block;
-  margin: 40px 0;
-  padding: 30px 0 0 0;
-  font-weight: bolder;
-  font-size: 28px;
 }
 </style>
