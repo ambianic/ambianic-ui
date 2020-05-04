@@ -414,7 +414,6 @@ export default {
       console.debug('event time before local timezone adjustment', { datetime })
       // eslint-disable-next-line
       console.debug('timezone offset', { tz })
-      // eslint-disable-next-line
       const adjustedLocalTime = moment.utc(datetime).local().calendar()
       // eslint-disable-next-line
       console.debug('local timezone adjusted time of event', { adjustedLocalTime })
