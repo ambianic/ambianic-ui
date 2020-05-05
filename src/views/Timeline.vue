@@ -264,6 +264,7 @@ import DetectionBoxes from '../components/DetectionBoxes.vue'
 import AppFrame from '@/components/AppFrame.vue'
 import { EdgeAPI } from '@/remote/edgeAPI'
 import { mapState } from 'vuex'
+import moment from 'moment'
 import {
   PEER_CONNECTED
 } from '@/store/mutation-types'
@@ -407,7 +408,6 @@ export default {
       return icon
     },
     friendlyTime (datetime) {
-      var moment = require('moment')
       const dt = new Date()
       var tz = dt.getTimezoneOffset()
       // eslint-disable-next-line
