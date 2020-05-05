@@ -1,5 +1,5 @@
 // Compress static text assets at build time
-const CompressionPlugin = require('compression-webpack-plugin')
+// const CompressionPlugin = require('compression-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const path = require('path')
 const PrerenderSPAPlugin = require('prerender-spa-plugin')
@@ -85,7 +85,7 @@ module.exports = {
     config.plugins.delete('prefetch')
 
     // enable build time compression
-    config.plugin('CompressionPlugin').use(CompressionPlugin)
+    // config.plugin('CompressionPlugin').use(CompressionPlugin)
     // bundle build analyzer
     config.plugin('BundleAnalyzerPlugin').use(BundleAnalyzerPlugin)
     // vuetify
