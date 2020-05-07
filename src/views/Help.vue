@@ -65,5 +65,4 @@
 export default {
 
 }
-
 </script>
