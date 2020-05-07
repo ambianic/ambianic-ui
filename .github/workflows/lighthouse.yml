@@ -12,8 +12,8 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
+  # This workflow contains a single job
+  static-dist-dir:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -26,9 +26,6 @@ jobs:
     - name: Lighthouse CI Action
       uses: treosh/lighthouse-ci-action@v2
       with:
-        # List of URL(s) to analyze
-        urls: |
-          http://localhost:8080/
         budgetPath: '.github/lighthouse/budget.json' # test performance budgets
         configPath: '.github/lighthouse/lighthouserc.json'
         # Path to a LHCI lighthouserc.json file
