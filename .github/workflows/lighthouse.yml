@@ -22,16 +22,6 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    # Runs a set of commands using the runners shell
-    - name: npm install
-      run: |
-        npm version
-        npm install -g npm
-        npm version
-        npm install
-      env:
-        CI: true
-
     #runs the lighthouse
     - name: Lighthouse CI Action
       uses: treosh/lighthouse-ci-action@v2
