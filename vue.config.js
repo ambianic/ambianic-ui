@@ -5,9 +5,18 @@ const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 module.exports = {
   configureWebpack: {
     optimization: {
+      moduleIds: 'hashed',
+      runtimeChunk: 'single',
       splitChunks: {
         minSize: 10000,
-        maxSize: 250000
+        maxSize: 250000,
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all'
+          }
+        }
       }
     }
   },
