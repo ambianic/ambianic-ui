@@ -37,7 +37,9 @@ jobs:
       uses: treosh/lighthouse-ci-action@v2
       with:
         # List of URL(s) to analyze
-        urls: 'https://ui.ambianic.ai/'
+        urls: |
+          https://ui.ambianic.ai/
+          http://localhost:8080/
         budgetPath: '.github/lighthouse/budget.json' # test performance budgets
         configPath: '.github/lighthouse/lighthouserc.json'
         # Path to a LHCI lighthouserc.json file
