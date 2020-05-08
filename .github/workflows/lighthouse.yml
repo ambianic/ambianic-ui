@@ -35,19 +35,28 @@ jobs:
       with:
         site_name: "happy-franklin-69b6d4"
 
-    #runs the lighthouse
-    - name: Lighthouse CI Action
-      uses: treosh/lighthouse-ci-action@v2
-      with:
-        urls: |
-          $DEPLOY_URL
-        budgetPath: '.github/lighthouse/budget.json' # test performance budgets
-        configPath: '.github/lighthouse/lighthouserc.json'
-        # Path to a LHCI lighthouserc.json file
-        # Opt-out of saving Lighthouse results as an action artifacts
-        uploadArtifacts: false
-        # Number of runs to do per URL
-        serverBaseUrl: ${{ secrets.LHCI_SERVER_URL }}
-        serverToken: ${{ secrets.LHCI_SERVER_TOKEN }}
+    # lighthouse local test
+    - name: Lighthouse CI
+      run: |
+        npm install -g @lhci/cli@0.3.x
+        lhci autorun
       env:
-        DEPLOY_URL: ${{ steps.waitFor200.outputs.url }}
+        LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+    #runs the lighthouse action
+    # - name: Lighthouse CI Action
+    #   uses: treosh/lighthouse-ci-action@v2
+    #   with:
+    #     urls: |
+    #       $DEPLOY_URL
+    #     budgetPath: '.github/lighthouse/budget.json' # test performance budgets
+    #     configPath: '.github/lighthouse/lighthouserc.json'
+    #     # Path to a LHCI lighthouserc.json file
+    #     # Opt-out of saving Lighthouse results as an action artifacts
+    #     uploadArtifacts: false
+    #     # Number of runs to do per URL
+    #     serverBaseUrl: ${{ secrets.LHCI_SERVER_URL }}
+    #     serverToken: ${{ secrets.LHCI_SERVER_TOKEN }}
+    #   env:
+    #     DEPLOY_URL: ${{ steps.waitFor200.outputs.url }}
+    
