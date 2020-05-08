@@ -1,5 +1,9 @@
 {
   "ci": {
+    "collect": {
+      "numberOfRuns": 2,
+      "startServerCommand": "npm run serve"
+    },
     "assert": {
       "preset": "lighthouse:recommended",
       "assertions": {
