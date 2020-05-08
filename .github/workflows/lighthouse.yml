@@ -33,7 +33,7 @@ jobs:
       uses: jakepartusch/wait-for-netlify-action@v1
       id: waitFor200
       with:
-        site_name: "lighthouse-ci-pr"
+        site_name: "happy-franklin-69b6d4"
 
     #runs the lighthouse
     - name: Lighthouse CI Action
