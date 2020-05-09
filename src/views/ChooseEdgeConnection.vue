@@ -88,10 +88,6 @@ import AppFrame from '@/components/AppFrame.vue'
 import {
   REMOVE_REMOTE_PEER_ID
 } from '../store/action-types.js'
-import { mapState } from 'vuex'
-import {
-  PEER_CONNECTED
-} from '@/store/mutation-types'
 
 export default {
   data: () => {
@@ -134,14 +130,6 @@ export default {
       this.edgeAddress = value
       this.validateIP(value)
     }
-  },
-  computed: {
-    ...mapState({
-      isEdgeConnected: function (state) {
-        console.debug(`app frame: state.pnp.peerConnectionStatus: ${state.pnp.peerConnectionStatus}`)
-        return state.pnp.peerConnectionStatus === PEER_CONNECTED
-      }
-    })
   }
 }
 </script>
