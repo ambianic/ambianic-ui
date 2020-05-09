@@ -88,6 +88,10 @@ import AppFrame from '@/components/AppFrame.vue'
 import {
   REMOVE_REMOTE_PEER_ID
 } from '../store/action-types.js'
+import { mapState } from 'vuex'
+import {
+  PEER_CONNECTED
+} from '@/store/mutation-types'
 
 export default {
   data: () => {
@@ -117,10 +121,13 @@ export default {
     sendEdgeAddress () {
       this.$store.state.pnp.edgeRoom = this.edgeAddress
       this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
-    },
-    redirect () {
-      console.log('Redirect!!!!!!')
     }
+  },
+  computed: {
+    ...mapState({
+      isEdgeConnected: state =>
+        state.pnp.peerConnectionStatus === PEER_CONNECTED
+    })
   },
   components: {
     AppFrame
