@@ -1,6 +1,7 @@
 <template>
   <app-frame>
     <v-row
+      v-if="!isEdgeConnected"
       align="start"
       justify="center"
     >
@@ -75,11 +76,22 @@
         </v-card-actions>
       </v-card>
     </v-row>
+    <div
+      v-else
+    >
+      {{ this.$router.push('edge-connect') }}
+    </div>
   </app-frame>
 </template>
 <script>
 import AppFrame from '@/components/AppFrame.vue'
-import { REMOVE_REMOTE_PEER_ID } from '../store/action-types.js'
+import {
+  REMOVE_REMOTE_PEER_ID
+} from '../store/action-types.js'
+import { mapState } from 'vuex'
+import {
+  PEER_CONNECTED
+} from '@/store/mutation-types'
 
 export default {
   data: () => {
@@ -94,7 +106,6 @@ export default {
       // resetEdgeDialog: false
     }
   },
-  computed: {},
   methods: {
     // Validate the user input so the ID has the correct format before showing the connect button
     validateIP (value) {
@@ -110,6 +121,9 @@ export default {
     sendEdgeAddress () {
       this.$store.state.pnp.edgeRoom = this.edgeAddress
       this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
+    },
+    redirect () {
+      console.log('Redirect!!!!!!')
     }
   },
   components: {
@@ -120,6 +134,14 @@ export default {
       this.edgeAddress = value
       this.validateIP(value)
     }
+  },
+  computed: {
+    ...mapState({
+      isEdgeConnected: function (state) {
+        console.debug(`app frame: state.pnp.peerConnectionStatus: ${state.pnp.peerConnectionStatus}`)
+        return state.pnp.peerConnectionStatus === PEER_CONNECTED
+      }
+    })
   }
 }
 </script>
