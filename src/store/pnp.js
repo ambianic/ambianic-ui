@@ -291,7 +291,6 @@ const actions = {
   * Initialize PnP Service and Peer Connection
   */
   async [INITIALIZE_PNP] ({ state, commit, dispatch }) {
-    // state.remotePeerId = undefined
     await dispatch(PNP_SERVICE_CONNECT)
   },
   /**

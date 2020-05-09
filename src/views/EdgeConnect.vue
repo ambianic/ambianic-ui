@@ -240,7 +240,7 @@ export default {
   },
   methods: {
     disconnectEdge () {
-      this.$store.state.pnp.remotePeerId = null
+      this.$store.state.pnp.remotePeerId = false
       this.$store.state.pnp.edgeRoom = undefined
       this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
     }
