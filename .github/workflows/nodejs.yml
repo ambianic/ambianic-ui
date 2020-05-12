@@ -55,7 +55,7 @@ jobs:
         uploadArtifacts: true # save results as an action artifacts
         temporaryPublicStorage: true # upload lighthouse report to the temporary storage
     - name: Wait for Netlify preview deployment of this git branch
-      uses: jakepartusch/wait-for-netlify-action@v1
+      uses: JosephDuffy/wait-for-netlify-action@v1
       id: waitForNetlify
       with:
         site_name: "ambianic-pwa-dist"
