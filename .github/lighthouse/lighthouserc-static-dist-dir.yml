@@ -2,7 +2,7 @@ ci:
   collect:
     staticDistDir: './dist'
     assert:
-      preset: "lighthouse:recommended"
+      preset: "lighthouse:no-pwa"
       assertions:
         first-contentful-paint:
           - "warn"
