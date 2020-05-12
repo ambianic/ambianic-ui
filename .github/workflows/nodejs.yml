@@ -1,6 +1,6 @@
 name: CI for Ambianic UI 
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
