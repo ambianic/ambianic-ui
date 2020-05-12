@@ -1,3 +1,3 @@
 ci:
   collect:
-    staticDistDir: './dist-fake'
+    staticDistDir: './dist'
