@@ -15,7 +15,7 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    #runs the lighthouse pwa test
+    - uses: actions/checkout@v1    
     - name: Wait for Netlify preview deployment of this git branch
       uses: jakepartusch/wait-for-netlify-action@v1
       id: get-netlify-url
