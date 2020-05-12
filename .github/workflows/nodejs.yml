@@ -55,14 +55,14 @@ jobs:
         uploadArtifacts: true # save results as an action artifacts
         temporaryPublicStorage: true # upload lighthouse report to the temporary storage
     - name: Wait for Netlify preview deployment of this git branch
-      uses: JosephDuffy/wait-for-netlify-action@v1
-      id: waitForNetlify
+    - uses: voorhoede/get-netlify-url@v2
+      id: get-netlify-url
       with:
         site_name: "ambianic-pwa-dist"
     - name: Run Lighthouse PWA check against Netlify deployment
       uses: treosh/lighthouse-ci-action@v2
       with:
-        urls: ${{ steps.waitForNetlify.outputs.url }}
+        urls: ${{ steps.get-netlify-url.outputs.url }}
         uploadArtifacts: true # save results as an action artifacts
         temporaryPublicStorage: true # upload lighthouse report to the temporary storage
     - name: Semantic Release
