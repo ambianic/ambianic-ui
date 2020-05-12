@@ -47,11 +47,22 @@ jobs:
         npm run build --if-present
       env:
         CI: true
-    - name: Run Lighthouse PWA check against production build
+    - name: Run Lighthouse PWA check against local production build
       uses: treosh/lighthouse-ci-action@v2
       with:
         # no urls needed, since it uses local folder to scan .html files
         configPath: '.github/lighthouse/lighthouserc-static-dist-dir.yml'
+        uploadArtifacts: true # save results as an action artifacts
+        temporaryPublicStorage: true # upload lighthouse report to the temporary storage
+    - name: Wait for Netlify preview deployment of this git branch
+      uses: jakepartusch/wait-for-netlify-action@v1
+      id: waitForNetlify
+      with:
+        site_name: "ambianic-pwa-dist"
+    - name: Run Lighthouse PWA check against Netlify deployment
+      uses: treosh/lighthouse-ci-action@v2
+      with:
+        urls: ${{ steps.waitForNetlify.outputs.url }}
         uploadArtifacts: true # save results as an action artifacts
         temporaryPublicStorage: true # upload lighthouse report to the temporary storage
     - name: Semantic Release
