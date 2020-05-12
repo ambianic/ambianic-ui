@@ -58,7 +58,7 @@ jobs:
     - uses: voorhoede/get-netlify-url@v2
       id: get-netlify-url
       with:
-        site_name: "ambianic-pwa-dist"
+        site-name: "ambianic-pwa-dist"
     - name: Run Lighthouse PWA check against Netlify deployment
       uses: treosh/lighthouse-ci-action@v2
       with:
