@@ -6,5 +6,5 @@ ci:
       assertions:
         first-contentful-paint:
           - "warn"
-          - 
+          -
             "minScore": 0.6
