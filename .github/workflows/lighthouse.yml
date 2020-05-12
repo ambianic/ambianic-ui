@@ -4,11 +4,7 @@ name: Lighthouse CI
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: [pull_request]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -19,30 +15,15 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
-
-    # Runs a single command using the runners shell
-    - name: Run a one-line script
-      run: echo Hello, world!
-
-    # Runs a set of commands using the runners shell
-    - name: Run a multi-line script
-      run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
-
-    #runs the lighthouse
-    - name: Lighthouse CI Action
+    #runs the lighthouse pwa test
+    - name: Wait for Netlify preview deployment of this git branch
+      uses: jakepartusch/wait-for-netlify-action@v1
+      id: get-netlify-url
+      with:
+        site_name: "ambianic-pwa-dist"
+    - name: Run Lighthouse PWA check against Netlify deployment
       uses: treosh/lighthouse-ci-action@v2
       with:
-        # List of URL(s) to analyze
-        urls: 'https://ui.ambianic.ai/'
-        budgetPath: '.github/lighthouse/budget.json' # test performance budgets
-        configPath: '.github/lighthouse/lighthouserc.json'
-        # Path to a LHCI lighthouserc.json file
-        # Opt-out of saving Lighthouse results as an action artifacts
-        uploadArtifacts: false
-        # Number of runs to do per URL
-        serverBaseUrl: ${{ secrets.LHCI_SERVER_URL }}
-        serverToken: ${{ secrets.LHCI_SERVER_TOKEN }}
+        urls: ${{ steps.get-netlify-url.outputs.url }}
+        uploadArtifacts: true # save results as an action artifacts
+        temporaryPublicStorage: true # upload  lighthouse report to the temporary storage
