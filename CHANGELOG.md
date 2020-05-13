@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.2.16](https://github.com/ambianic/ambianic-ui/compare/v2.2.15...v2.2.16) (2020-05-13)
+
+
+### Bug Fixes
+
+* broken dynamic import of momentjs in timeline.vue ([73c00ed](https://github.com/ambianic/ambianic-ui/commit/73c00ede8d45a4d457bc5ee52d9c286e3d2323b1))
+
 ## [2.2.15](https://github.com/ambianic/ambianic-ui/compare/v2.2.14...v2.2.15) (2020-05-02)
 
 
