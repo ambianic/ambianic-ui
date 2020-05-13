@@ -34,7 +34,7 @@ jobs:
       uses: cypress-io/github-action@v1
       with:
         start: npm run serve
-        record: true
+        record: false # cypress.io free recording limit exceeded
         wait-on: 'http://localhost:8080'
       env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
