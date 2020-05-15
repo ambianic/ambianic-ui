@@ -21,13 +21,21 @@ jobs:
       id: get-netlify-url
       with:
         site_name: "ambianic-pwa-dist"
-    - name: Run Lighthouse PWA check against Netlify deployment
+    - name: Run Lighthouse PWA check against Netlify PR Preview
       uses: treosh/lighthouse-ci-action@v2
       with:
         urls: |
-          https://ui.ambianic.ai
           ${{ steps.get-netlify-url.outputs.url }}
         uploadArtifacts: true # save results as an action artifacts
         temporaryPublicStorage: true # upload lighthouse report to the temporary storage
         # budgetPath: '.github/lighthouse/budget.json' # performance budgets
-        configPath: '.github/lighthouse/lighthouserc.json' # PWA checks
+        configPath: '.github/lighthouse/lighthouserc-netlify-preview.json' # PWA checks
+    - name: Run Lighthouse PWA sanity check against Netlify production deployment
+      uses: treosh/lighthouse-ci-action@v2
+      with:
+        urls: |
+          https://ui.ambianic.ai
+        uploadArtifacts: true # save results as an action artifacts
+        temporaryPublicStorage: true # upload lighthouse report to the temporary storage
+        # budgetPath: '.github/lighthouse/budget.json' # performance budgets
+        configPath: '.github/lighthouse/lighthouserc-netlify-prod.json' # PWA checks
