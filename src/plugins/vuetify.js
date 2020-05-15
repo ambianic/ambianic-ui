@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify/lib'
 import manifestJSON from '../../public/manifest.json'
+import '@mdi/font/css/materialdesignicons.css' // Ensure to use css-loader
 
 Vue.use(Vuetify)
 
