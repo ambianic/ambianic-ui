@@ -9,7 +9,7 @@
           "first-contentful-paint": ["warn", { "minScore": 0.6 }],
           "font-display": "off",
           "unused-css-rules": "off",
-          "uses-rel-preconnect": "off",
+          "uses-rel-preconnect": "off"
         }
       }
     }
