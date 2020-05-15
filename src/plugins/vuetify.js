@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify/lib'
 import manifestJSON from '../../public/manifest.json'
-import '@mdi/font/css/materialdesignicons.css' // Ensure to use css-loader
 
 Vue.use(Vuetify)
 
@@ -9,7 +8,7 @@ const mq = window.matchMedia('(prefers-color-scheme: dark)')
 
 const vuetify = new Vuetify({
   icons: {
-    iconfont: 'mdi'
+    iconfont: 'mdiSvg'
   },
   theme: {
     dark: mq.matches,
