@@ -224,6 +224,7 @@ export default {
       //  ]
       // },
       { icon: 'mdi-video-input-antenna', text: 'Connect', link: '/choose-edge-connection' },
+      { icon: 'mdi-video-input-antenna', text: 'Connect Remote', link: '/remote-edge-connection' },
       // { icon: 'settings', text: 'Settings', link: '/settings' },
       { icon: 'chat_bubble', text: 'Send feedback', link: '/feedback' },
       { icon: 'help', text: 'Help', link: '/help' },

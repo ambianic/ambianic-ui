@@ -88,6 +88,14 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "choose-edge-connection" */ '../views/ChooseEdgeConnection.vue')
+  },
+  {
+    path: '/remote-edge-connection',
+    name: 'remote-edge-connection',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "remote-edge-connection" */ '../views/RemoteEdgeConnection.vue')
   }
 ]
 

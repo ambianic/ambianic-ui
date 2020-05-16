@@ -79,7 +79,7 @@ const state = {
   /**
     Edgeroom ID when connecting to remote network
    */
-  edgeRoom: String
+  edgeRoom: undefined
 }
 
 const mutations = {

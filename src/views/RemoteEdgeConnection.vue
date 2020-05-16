@@ -1,47 +1,6 @@
 <template>
   <app-frame>
-    <v-row
-      v-if="!isEdgeConnected"
-      align="start"
-      justify="center"
-    >
-      <!-- top column -->
-      <v-col cols="6">
-        <v-card min-width="100">
-          <v-card-text class="text-center">
-            <p class="text">
-              Connect to local network
-            </p>
-          </v-card-text>
-          <v-card-actions>
-            <v-row justify="center">
-              <v-btn
-                color="primary"
-                :small="$vuetify.breakpoint.mdAndUp"
-              >
-                <v-icon v-if="$vuetify.breakpoint.xsOnly">
-                  mdi-wifi
-                </v-icon>
-                <span v-if="$vuetify.breakpoint.smAndUp">
-                  Local Network
-                </span>
-              </v-btn>
-            </v-row>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-      <!-- middle column -->
-      <v-col cols="12">
-        <v-row justify="center">
-          <v-card flat>
-            <v-card-title>
-              OR
-            </v-card-title>
-          </v-card>
-        </v-row>
-      </v-col>
-      <!-- third column -->
-      <v-card
+    <v-card
         max-width="500"
         class="text-center"
       >
@@ -73,12 +32,6 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-    </v-row>
-    <div
-      v-else
-    >
-      {{ this.$router.push('edge-connect') }}
-    </div>
   </app-frame>
 </template>
 <script>
@@ -117,9 +70,7 @@ export default {
       }
     },
     sendEdgeAddress () {
-      console.log(this.edgeAddress)
       this.$store.state.pnp.edgeRoom = this.edgeAddress
-      console.log(this.$store.state.pnp.edgeRoom)
       this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
     }
   },
