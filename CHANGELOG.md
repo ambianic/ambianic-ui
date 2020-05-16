@@ -1,5 +1,21 @@
 # Semantic Versioning Changelog
 
+## [2.2.17](https://github.com/ambianic/ambianic-ui/compare/v2.2.16...v2.2.17) (2020-05-16)
+
+
+### Bug Fixes
+
+* cleanup font dependencies ([f22a1e8](https://github.com/ambianic/ambianic-ui/commit/f22a1e8dc5369d6452679007287f226e7f432dbd))
+* default font display on webload ([d26538c](https://github.com/ambianic/ambianic-ui/commit/d26538ca8a493bd984a5d529ee01775200cb3812))
+* font display on webload ([e7276bd](https://github.com/ambianic/ambianic-ui/commit/e7276bd5b4d62fa1239d41b0026eaaf70b815b93))
+* font display on webload ([7784b07](https://github.com/ambianic/ambianic-ui/commit/7784b07a35ef947b8c84dae4532147e85345e8b6))
+* json syntax error ([0d4b921](https://github.com/ambianic/ambianic-ui/commit/0d4b921e3ec0ce2cb6368195c6cb6449e96e61f1))
+* lhci assertion error font not visible on webload ([f997b75](https://github.com/ambianic/ambianic-ui/commit/f997b75298d15f53ad776c839f2c690829433b60)), closes [.github#L1](https://github.com/.github/issues/L1)
+* merge branch 'dev' of https://github.com/ambianic/ambianic-ui into dev ([df859e8](https://github.com/ambianic/ambianic-ui/commit/df859e88d52ce0da0cb3b45755de2cf118148026))
+* split PR vs prod lhci configs ([6e05bdd](https://github.com/ambianic/ambianic-ui/commit/6e05bdd765b7627d024a0a38ce2b4dc2fecaac14))
+* test also ui.abmianic.ai ([95c23ad](https://github.com/ambianic/ambianic-ui/commit/95c23ad92fdc7ad0d2cf0bf04a39c4ebc4774f41))
+* turn off lhci assertions with inconsistent results ([ad55887](https://github.com/ambianic/ambianic-ui/commit/ad55887d275d466f025cb3b49d375b4dc3bfb0ba))
+
 ## [2.2.16](https://github.com/ambianic/ambianic-ui/compare/v2.2.15...v2.2.16) (2020-05-13)
 
 
