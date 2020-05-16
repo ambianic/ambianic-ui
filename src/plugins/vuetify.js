@@ -8,7 +8,7 @@ const mq = window.matchMedia('(prefers-color-scheme: dark)')
 
 const vuetify = new Vuetify({
   icons: {
-    iconfont: 'mdiSvg'
+    iconfont: 'mdi'
   },
   theme: {
     dark: mq.matches,
