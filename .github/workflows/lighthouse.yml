@@ -21,6 +21,7 @@ jobs:
       id: get-netlify-url
       with:
         site_name: "ambianic-pwa-dist"
+        max_timeout: 180
     - name: Run Lighthouse PWA check against Netlify PR Preview
       uses: treosh/lighthouse-ci-action@v2
       with:
