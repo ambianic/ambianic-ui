@@ -1,219 +1,181 @@
 <template>
-  <app-frame>
-    <v-row
-      align="start"
-      justify="space-around"
+  <v-row
+    align="start"
+    justify="space-around"
+  >
+    <v-col
+      v-if="edgePeerId"
+      style="max-width: 420px;"
+      align="center"
+      justify="center"
+      cols="12"
+      class="pa-0 ma-0 fill-height"
     >
-      <v-col
-        v-if="edgePeerId"
-        style="max-width: 420px;"
-        align="center"
-        justify="center"
-        cols="12"
-        class="pa-0 ma-0 fill-height"
+      <amb-banner
+        v-if="isEdgeConnected"
+        banner-class="text-left"
+        icon="wifi"
+        text="Ambianic Edge device connected!"
+      />
+
+      <amb-banner
+        v-else
+        progress
+        banner-class="text-left"
+        icon="wifi-off"
+        text="Connecting to Ambianic Edge device..."
+      />
+
+      <v-card
+        class="mx-auto text-left"
       >
-        <v-banner
-          v-if="isEdgeConnected"
+        <v-list
           two-line
-          class="text-left"
         >
-          <v-icon
-            slot="icon"
-            size="36"
-          >
-            mdi-wifi
-          </v-icon>
-          Ambianic Edge device connected!
-        </v-banner>
-        <v-banner
-          v-else
-          two-line
-          class="text-left"
+          <amb-list-item
+            title="My Ambianic Edge Device"
+            subtitle="Display Name"
+            icon-name="tag"
+          />
+
+          <v-divider inset />
+
+          <amb-list-item
+            :title="edgePeerId"
+            subtitle="Peer ID"
+            icon-name="identifier"
+          />
+
+          <amb-list-item
+            :title="version"
+            subtitle="Release Version"
+            icon-name="alpha-v-circle-outline"
+          />
+        </v-list>
+        <v-btn
+          text
+          :to="'timeline'"
         >
-          <v-icon
-            slot="icon"
-            size="36"
-          >
-            mdi-wifi-off
-          </v-icon>
-          Connecting to Ambianic Edge device...
+          OK
+        </v-btn>
+        <v-btn
+          text
+          @click.stop="resetEdgeDialog = true"
+        >
+          Reset
+        </v-btn>
+      </v-card>
+    </v-col>
+    <v-col
+      v-else
+      style="max-width: 420px;"
+      align="center"
+      justify="center"
+      cols="12"
+      class="pa-0 ma-0 fill-height"
+    >
+      <amb-banner
+        banner-class="text-left"
+        icon="wifi-off"
+        text="Let's find your Ambianic Edge device and connect to it..."
+      />
+
+      <v-stepper
+        v-model="connectStep"
+        vertical
+      >
+        <v-stepper-step
+          :complete="connectStep > 1"
+          step="1"
+          :rules="[() => true]"
+        >
+          Discovering
+          <small>Looking for Ambianic Edge device to pair with.</small>
+        </v-stepper-step>
+
+        <v-stepper-content step="1">
           <v-progress-linear
             color="info"
             indeterminate
             :size="50"
             :width="7"
+          />
+          <v-alert
+            v-if="this.$store.state.pnp.userMessage"
+            outlined
+            type="warning"
+            class="mt-5 text-left"
+            dense
           >
-          </v-progress-linear>
-        </v-banner>
+            {{ this.$store.state.pnp.userMessage }}
+          </v-alert>
+        </v-stepper-content>
 
-        <v-card
-          class="mx-auto text-left"
+        <v-stepper-step
+          :complete="connectStep > 2"
+          step="2"
         >
-          <v-list two-line
-          >
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon>mdi-tag</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>My Ambianic Edge Device</v-list-item-title>
-                  <v-list-item-subtitle>Display Name</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
+          Authenticating
+          <small>Establishing secure peer-to-peer connection.</small>
+        </v-stepper-step>
 
-              <v-divider inset></v-divider>
+        <v-stepper-content step="2">
+          <v-progress-linear
+            color="info"
+            indeterminate
+            :size="50"
+            :width="7"
+          />
+        </v-stepper-content>
 
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon>mdi-identifier</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>{{ edgePeerId }}</v-list-item-title>
-                  <v-list-item-subtitle>Peer ID</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
+        <v-stepper-step step="3">
+          Done
+        </v-stepper-step>
+        <v-stepper-content step="3" />
+      </v-stepper>
+    </v-col>
+    <v-dialog
+      v-model="resetEdgeDialog"
+      max-width="500"
+    >
+      <v-card>
+        <v-card-title class="headline">
+          Reset device pairing?
+        </v-card-title>
 
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon>mdi-alpha-v</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>{{ version }}</v-list-item-title>
-                  <v-list-item-subtitle>Release Version</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-
-          </v-list>
-          <v-btn text
-            :to="'timeline'"
-          >
-            OK
-          </v-btn>
-          <v-btn text
-            @click.stop="resetEdgeDialog = true"
-          >
-            Reset
-          </v-btn>
-        </v-card>
-      </v-col>
-      <v-col
-        v-else
-        style="max-width: 420px;"
-        align="center"
-        justify="center"
-        cols="12"
-        class="pa-0 ma-0 fill-height"
-      >
-        <v-banner
-          two-line
-          class="text-left"
-        >
-          <v-icon
-            slot="icon"
-            size="36"
-          >
-            mdi-wifi-off
-          </v-icon>
-          Let's find your Ambianic Edge device and connect to it...
-        </v-banner>
-
-        <v-stepper
-          v-model="connectStep"
-          vertical
-        >
-          <v-stepper-step
-            :complete="connectStep > 1"
-            step="1"
-            :rules="[() => true]"
-          >
-            Discovering
-            <small>Looking for Ambianic Edge device to pair with.</small>
-          </v-stepper-step>
-
-          <v-stepper-content step="1">
-            <v-progress-linear
-              color="info"
-              indeterminate
-              :size="50"
-              :width="7"
-            >
-            </v-progress-linear>
-            <v-alert
-              v-if="this.$store.state.pnp.userMessage"
-              outlined
-              type="warning"
-              class="mt-5 text-left"
-              dense
-            >
-              {{ this.$store.state.pnp.userMessage }}
-            </v-alert>
-
-          </v-stepper-content>
-
-          <v-stepper-step
-            :complete="connectStep > 2"
-            step="2"
-          >
-            Authenticating
-            <small>Establishing secure peer-to-peer connection.</small>
-          </v-stepper-step>
-
-          <v-stepper-content step="2">
-            <v-progress-linear
-              color="info"
-              indeterminate
-              :size="50"
-              :width="7"
-            >
-            </v-progress-linear>
-          </v-stepper-content>
-
-          <v-stepper-step step="3">
-            Done
-          </v-stepper-step>
-          <v-stepper-content step="3">
-          </v-stepper-content>
-        </v-stepper>
-      </v-col>
-      <v-dialog
-        v-model="resetEdgeDialog"
-        max-width="500"
-      >
-        <v-card>
-          <v-card-title class="headline">Reset device pairing?</v-card-title>
-
-          <v-card-text>
-            <p>
+        <v-card-text>
+          <p>
             Are you switching to a new Ambianic Edge device?
             Resetting a device association is usually done when switching to
             a new edge device with a different Peer ID.
-            </p>
-          </v-card-text>
+          </p>
+        </v-card-text>
 
-          <v-card-actions>
-            <v-spacer></v-spacer>
+        <v-card-actions>
+          <v-spacer />
 
-            <v-btn
-              text
-              @click="resetEdgeDialog = false"
-            >
-              Cancel
-            </v-btn>
+          <v-btn
+            text
+            @click="resetEdgeDialog = false"
+          >
+            Cancel
+          </v-btn>
 
-            <v-btn
-              text
-              @click="resetEdgeConnection()"
-            >
-              Yes, Reset
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-row>
-  </app-frame>
+          <v-btn
+            text
+            @click="resetEdgeConnection()"
+          >
+            Yes, Reset
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-row>
 </template>
 <script>
-import AppFrame from '@/components/AppFrame.vue'
+import AmbBanner from '../components/shared/Banner.vue'
+import AmbListItem from '@/components/shared/ListItem.vue'
+
 // import { settingsDB } from '@/store/db'
 import { mapState, mapActions } from 'vuex'
 import {
@@ -227,6 +189,10 @@ import {
 } from '@/store/mutation-types'
 
 export default {
+  components: {
+    AmbBanner,
+    AmbListItem
+  },
   data: function () {
     return {
       // edgeAddress: '',
@@ -273,9 +239,6 @@ export default {
       }
       return step
     }
-  },
-  components: {
-    AppFrame
   },
   mounted () {
     this.loadSettings()
