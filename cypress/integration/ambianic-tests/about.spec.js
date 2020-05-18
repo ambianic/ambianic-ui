@@ -32,8 +32,6 @@ context('AboutPage', () => {
   it('Loads version info', () => {
     cy.get('#version-info > .v-list-item__content > .v-list-item__subtitle')
       .should('contain.text', 'Release Version')
-      .click()
   })
-
 
 })
