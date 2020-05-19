@@ -1,85 +1,82 @@
 <template>
-  <app-frame>
-    <v-row
-      align="start"
-      justify="center"
-      align-content="space-around"
-    >
-      <template>
-        <v-card
-          max-width="344"
+  <v-row
+    align="start"
+    justify="center"
+    align-content="space-around"
+  >
+    <template>
+      <v-card
+        max-width="344"
+      >
+        <v-layout
+          column
+          wrap
+          align-start
         >
-          <v-list-item
-            align="center"
-            justify="center"
-          >
-            <v-list-item-content>
-              <v-list-item-title class="headline">
-                Cozy at Home
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                via Ambient Intelligence
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-
-          <v-img
-            max-width="300"
-            class="mx-auto"
-            src="@/assets/home-screen-logo.png"
+          <amb-list-item
+            id="about-title"
+            title="Cozy at Home"
+            subtitle="via Ambient Intelligence"
           />
+        </v-layout>
 
-          <v-card-text>
-            Review your home timeline for notable moments.
-            Configure input sensors and cameras for Ambianic to observe.
-            Share, purge or backup your data
-            - it never slips out of your control.
-          </v-card-text>
+        <v-img
+          max-width="300"
+          class="mx-auto"
+          src="@/assets/home-screen-logo.png"
+        />
 
-          <v-list-item
-            align="center"
-            justify="center"
+        <v-card-text id="about-info">
+          Review your home timeline for notable moments.
+          Configure input sensors and camers for Ambianic to observe.
+          Share, purge or backup your data
+          - it never slips out of your control.
+        </v-card-text>
+
+        <v-layout
+          column
+          wrap
+          align-center
+        >
+          <v-flex>
+            <amb-list-item
+              id="version-info"
+              :title="version"
+              icon-name="alpha-v-circle-outline"
+              subtitle="Release Version"
+            />
+          </v-flex>
+        </v-layout>
+        <v-card-actions>
+          <v-btn
+            text
+            color="info"
+            :to="'timeline'"
+            id="btn-timeline"
           >
-            <v-list-item-content>
-              <v-list-item-title>
-                <v-icon class="mx-n2">
-                  mdi-alpha-v
-                </v-icon>
-                {{ version }}
-              </v-list-item-title>
-              <v-list-item-subtitle>Release Version</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-
-          <v-card-actions>
-            <v-btn
-              text
-              color="info"
-              :to="'timeline'"
-            >
-              View Timeline
-            </v-btn>
-            <v-spacer />
-            <v-btn
-              text
-              color="info"
-              :to="'settings'"
-            >
-              Settings
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </template>
-    </v-row>
-  </app-frame>
+            View Timeline
+          </v-btn>
+          <v-spacer />
+          <v-btn
+            text
+            color="info"
+            :to="'settings'"
+            id="btn-settings"
+          >
+            Settings
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </template>
+  </v-row>
 </template>
 <script>
-import AppFrame from '@/components/AppFrame.vue'
+import AmbListItem from '@/components/shared/ListItem.vue'
 import { mapState } from 'vuex'
 
 export default {
   components: {
-    AppFrame
+    AmbListItem
   },
   computed: {
     ...mapState({

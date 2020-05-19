@@ -25,22 +25,6 @@ const routes = [
     component: () => import(/* webpackChunkName: "timeline" */ '../views/Timeline.vue')
   },
   {
-    path: '/people',
-    name: 'people',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "people" */ '../views/People.vue')
-  },
-  {
-    path: '/flows',
-    name: 'flows',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "flows" */ '../views/Flows.vue')
-  },
-  {
     path: '/edge-connect',
     name: 'edge-connect',
     props: true,
