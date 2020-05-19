@@ -14,19 +14,17 @@ context('AboutPage', () => {
   })
 
   it('Loads timeline button', () => {
-    cy.get('#btn-timeline > .v-btn__content')
-      .should('contain.text', 'View Timeline')
-      .click()
-
-    cy.url().should('include', '/timeline')
+    let btn = cy.get('#btn-timeline')
+    btn.should('have.attr', 'href', '/timeline')
+    btn.get('.v-btn__content')
+      .contains('View Timeline', { matchCase: false })
   })
 
   it('Loads settings button', () => {
-    cy.get('#btn-settings > .v-btn__content')
-      .should('contain.text', 'Settings')
-      .click()
-
-    cy.url().should('include', '/settings')
+    let btn = cy.get('#btn-settings')
+    btn.should('have.attr', 'href', '/settings')
+    btn.get('.v-btn__content')
+      .contains('Settings', { matchCase: false })
   })
 
   it('Loads version info', () => {
