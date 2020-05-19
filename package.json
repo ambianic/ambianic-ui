@@ -91,6 +91,7 @@
     "reporter": [
       "text",
       "json"
-    ]
+    ],
+    "extension": [".js", ".vue"]
   }
 }
