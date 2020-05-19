@@ -1,12 +1,24 @@
 <!-- App.vue -->
 <template>
-  <router-view />
+  <v-lazy>
+    <amb-app-frame v-if="$route.name !== 'home'">
+      <keep-alive>
+        <router-view />
+      </keep-alive>
+    </amb-app-frame>
+
+    <v-app v-else>
+      <router-view />
+    </v-app>
+  </v-lazy>
 </template>
 
 <script>
+import AmbAppFrame from './components/AppFrame.vue'
 export default {
   name: 'App',
   components: {
+    AmbAppFrame
   }
 }
 </script>

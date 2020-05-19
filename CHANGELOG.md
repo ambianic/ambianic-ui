@@ -1,5 +1,61 @@
 # Semantic Versioning Changelog
 
+# [2.3.0](https://github.com/ambianic/ambianic-ui/compare/v2.2.17...v2.3.0) (2020-05-19)
+
+
+### Bug Fixes
+
+* add cashing mechanics in webpack ([2d07b64](https://github.com/ambianic/ambianic-ui/commit/2d07b645e68c19d88a0fcf92498031612e110045))
+* add configuration and test for deployed pr ([a7ff7f3](https://github.com/ambianic/ambianic-ui/commit/a7ff7f3cc9dc2d66f480eb7ecb93248f46beeb17))
+* enable compression for vuetify library ([1be38dd](https://github.com/ambianic/ambianic-ui/commit/1be38dde1f746323e1409849cebf563d920ac263))
+* force lighthouse ci to check dist ([91fec39](https://github.com/ambianic/ambianic-ui/commit/91fec39815d70bdbb404fa743ea0252986cb2b9f))
+* modify lighthouse config for deployed PR ([b973392](https://github.com/ambianic/ambianic-ui/commit/b973392fdb8eb915b69c185bba88859dece8c23c))
+* organize lighthouse CI for localhost and deployed versions ([1783063](https://github.com/ambianic/ambianic-ui/commit/1783063a202c334c1a2a3f33d851bc62af05701c))
+* refactor lighthouse ci ([0edc035](https://github.com/ambianic/ambianic-ui/commit/0edc03504c4da5cc5936a1151c2a891f0e9502a2))
+* remove npm  lines from lighthouse ([5e342ac](https://github.com/ambianic/ambianic-ui/commit/5e342ac253bc04763c83f3a4c040b6f4d7550cc4))
+* remove unwated extra components ([a0e34aa](https://github.com/ambianic/ambianic-ui/commit/a0e34aa5be48375e482b249d3f604dd419c75b0e))
+* split main app-frame component ([2b3180d](https://github.com/ambianic/ambianic-ui/commit/2b3180d3f8a4f0517a910b184d37ac03b3ddadf8))
+* try using local host without http ([30fe194](https://github.com/ambianic/ambianic-ui/commit/30fe19433e9e4c5228d281b70a7cbc6f426ad745))
+* tweak lighthouse budgets and urls ([ea87696](https://github.com/ambianic/ambianic-ui/commit/ea876969f9844bd1989b472d1809ceeb574f13a8))
+* update lighthouse json ([d239e66](https://github.com/ambianic/ambianic-ui/commit/d239e667b7c8f569d38121768752608dc9768e2f))
+* update site preview url ([0854730](https://github.com/ambianic/ambianic-ui/commit/08547309985ee334b38be04d46e4e09bac9432cc))
+* use app-frame component in root app ([6f390cd](https://github.com/ambianic/ambianic-ui/commit/6f390cda44d52c1e6c099446787024ee73b7da49))
+* verify that lighthouse could do local test ([5f4a2ee](https://github.com/ambianic/ambianic-ui/commit/5f4a2eef717f62f7d9f4929ba1fe227f3a09698f))
+
+
+### Features
+
+* create reusable components for code dryness ([867356d](https://github.com/ambianic/ambianic-ui/commit/867356d450f6de013b3a1154d463a6bbd6fe8ed2))
+* globalize the use of reusable components ([419b18c](https://github.com/ambianic/ambianic-ui/commit/419b18c70268a05ef09034dbf0ab9bab0f777e87))
+
+
+### Performance Improvements
+
+* merge branch 'bug/amb-boost-performance' of https://github.com/sniperadmin/ambianic-ui into nasr-365 ([43c77de](https://github.com/ambianic/ambianic-ui/commit/43c77debe03cd0e00b43663d43bf9eded6879a54))
+
+## [2.2.17](https://github.com/ambianic/ambianic-ui/compare/v2.2.16...v2.2.17) (2020-05-16)
+
+
+### Bug Fixes
+
+* cleanup font dependencies ([f22a1e8](https://github.com/ambianic/ambianic-ui/commit/f22a1e8dc5369d6452679007287f226e7f432dbd))
+* default font display on webload ([d26538c](https://github.com/ambianic/ambianic-ui/commit/d26538ca8a493bd984a5d529ee01775200cb3812))
+* font display on webload ([e7276bd](https://github.com/ambianic/ambianic-ui/commit/e7276bd5b4d62fa1239d41b0026eaaf70b815b93))
+* font display on webload ([7784b07](https://github.com/ambianic/ambianic-ui/commit/7784b07a35ef947b8c84dae4532147e85345e8b6))
+* json syntax error ([0d4b921](https://github.com/ambianic/ambianic-ui/commit/0d4b921e3ec0ce2cb6368195c6cb6449e96e61f1))
+* lhci assertion error font not visible on webload ([f997b75](https://github.com/ambianic/ambianic-ui/commit/f997b75298d15f53ad776c839f2c690829433b60)), closes [.github#L1](https://github.com/.github/issues/L1)
+* merge branch 'dev' of https://github.com/ambianic/ambianic-ui into dev ([df859e8](https://github.com/ambianic/ambianic-ui/commit/df859e88d52ce0da0cb3b45755de2cf118148026))
+* split PR vs prod lhci configs ([6e05bdd](https://github.com/ambianic/ambianic-ui/commit/6e05bdd765b7627d024a0a38ce2b4dc2fecaac14))
+* test also ui.abmianic.ai ([95c23ad](https://github.com/ambianic/ambianic-ui/commit/95c23ad92fdc7ad0d2cf0bf04a39c4ebc4774f41))
+* turn off lhci assertions with inconsistent results ([ad55887](https://github.com/ambianic/ambianic-ui/commit/ad55887d275d466f025cb3b49d375b4dc3bfb0ba))
+
+## [2.2.16](https://github.com/ambianic/ambianic-ui/compare/v2.2.15...v2.2.16) (2020-05-13)
+
+
+### Bug Fixes
+
+* broken dynamic import of momentjs in timeline.vue ([73c00ed](https://github.com/ambianic/ambianic-ui/commit/73c00ede8d45a4d457bc5ee52d9c286e3d2323b1))
+
 ## [2.2.15](https://github.com/ambianic/ambianic-ui/compare/v2.2.14...v2.2.15) (2020-05-02)
 
 
