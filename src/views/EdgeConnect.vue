@@ -5,7 +5,7 @@
   >
     <v-col
       v-if="edgePeerId"
-      style="max-width: 420px;"
+      style="max-width: 400px;"
       align="center"
       justify="center"
       cols="12"
@@ -68,7 +68,7 @@
     </v-col>
     <v-col
       v-else
-      style="max-width: 420px;"
+      style="max-width: 400px;"
       align="center"
       justify="center"
       cols="12"
@@ -136,7 +136,7 @@
     </v-col>
     <v-dialog
       v-model="resetEdgeDialog"
-      max-width="500"
+      max-width="400"
     >
       <v-card>
         <v-card-title class="headline">

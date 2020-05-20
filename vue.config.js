@@ -3,6 +3,7 @@ const CompressionPlugin = require('compression-webpack-plugin')
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 
 module.exports = {
+  publicPath: '/',
   configureWebpack: {
     optimization: {
       moduleIds: 'hashed',
