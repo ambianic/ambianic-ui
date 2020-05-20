@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.3.1](https://github.com/ambianic/ambianic-ui/compare/v2.3.0...v2.3.1) (2020-05-20)
+
+
+### Bug Fixes
+
+* do not skip ci on release version update ([17bdd26](https://github.com/ambianic/ambianic-ui/commit/17bdd26a71c3c3cfe7e5ade0394dd06b8b451c0b))
+
 # [2.3.0](https://github.com/ambianic/ambianic-ui/compare/v2.2.17...v2.3.0) (2020-05-19)
 
 
