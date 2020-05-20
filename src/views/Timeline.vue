@@ -5,7 +5,7 @@
   >
     <v-col
       v-if="!isEdgeConnected"
-      style="max-width: 420px;"
+      style="max-width: 400px;"
       align="center"
       justify="center"
       cols="12"
@@ -49,7 +49,7 @@
     </v-col>
     <v-col
       v-else
-      style="max-width: 420px;"
+      style="max-width: 400px;"
       align="center"
       justify="center"
       cols="12"
