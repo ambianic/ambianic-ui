@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.3.2](https://github.com/ambianic/ambianic-ui/compare/v2.3.1...v2.3.2) (2020-05-20)
+
+
+### Bug Fixes
+
+* precache issue with netlify.toml ([ebb4bff](https://github.com/ambianic/ambianic-ui/commit/ebb4bff11246657bfde7591b5490d53abd0ad90b))
+
 ## [2.3.1](https://github.com/ambianic/ambianic-ui/compare/v2.3.0...v2.3.1) (2020-05-20)
 
 
