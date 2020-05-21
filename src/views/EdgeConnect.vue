@@ -1,3 +1,5 @@
+<!-- For the moment, this component is not used. 
+All is moved into Settings.vue -->
 <template>
   <v-row
     align="start"
@@ -60,7 +62,6 @@
         </v-btn>
         <v-btn
           text
-          @click.stop="resetEdgeDialog = true"
         >
           Reset
         </v-btn>
@@ -135,7 +136,6 @@
       </v-stepper>
     </v-col>
     <v-dialog
-      v-model="resetEdgeDialog"
       max-width="500"
     >
       <v-card>
@@ -156,14 +156,12 @@
 
           <v-btn
             text
-            @click="resetEdgeDialog = false"
           >
             Cancel
           </v-btn>
 
           <v-btn
             text
-            @click="resetEdgeConnection()"
           >
             Yes, Reset
           </v-btn>
@@ -241,7 +239,6 @@ export default {
     }
   },
   mounted () {
-    this.loadSettings()
   },
   beforeDestroy () {
   },

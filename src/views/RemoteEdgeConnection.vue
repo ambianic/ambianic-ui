@@ -1,3 +1,5 @@
+<!-- For the moment, this component is not used. 
+All is moved into Settings.vue -->
 <template>
   <app-frame>
     <v-card

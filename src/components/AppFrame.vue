@@ -73,14 +73,14 @@ export default {
       { icon: 'help', text: 'Help', link: '/help' },
       { icon: 'info', text: 'About Ambianic', link: '/about' }
     ]
-  }),
-  computed: {
-    ...mapState({
-      isEdgeConnected: function (state) {
-        console.debug(`app frame: state.pnp.peerConnectionStatus: ${state.pnp.peerConnectionStatus}`)
-        return state.pnp.peerConnectionStatus === PEER_CONNECTED
-      }
-    })
-  }
+  })
+  // computed: {
+  //   ...mapState({
+  //     isEdgeConnected: function (state) {
+  //       console.debug(`app frame: state.pnp.peerConnectionStatus: ${state.pnp.peerConnectionStatus}`)
+  //       return state.pnp.peerConnectionStatus === PEER_CONNECTED
+  //     }
+  //   })
+  // }
 }
 </script>

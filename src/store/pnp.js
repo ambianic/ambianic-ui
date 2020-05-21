@@ -16,7 +16,8 @@ import {
   NEW_PEER_ID,
   NEW_REMOTE_PEER_ID,
   REMOTE_PEER_ID_REMOVED,
-  PEER_FETCH
+  PEER_FETCH,
+  REMOTE_PEER_ID_CHANGED
 } from './mutation-types.js'
 import {
   INITIALIZE_PNP,
@@ -25,7 +26,8 @@ import {
   PEER_DISCOVER,
   PEER_CONNECT,
   PEER_AUTHENTICATE,
-  REMOVE_REMOTE_PEER_ID
+  REMOVE_REMOTE_PEER_ID,
+  CHANGE_REMOTE_PEER_ID
 } from './action-types.js'
 import { ambianicConf } from '@/config'
 import Peer from 'peerjs'
@@ -136,6 +138,10 @@ const mutations = {
   [PEER_FETCH] (state, peerFetch) {
     console.debug('Setting PeerFetch instance.')
     state.peerFetch = peerFetch
+  },
+  [REMOTE_PEER_ID_CHANGED] (state, newRemotePeerId) {
+    state.edgeRoom = newRemotePeerId
+    console.log(state)
   }
 }
 
@@ -485,6 +491,11 @@ const actions = {
     // const text2 = state.peerFetch.jsonify(response2)
     // console.debug('peerFetch.get returned response', { request, response, text2 })
     // console.debug('peerFetch.get returned response', { request2, response2 })
+  },
+  async [CHANGE_REMOTE_PEER_ID] ({ state, commit, dispatch }, sendEdgeAddress) {
+    console.log(sendEdgeAddress)
+    commit(REMOTE_PEER_ID_CHANGED, sendEdgeAddress)
+    dispatch(PEER_DISCOVER)
   },
   /**
   * Remove remote peer id from local store.
