@@ -224,7 +224,7 @@
 <script>
 import AmbBanner from '../components/shared/Banner.vue'
 import AmbListItem from '@/components/shared/ListItem.vue'
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import {
   PEER_DISCONNECTED,
   PEER_DISCOVERING,
@@ -235,6 +235,7 @@ import {
   PEER_CONNECTION_ERROR
 } from '@/store/mutation-types'
 import {
+  REMOVE_REMOTE_PEER_ID,
   CHANGE_REMOTE_PEER_ID
 } from '../store/action-types.js'
 
@@ -268,9 +269,11 @@ export default {
       'CHANGE_REMOTE_PEER_ID'
     ]),
     sendEdgeAddress () {
+      this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
       this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.edgeAddress)
     },
     localEdgeAddress () {
+      this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
       this.edgeAddress = undefined
       this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.edgeAddress)
     }
@@ -280,15 +283,14 @@ export default {
       console.log('this.$store.state.pnp.peerConnectionStatus', this.$store.state.pnp.peerConnectionStatus)
       return this.$store.state.pnp.peerConnectionStatus === PEER_CONNECTION_ERROR
     },
-    // ...mapState({
-    //   peerConnectionStatus: state => state.pnp.peerConnectionStatus,
-    //   // map this.edgeConnected to this.$store.state.edgeConnected
-    //   isEdgeConnected: state =>
-    //     state.pnp.peerConnectionStatus === PEER_CONNECTED,
-    //   edgePeerId: state => state.pnp.remotePeerId,
-    //   peerFetch: state => state.pnp.peerFetch,
-    //   version: state => state.version
-    // }),
+    ...mapState({
+      peerConnectionStatus: state => state.pnp.peerConnectionStatus,
+      isEdgeConnected: state =>
+        state.pnp.peerConnectionStatus === PEER_CONNECTED,
+      edgePeerId: state => state.pnp.remotePeerId,
+      peerFetch: state => state.pnp.peerFetch,
+      version: state => state.version
+    }),
     connectStep: function () {
       let step = 1
       switch (this.peerConnectionStatus) {

@@ -141,7 +141,8 @@ const mutations = {
   },
   [REMOTE_PEER_ID_CHANGED] (state, newRemotePeerId) {
     state.edgeRoom = newRemotePeerId
-    console.log(state)
+    state.remotePeerId = null
+    window.localStorage.removeItem(`${STORAGE_KEY}.remotePeerId`)
   }
 }
 
@@ -154,6 +155,7 @@ const mutations = {
 */
 async function discoverRemotePeerId ({ peer, state, commit }) {
   // first see if we got a remote Edge ID entered to connect to
+  console.log(state)
   if (state.edgeRoom !== undefined) {
     return state.edgeRoom
   }
@@ -493,7 +495,6 @@ const actions = {
     // console.debug('peerFetch.get returned response', { request2, response2 })
   },
   async [CHANGE_REMOTE_PEER_ID] ({ state, commit, dispatch }, sendEdgeAddress) {
-    console.log(sendEdgeAddress)
     commit(REMOTE_PEER_ID_CHANGED, sendEdgeAddress)
     dispatch(PEER_DISCOVER)
   },
