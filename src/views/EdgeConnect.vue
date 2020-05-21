@@ -7,7 +7,7 @@ All is moved into Settings.vue -->
   >
     <v-col
       v-if="edgePeerId"
-      style="max-width: 420px;"
+      style="max-width: 400px;"
       align="center"
       justify="center"
       cols="12"
@@ -69,7 +69,7 @@ All is moved into Settings.vue -->
     </v-col>
     <v-col
       v-else
-      style="max-width: 420px;"
+      style="max-width: 400px;"
       align="center"
       justify="center"
       cols="12"
@@ -136,7 +136,8 @@ All is moved into Settings.vue -->
       </v-stepper>
     </v-col>
     <v-dialog
-      max-width="500"
+      v-model="resetEdgeDialog"
+      max-width="400"
     >
       <v-card>
         <v-card-title class="headline">

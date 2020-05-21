@@ -8,6 +8,7 @@
       <v-row
         align="center"
         justify="center"
+        no-gutters
       >
         <v-card
           max-width="344"
@@ -29,7 +30,6 @@
 
           <v-img
             src="@/assets/home-screen-logo.png"
-            height="194"
           />
 
           <v-card-text id="welcome-text">
@@ -74,8 +74,14 @@
           </v-card-actions>
         </v-card>
       </v-row>
-      <v-row class="mt-4">
-        <update-notification class="mx-auto" />
+      <v-row
+        align="end"
+        justify="center"
+        no-gutters=""
+        >
+        <v-col>
+          <update-notification class="mx-auto" />
+        </v-col>
       </v-row>
     </v-container>
   </v-content>

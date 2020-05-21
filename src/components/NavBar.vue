@@ -4,10 +4,8 @@
     fluid
   >
     <v-app-bar
-      :clipped-left="$vuetify.breakpoint.lgAndUp"
       app
       color="blue darken-3"
-      dark
     >
       <v-toolbar-title
         style="width: 300px"
@@ -70,8 +68,9 @@
     <!-- drawer -->
     <v-navigation-drawer
       v-model="drawer"
-      :clipped="$vuetify.breakpoint.lgAndUp"
       app
+      mini-variant
+      expand-on-hover
     >
       <v-list dense>
         <template v-for="item in items">
@@ -161,7 +160,7 @@ export default {
   },
   data: () => ({
     dialog: false,
-    drawer: true,
+    drawer: null, // hide drawer on mobile and show on desktop
     on: true,
     newFavorites: 0,
     newAlerts: 2,
