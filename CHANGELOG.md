@@ -1,5 +1,28 @@
 # Semantic Versioning Changelog
 
+## [2.3.3](https://github.com/ambianic/ambianic-ui/compare/v2.3.2...v2.3.3) (2020-05-20)
+
+
+### Bug Fixes
+
+* lhci error ([9f8bec5](https://github.com/ambianic/ambianic-ui/commit/9f8bec598705ab2d94c72fceef5b3532781035d3))
+* lhci recommended fixes ([9394d98](https://github.com/ambianic/ambianic-ui/commit/9394d9892be9647c2c5280248700f94e9c9d432b))
+* pwa fixes recommended by lhci, closes [#372](https://github.com/ambianic/ambianic-ui/issues/372) ([acbd2f3](https://github.com/ambianic/ambianic-ui/commit/acbd2f35d56587115756babef25cf25615f872e3))
+
+## [2.3.2](https://github.com/ambianic/ambianic-ui/compare/v2.3.1...v2.3.2) (2020-05-20)
+
+
+### Bug Fixes
+
+* precache issue with netlify.toml ([ebb4bff](https://github.com/ambianic/ambianic-ui/commit/ebb4bff11246657bfde7591b5490d53abd0ad90b))
+
+## [2.3.1](https://github.com/ambianic/ambianic-ui/compare/v2.3.0...v2.3.1) (2020-05-20)
+
+
+### Bug Fixes
+
+* do not skip ci on release version update ([17bdd26](https://github.com/ambianic/ambianic-ui/commit/17bdd26a71c3c3cfe7e5ade0394dd06b8b451c0b))
+
 # [2.3.0](https://github.com/ambianic/ambianic-ui/compare/v2.2.17...v2.3.0) (2020-05-19)
 
 

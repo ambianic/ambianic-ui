@@ -4,7 +4,7 @@
     justify="space-around"
   >
     <v-col
-      style="max-width: 420px;"
+      style="max-width: 400px;"
       align="center"
       justify="center"
       cols="12"

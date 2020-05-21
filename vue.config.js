@@ -3,6 +3,7 @@ const CompressionPlugin = require('compression-webpack-plugin')
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 
 module.exports = {
+  publicPath: '/',
   configureWebpack: {
     optimization: {
       moduleIds: 'hashed',
@@ -34,7 +35,7 @@ module.exports = {
     },
     workboxPluginMode: 'GenerateSW',
     workboxOptions: {
-      exclude: [/\.map$/, /_redirects/],
+      exclude: ['/\.map$/', '/_redirects/', 'netlify\.toml'],
       runtimeCaching: [
         {
           urlPattern: new RegExp('https://fonts.(?:googleapis|gstatic).com/(.*)'),
