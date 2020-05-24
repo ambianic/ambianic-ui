@@ -247,8 +247,7 @@ export default {
   data () {
     return {
       edgeAddress: undefined,
-      correctEdgeAddress: false,
-      edgePeerId: ''
+      correctEdgeAddress: false
     }
   },
   mounted () {
