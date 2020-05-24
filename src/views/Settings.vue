@@ -235,7 +235,6 @@ import {
   PEER_CONNECTION_ERROR
 } from '@/store/mutation-types'
 import {
-  REMOVE_REMOTE_PEER_ID,
   CHANGE_REMOTE_PEER_ID
 } from '../store/action-types.js'
 
@@ -268,11 +267,9 @@ export default {
       'CHANGE_REMOTE_PEER_ID'
     ]),
     sendEdgeAddress () {
-      this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
       this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.edgeAddress)
     },
     localEdgeAddress () {
-      this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
       this.edgeAddress = undefined
       this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.edgeAddress)
     }
