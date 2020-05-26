@@ -13,21 +13,21 @@ context('RemoteConnections', () => {
 
         cy.get('#btn-settings').click()
         
-        cy.wait(6000)
+        cy.wait(8000)
         
-        cy.get('#peerID').should('contain-text', '5568ec87-42d8-47b0-aeea-01a125db0623')
+        cy.get('#peerID').contains('5568ec87-42d8-47b0-aeea-01a125db0623')
     })
 
     it('Should switch to a remote Edge', () => {
 
         cy.get('#btn-settings').click()
-        
-        cy.wait(6000)
 
-        cy.get('input[name="remotePeerID"]').invoke('8a9f5dbe-d8ee-4883-8ed6-8067ca2f1f39')
+        cy.get('#remotePeerID').type('917d5f0a-6469-4d33-b5c2-efd858118b74')
 
-        cy.get('#sendRemotePeerID').click()
+        cy.get('#btn-sendRemotePeerID').click()
         
-        cy.get('#peerID').should('contain-text', '8a9f5dbe-d8ee-4883-8ed6-8067ca2f1f39')
+        cy.wait(8000)
+
+        cy.get('#peerID').contains('917d5f0a-6469-4d33-b5c2-efd858118b74')
     })
 })
