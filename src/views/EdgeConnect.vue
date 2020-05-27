@@ -189,6 +189,7 @@ import {
 } from '@/store/mutation-types'
 
 export default {
+  name: 'EdgeConnect',
   components: {
     AmbBanner,
     AmbListItem
@@ -240,28 +241,13 @@ export default {
       return step
     }
   },
-  mounted () {
-    this.loadSettings()
-  },
-  beforeDestroy () {
-  },
   methods: {
     resetEdgeConnection () {
       this.resetEdgeDialog = false
       this.removeEdgeId()
     },
-    loadSettings () {
-      // settingsDB.get('ambanic-edge-address').then(
-      //   (address) => {
-      //     this.edgeAddress = address
-      //   }
-      // )
-    },
-    saveSettings () {
-      // settingsDB.set('ambanic-edge-address', this.edgeAddress)
-    },
     ...mapActions({
-      removeEdgeId: 'removeRemotePeerId' // map `this.add()` to `this.$store.dispatch('increment')`
+      removeEdgeId: 'removeRemotePeerId' // map `this.removeEdgeId()` to `this.$store.dispatch('removeRemotePeerId')`
     })
   }
 }

@@ -2,6 +2,7 @@
 Common mutation types
 */
 
+// PnP mutations
 export const PEER_DISCONNECTED = 'PEER_DISCONNECTED'
 export const PEER_CONNECTING = 'PEER_CONNECTING'
 export const PEER_DISCOVERING = 'PEER_DISCOVERING'
@@ -18,4 +19,9 @@ export const NEW_REMOTE_PEER_ID = 'NEW_REMOTE_PEER_ID'
 export const REMOTE_PEER_ID_REMOVED = 'REMOTE_PEER_ID_REMOVED'
 export const PEER_FETCH = 'PEER_FETCH'
 
+// App update mutations
 export const UPDATE_AVAILABLE = 'UPDATE_AVAILABLE'
+
+// User state mutations
+export const FIRST_TIME_USER_VISIT = 'FIRST_TIME_USER_VISIT'
+export const RETURNING_USER_VISIT = 'RETURNING_USER_VISIT'

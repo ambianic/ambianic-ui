@@ -20,10 +20,10 @@
           >
             <v-list-item-content>
               <v-list-item-title class="headline">
-                Cozy at Home
+                Welcome to Ambianic.ai
               </v-list-item-title>
               <v-list-item-subtitle>
-                via Ambient Intelligence
+                Cozy at Home via Ambient Intelligence
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -33,29 +33,18 @@
           />
 
           <v-card-text id="welcome-text">
-            Review your home timeline for notable moments.
-            Configure input sensors and camers for Ambianic to observe.
+            Ambianic.ai enables you to see your home
+            as a timeline of important events.
+            You can configure camers and sensors as ambient observation sources.
             Share, purge or backup your data
             - it never slips out of your control.
           </v-card-text>
 
+          <v-card-text id="welcome-text">
+            Now let's setup your Ambianic.ai system.
+          </v-card-text>
+
           <v-card-actions>
-            <v-btn
-              rounded
-              color="pink darken-4"
-              dark
-              class="ma-2 white--text"
-              :to="'timeline'"
-              id="btn-timeline"
-            >
-              View Timeline
-              <v-icon
-                right
-              >
-                mdi-history
-              </v-icon>
-            </v-btn>
-            <v-spacer />
             <v-btn
               id="btn-settings"
               rounded
@@ -64,11 +53,11 @@
               class="ma-2 white--text"
               :to="'settings'"
             >
-              Settings
+              Continue
               <v-icon
                 right
               >
-                mdi-settings
+                mdi-chevron-right
               </v-icon>
             </v-btn>
           </v-card-actions>
@@ -78,7 +67,7 @@
         align="end"
         justify="center"
         no-gutters=""
-        >
+      >
         <v-col>
           <update-notification class="mx-auto" />
         </v-col>
@@ -89,11 +78,35 @@
 
 <script>
 import UpdateNotification from '../components/UpdateNotification'
+import { mapGetters, mapActions } from 'vuex'
+import {
+  USER_VISIT
+} from '@/store/action-types'
 
 export default {
   name: 'Home',
   components: {
     UpdateNotification
+  },
+  computed: {
+    ...mapGetters([
+      'isFirstTimeUser'
+    ])
+  },
+  methods: {
+    ...mapActions({
+      userVisit: USER_VISIT
+    })
+  },
+  created () {
+    const firstVisit = this.isFirstTimeUser
+    console.debug({ firstVisit }) // eslint-disable-line no-console
+    console.debug('dispatch user visiting app')
+    this.userVisit()
+    if (!firstVisit) {
+      this.$router.replace({ name: 'timeline' })
+    }
   }
+
 }
 </script>
