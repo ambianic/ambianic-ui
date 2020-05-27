@@ -44,8 +44,6 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
         file: ./coverage/coverage-final.json # optional
-        flags: pwa-e2e-cypress-tests # optional
-        name: pwa-e2e-test-coverage # optional
         fail_ci_if_error: true # optional (default = false)        
     - name: Build PWA distribution for production
       run: |
