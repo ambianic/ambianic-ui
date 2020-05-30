@@ -1,6 +1,7 @@
 <template>
   <v-container
     class="pa-0 ma-0"
+    data-cy="container"
     fluid
   >
     <v-app-bar
@@ -11,10 +12,11 @@
         style="width: 300px"
         class="ml-0 pl-4"
       >
-        <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+        <v-app-bar-nav-icon id="drawer" @click.stop="drawer = !drawer" />
         <span class="hidden-sm-and-down">Ambianic</span>
       </v-toolbar-title>
       <v-text-field
+        id="searchbar"
         flat
         solo-inverted
         hide-details
@@ -26,6 +28,7 @@
 
       <amb-button
         with-badge
+        data-cy="download-off"
         is-icon
         icon="download-off"
         v-if="!isEdgeConnected"
@@ -35,6 +38,7 @@
       <!-- test -->
       <amb-button
         with-badge
+        data-cy="heart"
         is-icon
         icon="heart"
         :badge-content="newFavorites"
@@ -43,6 +47,7 @@
 
       <amb-button
         with-badge
+        data-cy="bell"
         is-icon
         icon="bell"
         :badge-content="newAlerts"
@@ -51,6 +56,7 @@
 
       <amb-button
         is-icon
+        data-cy="about"
         to="about"
       >
         <v-avatar
@@ -68,12 +74,15 @@
     <!-- drawer -->
     <v-navigation-drawer
       v-model="drawer"
+      data-cy="drawer"
       app
       mini-variant
       expand-on-hover
     >
       <v-list dense>
-        <template v-for="item in items">
+        <template
+          v-for="item in items"
+        >
           <v-row
             v-if="item.heading"
             :key="item.heading"

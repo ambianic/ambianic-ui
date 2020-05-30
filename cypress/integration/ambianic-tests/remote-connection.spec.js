@@ -11,7 +11,7 @@ context('RemoteConnections', () => {
 
     it('Should be connected automatically', () => {
 
-        cy.get('#btn-settings').click()
+        cy.get('[data-cy=settings]').click()
         
         cy.wait(8000)
         
@@ -20,11 +20,11 @@ context('RemoteConnections', () => {
 
     it('Should switch to a remote Edge', () => {
 
-        cy.get('#btn-settings').click()
+        cy.get('[data-cy=settings]').click()
 
-        cy.get('#remotePeerID').type('917d5f0a-6469-4d33-b5c2-efd858118b74')
+        cy.get('[data-cy=remotePeerID]').type('917d5f0a-6469-4d33-b5c2-efd858118b74')
 
-        cy.get('#btn-sendRemotePeerID').click()
+        cy.get('[data-cy=sendRemotePeerID]').click()
         
         cy.wait(8000)
 

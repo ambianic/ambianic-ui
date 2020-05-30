@@ -2,9 +2,13 @@
   <v-row
     align="start"
     justify="space-around"
+    data-cy="template-row"
   >
     <v-card>
-      <v-card-title class="light grey">
+      <v-card-title
+        class="light grey"
+        data-cy="titlecard"
+      >
         Connection details
       </v-card-title>
       <v-container grid-list-sm>
@@ -156,7 +160,10 @@
     </v-card>
 
     <v-card>
-      <v-card-title class="light grey">
+      <v-card-title
+        class="light grey"
+        data-cy="localtitlecard"
+      >
         Connect to local Ambianic Edge
       </v-card-title>
       <v-container grid-list-sm>
@@ -187,7 +194,10 @@
       </v-container>
     </v-card>
     <v-card>
-      <v-card-title class="light grey">
+      <v-card-title
+        class="light grey"
+        data-cy="remotetitlecard"
+      >
         Connect to remote Ambianic Edge
       </v-card-title>
       <v-container grid-list-sm>
@@ -204,9 +214,11 @@
             label="Peer ID to Ambianic Network*"
             placeholder="Enter Peer ID"
             id="remotePeerID"
+            data-cy="remotePeerID"
             outlined
             dense
             class="mt-4"
+
           />
         </v-card-text>
 
@@ -215,6 +227,7 @@
             :disabled="!correctEdgeAddress"
             @click="sendEdgeAddress"
             color="primary"
+            data-cy="sendRemotePeerID"
             id="btn-sendRemotePeerID"
           >
             REMOTE NETWORK

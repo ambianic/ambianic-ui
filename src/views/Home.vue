@@ -44,6 +44,7 @@
               rounded
               color="pink darken-4"
               dark
+              data-cy="timeline"
               class="ma-2 white--text"
               :to="'timeline'"
               id="btn-timeline"
@@ -63,6 +64,7 @@
               dark
               class="ma-2 white--text"
               :to="'settings'"
+              data-cy="settings"
             >
               Settings
               <v-icon

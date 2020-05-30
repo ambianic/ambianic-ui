@@ -40,6 +40,8 @@
         <v-card-actions>
           <v-btn
             text
+            id="btn-settings"
+            data-cy="settings"
             to="/edge-connect"
           >
             Connection Settings
