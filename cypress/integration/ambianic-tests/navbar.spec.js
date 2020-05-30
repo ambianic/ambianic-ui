@@ -6,8 +6,7 @@
 
 context('Check Navbar Items', () => {
     before(() => {
-      // cy.visit('http://18.219.76.94')
-      cy.visit('http://localhost:8080')
+      cy.visit('http://18.219.76.94')
       cy.get('[data-cy=settings]').click()
     })
 
