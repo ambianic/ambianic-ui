@@ -18,7 +18,7 @@
         >
           <amb-list-item
             id="help-title"
-            iconName="help-circle-outline"
+            icon-name="help-circle-outline"
             title="Need Help with Ambianic?"
             subtitle="Please reference our online docs or connect on Twitter."
           />

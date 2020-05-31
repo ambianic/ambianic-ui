@@ -1,4 +1,4 @@
-<!-- For the moment, this component is not used. 
+<!-- For the moment, this component is not used.
 All is moved into Settings.vue -->
 <template>
   <v-row

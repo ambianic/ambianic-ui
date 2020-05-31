@@ -18,7 +18,7 @@
         >
           <amb-list-item
             id="feedback-title"
-            iconName="comment-quote-outline"
+            icon-name="comment-quote-outline"
             title="Send Feedback"
             subtitle="We currently use github to gather user feedbaack. Click the button below to open an issue."
           />

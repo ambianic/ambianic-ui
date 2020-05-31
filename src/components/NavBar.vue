@@ -12,7 +12,10 @@
         style="width: 300px"
         class="ml-0 pl-4"
       >
-        <v-app-bar-nav-icon id="drawer" @click.stop="drawer = !drawer" />
+        <v-app-bar-nav-icon
+          id="drawer"
+          @click.stop="drawer = !drawer"
+        />
         <span class="hidden-sm-and-down">Ambianic</span>
       </v-toolbar-title>
       <v-text-field

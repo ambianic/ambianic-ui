@@ -1,25 +1,21 @@
 module.exports = {
-  verbose: true,
+  preset: '@vue/cli-plugin-unit-jest',
+  roots: [
+    '<rootDir>'
+  ],
   moduleNameMapper: {
-    "module_name_(.*)": "<rootDir>/src/$1"
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '^~/(.*)$': '<rootDir>/src/$1',
+    '^vue$': 'vue/dist/vue.common.js'
   },
-  moduleFileExtensions: [
-      "js",
-      "json",
-      "vue"
-  ],
+  moduleFileExtensions: ['js', 'vue', 'json'],
   transform: {
-      ".*\\.(vue)$": "vue-jest",
-      "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
+    '^.+\\.js$': 'babel-jest',
+    '.*\\.(vue)$': 'vue-jest'
   },
-  collectCoverage: true,
+  collectCoverage: false,
   collectCoverageFrom: [
-      "src\\*.{js,vue}",
-      "!**/node_modules/**"
-  ],
-  coverageReporters: [
-      "html",
-      "text-summary"
-  ],
-  preset: '@vue/cli-plugin-unit-jest'
+    '<rootDir>/components/**/*.vue',
+    '<rootDir>/pages/**/*.vue'
+  ]
 }

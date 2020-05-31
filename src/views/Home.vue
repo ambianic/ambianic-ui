@@ -80,7 +80,7 @@
         align="end"
         justify="center"
         no-gutters=""
-        >
+      >
         <v-col>
           <update-notification class="mx-auto" />
         </v-col>

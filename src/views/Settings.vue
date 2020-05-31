@@ -218,7 +218,6 @@
             outlined
             dense
             class="mt-4"
-
           />
         </v-card-text>
 

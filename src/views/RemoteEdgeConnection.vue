@@ -1,39 +1,39 @@
-<!-- For the moment, this component is not used. 
+<!-- For the moment, this component is not used.
 All is moved into Settings.vue -->
 <template>
   <app-frame>
     <v-card
-        max-width="500"
-        class="text-center"
-      >
-        <v-card-text>
-          <p class="text">
-            Connect to remote network
-          </p>
-          <v-subheader>
-            (must enter Peer ID to Ambianic network)
-          </v-subheader>
-          <v-text-field
-            v-model="edgeAddress"
-            type="text"
-            label="Peer ID to Ambianic Network*"
-            placeholder="Enter Peer ID"
-            outlined
-            dense
-            class="mt-4"
-          />
-        </v-card-text>
+      max-width="500"
+      class="text-center"
+    >
+      <v-card-text>
+        <p class="text">
+          Connect to remote network
+        </p>
+        <v-subheader>
+          (must enter Peer ID to Ambianic network)
+        </v-subheader>
+        <v-text-field
+          v-model="edgeAddress"
+          type="text"
+          label="Peer ID to Ambianic Network*"
+          placeholder="Enter Peer ID"
+          outlined
+          dense
+          class="mt-4"
+        />
+      </v-card-text>
 
-        <v-card-actions>
-          <v-btn
-            :disabled="!correctEdgeAddress"
-            @click="sendEdgeAddress"
-            color="primary"
-          >
-            REMOTE NETWORK
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+      <v-card-actions>
+        <v-btn
+          :disabled="!correctEdgeAddress"
+          @click="sendEdgeAddress"
+          color="primary"
+        >
+          REMOTE NETWORK
+        </v-btn>
+      </v-card-actions>
+    </v-card>
   </app-frame>
 </template>
 <script>

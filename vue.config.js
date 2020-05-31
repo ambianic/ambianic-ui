@@ -35,7 +35,7 @@ module.exports = {
     },
     workboxPluginMode: 'GenerateSW',
     workboxOptions: {
-      exclude: ['/\.map$/', '/_redirects/', 'netlify\.toml'],
+      exclude: ['/.map$/', '/_redirects/', 'netlify.toml'],
       runtimeCaching: [
         {
           urlPattern: new RegExp('https://fonts.(?:googleapis|gstatic).com/(.*)'),
