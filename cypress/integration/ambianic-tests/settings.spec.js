@@ -1,12 +1,8 @@
-/**
- * This test will only work while the EC2 machines are running.
- */
-
 /// <reference types="cypress" />
 
-context('RemoteConnections', () => {
+context('Settings', () => {
     before(() => {
-      cy.visit('http://18.219.76.94')
+      cy.visit('http://localhost:8080')
       cy.get('[data-cy=settings]').click()
     })
 

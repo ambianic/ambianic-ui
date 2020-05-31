@@ -13,6 +13,7 @@
     >
       <v-card
         class="mx-auto"
+        data-cy="connectioncard"
         outlined
       >
         <v-card-title>
@@ -62,6 +63,7 @@
         class="pa-0 ma-0"
       >
         <v-list-item
+          data-cy="timelinedata"
           v-for="(sample, index) in timeline"
           :key="index"
           class="pa-0 ma-0"

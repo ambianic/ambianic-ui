@@ -1,24 +1,17 @@
-/**
- * This test will only work while the EC2 machines are running.
- */
-
 /// <reference types="cypress" />
 
-context('RemoteConnections', () => {
-    beforeEach(() => {
-      cy.visit('http://18.219.76.94')
+context('Timeline', () => {
+    before(() => {
+      cy.visit('http://localhost:8080')
+      cy.get('[data-cy=timeline]').click()
     })
 
     it('Should browse to timeline', () => {
-        cy.get('[data-cy=timeline]').click()
-
         cy.url().should('include', '/timeline')
     })
 
     it('Should render connection card', () => {
-        cy.get('[data-cy=timeline]').click()
-
-        cy.get('.mx-auto').contains('Connecting to Ambianic Edge device...')
+        cy.get('[data-cy=connectioncard]').contains('Connecting to Ambianic Edge device...')
     })
 
     /**
@@ -26,7 +19,6 @@ context('RemoteConnections', () => {
      * for future layout/flow in UI / Edge connection
      */
     it('Should browse to edgeconnect', () => {
-        cy.get('[data-cy=timeline]').click()
 
         cy.wait(500)
 
@@ -35,11 +27,19 @@ context('RemoteConnections', () => {
         cy.url().should('include', '/edge-connect')
     })
 
-    it('Should generate no results in timeline', () => {
-        cy.get('[data-cy=timeline]').click()
+    // Try to get this to work once we have mock data
 
-        cy.wait(5000)
+    // it('Get timeline data', () => {
+    //     cy.get('[data-cy=timelinedata]').then(($result) => {
+    //         console.log($result)
+    //     })
+    // })
 
-        cy.get('.infinite-status-prompt').contains('No results :(')
-    })
+    // it('Should generate no results in timeline', () => {
+    //     cy.get('[data-cy=timeline]').click()
+
+    //     cy.wait(5000)
+
+    //     cy.get('.infinite-status-prompt').contains('No results :(')
+    // })
 })

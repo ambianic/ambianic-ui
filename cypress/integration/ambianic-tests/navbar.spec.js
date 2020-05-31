@@ -1,13 +1,9 @@
-/**
- * This test will only work while the EC2 machines are running.
- */
-
 /// <reference types="cypress" />
 
 context('Check Navbar Items', () => {
     before(() => {
-      cy.visit('http://18.219.76.94')
-      cy.get('[data-cy=settings]').click()
+      cy.visit('http://localhost:8080')
+      cy.get('[data-cy=timeline]').click()
     })
 
     it('Should have a search bar', () => {
