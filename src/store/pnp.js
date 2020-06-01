@@ -16,8 +16,7 @@ import {
   NEW_PEER_ID,
   NEW_REMOTE_PEER_ID,
   REMOTE_PEER_ID_REMOVED,
-  PEER_FETCH,
-  REMOTE_PEER_ID_CHANGED
+  PEER_FETCH
 } from './mutation-types.js'
 import {
   INITIALIZE_PNP,
@@ -77,11 +76,7 @@ const state = {
   /**
     PeerFetch instance
   */
-  peerFetch: PeerFetch,
-  /**
-    Edgeroom ID when connecting to remote network
-   */
-  edgeRoom: undefined
+  peerFetch: PeerFetch
 }
 
 const mutations = {
@@ -138,11 +133,6 @@ const mutations = {
   [PEER_FETCH] (state, peerFetch) {
     console.debug('Setting PeerFetch instance.')
     state.peerFetch = peerFetch
-  },
-  [REMOTE_PEER_ID_CHANGED] (state, newRemotePeerId) {
-    state.edgeRoom = newRemotePeerId
-    state.remotePeerId = null
-    window.localStorage.removeItem(`${STORAGE_KEY}.remotePeerId`)
   }
 }
 
@@ -156,9 +146,6 @@ const mutations = {
 async function discoverRemotePeerId ({ peer, state, commit }) {
   // first see if we got a remote Edge ID entered to connect to
   console.log(state)
-  if (state.edgeRoom !== undefined) {
-    return state.edgeRoom
-  }
   if (state.remotePeerId) {
     return state.remotePeerId
   } else {
@@ -495,18 +482,17 @@ const actions = {
     // console.debug('peerFetch.get returned response', { request2, response2 })
   },
   /**
-   * @param {*} edgeAddress The Edge PeerJS address that UI will connect too
-   * Update Edge Address for the remote Ambianic Edge you want to connect to
-   * Perhaps your parents are isolated, then it would be nixe to connect to
+   * @param {*} remotePeerId The Ambianic Edge PeerJS ID
+   * that the Ambianic UI will pair with.
+   *
+   * Update Ambianic Edge Peer ID for the remote Ambianic Edge you want to pair with.
+   * Perhaps your parents are isolated, then it would be nice to connect to
    * them or let them connect to you.
-   * When connecting to a remote network, edgeAddress will be the PeerJS ID
-   * from the remote Edge, and when connecting back to local network, it will be
-   * undefined.
    */
-  async [CHANGE_REMOTE_PEER_ID] ({ state, commit, dispatch }, edgeAddress) {
-    commit(REMOTE_PEER_ID_CHANGED, edgeAddress)
+  async [CHANGE_REMOTE_PEER_ID] ({ state, commit, dispatch }, remotePeerId) {
+    commit(NEW_REMOTE_PEER_ID, remotePeerId)
     commit(PEER_DISCONNECTED)
-    dispatch(PEER_DISCOVER)
+    dispatch(PEER_CONNECT, remotePeerId)
   },
   /**
   * Remove remote peer id from local store.

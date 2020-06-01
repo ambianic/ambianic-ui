@@ -189,7 +189,7 @@
                     mdi-wifi
                   </v-icon>
                   <span v-if="$vuetify.breakpoint.smAndUp">
-                    Local Network
+                    Discover on Local Network
                   </span>
                 </v-btn>
               </v-row>
@@ -262,7 +262,8 @@ import {
   PEER_CONNECTION_ERROR
 } from '@/store/mutation-types'
 import {
-  CHANGE_REMOTE_PEER_ID
+  CHANGE_REMOTE_PEER_ID,
+  REMOVE_REMOTE_PEER_ID
 } from '../store/action-types.js'
 
 export default {
@@ -298,7 +299,7 @@ export default {
     },
     localEdgeAddress () {
       this.edgeAddress = undefined
-      this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.edgeAddress)
+      this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
     }
   },
   computed: {
