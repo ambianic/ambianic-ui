@@ -494,8 +494,18 @@ const actions = {
     // console.debug('peerFetch.get returned response', { request, response, text2 })
     // console.debug('peerFetch.get returned response', { request2, response2 })
   },
-  async [CHANGE_REMOTE_PEER_ID] ({ state, commit, dispatch }, sendEdgeAddress) {
-    commit(REMOTE_PEER_ID_CHANGED, sendEdgeAddress)
+  /**
+   * @param {*} edgeAddress The Edge PeerJS address that UI will connect too
+   * Update Edge Address for the remote Ambianic Edge you want to connect to
+   * Perhaps your parents are isolated, then it would be nixe to connect to
+   * them or let them connect to you.
+   * When connecting to a remote network, edgeAddress will be the PeerJS ID
+   * from the remote Edge, and when connecting back to local network, it will be
+   * undefined.
+   */
+  async [CHANGE_REMOTE_PEER_ID] ({ state, commit, dispatch }, edgeAddress) {
+    commit(REMOTE_PEER_ID_CHANGED, edgeAddress)
+    commit(PEER_DISCONNECTED)
     dispatch(PEER_DISCOVER)
   },
   /**

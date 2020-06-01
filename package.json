@@ -21,7 +21,8 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test": "npx cypress run",
-    "codecov": "codecov -f coverage/coverage-final.json"
+    "codecov": "codecov -f coverage/coverage-final.json",
+    "e2e": "cypress open"
   },
   "funding": {
     "type": "github",

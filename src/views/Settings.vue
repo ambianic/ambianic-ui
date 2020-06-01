@@ -49,6 +49,7 @@
                   :title="edgePeerId"
                   subtitle="Peer ID"
                   icon-name="identifier"
+                  id="peerID"
                 />
                 <amb-list-item
                   :title="version"
@@ -202,6 +203,7 @@
             type="text"
             label="Peer ID to Ambianic Network*"
             placeholder="Enter Peer ID"
+            id="remotePeerID"
             outlined
             dense
             class="mt-4"
@@ -213,6 +215,7 @@
             :disabled="!correctEdgeAddress"
             @click="sendEdgeAddress"
             color="primary"
+            id="btn-sendRemotePeerID"
           >
             REMOTE NETWORK
           </v-btn>
@@ -235,7 +238,6 @@ import {
   PEER_CONNECTION_ERROR
 } from '@/store/mutation-types'
 import {
-  REMOVE_REMOTE_PEER_ID,
   CHANGE_REMOTE_PEER_ID
 } from '../store/action-types.js'
 
@@ -247,8 +249,7 @@ export default {
   data () {
     return {
       edgeAddress: undefined,
-      correctEdgeAddress: false,
-      edgePeerId: ''
+      correctEdgeAddress: false
     }
   },
   mounted () {
@@ -269,11 +270,9 @@ export default {
       'CHANGE_REMOTE_PEER_ID'
     ]),
     sendEdgeAddress () {
-      this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
       this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.edgeAddress)
     },
     localEdgeAddress () {
-      this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
       this.edgeAddress = undefined
       this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.edgeAddress)
     }
