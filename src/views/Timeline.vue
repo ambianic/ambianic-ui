@@ -40,7 +40,7 @@
         <v-card-actions>
           <v-btn
             text
-            to="/edge-connect"
+            to="/settings"
           >
             Connection Settings
           </v-btn>
