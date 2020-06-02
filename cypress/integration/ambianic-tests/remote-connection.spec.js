@@ -21,6 +21,6 @@ context('RemoteConnections', () => {
         cy.get('#btn-settings').click()
         cy.get('#remotePeerID').type('917d5f0a-6469-4d33-b5c2-efd858118b74')
         cy.get('#btn-sendRemotePeerID').click()
-        cy.get('#peerID').contains('917d5f0a-6469-4d33-b5c2-efd858118b74')
+        cy.get('#edgePeerID').contains('917d5f0a-6469-4d33-b5c2-efd858118b74')
     })
 })
