@@ -51,7 +51,7 @@
                     :title="edgePeerId"
                     subtitle="Peer ID"
                     icon-name="identifier"
-                    id="peerID"
+                    id="edgePeerID"
                   />
                   <amb-list-item
                     :title="version"
