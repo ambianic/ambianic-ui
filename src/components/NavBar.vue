@@ -1,7 +1,7 @@
 <template>
   <v-container
-        class="pa-0 ma-0"
-        fluid
+    class="pa-0 ma-0"
+    fluid
   >
     <v-app-bar
       app
@@ -192,8 +192,9 @@ export default {
       //    { text: 'Integrations' }
       //  ]
       // },
-      { icon: 'mdi-video-input-antenna', text: 'Connect', link: '/edge-connect' },
-      // { icon: 'settings', text: 'Settings', link: '/settings' },
+      // { icon: 'mdi-video-input-antenna', text: 'Connect', link: '/edge-connect' },
+      // { icon: 'mdi-video-input-antenna', text: 'Connect Remote', link: '/remote-edge-connection' },
+      { icon: 'settings', text: 'Settings', link: '/settings' },
       { icon: 'chat_bubble', text: 'Send feedback', link: '/feedback' },
       { icon: 'help', text: 'Help', link: '/help' },
       { icon: 'info', text: 'About Ambianic', link: '/about' }

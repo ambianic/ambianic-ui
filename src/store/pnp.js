@@ -25,7 +25,8 @@ import {
   PEER_DISCOVER,
   PEER_CONNECT,
   PEER_AUTHENTICATE,
-  REMOVE_REMOTE_PEER_ID
+  REMOVE_REMOTE_PEER_ID,
+  CHANGE_REMOTE_PEER_ID
 } from './action-types.js'
 import { ambianicConf } from '@/config'
 import Peer from 'peerjs'
@@ -143,10 +144,13 @@ const mutations = {
   and reused until explicitly reset by the user.
 */
 async function discoverRemotePeerId ({ peer, state, commit }) {
+  // first see if we got a remote Edge ID entered to connect to
+  console.log(state)
   if (state.remotePeerId) {
     return state.remotePeerId
   } else {
-    // first try to find the remote peer ID in the same room
+  // first try to find the remote peer ID in the same room
+    console.log(peer)
     const myRoom = new PeerRoom(peer)
     console.log('Fetching room members', myRoom)
     const { clientsIds } = await myRoom.getRoomMembers()
@@ -302,12 +306,14 @@ const actions = {
     // We expect that peerId is crypto secure. No need to replace.
     // Unless the user explicitly requests a refresh.
     console.log('pnp client: last saved myPeerId', state.myPeerId)
-    peer = new Peer(state.myPeerId, {
-      host: ambianicConf.AMBIANIC_PNP_HOST,
-      port: ambianicConf.AMBIANIC_PNP_PORT,
-      secure: ambianicConf.AMBIANIC_PNP_SECURE,
-      debug: 3
-    })
+    peer = new Peer(state.myPeerId,
+      {
+        host: ambianicConf.AMBIANIC_PNP_HOST,
+        port: ambianicConf.AMBIANIC_PNP_PORT,
+        secure: ambianicConf.AMBIANIC_PNP_SECURE,
+        debug: 3
+      }
+    )
     console.log('pnp client: peer created')
     setPnPServiceConnectionHandlers({ state, commit, dispatch }, peer)
     commit(PNP_SERVICE_CONNECTING)
@@ -350,7 +356,7 @@ const actions = {
       // start a discovery loop
       console.log('Discovering remote peer...')
       // its possible that the PNP signaling server connection was disrupted
-      // while looping in peer discovery mode.
+      // while looping in peer discovery mode
       if (state.pnpServiceConnectionStatus !== PNP_SERVICE_CONNECTED) {
         console.log('PNP Service disconnected. Reconnecting...')
         await dispatch(PNP_SERVICE_RECONNECT)
@@ -474,6 +480,19 @@ const actions = {
     // const text2 = state.peerFetch.jsonify(response2)
     // console.debug('peerFetch.get returned response', { request, response, text2 })
     // console.debug('peerFetch.get returned response', { request2, response2 })
+  },
+  /**
+   * @param {*} remotePeerId The Ambianic Edge PeerJS ID
+   * that the Ambianic UI will pair with.
+   *
+   * Update Ambianic Edge Peer ID for the remote Ambianic Edge you want to pair with.
+   * Perhaps your parents are isolated, then it would be nice to connect to
+   * them or let them connect to you.
+   */
+  async [CHANGE_REMOTE_PEER_ID] ({ state, commit, dispatch }, remotePeerId) {
+    commit(NEW_REMOTE_PEER_ID, remotePeerId)
+    commit(PEER_DISCONNECTED)
+    dispatch(PEER_CONNECT, remotePeerId)
   },
   /**
   * Remove remote peer id from local store.
