@@ -7,15 +7,15 @@ context('Settings', () => {
     })
 
     it('Should have a title card', () => {
-        cy.get('[data-cy=titlecard]').contains('Connection details')
+        cy.get('[data-cy=titlecard]').contains('Ambianic Edge connection details')
     })
 
     it('Should have a local ambianic edge title card', () => {
-      cy.get('[data-cy=localtitlecard]').contains('Connect to local Ambianic Edge')
+      cy.get('[data-cy=localtitlecard]').contains('Pair with local Ambianic Edge device')
     })
 
     it('Should have a remote ambianic edge title card', () => {
-      cy.get('[data-cy=remotetitlecard]').contains('Connect to remote Ambianic Edge')
+      cy.get('[data-cy=remotetitlecard]').contains('Pair with remote Ambianic Edge device')
     })
 
     it('Should have remote connection button disabled', () => {

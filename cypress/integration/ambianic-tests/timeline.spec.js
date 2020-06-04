@@ -14,19 +14,6 @@ context('Timeline', () => {
         cy.get('[data-cy=connectioncard]').contains('Connecting to Ambianic Edge device...')
     })
 
-    /**
-     * This will be removed once we have decided on the flow
-     * for future layout/flow in UI / Edge connection
-     */
-    it('Should browse to edgeconnect', () => {
-
-        cy.wait(500)
-
-        cy.get('[data-cy=settings]').click()
-
-        cy.url().should('include', '/edge-connect')
-    })
-
     // Try to get this to work once we have mock data
 
     // it('Get timeline data', () => {
