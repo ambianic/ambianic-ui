@@ -43,7 +43,7 @@
             text
             id="btn-settings"
             data-cy="settings"
-            to="/edge-connect"
+            to="/settings"
           >
             Connection Settings
           </v-btn>
@@ -266,7 +266,8 @@ import { EdgeAPI } from '@/remote/edgeAPI'
 import { mapState } from 'vuex'
 import moment from 'moment'
 import {
-  PEER_CONNECTED
+  PEER_CONNECTED,
+  NEW_REMOTE_PEER_ID
 } from '@/store/mutation-types'
 
 const PAGE_SIZE = 5
@@ -275,6 +276,7 @@ export default {
   data () {
     return {
       timeline: [],
+      clearTimeline: true, // flag to clear timeline when Edge Peer ID changes
       imageURL: [],
       isImageLoaded: [],
       on: true
@@ -282,6 +284,18 @@ export default {
   },
   created () {
     this.initEdgeAPI()
+    this.pnpUnsubscribe = this.$store.subscribe((mutation, state) => {
+      if (mutation.type === NEW_REMOTE_PEER_ID) {
+        // eslint-disable-next-line
+        console.debug(`New Edge Peer ID ${state.pnp.remotePeerId}`)
+        // eslint-disable-next-line
+        console.debug('Clearing event timeline received from previous Peer ID')
+        this.clearTimeline = true
+      }
+    })
+  },
+  beforeDestroy () {
+    this.pnpUnsubscribe()
   },
   components: {
     DetectionBoxes,
@@ -319,6 +333,10 @@ export default {
     },
     async infiniteHandler ($state) {
       try {
+        if (this.clearTimeline) {
+          this.timeline.length = 0
+          this.clearTimeline = false
+        }
         const data = await this.getTimelineSlice()
         console.debug('Infinite handler received timeline slice', { data }) // eslint-disable-line no-console
         // Are there any more timeline events left?

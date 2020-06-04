@@ -1,7 +1,6 @@
 {
   "name": "ambianic-ui",
-  "version": "2.3.3",
-  "private": false,
+  "version": "2.4.0",
   "description": "Ambianic UI is the main user interface to Ambianic Edge deployments.",
   "author": "Ivelin Ivanov",
   "scripts": {
@@ -16,7 +15,7 @@
   },
   "dependencies": {
     "codecov": "^3.7.0",
-    "compression-webpack-plugin": "^3.1.0",
+    "compression-webpack-plugin": "^4.0.0",
     "idb": "^5.0.3",
     "konva": "^4.2.2",
     "moment": "^2.26.0",

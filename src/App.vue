@@ -2,9 +2,7 @@
 <template>
   <v-lazy>
     <amb-app-frame v-if="$route.name !== 'home'">
-      <keep-alive>
-        <router-view />
-      </keep-alive>
+      <router-view />
     </amb-app-frame>
 
     <v-app v-else>
