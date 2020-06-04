@@ -1,5 +1,39 @@
 # Semantic Versioning Changelog
 
+# [2.4.0](https://github.com/ambianic/ambianic-ui/compare/v2.3.3...v2.4.0) (2020-06-02)
+
+
+### Bug Fixes
+
+* Added E2E test ([de1d8e3](https://github.com/ambianic/ambianic-ui/commit/de1d8e3b6fced827d896ff55e005b616a013c102))
+* Bug in disconnecting / connecting ([c4d27a0](https://github.com/ambianic/ambianic-ui/commit/c4d27a04421935e4a9105f0fbc91563b5cf821a6))
+* Bug removed ([34c0c6e](https://github.com/ambianic/ambianic-ui/commit/34c0c6eb9ee1a96167c14aec62ccaddb781e3f97))
+* Changed disconnection stream ([f457ab4](https://github.com/ambianic/ambianic-ui/commit/f457ab460588f0b5a5994f13755960da5d9dbaff))
+* changed text to be more specific ([2674ca7](https://github.com/ambianic/ambianic-ui/commit/2674ca74f007380c0fdf6c75076a76f3f257ae51))
+* choose edge connection clean up ([d0b563b](https://github.com/ambianic/ambianic-ui/commit/d0b563b9417f605970eeb30fc2b323c01f85bf32))
+* cosmetic UI changes in settings page ([4596d29](https://github.com/ambianic/ambianic-ui/commit/4596d29859d9c64ed7edb1a58a6401f79e8494d2))
+* Fixed merge conflicts ([87907df](https://github.com/ambianic/ambianic-ui/commit/87907df117f8e8f6dbd218e4699a55c3a30f101a))
+* fixed tests so timeout was correct ([f616f66](https://github.com/ambianic/ambianic-ui/commit/f616f662f323a3a66e4e05d61c73e0c81764ba0e))
+* mapstate to avoid error ([9608cbb](https://github.com/ambianic/ambianic-ui/commit/9608cbb05b057cc918d61a3b6af742681749431d))
+* merge branch 'master' of https://github.com/ambianic/ambianic-ui into remote-access ([66883b3](https://github.com/ambianic/ambianic-ui/commit/66883b3bf7ec974626b3cec4a795cf843deadd1f))
+* merge branch 'remote-access' of https://github.com/BKristenssonAlfsson/ambianic-ui into remote-access ([ac4c957](https://github.com/ambianic/ambianic-ui/commit/ac4c957d152b00894b9a598e2fe891dcd2ef8287))
+* Redirect to edge connect if connected ([16b1878](https://github.com/ambianic/ambianic-ui/commit/16b1878535831ba902111621f608b52214d82a63))
+* remote pairing code cleanup ([e095212](https://github.com/ambianic/ambianic-ui/commit/e095212502076f2644c6b3e35c2082aa003c9122))
+* remove vue keep-alive around timeline vue ([1bde1b1](https://github.com/ambianic/ambianic-ui/commit/1bde1b13d4651826a4fd941f2c532b45aabdbb02)), closes [#394](https://github.com/ambianic/ambianic-ui/issues/394)
+* Removed unused variable ([43c03ec](https://github.com/ambianic/ambianic-ui/commit/43c03ecdb28dc754e5cbf763d543808f28dc4efc))
+* Setting state to false ([d4a8914](https://github.com/ambianic/ambianic-ui/commit/d4a8914b082e7827162dbc606d526486bb388ef0))
+* structure grid system ([cbecd0b](https://github.com/ambianic/ambianic-ui/commit/cbecd0bd87dca7ba860fc65caf464067aeaf016e))
+* vuetify warnings and initilization of app ([6f3545d](https://github.com/ambianic/ambianic-ui/commit/6f3545dda573f689859a44e4ecc6c5ca0fd1a87b))
+
+
+### Features
+
+* Remote connection ([1a89b66](https://github.com/ambianic/ambianic-ui/commit/1a89b66d64884b7a0838e80b44ed8bdc1a8df20c))
+* remote first time connectivity ([538a2d1](https://github.com/ambianic/ambianic-ui/commit/538a2d19fd51a1213da97e98164a465eb169e94c))
+* remote first time connectivity ([d038f27](https://github.com/ambianic/ambianic-ui/commit/d038f27e063eb34e07e6895a0d8ed37a5bfed4e1))
+* remote network pairing with ambianic edge ([7c297b1](https://github.com/ambianic/ambianic-ui/commit/7c297b1f1e37a386728f42291c211870d91d5a4e))
+* Remote-access changes ([4c6b58a](https://github.com/ambianic/ambianic-ui/commit/4c6b58aaba31c86d88bbac9c499bc016b92059c3))
+
 ## [2.3.3](https://github.com/ambianic/ambianic-ui/compare/v2.3.2...v2.3.3) (2020-05-20)
 
 

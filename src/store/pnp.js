@@ -25,7 +25,8 @@ import {
   PEER_DISCOVER,
   PEER_CONNECT,
   PEER_AUTHENTICATE,
-  REMOVE_REMOTE_PEER_ID
+  REMOVE_REMOTE_PEER_ID,
+  CHANGE_REMOTE_PEER_ID
 } from './action-types.js'
 import { ambianicConf } from '@/config'
 import Peer from 'peerjs'
@@ -75,11 +76,7 @@ const state = {
   /**
     PeerFetch instance
   */
-  peerFetch: PeerFetch,
-  /**
-    Edgeroom ID when connecting to remote network
-   */
-  edgeRoom: String
+  peerFetch: PeerFetch
 }
 
 const mutations = {
@@ -148,9 +145,7 @@ const mutations = {
 */
 async function discoverRemotePeerId ({ peer, state, commit }) {
   // first see if we got a remote Edge ID entered to connect to
-  if (state.edgeRoom !== undefined) {
-    return state.edgeRoom
-  }
+  console.log(state)
   if (state.remotePeerId) {
     return state.remotePeerId
   } else {
@@ -291,7 +286,6 @@ const actions = {
   * Initialize PnP Service and Peer Connection
   */
   async [INITIALIZE_PNP] ({ state, commit, dispatch }) {
-    // state.remotePeerId = undefined
     await dispatch(PNP_SERVICE_CONNECT)
   },
   /**
@@ -486,6 +480,19 @@ const actions = {
     // const text2 = state.peerFetch.jsonify(response2)
     // console.debug('peerFetch.get returned response', { request, response, text2 })
     // console.debug('peerFetch.get returned response', { request2, response2 })
+  },
+  /**
+   * @param {*} remotePeerId The Ambianic Edge PeerJS ID
+   * that the Ambianic UI will pair with.
+   *
+   * Update Ambianic Edge Peer ID for the remote Ambianic Edge you want to pair with.
+   * Perhaps your parents are isolated, then it would be nice to connect to
+   * them or let them connect to you.
+   */
+  async [CHANGE_REMOTE_PEER_ID] ({ state, commit, dispatch }, remotePeerId) {
+    commit(NEW_REMOTE_PEER_ID, remotePeerId)
+    commit(PEER_DISCONNECTED)
+    dispatch(PEER_CONNECT, remotePeerId)
   },
   /**
   * Remove remote peer id from local store.
