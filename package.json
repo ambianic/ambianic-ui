@@ -6,12 +6,11 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
     "codecov": "codecov -f coverage/coverage-final.json",
-    "e2e": "cypress open",
-    "test": "jest",
-    "test:jest": "jest"
+    "test:unit": "jest",
+    "test:e2e": "npx cypress run",
+    "test": "npm run test:unit && npm run test:e2e"
   },
   "dependencies": {
     "codecov": "^3.7.0",

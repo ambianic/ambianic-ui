@@ -55,17 +55,20 @@ describe('NavBar', () => {
   })
   test('Connection details loaded', () => {
     const card = wrapper.find('.v-card')
-    expect(card.find('.v-card__title').text()).toBe('Connection details')
+    expect(card.find('.v-card__title').text()).toBe('Ambianic Edge connection details')
     expect(card.exists()).toBe(true)
   })
   
-  test('Connection Status', () => {
+  /**
+   * These tests are under construction. Need to mock Edge's in Vuex
+   */
+  // test('Connection Status', () => {
 
-    const edgeAddress = '5568ec87-42d8-47b0-aeea-01a125db0623'
-    // state.pnp.edgeAddress = edgeAddress
+  //   const edgeAddress = '5568ec87-42d8-47b0-aeea-01a125db0623'
+  //   // state.pnp.edgeAddress = edgeAddress
 
-    expect(this.mutations.testMutation).toHaveBeenCalledWith({},{})
-  })
+  //   expect(this.mutations.testMutation).toHaveBeenCalledWith({},{})
+  // })
 
 
 //   test('should load 5 buttons', () => {

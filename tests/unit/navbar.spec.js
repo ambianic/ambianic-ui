@@ -48,9 +48,7 @@ describe('NavBar', () => {
   afterEach(() => {
     wrapper.destroy()
   })
-  test('is Vue instance', () => { // this will be depricated
-    expect(wrapper.isVueInstance()).toBe(true)
-  })
+
   test('should load app bar', () => {
     const bar = wrapper.find('.v-app-bar')
     expect(bar.find('.v-toolbar__title').text()).toBe('Ambianic')
