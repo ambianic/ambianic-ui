@@ -3,7 +3,7 @@ import { mount, createLocalVue } from '@vue/test-utils'
 import Vuetify from 'vuetify'
 import VueX from 'vuex'
 import VueRouter from 'vue-router'
-import NavBar from '../../src/components/NavBar.vue'
+import NavBar from '@/components/NavBar.vue'
 
 describe('NavBar', () => {
 // global

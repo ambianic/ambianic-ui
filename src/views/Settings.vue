@@ -261,7 +261,7 @@
   </v-container>
 </template>
 <script>
-import AmbBanner from '../components/shared/Banner.vue'
+import AmbBanner from '@/components/shared/Banner.vue'
 import AmbListItem from '@/components/shared/ListItem.vue'
 import { mapActions, mapState } from 'vuex'
 import {

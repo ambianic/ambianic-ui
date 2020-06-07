@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { mount, createLocalVue } from '@vue/test-utils'
 import Vuetify from 'vuetify'
-import Button from '@/components/Button.vue'
+import Button from '@/components/shared/Button.vue'
 
 describe('Button', () => {
   let wrapper

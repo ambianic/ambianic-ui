@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import UpdateNotification from '../components/UpdateNotification'
+import UpdateNotification from '@/components/UpdateNotification'
 
 export default {
   name: 'Home',

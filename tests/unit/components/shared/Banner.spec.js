@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { mount, createLocalVue } from '@vue/test-utils'
 import Vuetify from 'vuetify'
-import Banner from '@/components/Banner.vue'
+import Banner from '@/components/shared/Banner.vue'
 
 describe('Banner', () => {
   let wrapper

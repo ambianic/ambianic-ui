@@ -261,7 +261,7 @@
 <script>
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import InfiniteLoading from 'vue-infinite-loading'
-import DetectionBoxes from '../components/DetectionBoxes.vue'
+import DetectionBoxes from '@/components/DetectionBoxes.vue'
 import { EdgeAPI } from '@/remote/edgeAPI'
 import { mapState } from 'vuex'
 import moment from 'moment'
