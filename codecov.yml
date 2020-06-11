@@ -10,7 +10,6 @@ coverage:
           - unit
         paths:
           - "src"
-        run: pwd
         # advanced
         # branches:
         #  - master
