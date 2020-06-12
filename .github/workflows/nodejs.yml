@@ -18,10 +18,12 @@ jobs:
         node-version: [12.x]
     steps:
     - uses: actions/checkout@master
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+
     - name: npm install
       run: |
         npm version
@@ -30,8 +32,9 @@ jobs:
         npm install
       env:
         CI: true
+
     - name: Tests
-      uses: github-action@v1
+      uses: cypress-io/github-action@v1
       with:
         start: npm run serve
         record: false # cypress.io free recording limit exceeded
@@ -40,17 +43,14 @@ jobs:
       env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Code Coverage Report
       uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
         file: ./coverage/coverage-final.json # optional
-        fail_ci_if_error: true # optional (default = false)        
-    - name: Build PWA distribution for production
-      run: |
-        npm run build --if-present
-      env:
-        CI: true
+        fail_ci_if_error: true # optional (default = false)
+
     - name: Run Lighthouse PWA check against local production build
       uses: treosh/lighthouse-ci-action@v2
       with:
@@ -59,6 +59,7 @@ jobs:
         configPath: '.github/lighthouse/lighthouserc-static-dist-dir.yml'
         uploadArtifacts: true # save results as an action artifacts
         temporaryPublicStorage: true # upload lighthouse report to the temporary storage
+
     - name: Semantic Release
       if: github.event_name == 'push'
       run: npx semantic-release
