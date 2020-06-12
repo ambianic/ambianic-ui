@@ -30,6 +30,16 @@ jobs:
         npm install
       env:
         CI: true
+    - name: Unit tests with Jest
+        uses: mattallty/jest-github-action@v1
+        with:
+          changes-only: false
+          test-command: npm test:unit
+      - name: Code Coverage Report
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./coverage/jest/coverage-final.json # optional
+          fail_ci_if_error: true # optional (default = false)
     - name: End-to-end Tests with Cypress
       uses: cypress-io/github-action@v1
       with:
@@ -47,7 +57,7 @@ jobs:
       uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-        file: ./coverag*/coverage-final.json # optional
+        file: ./coverage/cypress/coverage-final.json # optional
         fail_ci_if_error: true # optional (default = false)        
     - name: Build PWA distribution for production
       run: |
