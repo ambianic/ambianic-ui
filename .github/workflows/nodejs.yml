@@ -34,7 +34,7 @@ jobs:
         CI: true
 
     - name: Tests
-      uses: cypress-io/github-action@v1
+      uses: actions/checkout@v2
       with:
         start: npm run serve
         record: false # cypress.io free recording limit exceeded
