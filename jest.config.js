@@ -13,7 +13,7 @@ module.exports = {
     '.*\\.vue$': 'vue-jest'
   },
   collectCoverage: true,
-  coverageDirectory: "./coverage/jest",
+  coverageDirectory: "./coverage-jest",
   coverageReporters: ["json"],
   collectCoverageFrom: [
     '<rootDir>/**/*.vue',

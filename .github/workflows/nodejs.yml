@@ -47,7 +47,7 @@ jobs:
       uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-        file: ./coverage/coverage-final.json # optional
+        file: ./coverag*/coverage-final.json # optional
         fail_ci_if_error: true # optional (default = false)        
     - name: Build PWA distribution for production
       run: |
