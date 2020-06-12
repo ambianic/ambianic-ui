@@ -40,7 +40,9 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Current directory
-      run: pwd
+      run: | 
+        pwd
+        ls -al
     - name: Code Coverage Report
       uses: codecov/codecov-action@v1
       with:
