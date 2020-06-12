@@ -7,10 +7,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "codecov:cypress": "codecov -f ../coverage/coverage-final.json",
-    "codecov:jest": "codecov -f ../coverage/jest/coverage-final.json",
-    "codecov:all": "npm run codecov:cypress && npm run codecov:jest",
-    "codecov": "codecov -f coverage/coverage-final.json && codecov: codecov -f coverage/jest/coverage-final.json",
+    "codecov": "codecov -f coverage/coverage-final.json && codecov -f coverage/jest/coverage-final.json",
     "test:unit": "jest",
     "test:e2e": "npx cypress run",
     "test": "npm run test:unit && npm run test:e2e"
