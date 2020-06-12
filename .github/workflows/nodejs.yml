@@ -30,22 +30,13 @@ jobs:
         npm install
       env:
         CI: true
-    - name: Unit tests with Jest
-        uses: mattallty/jest-github-action@v1
-        with:
-          changes-only: false
-          test-command: npm test:unit
-      - name: Code Coverage Report
-        uses: codecov/codecov-action@v1
-        with:
-          file: ./coverage/jest/coverage-final.json # optional
-          fail_ci_if_error: true # optional (default = false)
-    - name: End-to-end Tests with Cypress
-      uses: cypress-io/github-action@v1
+    - name: Tests
+      uses: github-action@v1
       with:
         start: npm run serve
         record: false # cypress.io free recording limit exceeded
         wait-on: 'http://localhost:8080'
+      run: npm test
       env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
