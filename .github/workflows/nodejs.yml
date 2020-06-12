@@ -39,6 +39,7 @@ jobs:
         start: npm run serve
         record: false # cypress.io free recording limit exceeded
         wait-on: 'http://localhost:8080'
+      run: npm test
       env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -51,7 +52,6 @@ jobs:
     - name: Build PWA distribution for production
       run: |
         npm run build --if-present
-        npm test
       env:
         CI: true
     - name: Run Lighthouse PWA check against local production build
