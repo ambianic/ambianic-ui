@@ -28,7 +28,6 @@ jobs:
         npm install -g npm
         npm version
         npm install
-        mkdir coverage
       env:
         CI: true
     - name: End-to-end Tests with Cypress
