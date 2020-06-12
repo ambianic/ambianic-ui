@@ -28,6 +28,8 @@ jobs:
         npm install -g npm
         npm version
         npm install
+        mkdir coverage
+        chmod 777 /coverage
       env:
         CI: true
     - name: End-to-end Tests with Cypress
