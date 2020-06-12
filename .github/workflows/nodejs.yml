@@ -39,7 +39,7 @@ jobs:
         build: npm run serve
         record: false # cypress.io free recording limit exceeded
         wait-on: 'http://localhost:8080'
-        start: npm test
+        command: npm run test:e2e
       env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
