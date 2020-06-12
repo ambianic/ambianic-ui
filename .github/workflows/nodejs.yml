@@ -36,14 +36,13 @@ jobs:
     - name: Tests
       uses: cypress-io/github-action@v1
       with:
-        start: npm run serve
+        build: npm run serve
         record: false # cypress.io free recording limit exceeded
         wait-on: 'http://localhost:8080'
-        # run: npm test  # run cannot be excuted in `with:`
+        start: npm test
       env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     - name: Code Coverage Report
       uses: codecov/codecov-action@v1
       with:
