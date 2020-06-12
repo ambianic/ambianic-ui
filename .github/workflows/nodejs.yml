@@ -29,7 +29,6 @@ jobs:
         npm version
         npm install
         mkdir coverage
-        chmod 777 /coverage
       env:
         CI: true
     - name: End-to-end Tests with Cypress
@@ -42,7 +41,7 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Current directory
-      run: | 
+      run: |
         pwd
         ls -al
     - name: Code Coverage Report
