@@ -24,12 +24,10 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: npm install
+    - name: Install npm
       run: |
         npm version
-        npm install -g npm
-        npm version
-        npm install
+        npm ci
       env:
         CI: true
 
