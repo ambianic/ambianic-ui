@@ -24,12 +24,10 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: npm install
+    - name: Install npm
       run: |
         npm version
-        npm install -g npm
-        npm version
-        npm install
+        npm ci
       env:
         CI: true
 
@@ -47,7 +45,9 @@ jobs:
       uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-        file: ./coverage/coverage-final.json && ./coverage/jest/coverage-final.json # optional
+        file: |
+          ./coverage/coverage-final.json
+          ./coverage/jest/coverage-final.json
         fail_ci_if_error: true # optional (default = false)
     - name: Build PWA distribution for production
       run: |
