@@ -1,0 +1,42 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Lighthouse PWA CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on: [pull_request]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job
+  lighthouse:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    - uses: actions/checkout@v1
+    - name: Wait for Netlify preview deployment of this git branch
+      uses: jakepartusch/wait-for-netlify-action@v1
+      id: get-netlify-url
+      with:
+        site_name: "ambianic-pwa-dist"
+        max_timeout: 180
+    - name: Run Lighthouse PWA check against Netlify PR Preview
+      uses: treosh/lighthouse-ci-action@v2
+      with:
+        urls: |
+          ${{ steps.get-netlify-url.outputs.url }}
+        uploadArtifacts: true # save results as an action artifacts
+        temporaryPublicStorage: true # upload lighthouse report to the temporary storage
+        # budgetPath: '.github/lighthouse/budget.json' # performance budgets
+        configPath: '.github/lighthouse/lighthouserc-netlify-preview.json' # PWA checks
+    - name: Run Lighthouse PWA sanity check against Netlify production deployment
+      uses: treosh/lighthouse-ci-action@v2
+      with:
+        urls: |
+          https://ui.ambianic.ai
+        uploadArtifacts: true # save results as an action artifacts
+        temporaryPublicStorage: true # upload lighthouse report to the temporary storage
+        # budgetPath: '.github/lighthouse/budget.json' # performance budgets
+        configPath: '.github/lighthouse/lighthouserc-netlify-prod.json' # PWA checks

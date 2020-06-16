@@ -24,37 +24,23 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "timeline" */ '../views/Timeline.vue')
   },
-  {
-    path: '/people',
-    name: 'people',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "people" */ '../views/People.vue')
-  },
-  {
-    path: '/flows',
-    name: 'flows',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "flows" */ '../views/Flows.vue')
-  },
-  {
-    path: '/edge-connect',
-    name: 'edge-connect',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "edge-connect" */ '../views/EdgeConnect.vue')
-  },
+  // {
+  // This might be connected again once we have better UX design
+  //   path: '/edge-connect',
+  //   name: 'edge-connect',
+  //   props: true,
+  //     route level code-splitting
+  //     this generates a separate chunk (about.[hash].js) for this route
+  //     which is lazy-loaded when the route is visited.
+  //   component: () => import(/* webpackChunkName: "edge-connect" */ '../views/EdgeConnect.vue')
+  // },
   {
     path: '/settings',
     name: 'settings',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "edge-connect" */ '../views/EdgeConnect.vue') // '../views/Settings.vue')
+    component: () => import(/* webpackChunkName: "settings" */ '../views/Settings.vue')
   },
   {
     path: '/feedback',
