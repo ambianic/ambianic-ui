@@ -1,9 +1,3 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-// import Home from '../views/Home.vue'
-
-Vue.use(VueRouter)
-
 const routes = [
   {
     path: '/',
@@ -67,16 +61,5 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   }
 ]
-
-/**
- * TODO
- * Before making new PR, connect in Router again in another file
- */
-
-// const router = new VueRouter({
-//   mode: 'history',
-//   base: process.env.BASE_URL,
-//   routes
-// })
 
 export default routes
