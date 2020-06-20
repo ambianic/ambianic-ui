@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
-import routes from './router/index.js'
+import routes from './routes/routes.js'
 import store from './store/index.js'
 import './registerServiceWorker'
 import vuetify from './plugins/vuetify'

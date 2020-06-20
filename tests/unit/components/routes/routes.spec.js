@@ -4,7 +4,7 @@ import Vuetify from 'vuetify'
 import VueX from 'vuex'
 import VueRouter from 'vue-router'
 import App from '@/App.vue'
-import routes from '@/router/index.js'
+import routes from '@/routes/routes.js'
 
 describe('Routing', () => {
   // global
