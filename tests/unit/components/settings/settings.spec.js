@@ -59,27 +59,8 @@ describe('NavBar', () => {
     expect(card.exists()).toBe(true)
   })
 
-  /**
-   * These tests are under construction. Need to mock Edge's in Vuex
-   */
-  // test('Connection Status', () => {
-
-  //   const edgeAddress = '5568ec87-42d8-47b0-aeea-01a125db0623'
-  //   // state.pnp.edgeAddress = edgeAddress
-
-  //   expect(this.mutations.testMutation).toHaveBeenCalledWith({},{})
-  // })
-
-  //   test('should load 5 buttons', () => {
-  //     const btn = wrapper.findAll('.v-btn')
-  //     expect(btn.length).toBe(5)
-  //   })
-
-  //   test('should load navigation drawer', () => {
-  //     const nav = wrapper.find('.v-navigation-drawer')
-  //     const item = wrapper.findAll('.v-list-item')
-
-//     expect(nav.exists()).toBe(true)
-//     expect(item.length).toBe(5)
-//   })
+  test('should load 2 buttons', () => {
+    const btn = wrapper.findAll('.v-btn')
+    expect(btn.length).toBe(2)
+  })
 })

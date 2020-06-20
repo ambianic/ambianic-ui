@@ -68,10 +68,15 @@ const routes = [
   }
 ]
 
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
-})
+/**
+ * TODO
+ * Before making new PR, connect in Router again in another file
+ */
 
-export default router
+// const router = new VueRouter({
+//   mode: 'history',
+//   base: process.env.BASE_URL,
+//   routes
+// })
+
+export default routes
