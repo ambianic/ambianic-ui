@@ -57,6 +57,8 @@ jobs:
     steps:
       - name: Build PWA distribution for production
         run: |
+          pwd
+          ls -al
           npm run build --if-present
         env:
           CI: true
