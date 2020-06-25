@@ -52,9 +52,9 @@ jobs:
     
     - name: Create artifacts
       uses: actions/upload-artifact@master
-        with:
-          name: Ambianic-UI
-          path: /home/runner/work/ambianic-ui/ambianic-ui
+      with:
+        name: Ambianic-UI
+        path: /home/runner/work/ambianic-ui/ambianic-ui
 
   deploy:
     runs-on: ubuntu-latest
