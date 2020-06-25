@@ -17,7 +17,7 @@ jobs:
       matrix:
         node-version: [12.x]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@master
 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
@@ -41,7 +41,6 @@ jobs:
       env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    
-
     - name: Code Coverage Report
       uses: codecov/codecov-action@v1
       with:
@@ -50,29 +49,21 @@ jobs:
           ./coverage/coverage-final.json
           ./coverage/jest/coverage-final.json
         fail_ci_if_error: true # optional (default = false)
+    
+    - name: Create artifacts
+      uses: actions/upload-artifact@master
+        with:
+          name: Ambianic-UI
+          path: /home/runner/work/ambianic-ui/ambianic-ui
 
   deploy:
     runs-on: ubuntu-latest
     needs: test
-    steps:
-  
-    - name: Download Artifact
-		  uses: actions/download-artifact@master
-		  with:
-        name: Ambianic-UI
-        path: /home/runner/work/ambianic-ui/ambianic-ui
-
-	  - name: Debugging
-      run: |
-        pwd
-        ls -al
-      
-	  - name: Build PWA distribution for production
+    - name: Build PWA distribution for production
       run: |
         npm run build --if-present
       env:
         CI: true
-
     - name: Run Lighthouse PWA check against local production build
       uses: treosh/lighthouse-ci-action@v2
       with:
@@ -81,7 +72,6 @@ jobs:
         configPath: '.github/lighthouse/lighthouserc-static-dist-dir.yml'
         uploadArtifacts: true # save results as an action artifacts
         temporaryPublicStorage: true # upload lighthouse report to the temporary storage
-
     - name: Semantic Release
       if: github.event_name == 'push'
       run: npx semantic-release
@@ -89,3 +79,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
