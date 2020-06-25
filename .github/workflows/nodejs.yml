@@ -55,26 +55,37 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     steps:
-      - name: Build PWA distribution for production
-        run: |
-          npm run build --if-present
-        env:
-          CI: true
+  
+    - name: Download Artifact
+		  uses: actions/download-artifact@master
+		  with:
+        name: Ambianic-UI
+        path: /home/runner/work/ambianic-ui/ambianic-ui
 
-      - name: Run Lighthouse PWA check against local production build
-        uses: treosh/lighthouse-ci-action@v2
-        with:
-          # no urls needed, since it uses local folder to scan .html files
-          # budgetPath: '.github/lighthouse/budget.json' # performance budgets
-          configPath: '.github/lighthouse/lighthouserc-static-dist-dir.yml'
-          uploadArtifacts: true # save results as an action artifacts
-          temporaryPublicStorage: true # upload lighthouse report to the temporary storage
+	  - name: Debugging
+      run: |
+        pwd
+        ls -al
+      
+	  - name: Build PWA distribution for production
+      run: |
+        npm run build --if-present
+      env:
+        CI: true
 
-      - name: Semantic Release
-        if: github.event_name == 'push'
-        run: npx semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    - name: Run Lighthouse PWA check against local production build
+      uses: treosh/lighthouse-ci-action@v2
+      with:
+        # no urls needed, since it uses local folder to scan .html files
+        # budgetPath: '.github/lighthouse/budget.json' # performance budgets
+        configPath: '.github/lighthouse/lighthouserc-static-dist-dir.yml'
+        uploadArtifacts: true # save results as an action artifacts
+        temporaryPublicStorage: true # upload lighthouse report to the temporary storage
 
+    - name: Semantic Release
+      if: github.event_name == 'push'
+      run: npx semantic-release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
