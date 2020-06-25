@@ -52,7 +52,7 @@ jobs:
         fail_ci_if_error: true # optional (default = false)
     
     - name: Upload Artifact
-      - uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@master
         with:
           name: Ambianic-UI
           path: /home/runner/work/ambianic-ui/ambianic-ui
@@ -62,7 +62,7 @@ jobs:
     needs: test
     steps:
     - name: Download Artifact
-      - uses: actions/download-artifact@master
+      uses: actions/download-artifact@master
         with:
         name: Ambianic-UI
         path: /home/runner/work/ambianic-ui/ambianic-ui
