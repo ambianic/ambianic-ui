@@ -50,15 +50,30 @@ jobs:
           ./coverage/coverage-final.json
           ./coverage/jest/coverage-final.json
         fail_ci_if_error: true # optional (default = false)
+    
+    - name: Upload Artifact
+      - uses: actions/upload-artifact@master
+        with:
+          name: Ambianic-UI
+          path: /home/runner/work/ambianic-ui/ambianic-ui
 
   deploy:
     runs-on: ubuntu-latest
     needs: test
     steps:
+      - name: Download Artifact
+        - uses: actions/download-artifact@master
+          with:
+          name: Ambianic-UI
+          path: /home/runner/work/ambianic-ui/ambianic-ui
+
+      - name: Debugging
+        run: |
+            pwd
+            ls -al
+
       - name: Build PWA distribution for production
         run: |
-          pwd
-          ls -al
           npm run build --if-present
         env:
           CI: true
