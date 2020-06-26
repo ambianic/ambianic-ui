@@ -1,5 +1,65 @@
 # Semantic Versioning Changelog
 
+# [2.5.0](https://github.com/ambianic/ambianic-ui/compare/v2.4.0...v2.5.0) (2020-06-26)
+
+
+### Bug Fixes
+
+* action rewrite ([82c958e](https://github.com/ambianic/ambianic-ui/commit/82c958e139d0f5bcf5671cb1738c3b71d8461198))
+* Added action for jest ([6c6d213](https://github.com/ambianic/ambianic-ui/commit/6c6d21332762d3591201a71d15dfe3b9b32f0aeb))
+* added artifact build ([97b81fd](https://github.com/ambianic/ambianic-ui/commit/97b81fd17182243bfcbd61033596215e96d114d4))
+* Added bash issue in nodejs.yml ([544155d](https://github.com/ambianic/ambianic-ui/commit/544155dba549a6006370885239b0828848f7a19b))
+* added build step ([1e33ffc](https://github.com/ambianic/ambianic-ui/commit/1e33ffc070833e1a46dc60a9ee9fdeca7dafae0d))
+* Added jest and jest config ([33b853c](https://github.com/ambianic/ambianic-ui/commit/33b853c9db9266c2ebab3a708ee55a277e2ef6c0))
+* Added spaces and missing step ([6251b10](https://github.com/ambianic/ambianic-ui/commit/6251b104d5b0299778681bda473bd4dce562acc0))
+* another attempt ([b81e365](https://github.com/ambianic/ambianic-ui/commit/b81e365b84f29f68aefdd287aac1074a44a9dd33))
+* apply code tweaks and add minor tweaks ([313f549](https://github.com/ambianic/ambianic-ui/commit/313f54951cf214d74c38905733683f896a96a25e))
+* bash command in codecov ([022ca5e](https://github.com/ambianic/ambianic-ui/commit/022ca5e69dd6744aea37142ff5f21728280a340c))
+* Changed cypress visit to remote ([e2bbe7e](https://github.com/ambianic/ambianic-ui/commit/e2bbe7ec3c05b84e06e4839c891ca9691b7f5769))
+* clean up action ([1346cea](https://github.com/ambianic/ambianic-ui/commit/1346ceac4adadcfff43372ba75f348f50b8e3459))
+* codecov failure with merge. ([aa073f5](https://github.com/ambianic/ambianic-ui/commit/aa073f57c25126299c2d7d67a8db4da6f55a40ac))
+* codevoc problems ([03d8637](https://github.com/ambianic/ambianic-ui/commit/03d8637414761dc07dfa156c41c3c22611b411cb))
+* Create artifact step ([39f9d28](https://github.com/ambianic/ambianic-ui/commit/39f9d2829dff0901e613a2858fbc12d21570467a))
+* creating test folders ([5819c20](https://github.com/ambianic/ambianic-ui/commit/5819c20f91560420ab98294b30a3481ceb690bee))
+* Debuggin why npm fails to find files ([41d467d](https://github.com/ambianic/ambianic-ui/commit/41d467d910a2b02f01748d42e819562774ec6c4f))
+* Debugging ([ad2dc3f](https://github.com/ambianic/ambianic-ui/commit/ad2dc3f750d468ff3251feabd924725cee274100))
+* debugging CI script ([80afd13](https://github.com/ambianic/ambianic-ui/commit/80afd13d0ccd9ae4c1a3d600891fb962e592ad3e))
+* debugging paths ([db62b8b](https://github.com/ambianic/ambianic-ui/commit/db62b8b914c97a29e62f673942f49960ec5d3dac))
+* different actiontype ([ce6600a](https://github.com/ambianic/ambianic-ui/commit/ce6600ae01fed0d796b71c7eb196bbe7c7af9277))
+* formatted actions ([ebb7308](https://github.com/ambianic/ambianic-ui/commit/ebb73083c0b30801fc526e9e24d6906e38b557ff))
+* indented it wrong in previous commit ([7e61339](https://github.com/ambianic/ambianic-ui/commit/7e613396755dce678f0a5a94d7af95d7ea99d385))
+* make minor configurations ([90290df](https://github.com/ambianic/ambianic-ui/commit/90290df363a3705bd115c794042235668f025a7a))
+* merge two reports ([0717a97](https://github.com/ambianic/ambianic-ui/commit/0717a97e104be280cca598546112135edcd10856))
+* minor change ([c3d7e71](https://github.com/ambianic/ambianic-ui/commit/c3d7e717455da4190576e7424ee2cff50666354b))
+* new package-lock.json ([ceb737c](https://github.com/ambianic/ambianic-ui/commit/ceb737c740ebcbd438b219241f7d5fb5893b921e))
+* npm issues ([5f4a512](https://github.com/ambianic/ambianic-ui/commit/5f4a5127c206d01e82d4b88c1ade1d1cd0ae952c))
+* One action for all tests ([34c2654](https://github.com/ambianic/ambianic-ui/commit/34c2654d9eef2de7df009e018a769d30ae9bcdcf))
+* path typo ([bc45074](https://github.com/ambianic/ambianic-ui/commit/bc450747aa767c3e367e154302e7397c61043680))
+* refactored routes file ([2cf4d7c](https://github.com/ambianic/ambianic-ui/commit/2cf4d7cce5185a117411916f694df34906e4f6e9))
+* Removed duplicate entry key ([dabfa23](https://github.com/ambianic/ambianic-ui/commit/dabfa23d3d45280aff072fdd6410eb6ffdb69f1a))
+* removed failing test case ([e7a7a7f](https://github.com/ambianic/ambianic-ui/commit/e7a7a7feb433c37186706339a0ab654b5d18a4c4))
+* removed failing test file ([33278c0](https://github.com/ambianic/ambianic-ui/commit/33278c03b73c594545ef9a4bd30c349f126937ac))
+* Removed separated jobs for now ([155bf6e](https://github.com/ambianic/ambianic-ui/commit/155bf6e95678790953343348c528ec440fbc636d))
+* removed signs not needed ([5169281](https://github.com/ambianic/ambianic-ui/commit/5169281e79d77dfebee2ae37fe703ac4a7023d50))
+* removing cypress engine ([645a253](https://github.com/ambianic/ambianic-ui/commit/645a25384a6e71fdf5bf1e59da8d264f1022d77b))
+* splitted Github actions ([f825707](https://github.com/ambianic/ambianic-ui/commit/f82570795b11d99c0ef97cb361899215b3038b5b))
+* Splitted router for routing tests ([7a18983](https://github.com/ambianic/ambianic-ui/commit/7a18983dc4c50dec05393602905d50e6dd99ef0b))
+* Test coverage report merged ([3da02dd](https://github.com/ambianic/ambianic-ui/commit/3da02dd322594c94af441df76f414b1d093ea921))
+* test scripts start commands altered ([ee35224](https://github.com/ambianic/ambianic-ui/commit/ee35224efb0cfc470fe18cf6b0ae5e2bbd295b4b))
+* testing for coverage folder ([26218fd](https://github.com/ambianic/ambianic-ui/commit/26218fd8aca59fc1b3757c51c44dc941388a8107))
+* tests for routes ([c557727](https://github.com/ambianic/ambianic-ui/commit/c55772774c2bd583d4b96c25968addb3f2f3b927))
+* Tests setup finished ([deb328a](https://github.com/ambianic/ambianic-ui/commit/deb328a429365f0fdf42a7b0725d2c3e30819033))
+* trying to generate reports ([7a4663a](https://github.com/ambianic/ambianic-ui/commit/7a4663a52e18a1e41e7f898838e8995583596d77))
+* typos changed ([82855c4](https://github.com/ambianic/ambianic-ui/commit/82855c4670d9edeef834e6a615abff4b16955fe6))
+* Updated tests after changes in the layout ([f55d59b](https://github.com/ambianic/ambianic-ui/commit/f55d59bfa5b073d3d266e40fba5c278276aa55d3))
+* WIP on spies ([1d7734e](https://github.com/ambianic/ambianic-ui/commit/1d7734edf45ac4cc73daad910644277f5d7dbf67))
+
+
+### Features
+
+* End to End tests written ([d7fe170](https://github.com/ambianic/ambianic-ui/commit/d7fe1703fe237b60680caa49fffe33aa5824dfd8))
+* use parallel tests and modify code ([1788fef](https://github.com/ambianic/ambianic-ui/commit/1788fef35d2529f8888c214f3fd16422d974e258))
+
 # [2.4.0](https://github.com/ambianic/ambianic-ui/compare/v2.3.3...v2.4.0) (2020-06-02)
 
 
