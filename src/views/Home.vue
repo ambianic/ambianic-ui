@@ -44,6 +44,7 @@
               rounded
               color="pink darken-4"
               dark
+              data-cy="timeline"
               class="ma-2 white--text"
               :to="'timeline'"
               id="btn-timeline"
@@ -63,6 +64,7 @@
               dark
               class="ma-2 white--text"
               :to="'settings'"
+              data-cy="settings"
             >
               Settings
               <v-icon
@@ -78,7 +80,7 @@
         align="end"
         justify="center"
         no-gutters=""
-        >
+      >
         <v-col>
           <update-notification class="mx-auto" />
         </v-col>
@@ -88,7 +90,7 @@
 </template>
 
 <script>
-import UpdateNotification from '../components/UpdateNotification'
+import UpdateNotification from '@/components/UpdateNotification'
 
 export default {
   name: 'Home',

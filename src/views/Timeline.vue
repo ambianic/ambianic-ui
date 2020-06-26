@@ -13,6 +13,7 @@
     >
       <v-card
         class="mx-auto"
+        data-cy="connectioncard"
         outlined
       >
         <v-card-title>
@@ -40,6 +41,8 @@
         <v-card-actions>
           <v-btn
             text
+            id="btn-settings"
+            data-cy="settings"
             to="/settings"
           >
             Connection Settings
@@ -60,6 +63,7 @@
         class="pa-0 ma-0"
       >
         <v-list-item
+          data-cy="timelinedata"
           v-for="(sample, index) in timeline"
           :key="index"
           class="pa-0 ma-0"
@@ -257,7 +261,7 @@
 <script>
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import InfiniteLoading from 'vue-infinite-loading'
-import DetectionBoxes from '../components/DetectionBoxes.vue'
+import DetectionBoxes from '@/components/DetectionBoxes.vue'
 import { EdgeAPI } from '@/remote/edgeAPI'
 import { mapState } from 'vuex'
 import moment from 'moment'

@@ -4,9 +4,13 @@
       align="start"
       justify="center"
       class="pb-5"
+      data-cy="template-row"
     >
       <v-card>
-        <v-card-title class="light grey">
+        <v-card-title
+          class="light grey"
+          data-cy="titlecard"
+        >
           Ambianic Edge connection details
         </v-card-title>
         <v-container grid-list-sm>
@@ -163,7 +167,10 @@
       class="pb-5"
     >
       <v-card>
-        <v-card-title class="light grey">
+        <v-card-title
+          class="light grey"
+          data-cy="localtitlecard"
+        >
           Pair with local Ambianic Edge device
         </v-card-title>
         <v-container grid-list-sm>
@@ -204,7 +211,10 @@
       class="pb-5"
     >
       <v-card>
-        <v-card-title class="light grey">
+        <v-card-title
+          class="light grey"
+          data-cy="remotetitlecard"
+        >
           Pair with remote Ambianic Edge device
         </v-card-title>
         <v-container grid-list-sm>
@@ -230,6 +240,7 @@
               outlined
               dense
               class="mt-4"
+              data-cy="remotePeerID"
             />
           </v-card-text>
 
@@ -239,6 +250,7 @@
               @click="sendEdgeAddress"
               color="primary"
               id="btn-sendRemotePeerID"
+              data-cy="sendRemotePeerID"
             >
               Pair Remotely
             </v-btn>
@@ -249,7 +261,7 @@
   </v-container>
 </template>
 <script>
-import AmbBanner from '../components/shared/Banner.vue'
+import AmbBanner from '@/components/shared/Banner.vue'
 import AmbListItem from '@/components/shared/ListItem.vue'
 import { mapActions, mapState } from 'vuex'
 import {

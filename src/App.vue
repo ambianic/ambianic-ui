@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import AmbAppFrame from './components/AppFrame.vue'
+import AmbAppFrame from '@/components/AppFrame.vue'
 export default {
   name: 'App',
   components: {
