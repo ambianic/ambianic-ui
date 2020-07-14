@@ -5,6 +5,7 @@ import store from './store/index.js'
 import './registerServiceWorker'
 import vuetify from './plugins/vuetify'
 import VueRouter from 'vue-router'
+import VuePageTransition from 'vue-page-transition'
 
 Vue.config.productionTip = false
 
@@ -15,6 +16,7 @@ const router = new VueRouter({
 })
 
 Vue.use(VueRouter)
+Vue.use(VuePageTransition)
 
 new Vue({
   router,
