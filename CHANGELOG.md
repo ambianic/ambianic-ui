@@ -1,5 +1,18 @@
 # Semantic Versioning Changelog
 
+# [2.6.0](https://github.com/ambianic/ambianic-ui/compare/v2.5.0...v2.6.0) (2020-07-24)
+
+
+### Bug Fixes
+
+* build failed for deployment ([01477b6](https://github.com/ambianic/ambianic-ui/commit/01477b64f60e4922c3f58f0c506017b55ce3639b))
+* move fs-vacuum from prod deps to dev deps ([810c7a2](https://github.com/ambianic/ambianic-ui/commit/810c7a2394de78a17bc3583f7d8d55dedab8f34c))
+
+
+### Features
+
+* include smooth page to page transition ([40d5691](https://github.com/ambianic/ambianic-ui/commit/40d56919138fedc6694d50fcdd3041bc9469f6aa))
+
 # [2.5.0](https://github.com/ambianic/ambianic-ui/compare/v2.4.0...v2.5.0) (2020-06-26)
 
 
