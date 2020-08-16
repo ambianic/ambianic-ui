@@ -65,6 +65,6 @@ describe('NavBar', () => {
     const item = wrapper.findAll('.v-list-item')
 
     expect(nav.exists()).toBe(true)
-    expect(item.length).toBe(5)
+    expect(item.length).toBe(6)
   })
 })
