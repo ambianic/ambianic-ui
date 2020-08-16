@@ -10,7 +10,7 @@
     <v-app v-else>
       <vue-page-transition name="fade-in-right">
         <router-view />
-        </vue-page-transition>
+      </vue-page-transition>
     </v-app>
   </v-lazy>
 </template>

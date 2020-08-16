@@ -209,7 +209,8 @@ export default {
       { icon: 'settings', text: 'Settings', link: '/settings' },
       { icon: 'chat_bubble', text: 'Send feedback', link: '/feedback' },
       { icon: 'help', text: 'Help', link: '/help' },
-      { icon: 'info', text: 'About Ambianic', link: '/about' }
+      { icon: 'info', text: 'About Ambianic', link: '/about' },
+      { icon: 'mdi-robot-vacuum', text: 'Setup Ambianic', link: '/setup' }
     ]
   }),
   computed: {
