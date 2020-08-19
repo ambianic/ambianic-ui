@@ -185,7 +185,8 @@ export default {
      */
     bluetooth () {
       navigator.bluetooth.requestDevice({
-        filters: [{ services: ['12342233-0000-1000-8000-00805F9B34FB'] }]
+        // filters: [{ services: ['12342233-0000-1000-8000-00805F9B34FB'] }]
+        acceptAllDevices: true
       })
         .then(device => device.gatt.connect())
         .then(server => server.getPrimaryService('12342233-0000-1000-8000-00805F9B34FB'))
