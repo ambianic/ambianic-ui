@@ -2,19 +2,19 @@
   <v-row
     align="start"
     justify="space-around"
+    fill-height
   >
     <v-col
       v-if="!isEdgeConnected"
-      style="max-width: 400px;"
-      align="center"
+      align-self="center"
       justify="center"
       cols="12"
-      class="pa-0 ma-0 fill-height"
     >
       <v-card
         class="mx-auto"
         data-cy="connectioncard"
         outlined
+        width="400"
       >
         <v-card-title>
           <v-icon

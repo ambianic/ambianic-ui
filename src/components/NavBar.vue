@@ -7,6 +7,7 @@
     <v-app-bar
       app
       color="blue darken-3"
+      dark
     >
       <v-toolbar-title
         style="width: 300px"
