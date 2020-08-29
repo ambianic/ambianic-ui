@@ -44,10 +44,35 @@
               v-on="on"
               data-cy="wifi-button"
             >
-              See Wifis
+              Enter Wifi
             </v-btn>
           </template>
           <v-card>
+            <v-subheader
+              data-cy="wifi-card"
+            >
+              Enter Wifi Details
+            </v-subheader>
+            <v-text-field
+              v-model="selectedWifi.wifi"
+              label="WiFi name"
+            />
+            <v-text-field
+              v-model="selectedWifi.password"
+              label="Password"
+            />
+            <v-card-actions>
+              <v-spacer />
+              <v-btn
+                color="primary"
+                text
+                @click="getWifi();"
+              >
+                Enter network
+                </v-btn>
+              </v-card-actions>
+          </v-card>
+          <!--<v-card>
             <v-list
               shaped
               :flat="flat"
@@ -92,7 +117,6 @@
               width="500"
             >
               <v-card>
-                <!-- TODO make smooth transition between v-dialogs and remove the initial text on input line -->
                 <v-text-field
                   single-line
                   v-model="selectedWifi.password"
@@ -109,7 +133,7 @@
                 </v-card-actions>
               </v-card>
             </v-dialog>
-          </v-card>
+          </v-card>-->
         </v-dialog>
         <!-- This button will be removed before merge to master. Just for debugging purposes.
         Intended to force connect using bluetooth -->
@@ -135,8 +159,8 @@ export default {
       edgeConnected: false, // Let this variable enter Vuex later on so the state is saved globally.
       dialog: false,
       selectedWifi: {
-        wifi: String,
-        password: String
+        wifi: '',
+        password: ''
       },
       // This will be an array of objects for all wifis found supplied from Edge.
       // For test purposes, a mock data will be created in separate file
@@ -182,6 +206,10 @@ export default {
      *
      * In the setup card, there will be a switch. If RPI returns true, it will switch to
      * green to show the user it has been successfully connected to the Wifi.
+     *
+     *
+     * UPDATE. As first iteration the user will have to enter both wifi and password.
+     * A list with selectable networks will be in iteration 2.
      */
     bluetooth () {
       navigator.bluetooth.requestDevice({

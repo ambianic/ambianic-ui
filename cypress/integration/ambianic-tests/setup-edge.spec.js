@@ -11,16 +11,24 @@ context('Setup Edge With Bluetooth', () => {
       cy.get('[data-cy=basecard]').should('exist')
     })
 
+    // To be removed once a list of selectable wifis are implemented
     it('Should have a wifi card', () => {
       cy.get('[data-cy=wifi-button]').click()
-      cy.get('[data-cy=wifi-card]').contains('WIFIS FOUND')
-      cy.get('[data-cy=close-dialog]').click()
+      cy.get('[data-cy=wifi-card]').contains('Enter Wifi Details')
     })
+    
 
-    it('Should have a five wifis', () => {
-      cy.get('[data-cy=wifi-button]').click()
-      cy.get('[data-cy=wifis]').then(($result => {
-        assert.equal($result.length,5)
-      }))
-    })
+    // Commented away until select wifis by list is implemented
+    // it('Should have a wifi card', () => {
+    //   cy.get('[data-cy=wifi-button]').click()
+    //   cy.get('[data-cy=wifi-card]').contains('WIFIS FOUND')
+    //   cy.get('[data-cy=close-dialog]').click()
+    // })
+
+    // it('Should have a five wifis', () => {
+    //   cy.get('[data-cy=wifi-button]').click()
+    //   cy.get('[data-cy=wifis]').then(($result => {
+    //     assert.equal($result.length,5)
+    //   }))
+    // })
 })
