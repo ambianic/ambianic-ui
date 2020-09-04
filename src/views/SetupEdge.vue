@@ -213,15 +213,46 @@ export default {
      */
     bluetooth () {
       navigator.bluetooth.requestDevice({
-        // filters: [{ services: ['12342233-0000-1000-8000-00805F9B34FB'] }]
+        // filters: [
+        //   { services: ['12342233-0000-1000-8000-00805f9b34fb'] }
+        // ],
+        optionalServices: ['12342233-0000-1000-8000-00805f9b34fb'],
         acceptAllDevices: true
       })
-        .then(device => device.gatt.connect())
-        .then(server => server.getPrimaryService('12342233-0000-1000-8000-00805F9B34FB'))
-        // .then(service => service.getCharacteristic('heart_rate_measurement'))
-        .then(characteristic => characteristic.startNotifications())
-        .then(characteristic => characteristic.addEventListener('characteristicvaluechanged', this.handleCharacteristicValueChanged.bind(this)))
+        .then(device => {
+          console.log('connect')
+          return device.gatt.connect()
+        })
+        .then(server => {
+          console.log('get service')
+          return server.getPrimaryService(0x12342233)
+        })
+        .then(service => {
+          console.log('get char')
+          return service.getCharacteristic(0x12343344)
+        })
+        // .then(characteristic => characteristic.startNotifications())
+        .then(async (characteristic) => {
+          // this.selectedWifi is the object that contains the details the user inserted:
+          // this.selectedWifi.wifi is the wifi name
+          // this.selectedWifi.password is the password
+          console.log(this.selectedWifi)
+          characteristic.addEventListener('characteristicvaluechanged', this.handleCharacteristicValueChanged)
+
+          const val = await characteristic.readValue()
+          console.log('READ #1 = ', val)
+
+          const val1 = Uint8Array.of(1)
+          await characteristic.writeValue(val1)
+
+          const val2 = await characteristic.readValue()
+          console.log('READ #2 = ', val2)
+        })
         .catch(error => console.log(error))
+    },
+    handleCharacteristicValueChanged (event) {
+      console.log('handleCharacteristicValueChanged', event)
+      console.log('raw %s', event.target.value)
     },
     setWifi (wifi) {
       this.selectedWifi.wifi = wifi
@@ -230,7 +261,8 @@ export default {
       this.selectedWifi.password = password
     },
     getWifi () {
-      console.log(this.selectedWifi)
+      this.dialog = false
+      this.bluetooth(this.selectedWifi)
     }
   }
 }

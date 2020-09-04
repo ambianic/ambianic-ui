@@ -1,7 +1,5 @@
 /// <reference types="cypress" />
 
-const { equal } = require("assert")
-
 context('Setup Edge With Bluetooth', () => {
     beforeEach(() => {
       cy.visit('http://localhost:8080/setup')
