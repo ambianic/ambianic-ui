@@ -214,9 +214,9 @@ export default {
     bluetooth () {
       navigator.bluetooth.requestDevice({
         // filters: [
-        //   { services: ['12342233-0000-1000-8000-00805f9b34fb'] }
+        //   { services: [0x12342233] }
         // ],
-        optionalServices: ['12342233-0000-1000-8000-00805f9b34fb'],
+        optionalServices: [0x12342233],
         acceptAllDevices: true
       })
         .then(device => {
@@ -228,31 +228,55 @@ export default {
           return server.getPrimaryService(0x12342233)
         })
         .then(service => {
-          console.log('get char')
-          return service.getCharacteristic(0x12343344)
+          console.log('get chars')
+          return Promise.all([
+            // write=connect & read=status
+            service.getCharacteristic(0x12343344),
+            // read=ap list
+            service.getCharacteristic(0x12344455)
+          ])
         })
         // .then(characteristic => characteristic.startNotifications())
-        .then(async (characteristic) => {
-          // this.selectedWifi is the object that contains the details the user inserted:
-          // this.selectedWifi.wifi is the wifi name
-          // this.selectedWifi.password is the password
-          console.log(this.selectedWifi)
-          characteristic.addEventListener('characteristicvaluechanged', this.handleCharacteristicValueChanged)
+        .then(async ([connChar, listapChar]) => {
+          // console.log(this.selectedWifi)
+          // const connStr = `WIFI:T:WPA;S:${this.selectedWifi.wifi};P:${this.selectedWifi.password};H:false;;`
 
-          const val = await characteristic.readValue()
-          console.log('READ #1 = ', val)
+          // connChar.addEventListener('characteristicvaluechanged', this.handleCharacteristicValueChanged)
 
-          const val1 = Uint8Array.of(1)
-          await characteristic.writeValue(val1)
+          // let val = await connChar.readValue()
+          // console.log('status=%s', this.toString(val.buffer))
 
-          const val2 = await characteristic.readValue()
-          console.log('READ #2 = ', val2)
+          // const val1 = this.toByteArray(connStr)
+          // console.log('connstr=%s', connStr)
+          // await connChar.writeValue(val1)
+          // val = await connChar.readValue()
+          // console.log('status=%s', this.toString(val.buffer))
+
+          const apsraw = await listapChar.readValue()
+          const listAP = this.toString(apsraw)
+            .split('\n')
+            .map(line => line.split(';'))
+            .filter(rows => rows.length && rows[0].length)
+            .map(([ssid, strength]) => ({ ssid, strength, title: ssid }))
+          console.log('accessPoints = ', listAP)
+          this.wifis = listAP
         })
         .catch(error => console.log(error))
     },
+    toString (buffer) {
+      return String.fromCharCode.apply(null, Array.from(new Uint8Array(buffer.buffer || buffer)))
+    },
+    toByteArray (value) {
+      const buffer = new ArrayBuffer(value.length)
+      const view = new Uint8Array(buffer)
+      for (let i = 0, length = value.length; i < length; i++) {
+        view[i] = value.charCodeAt(i)
+      }
+      return buffer
+    },
     handleCharacteristicValueChanged (event) {
       console.log('handleCharacteristicValueChanged', event)
-      console.log('raw %s', event.target.value)
+      console.log('raw %s', this.toString(event.target.value.buffer))
     },
     setWifi (wifi) {
       this.selectedWifi.wifi = wifi
