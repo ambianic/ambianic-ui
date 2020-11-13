@@ -18,7 +18,7 @@
     "codecov": "^3.7.0",
     "compression-webpack-plugin": "^6.0.4",
     "idb": "^5.0.3",
-    "konva": "^4.2.2",
+    "konva": "^7.1.6",
     "moment": "^2.26.0",
     "node": "^14.2.0",
     "peerjs": "^1.1.0",
