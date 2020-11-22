@@ -16,7 +16,8 @@ import {
   NEW_PEER_ID,
   NEW_REMOTE_PEER_ID,
   REMOTE_PEER_ID_REMOVED,
-  PEER_FETCH
+  PEER_FETCH,
+  ADD_NEW_FRIENDLY_NAME
 } from './mutation-types.js'
 import {
   INITIALIZE_PNP,
@@ -26,7 +27,8 @@ import {
   PEER_CONNECT,
   PEER_AUTHENTICATE,
   REMOVE_REMOTE_PEER_ID,
-  CHANGE_REMOTE_PEER_ID
+  CHANGE_REMOTE_PEER_ID,
+  ADD_FRIENDLY_NAME
 } from './action-types.js'
 import { ambianicConf } from '@/config'
 import Peer from 'peerjs'
@@ -76,7 +78,11 @@ const state = {
   /**
     PeerFetch instance
   */
-  peerFetch: PeerFetch
+  peerFetch: PeerFetch,
+  /**
+    Peer friendly name for easier remembering what the PeerID connects to
+   */
+  peerFriendlyName: []
 }
 
 const mutations = {
@@ -133,6 +139,9 @@ const mutations = {
   [PEER_FETCH] (state, peerFetch) {
     console.debug('Setting PeerFetch instance.')
     state.peerFetch = peerFetch
+  },
+  [ADD_NEW_FRIENDLY_NAME] (state, edgeFriendlyName) {
+    state.peerFriendlyName.push(edgeFriendlyName)
   }
 }
 
@@ -490,9 +499,17 @@ const actions = {
    * them or let them connect to you.
    */
   async [CHANGE_REMOTE_PEER_ID] ({ state, commit, dispatch }, remotePeerId) {
-    commit(NEW_REMOTE_PEER_ID, remotePeerId)
+    commit(NEW_REMOTE_PEER_ID, remotePeerId.edgeAddress)
     commit(PEER_DISCONNECTED)
     dispatch(PEER_CONNECT, remotePeerId)
+  },
+  /**
+   *
+   * @param {*} edgeFriendlyName The user entered details about
+   * a remote Ambianic Edge
+   */
+  async [ADD_FRIENDLY_NAME] ({ commit }, edgeFriendlyName) {
+    commit(ADD_NEW_FRIENDLY_NAME, edgeFriendlyName)
   },
   /**
   * Remove remote peer id from local store.
@@ -520,6 +537,9 @@ const actions = {
 const getters = {
   isEdgeConnected: state => {
     return state.peerConnectionStatus === PEER_CONNECTED
+  },
+  friendlyName: state => {
+    return state.peerFriendlyName
   }
 }
 

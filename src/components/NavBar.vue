@@ -29,6 +29,7 @@
       />
       <v-spacer />
 
+      Connected to: {{ connected_to }}
       <amb-button
         with-badge
         data-cy="download-off"
@@ -171,6 +172,8 @@ export default {
     AmbButton: () => import('./shared/Button.vue')
   },
   data: () => ({
+    connected_to: 'Home Network',
+    remoteEdges: [],
     dialog: false,
     drawer: null, // hide drawer on mobile and show on desktop
     on: true,
@@ -212,6 +215,7 @@ export default {
       { icon: 'info', text: 'About Ambianic', link: '/about' }
     ]
   }),
+  /* Change connected_to to the current ambianic edge we have connected to */
   computed: {
     ...mapState({
       isEdgeConnected: function (state) {
