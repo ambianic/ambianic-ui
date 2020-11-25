@@ -20,6 +20,7 @@
             id="help-title"
             icon-name="help-circle-outline"
             title="Need Help with Ambianic?"
+            icon-color="accent"
             subtitle="Please reference our online docs or connect on Twitter."
           />
         </v-list>
@@ -33,6 +34,7 @@
             <v-icon
               left
               dark
+              color="accent"
             >
               mdi-file-document-box-check-outline
             </v-icon>
@@ -47,6 +49,7 @@
             <v-icon
               left
               dark
+              color="accent"
             >
               mdi-twitter
             </v-icon>

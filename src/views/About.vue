@@ -49,7 +49,7 @@
         </v-layout>
         <v-card-actions>
           <v-btn
-            text
+            outlined
             color="info"
             :to="'timeline'"
             id="btn-timeline"
@@ -58,7 +58,7 @@
           </v-btn>
           <v-spacer />
           <v-btn
-            text
+            outlined
             color="info"
             :to="'settings'"
             id="btn-settings"

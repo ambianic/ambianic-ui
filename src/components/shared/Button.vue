@@ -2,13 +2,14 @@
   <v-btn
     :icon="isIcon"
     :to="to"
+    :color="btnColor"
   >
     <v-badge
       v-if="withBadge"
       top
       right
       overlap
-      color="error lighten-1"
+      color="error"
       class="align-self-center"
       :content="badgeContent"
       :value="badgeValue"
@@ -44,6 +45,10 @@ export default {
       default: false
     },
     to: {
+      type: String,
+      default: null
+    },
+    btnColor: {
       type: String,
       default: null
     }
