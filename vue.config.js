@@ -3,6 +3,10 @@ const CompressionPlugin = require('compression-webpack-plugin')
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 
 module.exports = {
+  devServer: {
+    // setting to fix gitpod Ivalid Host Header error 
+    disableHostCheck: true
+  },
   publicPath: '/',
   configureWebpack: {
     optimization: {
@@ -54,7 +58,8 @@ module.exports = {
           }
         }
       ]
-    }
+    },
+
   },
 
   transpileDependencies: [
