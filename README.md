@@ -1,3 +1,5 @@
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/ambianic/ambianic-ui)
+
 # Ambianic Client UI
 
 ![CI for Ambianic UI](https://github.com/ambianic/ambianic-ui/workflows/CI%20for%20Ambianic%20UI/badge.svg)
