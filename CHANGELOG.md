@@ -1,5 +1,18 @@
 # Semantic Versioning Changelog
 
+# [2.7.0](https://github.com/ambianic/ambianic-ui/compare/v2.6.0...v2.7.0) (2020-11-26)
+
+
+### Bug Fixes
+
+* add command on workspace startup ([e213e17](https://github.com/ambianic/ambianic-ui/commit/e213e1758df1f338c3770a213f18aa7cd18d0879))
+* cypress github action update ([a92698e](https://github.com/ambianic/ambianic-ui/commit/a92698e4a82d6006fdd72afe306c447bab3a02c9))
+
+
+### Features
+
+* enable gitpod dev in browser ([f236432](https://github.com/ambianic/ambianic-ui/commit/f236432af53090a8797367c34c94cae2439ee32b))
+
 # [2.6.0](https://github.com/ambianic/ambianic-ui/compare/v2.5.0...v2.6.0) (2020-07-24)
 
 
