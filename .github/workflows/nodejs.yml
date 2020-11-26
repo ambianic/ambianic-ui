@@ -32,7 +32,7 @@ jobs:
         CI: true
 
     - name: Test Suite
-      uses: cypress-io/github-action@v1
+      uses: cypress-io/github-action@v2
       with:
         start: npm run serve
         record: false # cypress.io free recording limit exceeded
