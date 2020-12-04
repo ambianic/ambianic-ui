@@ -169,11 +169,11 @@
           >
             Remote Ambianic Edge
           </v-card-title>
-          <!-- Populate the v-select with the friendlynames -->
           <v-select
-            :ambianic-edge="friendlyEdges"
-            label="Outlined style"
+            :items="friendlyName"
+            item-text="edgeFriendlyName"
             outlined
+            @change="selectedEdge"
           />
         </v-card>
       </v-col>
@@ -293,7 +293,7 @@
 <script>
 import AmbBanner from '@/components/shared/Banner.vue'
 import AmbListItem from '@/components/shared/ListItem.vue'
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import {
   PEER_DISCONNECTED,
   PEER_DISCOVERING,
@@ -306,7 +306,8 @@ import {
 import {
   CHANGE_REMOTE_PEER_ID,
   REMOVE_REMOTE_PEER_ID,
-  ADD_FRIENDLY_NAME
+  ADD_FRIENDLY_NAME,
+  CURRENT_USER
 } from '../store/action-types.js'
 
 export default {
@@ -321,10 +322,11 @@ export default {
         edgeFriendlyName: 'My Home Ambianic'
       },
       correctEdgeAddress: false,
-      edgeFriendlyNameSet: '',
-      friendlyEdges: []
+      edgeFriendlyNameSet: ''
     }
   },
+  // 5d9d0a4c-562f-4f6a-b88e-73121b61e75e
+  // 9f8bfda1-0224-4df4-a752-e61cb4c4a847
   mounted () {
   },
   methods: {
@@ -342,6 +344,16 @@ export default {
     ...mapActions([
       'CHANGE_REMOTE_PEER_ID'
     ]),
+    selectedEdge (friendlyName) {
+      var result = this.friendlyName.filter(obj => {
+        return obj.edgeFriendlyName === friendlyName
+      })
+      this.ambianicEdge.edgeAddress = result[0].edgeAddress
+      this.ambianicEdge.edgeFriendlyName = result[0].edgeFriendlyName
+
+      this.$store.dispatch(CURRENT_USER, this.ambianicEdge.edgeFriendlyName)
+      this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.ambianicEdge)
+    },
     sendEdgeAddress () {
       this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.ambianicEdge)
       if (this.edgeFriendlyNameSet === undefined || this.edgeFriendlyNameSet === '') {
@@ -352,7 +364,8 @@ export default {
       this.$store.dispatch(ADD_FRIENDLY_NAME, { ...this.ambianicEdge })
     },
     localEdgeAddress () {
-      this.edgeAddress = undefined
+      this.ambianicEdge.edgeAddress = undefined
+      this.ambianicEdge.edgefriendlyName = 'My Home Ambianic'
       this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
     }
   },
@@ -361,15 +374,14 @@ export default {
       console.log('this.$store.state.pnp.peerConnectionStatus', this.$store.state.pnp.peerConnectionStatus)
       return this.$store.state.pnp.peerConnectionStatus === PEER_CONNECTION_ERROR
     },
+    ...mapGetters(['friendlyName']),
     ...mapState({
       peerConnectionStatus: state => state.pnp.peerConnectionStatus,
       isEdgeConnected: state =>
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
       edgePeerId: state => state.pnp.remotePeerId,
       peerFetch: state => state.pnp.peerFetch,
-      version: state => state.version,
-      /* Try to fetch out the friendlyname object from the state to populate the dropdown with name and beeing able to use the PeerId to connect with */
-      friendlyName: state => state.peerFriendlyName
+      version: state => state.version
     }),
     connectStep: function () {
       let step = 1

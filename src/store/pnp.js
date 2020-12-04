@@ -17,7 +17,8 @@ import {
   NEW_REMOTE_PEER_ID,
   REMOTE_PEER_ID_REMOVED,
   PEER_FETCH,
-  ADD_NEW_FRIENDLY_NAME
+  ADD_NEW_FRIENDLY_NAME,
+  CURRENT_ACTIVE_USER
 } from './mutation-types.js'
 import {
   INITIALIZE_PNP,
@@ -28,7 +29,8 @@ import {
   PEER_AUTHENTICATE,
   REMOVE_REMOTE_PEER_ID,
   CHANGE_REMOTE_PEER_ID,
-  ADD_FRIENDLY_NAME
+  ADD_FRIENDLY_NAME,
+  CURRENT_USER
 } from './action-types.js'
 import { ambianicConf } from '@/config'
 import Peer from 'peerjs'
@@ -82,7 +84,8 @@ const state = {
   /**
     Peer friendly name for easier remembering what the PeerID connects to
    */
-  peerFriendlyName: []
+  peerFriendlyName: [],
+  friendlyName: ''
 }
 
 const mutations = {
@@ -142,6 +145,9 @@ const mutations = {
   },
   [ADD_NEW_FRIENDLY_NAME] (state, edgeFriendlyName) {
     state.peerFriendlyName.push(edgeFriendlyName)
+  },
+  [CURRENT_ACTIVE_USER] (state, edgeFriendlyName) {
+    state.edgeFriendlyName = edgeFriendlyName
   }
 }
 
@@ -511,6 +517,10 @@ const actions = {
   async [ADD_FRIENDLY_NAME] ({ commit }, edgeFriendlyName) {
     commit(ADD_NEW_FRIENDLY_NAME, edgeFriendlyName)
   },
+
+  async [CURRENT_USER] ({ commit }, edgeFriendlyName) {
+    commit(CURRENT_ACTIVE_USER, edgeFriendlyName)
+  },
   /**
   * Remove remote peer id from local store.
   * Maybe the edge device is damaged and its id cannot be recovered.
@@ -540,6 +550,9 @@ const getters = {
   },
   friendlyName: state => {
     return state.peerFriendlyName
+  },
+  twat: state => {
+    return state.friendlyName
   }
 }
 
