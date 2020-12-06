@@ -17,7 +17,8 @@ import {
   NEW_REMOTE_PEER_ID,
   REMOTE_PEER_ID_REMOVED,
   PEER_FETCH,
-  ADD_NEW_FRIENDLY_NAME
+  ADD_NEW_FRIENDLY_NAME,
+  CURRENT_ACTIVE_USER
 } from './mutation-types.js'
 import {
   INITIALIZE_PNP,
@@ -28,7 +29,8 @@ import {
   PEER_AUTHENTICATE,
   REMOVE_REMOTE_PEER_ID,
   CHANGE_REMOTE_PEER_ID,
-  ADD_FRIENDLY_NAME
+  ADD_FRIENDLY_NAME,
+  CURRENT_USER
 } from './action-types.js'
 import { ambianicConf } from '@/config'
 import Peer from 'peerjs'
@@ -82,7 +84,11 @@ const state = {
   /**
     Peer friendly name for easier remembering what the PeerID connects to
    */
-  peerFriendlyName: []
+  peerFriendlyName: [],
+  /**
+     The username that will be displayed in Settings card and in
+   */
+  friendlyName: ''
 }
 
 const mutations = {
@@ -142,6 +148,9 @@ const mutations = {
   },
   [ADD_NEW_FRIENDLY_NAME] (state, edgeFriendlyName) {
     state.peerFriendlyName.push(edgeFriendlyName)
+  },
+  [CURRENT_ACTIVE_USER] (state, loggedInUser) {
+    state.friendlyName = loggedInUser
   }
 }
 
@@ -158,7 +167,9 @@ async function discoverRemotePeerId ({ peer, state, commit }) {
   if (state.remotePeerId) {
     return state.remotePeerId
   } else {
-  // first try to find the remote peer ID in the same room
+    // Set the user to be default value
+    commit(CURRENT_ACTIVE_USER, 'My Ambianic Edge')
+    // first try to find the remote peer ID in the same room
     console.log(peer)
     const myRoom = new PeerRoom(peer)
     console.log('Fetching room members', myRoom)
@@ -512,6 +523,13 @@ const actions = {
     commit(ADD_NEW_FRIENDLY_NAME, edgeFriendlyName)
   },
   /**
+   * The Current user that is logged on
+   * @param {*} loggedInUser, which user that you are connected to
+   */
+  async [CURRENT_USER] ({ commit }, loggedInUser) {
+    commit(CURRENT_ACTIVE_USER, loggedInUser)
+  },
+  /**
   * Remove remote peer id from local store.
   * Maybe the edge device is damaged and its id cannot be recovered.
   * In such cases the user will request removal of the existing device
@@ -540,6 +558,9 @@ const getters = {
   },
   friendlyName: state => {
     return state.peerFriendlyName
+  },
+  connectedTo: state => {
+    return state.friendlyName
   }
 }
 

@@ -29,7 +29,7 @@
       />
       <v-spacer />
 
-      Connected to: {{ connected_to }}
+      Connected to: {{ connectedTo }}
       <amb-button
         with-badge
         data-cy="download-off"
@@ -161,7 +161,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import {
   PEER_CONNECTED
 } from '@/store/mutation-types'
@@ -172,8 +172,6 @@ export default {
     AmbButton: () => import('./shared/Button.vue')
   },
   data: () => ({
-    connected_to: 'Home Network',
-    remoteEdges: [],
     dialog: false,
     drawer: null, // hide drawer on mobile and show on desktop
     on: true,
@@ -215,8 +213,10 @@ export default {
       { icon: 'info', text: 'About Ambianic', link: '/about' }
     ]
   }),
-  /* Change connected_to to the current ambianic edge we have connected to */
   computed: {
+    ...mapGetters(
+      ['connectedTo']
+    ),
     ...mapState({
       isEdgeConnected: function (state) {
         console.debug(`app frame: state.pnp.peerConnectionStatus: ${state.pnp.peerConnectionStatus}`)
