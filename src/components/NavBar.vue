@@ -29,7 +29,11 @@
       />
       <v-spacer />
 
+<<<<<<< HEAD
       Connected to: {{ connectedTo }}
+=======
+      Connected to: {{ twat }}
+>>>>>>> 3cb661b9a97db6a75545aea76a01d2b6fde19170
       <amb-button
         with-badge
         data-cy="download-off"
