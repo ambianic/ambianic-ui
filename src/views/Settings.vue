@@ -325,8 +325,6 @@ export default {
       edgeFriendlyNameSet: ''
     }
   },
-  // 5d9d0a4c-562f-4f6a-b88e-73121b61e75e
-  // 9f8bfda1-0224-4df4-a752-e61cb4c4a847
   mounted () {
   },
   methods: {
@@ -361,11 +359,12 @@ export default {
       } else {
         this.ambianicEdge.edgeFriendlyName = this.edgeFriendlyNameSet
       }
+      this.$store.dispatch(CURRENT_USER, this.ambianicEdge.edgeFriendlyName)
       this.$store.dispatch(ADD_FRIENDLY_NAME, { ...this.ambianicEdge })
     },
     localEdgeAddress () {
       this.ambianicEdge.edgeAddress = undefined
-      this.ambianicEdge.edgefriendlyName = 'My Home Ambianic'
+      this.ambianicEdge.edgeFriendlyName = 'My Home Ambianic'
       this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
     }
   },

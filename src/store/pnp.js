@@ -522,10 +522,6 @@ const actions = {
   async [ADD_FRIENDLY_NAME] ({ commit }, edgeFriendlyName) {
     commit(ADD_NEW_FRIENDLY_NAME, edgeFriendlyName)
   },
-
-  async [CURRENT_USER] ({ commit }, edgeFriendlyName) {
-    commit(CURRENT_ACTIVE_USER, edgeFriendlyName)
-  },
   /**
    * The Current user that is logged on
    * @param {*} loggedInUser, which user that you are connected to
