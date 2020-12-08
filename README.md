@@ -1,3 +1,4 @@
+
 # Ambianic Client UI
 
 ![CI for Ambianic UI](https://github.com/ambianic/ambianic-ui/workflows/CI%20for%20Ambianic%20UI/badge.svg)
@@ -8,6 +9,8 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/ambianic/ambianic-ui/badge)](https://www.codefactor.io/repository/github/ambianic/ambianic-ui)
 ![Lighthouse PWA CI](https://github.com/ambianic/ambianic-ui/workflows/Lighthouse%20CI/badge.svg)
 [![codecov](https://codecov.io/gh/ambianic/ambianic-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/ambianic/ambianic-ui)
+
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/ambianic/ambianic-ui)
 
 Ambianic Client UI is an Offline-first Progressive Web App (PWA) to manage Ambianic Edge deployments.
 
@@ -26,9 +29,9 @@ The app is explicitly designed with user privacy and data ownership in mind:
 
 # Project Status
 
-A Beta version of the app is available to install here: [https://ui.ambianic.ai/](https://ui.ambianic.ai/)
+A hosted version of the app is now available to install here: [https://ui.ambianic.ai/](https://ui.ambianic.ai/)
 
-See the [5 Minute Quick Start](https://docs.ambianic.ai/users/quickstart/) guide for instructions how to connect Ambianic UI to Ambianic Edge for secure and private data access.
+See the [Quick Start](https://docs.ambianic.ai/users/quickstart/) guide for instructions how to connect Ambianic UI to Ambianic Edge for secure and private data access.
 
 Example screenshots on mobile and desktop:
  
@@ -37,10 +40,6 @@ Example screenshots on mobile and desktop:
 &nbsp;
 
 <img src="public/img/ambianic-ui-dekstop-screenshot.png" width="600">
-
-&nbsp;
-
-Next step: moving forward towards a more polished timeline UI.
 
 ## Local Installation & Setup
 
@@ -63,11 +62,6 @@ npm run serve
 ### Compiles and minifies for production
 ```
 npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
 ```
 
 # Community Support 
