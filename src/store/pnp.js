@@ -168,7 +168,7 @@ async function discoverRemotePeerId ({ peer, state, commit }) {
     return state.remotePeerId
   } else {
     // Set the user to be default value
-    commit(CURRENT_ACTIVE_USER, 'My Ambianic Edge')
+    commit(CURRENT_ACTIVE_USER, 'My Home Ambianic')
     // first try to find the remote peer ID in the same room
     console.log(peer)
     const myRoom = new PeerRoom(peer)

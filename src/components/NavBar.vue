@@ -29,7 +29,7 @@
       />
       <v-spacer />
 
-      Connected to: {{ connectedTo }}
+      <p class='text-caption'>Connected to: {{ connectedTo }}</p>
       <amb-button
         with-badge
         data-cy="download-off"
@@ -228,5 +228,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+  .text-caption {
+    width: 400px;
+    color: #FFFFFF;
+    margin-top:15px;
+  }
 </style>

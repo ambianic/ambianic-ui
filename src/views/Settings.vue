@@ -174,6 +174,7 @@
             item-text="edgeFriendlyName"
             outlined
             @change="selectedEdge"
+            label="Previously connected Ambianic Edge's"
           />
         </v-card>
       </v-col>
@@ -326,6 +327,11 @@ export default {
     }
   },
   mounted () {
+    if (this.connectedTo === '') {
+      this.$store.dispatch(CURRENT_USER, 'My Home Ambianic')
+    } else {
+      this.$store.dispatch(CURRENT_USER, this.connectedTo)
+    }
   },
   methods: {
     // Validate the user input so the ID has the correct format before showing the connect button
@@ -364,7 +370,7 @@ export default {
     },
     localEdgeAddress () {
       this.ambianicEdge.edgeAddress = undefined
-      this.ambianicEdge.edgeFriendlyName = 'My Home Ambianic'
+      this.ambianicEdge.edgeFriendlyName = undefined
       this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
     }
   },
