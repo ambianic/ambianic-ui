@@ -148,11 +148,10 @@ const mutations = {
   },
   [ADD_NEW_FRIENDLY_NAME] (state, edgeFriendlyName) {
     if (this.peerFriendlyName === undefined) {
-      console.log('UNDEFINED', state.peerFriendlyName)
       state.peerFriendlyName.push(edgeFriendlyName)
     } else {
       if (!state.peerFriendlyName.some(data => data.edgeFriendlyName === 'My Home Ambianic')) {
-        // The Ambianic Peer ID is already in the store
+        // The Ambianic Peer ID is already in the store, DO NOTHING
       } else {
         state.peerFriendlyName.push(edgeFriendlyName)
       }
