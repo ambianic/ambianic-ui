@@ -8,166 +8,25 @@
     >
       <v-col>
         <v-card>
-          <v-card-title
-            class="light grey"
-            data-cy="titlecard"
+          <v-list-item
+            two-line
+            v-for="(edge, index) in friendlyName"
+            :key="index"
           >
-            Ambianic Edge connection details
-          </v-card-title>
-          <v-container grid-list-sm>
-            <v-row
-              align="start"
-              justify="space-around"
-            >
-              <v-col
-                v-if="edgePeerId"
-                style="max-width: 420px;"
-                align="center"
-                justify="center"
-                cols="12"
-                class="pa-0 ma-0 fill-height"
-              >
-                <amb-banner
-                  v-if="isEdgeConnected"
-                  banner-class="text-left"
-                  icon="wifi"
-                  text="Ambianic Edge device connected!"
-                />
-                <amb-banner
-                  v-else
-                  progress
-                  banner-class="text-left"
-                  icon="wifi-off"
-                  text="Connecting to Ambianic Edge device..."
-                />
-                <v-card
-                  class="mx-auto text-left"
-                >
-                  <v-list
-                    two-line
-                  >
-                    <amb-list-item
-                      :title="connectedTo"
-                      subtitle="Display Name"
-                      icon-name="tag"
-                    />
-                    <v-divider inset />
-                    <amb-list-item
-                      :title="edgePeerId"
-                      subtitle="Peer ID"
-                      icon-name="identifier"
-                      id="edgePeerID"
-                    />
-                    <amb-list-item
-                      :title="version"
-                      subtitle="Release Version"
-                      icon-name="alpha-v-circle-outline"
-                    />
-                  </v-list>
-                </v-card>
-              </v-col>
-              <v-col
-                v-else
-                style="max-width: 420px;"
-                align="center"
-                justify="center"
-                cols="12"
-                class="pa-0 ma-0 fill-height"
-              >
-                <amb-banner
-                  banner-class="text-left"
-                  icon="wifi-off"
-                  text="Let's find your Ambianic Edge device and connect to it..."
-                />
-                <v-stepper
-                  v-model="connectStep"
-                  vertical
-                >
-                  <v-stepper-step
-                    :complete="connectStep > 1"
-                    step="1"
-                    :rules="[() => true]"
-                  >
-                    Discovering
-                    <small>Looking for Ambianic Edge device to pair with.</small>
-                  </v-stepper-step>
-                  <v-stepper-content step="1">
-                    <v-progress-linear
-                      color="info"
-                      indeterminate
-                      :size="50"
-                      :width="7"
-                    />
-                    <v-alert
-                      v-if="this.$store.state.pnp.userMessage"
-                      outlined
-                      type="warning"
-                      class="mt-5 text-left"
-                      dense
-                    >
-                      {{ this.$store.state.pnp.userMessage }}
-                    </v-alert>
-                  </v-stepper-content>
-                  <v-stepper-step
-                    :complete="connectStep > 2"
-                    step="2"
-                  >
-                    Authenticating
-                    <small>Establishing secure peer-to-peer connection.</small>
-                  </v-stepper-step>
-                  <v-stepper-content step="2">
-                    <v-progress-linear
-                      color="info"
-                      indeterminate
-                      :size="50"
-                      :width="7"
-                    />
-                  </v-stepper-content>
-                  <v-stepper-step step="3">
-                    Done
-                  </v-stepper-step>
-                  <v-stepper-content step="3" />
-                </v-stepper>
-              </v-col>
-              <v-dialog
-                max-width="500"
-              >
-                <v-card>
-                  <v-card-title class="headline">
-                    Reset device pairing?
-                  </v-card-title>
-                  <v-card-text>
-                    <p>
-                      Are you switching to a new Ambianic Edge device?
-                      Resetting a device association is usually done when switching to
-                      a new edge device with a different Peer ID.
-                    </p>
-                  </v-card-text>
-                  <v-card-actions>
-                    <v-spacer />
-                    <v-btn
-                      text
-                    >
-                      Cancel
-                    </v-btn>
-                    <v-btn
-                      text
-                    >
-                      Yes, Reset
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-            </v-row>
-          </v-container>
+            <v-list-item-content>
+              <v-list-item-title>{{ edge.edgeFriendlyName }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
         </v-card>
       </v-col>
+    </v-row>
+    <v-row>
       <v-col>
         <v-card>
           <v-card-title
             class="light grey"
           >
-            Remote Ambianic Edge
+            Previously connected Ambianic Edge
           </v-card-title>
           <v-select
             :items="friendlyName"
@@ -292,8 +151,8 @@
   </v-container>
 </template>
 <script>
-import AmbBanner from '@/components/shared/Banner.vue'
-import AmbListItem from '@/components/shared/ListItem.vue'
+// import AmbBanner from '@/components/shared/Banner.vue'
+// import AmbListItem from '@/components/shared/ListItem.vue'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import {
   PEER_DISCONNECTED,
@@ -313,8 +172,8 @@ import {
 
 export default {
   components: {
-    AmbBanner,
-    AmbListItem
+    // AmbBanner,
+    // AmbListItem
   },
   data () {
     return {
@@ -324,13 +183,6 @@ export default {
       },
       correctEdgeAddress: false,
       edgeFriendlyNameSet: ''
-    }
-  },
-  mounted () {
-    if (this.connectedTo === '') {
-      this.$store.dispatch(CURRENT_USER, 'My Home Ambianic')
-    } else {
-      this.$store.dispatch(CURRENT_USER, this.connectedTo)
     }
   },
   methods: {
@@ -371,6 +223,11 @@ export default {
     localEdgeAddress () {
       this.ambianicEdge.edgeAddress = undefined
       this.ambianicEdge.edgeFriendlyName = undefined
+      if (!this.friendlyName.some(data => data.friendlyName === 'My Home Ambianic')) {
+        // The Ambianic Peer ID is already in the store
+      } else {
+        // The Ambianic Peer ID is NOT in the store
+      }
       this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
     }
   },

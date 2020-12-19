@@ -147,7 +147,16 @@ const mutations = {
     state.peerFetch = peerFetch
   },
   [ADD_NEW_FRIENDLY_NAME] (state, edgeFriendlyName) {
-    state.peerFriendlyName.push(edgeFriendlyName)
+    if (this.peerFriendlyName === undefined) {
+      console.log('UNDEFINED', state.peerFriendlyName)
+      state.peerFriendlyName.push(edgeFriendlyName)
+    } else {
+      if (!state.peerFriendlyName.some(data => data.edgeFriendlyName === 'My Home Ambianic')) {
+        // The Ambianic Peer ID is already in the store
+      } else {
+        state.peerFriendlyName.push(edgeFriendlyName)
+      }
+    }
   },
   [CURRENT_ACTIVE_USER] (state, loggedInUser) {
     state.friendlyName = loggedInUser
@@ -211,6 +220,7 @@ function setPnPServiceConnectionHandlers (
       }
     }
     console.log('pnp client: myPeerId: ', peer.id)
+    commit(ADD_NEW_FRIENDLY_NAME, { edgeAddress: peer.id, edgeFriendlyName: 'My Home Ambianic' })
     // signaling server connection established
     // we can advance to peer discovery
     dispatch(PEER_DISCOVER)

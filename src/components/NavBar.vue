@@ -29,7 +29,6 @@
       />
       <v-spacer />
 
-      <p class='text-caption'>Connected to: {{ connectedTo }}</p>
       <amb-button
         with-badge
         data-cy="download-off"
@@ -54,8 +53,8 @@
         data-cy="bell"
         is-icon
         icon="bell"
-        :badge-content="newAlerts"
-        :badge-value="newAlerts"
+        :badge-content="friendlyName.length"
+        :badge-value="friendlyName.length"
       />
 
       <amb-button
@@ -215,7 +214,7 @@ export default {
   }),
   computed: {
     ...mapGetters(
-      ['connectedTo']
+      ['friendlyName']
     ),
     ...mapState({
       isEdgeConnected: function (state) {
