@@ -8,6 +8,9 @@
     >
       <v-col>
         <v-card>
+          <v-card-title>
+            Ambianic Edge Connections
+          </v-card-title>
           <v-list-item
             two-line
             v-for="(edge, index) in friendlyName"
@@ -22,7 +25,9 @@
     </v-row>
     <v-row>
       <v-col>
-        <v-card>
+        <v-card
+          class="previously"
+        >
           <v-card-title
             class="light grey"
           >

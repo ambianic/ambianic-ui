@@ -32,7 +32,7 @@ describe('NavBar', () => {
     }
 
     getters = {
-    //   ...
+      friendlyName: jest.fn()
     }
 
     store = new VueX.Store({
@@ -53,9 +53,16 @@ describe('NavBar', () => {
   afterEach(() => {
     wrapper.destroy()
   })
+
   test('Connection details loaded', () => {
     const card = wrapper.find('.v-card')
-    expect(card.find('.v-card__title').text()).toBe('Ambianic Edge connection details')
+    expect(card.find('.v-card__title').text()).toBe('Ambianic Edge Connections')
+    expect(card.exists()).toBe(true)
+  })
+
+  test('Previously connections', () => {
+    const card = wrapper.find('.previously')
+    expect(card.find('.v-card__title').text()).toBe('Previously connected Ambianic Edge')
     expect(card.exists()).toBe(true)
   })
 

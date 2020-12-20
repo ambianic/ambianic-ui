@@ -28,7 +28,7 @@ describe('NavBar', () => {
     }
 
     getters = {
-    //   ...
+      friendlyName: () => []
     }
 
     store = new VueX.Store({
