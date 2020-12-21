@@ -7,7 +7,7 @@ context('Settings', () => {
     })
 
     it('Should have a title card', () => {
-        cy.get('[data-cy=titlecard]').contains('Ambianic Edge connection details')
+        cy.get('[data-cy=titlecard]').contains('Ambianic Edge Connections')
     })
 
     it('Should have a local ambianic edge title card', () => {

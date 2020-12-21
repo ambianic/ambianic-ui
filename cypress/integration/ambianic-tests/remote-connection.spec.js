@@ -1,7 +1,3 @@
-/**
- * This test will only work while the EC2 machines are running.
- */
-
 /// <reference types="cypress" />
 
 context('RemoteConnections', () => {
@@ -21,6 +17,6 @@ context('RemoteConnections', () => {
         cy.get('#btn-settings').click()
         cy.get('#remotePeerID').type('917d5f0a-6469-4d33-b5c2-efd858118b74')
         cy.get('#btn-sendRemotePeerID').click()
-        cy.get('#edgePeerID').contains('917d5f0a-6469-4d33-b5c2-efd858118b74')
+        cy.get('[data-cy=listofambianics]').contains('My Home Ambianic')
     })
 })

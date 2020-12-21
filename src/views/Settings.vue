@@ -8,13 +8,16 @@
     >
       <v-col>
         <v-card>
-          <v-card-title>
+          <v-card-title
+            data-cy="titlecard"
+          >
             Ambianic Edge Connections
           </v-card-title>
           <v-list-item
             two-line
             v-for="(edge, index) in friendlyName"
             :key="index"
+            data-cy="listofambianics"
           >
             <v-list-item-content>
               <v-list-item-title>{{ edge.edgeFriendlyName }}</v-list-item-title>
