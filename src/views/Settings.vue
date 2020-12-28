@@ -244,7 +244,7 @@ export default {
       console.log('this.$store.state.pnp.peerConnectionStatus', this.$store.state.pnp.peerConnectionStatus)
       return this.$store.state.pnp.peerConnectionStatus === PEER_CONNECTION_ERROR
     },
-    ...mapGetters(['friendlyName', 'connectedTo']),
+    ...mapGetters(['friendlyName']),
     ...mapState({
       peerConnectionStatus: state => state.pnp.peerConnectionStatus,
       isEdgeConnected: state =>

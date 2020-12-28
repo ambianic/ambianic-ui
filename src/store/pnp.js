@@ -219,7 +219,6 @@ function setPnPServiceConnectionHandlers (
       }
     }
     console.log('pnp client: myPeerId: ', peer.id)
-    commit(ADD_NEW_FRIENDLY_NAME, { edgeAddress: peer.id, edgeFriendlyName: 'My Home Ambianic' })
     // signaling server connection established
     // we can advance to peer discovery
     dispatch(PEER_DISCOVER)
@@ -494,6 +493,7 @@ const actions = {
       // remote Peer ID authenticated,
       // lets store it for future (re)connections
       commit(NEW_REMOTE_PEER_ID, peerConnection.peer)
+      commit(ADD_NEW_FRIENDLY_NAME, { edgeAddress: peer.id, edgeFriendlyName: 'My Home Ambianic' })
     } else {
       commit(USER_MESSAGE, 'Remote peer authentication failed.')
       commit(PEER_CONNECTION_ERROR)
