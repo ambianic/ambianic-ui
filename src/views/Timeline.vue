@@ -20,6 +20,7 @@
           <v-icon
             slot="icon"
             size="36"
+            color="pink"
           >
             mdi-wifi-off
           </v-icon>
@@ -40,7 +41,8 @@
 
         <v-card-actions>
           <v-btn
-            text
+            outlined
+            color="accent"
             id="btn-settings"
             data-cy="settings"
             to="/settings"
