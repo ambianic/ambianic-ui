@@ -1,5 +1,18 @@
 # Semantic Versioning Changelog
 
+# [2.8.0](https://github.com/ambianic/ambianic-ui/compare/v2.7.0...v2.8.0) (2021-01-06)
+
+
+### Bug Fixes
+
+* tweak indentations ([c4926dc](https://github.com/ambianic/ambianic-ui/commit/c4926dc426969637096eea8498d1766240269f3f))
+
+
+### Features
+
+* change theme colors ([2c83edb](https://github.com/ambianic/ambianic-ui/commit/2c83edb1fd43a168a71c200983be7725ea82e384))
+* new theme colors ([81ec8b0](https://github.com/ambianic/ambianic-ui/commit/81ec8b07405140fdb7c8e21722924f626ab5c4a0)), closes [#445](https://github.com/ambianic/ambianic-ui/issues/445)
+
 # [2.7.0](https://github.com/ambianic/ambianic-ui/compare/v2.6.0...v2.7.0) (2020-11-26)
 
 
