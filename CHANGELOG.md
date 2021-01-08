@@ -1,5 +1,13 @@
 # Semantic Versioning Changelog
 
+# [2.9.0](https://github.com/ambianic/ambianic-ui/compare/v2.8.0...v2.9.0) (2021-01-08)
+
+
+### Features
+
+* timeline refresh to show new events, closes [#413](https://github.com/ambianic/ambianic-ui/issues/413) ([aac09d0](https://github.com/ambianic/ambianic-ui/commit/aac09d09574c2865f93e9e24262a168bb14276a6)), closes [#486](https://github.com/ambianic/ambianic-ui/issues/486)
+* timeline refresh, closes [#413](https://github.com/ambianic/ambianic-ui/issues/413) ([b27d14d](https://github.com/ambianic/ambianic-ui/commit/b27d14d7c734c581cf060ebcd66f291c80f47530))
+
 # [2.8.0](https://github.com/ambianic/ambianic-ui/compare/v2.7.0...v2.8.0) (2021-01-06)
 
 
