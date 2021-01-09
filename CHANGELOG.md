@@ -1,5 +1,13 @@
 # Semantic Versioning Changelog
 
+## [2.9.1](https://github.com/ambianic/ambianic-ui/compare/v2.9.0...v2.9.1) (2021-01-09)
+
+
+### Bug Fixes
+
+* simultaneous top/bottom timeline update spinner ([0d297cb](https://github.com/ambianic/ambianic-ui/commit/0d297cb540aa340dd0b9a84da0035b1907d5032b)), closes [#487](https://github.com/ambianic/ambianic-ui/issues/487)
+* simultaneous top/bottom timeline update spinner ([3a4b73f](https://github.com/ambianic/ambianic-ui/commit/3a4b73f83cb8a6164f1ca8d5b3cad676d2447bb3))
+
 # [2.9.0](https://github.com/ambianic/ambianic-ui/compare/v2.8.0...v2.9.0) (2021-01-08)
 
 
