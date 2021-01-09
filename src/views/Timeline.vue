@@ -64,7 +64,10 @@
         dense
         class="pa-0 ma-0"
       >
-        <infinite-loading direction="top" @infinite="infiniteHandlerTop">
+        <infinite-loading v-if="!isBottomSpinnerVisible" direction="top" @infinite="infiniteHandlerTop">
+          <span slot="no-more">
+            There are no new timeline events.
+          </span>
         </infinite-loading>
         <v-list-item
           data-cy="timelinedata"
@@ -248,7 +251,7 @@
             </v-timeline>
           </v-list-item-content>
         </v-list-item>
-        <infinite-loading @infinite="infiniteHandlerBottom">
+        <infinite-loading @infinite="infiniteHandlerBottom" v-observe-visibility="bottomSpinnerVisibilityChanged">
           <span slot="no-more">
             There are no more timeline events.
           </span>
@@ -266,6 +269,8 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import InfiniteLoading from 'vue-infinite-loading'
 import DetectionBoxes from '@/components/DetectionBoxes.vue'
+import Vue from 'vue'
+import VueObserveVisibility from 'vue-observe-visibility'
 import { EdgeAPI } from '@/remote/edgeAPI'
 import { mapState } from 'vuex'
 import moment from 'moment'
@@ -273,6 +278,8 @@ import {
   PEER_CONNECTED,
   NEW_REMOTE_PEER_ID
 } from '@/store/mutation-types'
+
+Vue.use(VueObserveVisibility)
 
 const PAGE_SIZE = 5
 
@@ -284,7 +291,7 @@ export default {
       imageURL: {}, // map[id, fullURL] - maps unique event id to their full thumbnail URLs
       isImageLoaded: [],
       on: true,
-      loading: false // flags whether the timeline is in the process of loading data
+      isBottomSpinnerVisible: false // flags whether the timeline is in the process of loading data
     }
   },
   created () {
@@ -342,14 +349,12 @@ export default {
       console.debug('getNextTimelinePage received data', { timelineEvents }) // eslint-disable-line no-console
       return timelineEvents
     },
+    async bottomSpinnerVisibilityChanged (isVisible, entry) {
+      this.isBottomSpinnerVisible = isVisible
+      console.debug(`bottomSpinnerVisibilityChanged: ${isVisible}`) // eslint-disable-line no-console
+    },
     async infiniteHandlerTop ($state) {
       try {
-        if (this.loading) {
-          $state.loaded()
-          return
-        } else {
-          this.loading = true
-        }
         if (this.clearTimeline) {
           this.timeline.length = 0
           this.clearTimeline = false
@@ -390,18 +395,10 @@ export default {
         // the backend API call returned an error
         // eslint-disable-next-line
         console.error(error)
-      } finally {
-        this.loading = false
       }
     },
     async infiniteHandlerBottom ($state) {
       try {
-        if (this.loading) {
-          $state.loaded()
-          return
-        } else {
-          this.loading = true
-        }
         if (this.clearTimeline) {
           this.timeline.length = 0
           this.clearTimeline = false
@@ -441,8 +438,6 @@ export default {
         // the backend API call returned an error
         // eslint-disable-next-line
         console.error(error)
-      } finally {
-        this.loading = false
       }
     },
     eventColor (event) {
