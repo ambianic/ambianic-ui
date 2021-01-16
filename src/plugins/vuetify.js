@@ -13,12 +13,12 @@ const vuetify = new Vuetify({
   theme: {
     dark: mq.matches,
     primary: manifestJSON.theme_color,
-    secondary: 0x00bcd4,
-    accent: 0x9c27b0,
-    error: 0xf44336,
-    warning: 0xff9800,
-    info: 0x607d8b,
-    success: 0x4caf50
+    secondary: '#00bcd4',
+    accent: '#9c27b0',
+    error: '#f44336',
+    warning: '#ff9800',
+    info: '#607d8b',
+    success: '#4caf50'
   }
 })
 
