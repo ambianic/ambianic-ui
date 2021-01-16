@@ -84,7 +84,7 @@
                 align="start"
                 justify="start"
               >
-                <template v-slot:placeholder>
+                <template #placeholder>
                   <v-row
                     class="fill-height ma-0"
                     align="center"
@@ -134,7 +134,7 @@
                 >
                   <v-col cols="7">
                     <v-tooltip bottom>
-                      <template v-slot:activator="{ on }">
+                      <template #activator="{ on }">
                         <v-btn
                           v-on="on"
                           fab
@@ -147,7 +147,7 @@
                       <span>Looks fine</span>
                     </v-tooltip>
                     <v-tooltip bottom>
-                      <template v-slot:activator="{ on }">
+                      <template #activator="{ on }">
                         <v-btn
                           v-on="on"
                           color="error lighten-2"
@@ -162,7 +162,7 @@
                   </v-col>
                   <v-col cols="1">
                     <v-tooltip bottom>
-                      <template v-slot:activator="{ on }">
+                      <template #activator="{ on }">
                         <v-btn
                           icon
                           v-on="on"
@@ -173,7 +173,7 @@
                       <span>Save to Favorites</span>
                     </v-tooltip>
                     <v-tooltip bottom>
-                      <template v-slot:activator="{ on }">
+                      <template #activator="{ on }">
                         <v-btn
                           icon
                           v-on="on"
@@ -184,7 +184,7 @@
                       <span>Edit event details</span>
                     </v-tooltip>
                     <v-tooltip bottom>
-                      <template v-slot:activator="{ on }">
+                      <template #activator="{ on }">
                         <v-btn
                           icon
                           v-on="on"

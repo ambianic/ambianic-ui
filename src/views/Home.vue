@@ -59,13 +59,28 @@
           </v-list-item-content>
         </v-list-item>
       </v-card>
+
+      <v-row
+        align="end"
+        justify="center"
+        no-gutters=""
+      >
+        <v-col>
+          <update-notification class="mx-auto" />
+        </v-col>
+      </v-row>
     </div>
   </div>
 </template>
 
 <script>
+import UpdateNotification from '@/components/UpdateNotification'
+
 export default {
   name: 'Home',
+  components: {
+    UpdateNotification
+  },
   data () {
     return { hasSetupSystem: false }
   },

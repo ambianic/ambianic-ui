@@ -115,7 +115,7 @@
             append-icon=""
             :class="item.class"
           >
-            <template v-slot:activator>
+            <template #activator>
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title>
