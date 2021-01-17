@@ -64,7 +64,11 @@
         dense
         class="pa-0 ma-0"
       >
-        <infinite-loading v-if="!isBottomSpinnerVisible" direction="top" @infinite="infiniteHandlerTop">
+        <infinite-loading
+          v-if="!isBottomSpinnerVisible"
+          direction="top"
+          @infinite="infiniteHandlerTop"
+        >
           <span slot="no-more">
             There are no new timeline events.
           </span>
@@ -251,7 +255,10 @@
             </v-timeline>
           </v-list-item-content>
         </v-list-item>
-        <infinite-loading @infinite="infiniteHandlerBottom" v-observe-visibility="bottomSpinnerVisibilityChanged">
+        <infinite-loading
+          @infinite="infiniteHandlerBottom"
+          v-observe-visibility="bottomSpinnerVisibilityChanged"
+        >
           <span slot="no-more">
             There are no more timeline events.
           </span>

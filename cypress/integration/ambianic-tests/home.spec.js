@@ -5,26 +5,13 @@ context('HomePage', () => {
   })
 
   it('Loads title and subtitle', () => {
-    cy.get('.v-list-item__title')
-      .should('contain.text', 'Cozy at Home')
-
     cy.get('.v-list-item__subtitle')
-      .should('contain.text', 'via Ambient Intelligence')
+      .should('contain.text', 'Cozy at Home - via Ambient Intelligence')
   })
 
-  it('Loads timeline button', () => {
+  it('Loads firsttime installation button', () => {
     cy.get('#btn-timeline > .v-btn__content')
-      .should('contain.text', 'View Timeline')
+      .should('contain.text', 'Continue Setup')
       .click()
-
-    cy.url().should('include', '/timeline')
-  })
-
-  it('Loads settings button', () => {
-    cy.get('#btn-settings > .v-btn__content')
-      .should('contain.text', 'Settings')
-      .click()
-
-    cy.url().should('include', '/settings')
   })
 })

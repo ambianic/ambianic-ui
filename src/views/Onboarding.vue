@@ -67,12 +67,16 @@
       >
         <v-list-item justify="center">
           <v-list-item-content>
-            <div class="flex">
+            <nav style="display: flex; flex-direction: row;">
               <v-list-item-title class="headline">
                 <h5>Getting Started</h5>
               </v-list-item-title>
 
-              <div @click="finishOnboarding()">
+              <div
+                v-if="stepLevel < 3"
+                class="skip-link"
+                @click="finishOnboarding()"
+              >
                 <a
                   style="text-decoration: none; color: grey;"
                   href="timeline"
@@ -80,122 +84,80 @@
                   Skip
                 </a>
               </div>
-            </div>
+            </nav>
 
             <br>
             <br>
 
-            <v-stepper v-model="stepLevel">
-              <v-stepper-header>
-                <v-stepper-step
-                  @click="
-                    moveStep(2)
-                    setStepContent('installation')
-                  "
-                  editable
-                  data-cy="stepper"
-                  :complete="stepLevel > 1"
-                  step="1"
-                >
-                  App Installation
-                  <br>
-                </v-stepper-step>
-                <v-divider />
+            <v-stepper
+              v-model="stepLevel"
+              vertical
+            >
+              <v-stepper-step
+                @click="
+                  moveStep(2)
+                  setStepContent('installation')
+                "
+                editable
+                data-cy="stepper"
+                :complete="stepLevel > 1"
+                step="1"
+              >
+                App Installation
+                <br>
+              </v-stepper-step>
 
-                <v-stepper-step
-                  editable
-                  data-cy="stepper"
-                  :complete="stepLevel > 2"
-                  step="2"
-                >
-                  Edge Device Setup
-                </v-stepper-step>
+              <v-stepper-content step="1">
+                <div v-if="!appInstallationComplete">
+                  <div class="flex-between">
+                    <v-card-text class="step-text">
+                      First, let's install the Ambianic UI App on your device.
+                    </v-card-text>
 
-                <v-divider />
-
-                <v-stepper-step
-                  data-cy="stepper"
-                  step="3"
-                >
-                  Connection Settings
-                </v-stepper-step>
-              </v-stepper-header>
-              <br>
-              <br>
-              <v-stepper-items>
-                <v-stepper-content step="1">
-                  <div v-if="!appInstallationComplete">
-                    <div class="flex-between">
-                      <p class="step-text">
-                        First, let's install the Ambianic UI App on your device.
+                    <v-btn
+                      style="padding: 1.2rem 1.2rem;"
+                      color="primary"
+                      size="2"
+                      data-cy="install-app"
+                      @click="installApp()"
+                    >
+                      <p
+                        style="padding-top: 15px;"
+                        v-if="!isInstallingApp"
+                      >
+                        Install App
+                      </p>
+                      <p
+                        style="padding-top: 15px;"
+                        v-else
+                      >
+                        Installing App
                       </p>
 
-                      <v-btn
-                        style="padding: 1.2rem 1.2rem;"
-                        color="primary"
-                        size="2"
-                        data-cy="install-app"
-                        @click="installApp()"
-                      >
-                        <p
-                          style="padding-top: 15px;"
-                          v-if="!isInstallingApp"
-                        >
-                          Install App
-                        </p>
-                        <p
-                          style="padding-top: 15px;"
-                          v-else
-                        >
-                          Installing App
-                        </p>
-
-                        <v-progress-circular
-                          style="padding-left: 50px;"
-                          indeterminate
-                          color="white"
-                          v-if="isInstallingApp"
-                        />
-                      </v-btn>
-                    </div>
+                      <v-progress-circular
+                        style="padding-left: 50px;"
+                        indeterminate
+                        color="white"
+                        v-if="isInstallingApp"
+                      />
+                    </v-btn>
                   </div>
-                  <div v-else>
-                    <div class="flex-between">
-                      <p class="step-text">
-                        Now you can access Ambianic as a native app on your
-                        mobile or desktop device.
-                      </p>
+                </div>
+                <div v-else>
+                  <div class="flex-between">
+                    <v-card-text class="step-text">
+                      Now you can access Ambianic as a native app on your mobile
+                      or desktop device.
+                    </v-card-text>
 
-                      <v-btn
-                        style="padding: 0.5rem 2rem;"
-                        color="primary"
-                        data-cy="continue-installation"
-                        @click="
-                          moveStep(2)
-                          setStepContent('installation')
-                        "
-                      >
-                        Continue
-
-                        <v-icon right>
-                          mdi-arrow-right
-                        </v-icon>
-                      </v-btn>
-                    </div>
-                  </div>
-                </v-stepper-content>
-
-                <v-stepper-content step="2">
-                  <div v-if="stepContentName === 'installation'">
-                    <p class="step-text">
-                      Next, let's setup your Ambianic Edge Device which will
-                      observe and report important events around the house.
-                    </p>
                     <v-btn
                       style="padding: 0.5rem 2rem;"
                       color="primary"
-                      data-cy="continue-step-2"
-                      @click="setStepContent('installation-question')"
+                      data-cy="continue-installation"
+                      @click="
+                        moveStep(2)
+                        setStepContent('installation')
+                      "
                     >
                       Continue
 
@@ -204,121 +166,160 @@
                       </v-icon>
                     </v-btn>
                   </div>
+                </div>
+              </v-stepper-content>
 
-                  <div v-if="stepContentName == 'installation-question'">
-                    <div class="flex-between">
-                      <p class="step-text">
-                        Are you installing Ambianic Edge Device on your local
-                        network, or you will be conneciting to a device on a
-                        remote network.
-                      </p>
-                    </div>
+              <v-stepper-step
+                editable
+                data-cy="stepper"
+                :complete="stepLevel > 2"
+                step="2"
+              >
+                Edge Device Setup
+              </v-stepper-step>
 
-                    <div class="button-flex">
-                      <v-btn
-                        style="padding: 0.5rem 2rem;"
-                        color="primary"
-                        data-cy="remote-button"
-                        @click="setStepContent('remote')"
-                      >
-                        Remote
-                      </v-btn>
+              <v-stepper-content step="2">
+                <div v-if="stepContentName === 'installation'">
+                  <v-card-text class="step-text">
+                    Next, let's setup your Ambianic Edge Device which will
+                    observe and report important events around the house.
+                  </v-card-text>
+                  <v-btn
+                    style="padding: 0.5rem 2rem;"
+                    color="primary"
+                    data-cy="continue-step-2"
+                    @click="setStepContent('installation-question')"
+                  >
+                    Continue
 
-                      <div style="padding-left: 50px;">
+                    <v-icon right>
+                      mdi-arrow-right
+                    </v-icon>
+                  </v-btn>
+                </div>
+
+                <div v-if="stepContentName == 'installation-question'">
+                  <div class="flex-between">
+                    <v-card-text class="step-text">
+                      Are you installing Ambianic Edge Device on your local
+                      network, or you will be conneciting to a device on a
+                      remote network?
+                    </v-card-text>
+                  </div>
+
+                  <v-container>
+                    <v-row dense>
+                      <v-col>
                         <v-btn
-                          style="padding: 0.5rem 2rem;"
+                          size="3"
+                          class="align-center"
+                          style="width: 100%; padding: 0.5rem 2rem;"
                           color="primary"
-                          data-cy="local-button"
-                          @click="setStepContent('local')"
+                          data-cy="remote-button"
+                          @click="setStepContent('remote')"
                         >
-                          Local
+                          Remote Device
+                        </v-btn>
+                      </v-col>
+
+                      <v-col>
+                        <div class="align-center">
+                          <v-btn
+                            style="width: 100%; padding: 0.5rem 2.5rem;"
+                            color="primary"
+                            data-cy="local-button"
+                            @click="setStepContent('local')"
+                          >
+                            Local Device
+                          </v-btn>
+                        </div>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </div>
+
+                <div v-if="stepContentName === 'remote'">
+                  <div class="flex-between">
+                    <v-card-text class="step-text">
+                      OK, you will need an invitation from the user who
+                      installed the Ambianic Edge device on their local network.
+
+                      <br>
+                      <br>
+                      Click the button below to request invitation granting
+                      access.
+                    </v-card-text>
+                  </div>
+
+                  <div class="flex">
+                    <v-btn
+                      color="primary"
+                      data-cy="request-access"
+                      @click="setStepContent('send-message')"
+                    >
+                      Request Access
+                    </v-btn>
+                  </div>
+                </div>
+
+                <div v-if="stepContentName === 'send-message'">
+                  <div v-if="!hasSentAccessRequest">
+                    <p class="step-text">
+                      Send a message using the template below.
+                    </p>
+
+                    <div class="message-container">
+                      <v-card-text class="step-text">
+                        Hi Blob, please send me an access invitation to your
+                        Ambianic Edge Device.
+                        <br>
+                      </v-card-text>
+                    </div>
+                    <br>
+                    <div class="center">
+                      <div class="flex">
+                        <v-btn
+                          color="primary"
+                          data-cy="send-message"
+                          @click="handleRequestDialog(true)"
+                        >
+                          Send Message
                         </v-btn>
                       </div>
                     </div>
                   </div>
+                  <div v-else>
+                    <v-card-text
+                      style="step-text"
+                      align="center"
+                    >
+                      Messaging client to send access request initiated
+                      sucessfully.
+                    </v-card-text>
+                    <v-card-text
+                      style="step-text"
+                      align="center"
+                    >
+                      Access Request wasn't sent successfully?
 
-                  <div v-if="stepContentName === 'remote'">
-                    <div class="flex-between">
-                      <p class="step-text">
-                        OK, you will need an invitation from the user who
-                        installed the Ambianic Edge device on their local
-                        network.
-
-                        <br>
-                        <br>
-                        Click the button below to request invitation granting
-                        access.
-                      </p>
-                    </div>
-
-                    <div class="flex">
-                      <v-btn
-                        color="primary"
-                        data-cy="request-access"
-                        @click="setStepContent('send-message')"
+                      <span
+                        color="pink darken-4"
+                        class="action-text"
+                        @click="handleAccessRequest(false)"
                       >
-                        Request Access
-                      </v-btn>
-                    </div>
-                  </div>
+                        Resend Request
+                      </span>
+                    </v-card-text>
 
-                  <div v-if="stepContentName === 'send-message'">
-                    <div v-if="!hasSentAccessRequest">
-                      <p class="step-text">
-                        Send a message using the template below.
-                      </p>
+                    <br>
 
-                      <div class="message-container">
-                        <p class="step-text">
-                          Hi Blob, please send me an access invitation to your
-                          Ambianic Edge Device.
-                          <br>
+                    <div class="align-center">
+                      <div class="flex">
+                        <p style="margin: 0.5rem 0.5rem;">
+                          Awaiting edge device connection
                         </p>
-                      </div>
-                      <br>
-                      <div class="center">
-                        <div class="flex">
-                          <v-btn
-                            color="primary"
-                            data-cy="send-message"
-                            @click="handleRequestDialog(true)"
-                          >
-                            Send Message
-                          </v-btn>
-                        </div>
-                      </div>
-                    </div>
-                    <div v-else>
-                      <p
-                        style="step-text"
-                        align="center"
-                      >
-                        Messaging client to send access request initiated
-                        sucessfully.
-                      </p>
-                      <p
-                        style="step-text"
-                        align="center"
-                      >
-                        Access Request wasn't sent successfully?
 
-                        <span
-                          color="pink darken-4"
-                          class="action-text"
-                          @click="handleAccessRequest(false)"
-                        >
-                          Resend Access Request
-                        </span>
-                      </p>
-
-                      <br>
-
-                      <div class="align-center">
-                        <div style="display: flex;">
-                          <p style="margin: 0.5rem 0.5rem;">
-                            Awaiting edge device connection
-                          </p>
-
+                        <div class="align-center">
                           <v-progress-circular
                             style="padding-left: 50px;"
                             indeterminate
@@ -326,24 +327,26 @@
                           />
                         </div>
                       </div>
-                      <br>
-                      <br>
-                      <hr>
-                      <br>
-                      <div>
+                    </div>
+                    <br>
+                    <br>
+                    <hr>
+                    <br>
+                    <div>
+                      <div
+                        class="align-center"
+                        style="flex-direction: column;"
+                      >
+                        <v-card-text class="info-text">
+                          Use recieved
+                          <b>PeerID</b>
+                          to pair with remote Ambianic Edge Device.
+                        </v-card-text>
                         <div
-                          class="align-center"
-                          style="flex-direction: column;"
+                          class="flex"
+                          style="justify-content: space-around;"
                         >
-                          <p class="info-text">
-                            Use recieved
-                            <b>PeerID</b>
-                            to pair with remote Ambianic Edge Device.
-                          </p>
-                          <div
-                            class="flex"
-                            style="justify-content: space-around;"
-                          >
+                          <div class="align-center">
                             <v-text-field
                               v-model="recievedPeerID"
                               type="text"
@@ -352,129 +355,173 @@
                               id="recievedPeerID"
                               outlined
                               dense
-                              class="mt-4"
+                              class="input"
                               name="peerid-input"
                             />
+                          </div>
 
-                            <div class="align-center">
-                              <v-btn
-                                :disabled="!isCorrectPeerId"
-                                style="margin-left: 20px;"
-                                color="primary"
-                                @click="submitPeerId()"
-                                data-cy="submit-button"
-                              >
-                                Submit PeerID
-                              </v-btn>
-                            </div>
+                          <div class="align-center">
+                            <v-btn
+                              :disabled="!isCorrectPeerId"
+                              style="margin-left: 20px; margin-bottom: 20px;"
+                              color="primary"
+                              @click="submitPeerId()"
+                              data-cy="submit-button"
+                            >
+                              Submit PeerID
+                            </v-btn>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
+                </div>
 
-                  <div v-if="stepContentName === 'local'">
-                    <div class="flex-between">
-                      <p class="step-text">
-                        Are you using a pre-installed Certified Ambianic Edge
-                        hardware device or you will use your own hardware?
-                      </p>
-                    </div>
+                <div v-if="stepContentName === 'local'">
+                  <div class="flex-between">
+                    <v-card-text class="step-text">
+                      Are you using a pre-installed Certified Ambianic Edge
+                      hardware device or you will use your own hardware?
+                    </v-card-text>
+                  </div>
 
-                    <div class="flex">
-                      <v-btn
-                        color="primary"
-                        @click="setStepContent('certified')"
-                      >
-                        Certified
-                      </v-btn>
-
-                      <div style="padding-left: 50px;">
+                  <v-container>
+                    <v-row dense>
+                      <v-col>
                         <v-btn
                           color="primary"
-                          @click="setStepContent('my-own')"
+                          style="width: 100%"
+                          @click="setStepContent('certified')"
                         >
-                          My Own
+                          Certified
                         </v-btn>
-                      </div>
-                    </div>
-                  </div>
+                      </v-col>
 
-                  <div v-if="stepContentName === 'my-own'">
-                    <div class="flex-between">
-                      <p class="step-text">
-                        Please follow the
-                        <a
-                          href="https://docs.ambianic.ai/users/quickstart/"
-                          target="_blank"
-                          rel="no-oopener"
-                        >
-                          Ambianic Edge DYI Install document guide
-                        </a>
-                        . When finished click, continue.
-                      </p>
-                    </div>
+                      <v-col>
+                        <div style="padding-left: 50px;">
+                          <v-btn
+                            color="primary"
+                            style="width: 100%"
+                            @click="setStepContent('my-own')"
+                          >
+                            My Own
+                          </v-btn>
+                        </div>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </div>
 
-                    <div class="right-btn">
-                      <v-btn
-                        color="primary"
-                        @click="setStepContent('certified')"
+                <div v-if="stepContentName === 'my-own'">
+                  <div class="flex-between">
+                    <v-card-text class="step-text">
+                      Please follow the
+                      <a
+                        href="https://docs.ambianic.ai/users/quickstart/"
+                        target="_blank"
+                        rel="no-oopener"
                       >
-                        Continue
-
-                        <v-icon right>
-                          mdi-arrow-right
-                        </v-icon>
-                      </v-btn>
-                    </div>
-                  </div>
-
-                  <div v-if="stepContentName === 'certified'">
-                    <div class="flex-between">
-                      <p class="step-text">
-                        Let's connect to your Ambianic Edge device.
-                      </p>
-                    </div>
-
-                    <div class="right-btn">
-                      <v-btn
-                        color="primary"
-                        @click="
-                          moveStep(3)
-                          setStepContent('discovering')
-                        "
-                      >
-                        Continue
-
-                        <v-icon right>
-                          mdi-arrow-right
-                        </v-icon>
-                      </v-btn>
-                    </div>
-                  </div>
-                </v-stepper-content>
-
-                <div v-if="stepContentName === 'discovering'">
-                  <div class="flex">
-                    <div class="align-center">
-                      <p>
-                        Now discovering your local edge device...
-                      </p>
-                    </div>
-
-                    <v-progress-circular
-                      style="padding-left: 50px;"
-                      indeterminate
-                      color="blue"
-                    />
+                        Ambianic Edge DYI Install document guide
+                      </a>
+                      . When finished click, continue.
+                    </v-card-text>
                   </div>
 
                   <div class="right-btn">
                     <v-btn
-                      :disabled="isEdgeConnected"
+                      color="primary"
+                      @click="setStepContent('certified')"
+                    >
+                      Continue
+
+                      <v-icon right>
+                        mdi-arrow-right
+                      </v-icon>
+                    </v-btn>
+                  </div>
+                </div>
+
+                <div v-if="stepContentName === 'certified'">
+                  <div class="flex-between">
+                    <v-card-text class="step-text">
+                      Let's connect to your Ambianic Edge device.
+                    </v-card-text>
+                  </div>
+
+                  <div class="right-btn">
+                    <v-btn
+                      color="primary"
+                      @click="
+                        moveStep(3)
+                        setStepContent('discovering')
+                      "
+                    >
+                      Continue
+
+                      <v-icon right>
+                        mdi-arrow-right
+                      </v-icon>
+                    </v-btn>
+                  </div>
+                </div>
+              </v-stepper-content>
+
+              <v-stepper-step
+                data-cy="stepper"
+                step="3"
+              >
+                Connection Settings
+              </v-stepper-step>
+              <br>
+
+              <v-stepper-content step="3">
+                <div v-if="stepContentName === 'discovering'">
+                  <div class="align-center">
+                    <div
+                      style="display: flex; flex-direction: column;"
+                      v-if="peerConnectionStatus === 'PEER_CONNECTED'"
+                    >
+                      <div class="align-center">
+                        <v-icon
+                          center
+                          style="color: green; font-size: 40px;"
+                        >
+                          mdi-check-bold
+                        </v-icon>
+                      </div>
+                      <br>
+                      <v-card-text>
+                        Your local edge device has been discovered.
+                        <br>
+                        Click continue to proceed.
+                      </v-card-text>
+                    </div>
+
+                    <div
+                      v-else
+                      class="flex"
+                    >
+                      <v-card-text>
+                        Discovering your local edge device...
+                      </v-card-text>
+
+                      <div class="align-center">
+                        <v-progress-circular
+                          style="padding-left: 50px;"
+                          indeterminate
+                          color="blue"
+                          v-if="peerConnectionStatus !== 'PEER_CONNECTED'"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="right-btn">
+                    <v-btn
+                      :disabled="peerConnectionStatus !== 'PEER_CONNECTED'"
                       style="padding: 0.5rem 2rem;"
                       color="primary"
-                      @click="setStepContent('connection')"
+                      @click="setStepContent('settings')"
                     >
                       Continue
 
@@ -487,9 +534,9 @@
 
                 <div v-if="stepContentName === 'connection'">
                   <div class="flex-between">
-                    <p class="step-text">
+                    <v-card-text class="step-text">
                       Connecting to edge...
-                    </p>
+                    </v-card-text>
                   </div>
 
                   <div class="flex">
@@ -507,67 +554,25 @@
                 </div>
 
                 <div v-if="stepContentName === 'settings'">
-                  <div class="flex-between">
-                    <p class="step-text">
+                  <div>
+                    <v-card-text class="step-text">
                       Edge Device Connected!
-                    </p>
-                    <br>
-                    <p>Edge Peer ID: {{ edgePeerID }}.</p>
+                    </v-card-text>
+                    <v-card-text>Edge Peer ID: {{ edgePeerId }}.</v-card-text>
                   </div>
-
-                  <div class="flex">
-                    <v-btn
-                      style="padding: 0.5rem 2rem;"
-                      color="primary"
-                      @click="setStepContent('timeline')"
-                    >
-                      OK
-                    </v-btn>
-
-                    <div style="padding-left: 50px;">
-                      <v-btn
-                        style="padding: 0.5rem 2rem;"
-                        color="primary"
-                        @click="stepContentName('reset')"
-                      >
-                        Reset
-                      </v-btn>
-                    </div>
-
-                    <div style="padding-left: 50px;">
-                      <v-btn
-                        style="padding: 0.5rem 2rem;"
-                        color="primary"
-                        @click="stepContentName('share')"
-                      >
-                        Share
-                      </v-btn>
-                    </div>
-                  </div>
-                </div>
-
-                <div v-if="stepContentName === 'timeline'">
-                  <div class="flex-between">
-                    <p class="step-text">
-                      Proceed To Timeline
-                    </p>
-                  </div>
-
-                  <div class="flex">
+                  <br>
+                  <div class="align-center">
                     <v-btn
                       style="padding: 0.5rem 2rem;"
                       color="primary"
                       :to="'timeline'"
                       @click="finishOnboarding()"
                     >
-                      Continue
-                      <v-icon right>
-                        mdi-arrow-right
-                      </v-icon>
+                      Complete Installation
                     </v-btn>
                   </div>
                 </div>
-              </v-stepper-items>
+              </v-stepper-content>
             </v-stepper>
           </v-list-item-content>
         </v-list-item>
@@ -687,7 +692,6 @@ export default {
     handleRequestDialog (state) {
       if (navigator.share) {
         navigator.share({
-          // url: link,
           title: 'Ambianic Edge Device Access Request',
           text:
             'Hi Blob, please send me an access invitation to your Ambianic Edge Device'
@@ -701,7 +705,7 @@ export default {
       window.localStorage.setItem('hasCompletedOnboarding', true)
     },
 
-    handleAccessRequest (state, client) {
+    handleAccessRequest (state) {
       this.sendRequestDialog = false
       this.hasSentAccessRequest = state
     },
@@ -724,7 +728,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="css" scoped>
 .input-field {
   color: #000;
   border: 1px solid #c0c0c0;
@@ -842,8 +846,20 @@ export default {
   height: calc(100vh - 78px);
 }
 
-@media only screen and (max-width: 750px) {
+.input {
+  width: 400px;
+}
+
+@media (max-width: 800px) {
   .flex-between {
+    flex-direction: column;
+  }
+
+  .input {
+    width: 350px;
+  }
+
+  .flex {
     flex-direction: column;
   }
 }

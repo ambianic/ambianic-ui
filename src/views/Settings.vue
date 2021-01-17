@@ -178,7 +178,10 @@
         </v-card-title>
         <v-container grid-list-sm>
           <!-- top column -->
-          <v-card min-width="100" flat>
+          <v-card
+            min-width="100"
+            flat
+          >
             <v-card-text class="text-center">
               <p class="text">
                 [On by default] Discover and pair with an Ambianic Edge device on

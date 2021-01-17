@@ -27,11 +27,11 @@ export default {
 
 <style scoped>
 .theme--light.v-application {
-  background: rgb(65, 131, 194) !important;
-  background: linear-gradient(
-    180deg,
-    rgb(49, 30, 102) 0%,
-    rgb(94, 48, 99) 100%
-  );
+    background: rgb(65, 131, 194) !important;
+    background: linear-gradient(
+        180deg,
+        rgb(49, 30, 102) 0%,
+        rgb(94, 48, 99) 100%
+    );
 }
 </style>
