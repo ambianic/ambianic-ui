@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [2.10.0](https://github.com/ambianic/ambianic-ui/compare/v2.9.1...v2.10.0) (2021-01-23)
+
+
+### Features
+
+* new end to end installation flow, closes [#380](https://github.com/ambianic/ambianic-ui/issues/380) ([17175da](https://github.com/ambianic/ambianic-ui/commit/17175da96069c03e96dcff9c60df01e950550e40)), closes [#466](https://github.com/ambianic/ambianic-ui/issues/466)
+
 ## [2.9.1](https://github.com/ambianic/ambianic-ui/compare/v2.9.0...v2.9.1) (2021-01-09)
 
 
