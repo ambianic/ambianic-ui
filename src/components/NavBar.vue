@@ -7,6 +7,7 @@
     <v-app-bar
       app
       color="blue darken-3"
+      dark
     >
       <v-toolbar-title
         style="width: 300px"
@@ -34,6 +35,7 @@
         data-cy="download-off"
         is-icon
         icon="download-off"
+        btn-color="secondary"
         v-if="!isEdgeConnected"
         @click="$router.push('edge-connect')"
       />
@@ -44,6 +46,7 @@
         data-cy="heart"
         is-icon
         icon="heart"
+        btn-color="pink lighten-2"
         :badge-content="newFavorites"
         :badge-value="newFavorites"
       />
@@ -115,7 +118,7 @@
             append-icon=""
             :class="item.class"
           >
-            <template v-slot:activator>
+            <template #activator>
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title>
@@ -129,7 +132,9 @@
               :key="i"
             >
               <v-list-item-action v-if="child.icon">
-                <v-icon>{{ child.icon }}</v-icon>
+                <v-icon color="primary">
+                  {{ child.icon }}
+                </v-icon>
               </v-list-item-action>
               <v-list-item-content>
                 <v-list-item-title>
@@ -145,7 +150,9 @@
             :class="item.class"
           >
             <v-list-item-action>
-              <v-icon>{{ item.icon }}</v-icon>
+              <v-icon :color="item.color">
+                {{ item.icon }}
+              </v-icon>
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title>
@@ -178,7 +185,7 @@ export default {
     newAlerts: 2,
     logo: '../assets/logo5.svg',
     items: [
-      { icon: 'history', text: 'Timeline', link: '/timeline' },
+      { icon: 'history', color: 'warning', text: 'Timeline', link: '/timeline' },
       // { icon: 'mdi-account-heart-outline', text: 'People', link: '/people' },
       // class: 'hidden-sm-and-down' ensures that an item is not shown
       // on small screens. For example flows are only visible on screens with
@@ -206,10 +213,10 @@ export default {
       // },
       // { icon: 'mdi-video-input-antenna', text: 'Connect', link: '/edge-connect' },
       // { icon: 'mdi-video-input-antenna', text: 'Connect Remote', link: '/remote-edge-connection' },
-      { icon: 'settings', text: 'Settings', link: '/settings' },
-      { icon: 'chat_bubble', text: 'Send feedback', link: '/feedback' },
-      { icon: 'help', text: 'Help', link: '/help' },
-      { icon: 'info', text: 'About Ambianic', link: '/about' }
+      { icon: 'settings', color: 'blue lighten-3', text: 'Settings', link: '/settings' },
+      { icon: 'chat_bubble', color: 'accent', text: 'Send feedback', link: '/feedback' },
+      { icon: 'help', color: 'indigo lighten-2', text: 'Help', link: '/help' },
+      { icon: 'info', color: 'info', text: 'About Ambianic', link: '/about' }
     ]
   }),
   computed: {

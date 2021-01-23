@@ -6,6 +6,10 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const webpack = require('webpack')
 
 module.exports = {
+  devServer: {
+    // setting to fix gitpod Ivalid Host Header error
+    disableHostCheck: true
+  },
   publicPath: '/',
   configureWebpack: {
     plugins: [
@@ -64,6 +68,7 @@ module.exports = {
         }
       ]
     }
+
   },
 
   transpileDependencies: [

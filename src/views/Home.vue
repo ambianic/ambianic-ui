@@ -1,8 +1,7 @@
 <template>
-  <v-content>
+  <v-content class="body">
     <v-container
       id="container"
-      class="pa-0 ma-0"
       fluid
     >
       <v-row
@@ -20,59 +19,69 @@
           >
             <v-list-item-content>
               <v-list-item-title class="headline">
-                Cozy at Home
+                Welcome to Ambianic.ai
               </v-list-item-title>
-              <v-list-item-subtitle>
-                via Ambient Intelligence
-              </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
 
-          <v-img
-            src="@/assets/home-screen-logo.png"
-          />
+          <v-img src="@/assets/home-screen-logo.png" />
 
           <v-card-text id="welcome-text">
-            Review your home timeline for notable moments.
-            Configure input sensors and camers for Ambianic to observe.
-            Share, purge or backup your data
-            - it never slips out of your control.
+            <v-list-item-subtitle class="center">
+              Cozy at Home - via Ambient Intelligence
+            </v-list-item-subtitle>
+
+            <p
+              class="center"
+              v-if="!hasSetupSystem"
+            >
+              Let's setup your system
+            </p>
+            <p
+              class="center"
+              v-else
+            >
+              Control your Ambianic Edge Appliances from your console.
+            </p>
           </v-card-text>
 
-          <v-card-actions>
-            <v-btn
-              rounded
-              color="pink darken-4"
-              dark
-              data-cy="timeline"
-              class="ma-2 white--text"
-              :to="'timeline'"
-              id="btn-timeline"
+          <v-card-actions class="align-center">
+            <div
+              v-if="hasSetupSystem"
+              class="skip-link"
             >
-              View Timeline
-              <v-icon
-                right
+              <v-btn
+                rounded
+                color="pink darken-4"
+                dark
+                data-cy="timeline"
+                class="ma-2 white--text"
+                :to="'timeline'"
+                id="btn-timeline"
               >
-                mdi-history
-              </v-icon>
-            </v-btn>
-            <v-spacer />
-            <v-btn
-              id="btn-settings"
-              rounded
-              color="pink darken-4"
-              dark
-              class="ma-2 white--text"
-              :to="'settings'"
-              data-cy="settings"
+                Open Edge Console
+              </v-btn>
+            </div>
+
+            <div
+              v-else
+              class="skip-link"
             >
-              Settings
-              <v-icon
-                right
+              <v-btn
+                rounded
+                color="pink darken-4"
+                dark
+                data-cy="timeline"
+                class="ma-2 white--text"
+                :to="'onboarding'"
+                id="btn-timeline"
               >
-                mdi-settings
-              </v-icon>
-            </v-btn>
+                Continue Setup
+                <v-icon right>
+                  mdi-arrow-right
+                </v-icon>
+              </v-btn>
+            </div>
           </v-card-actions>
         </v-card>
       </v-row>
@@ -90,7 +99,7 @@
 </template>
 
 <script>
-// import { mapState } from 'vuex'
+import { mapState } from 'vuex'
 
 const UpdateNotification = () => import('@/components/UpdateNotification')
 
@@ -98,6 +107,69 @@ export default {
   name: 'Home',
   components: {
     UpdateNotification
+  },
+  computed: {
+    ...mapState({
+      edgePeerId: state => state.pnp.remotePeerId
+    })
+  },
+  data () {
+    return { hasSetupSystem: false }
+  },
+  created () {
+    const setupStatus = window.localStorage.getItem('hasCompletedOnboarding')
+    const remotePeerId = this.edgePeerId
+
+    if (setupStatus || remotePeerId) {
+      this.hasSetupSystem = true
+    }
   }
 }
 </script>
+
+<style lang="stylus" scoped>
+.see-thru {
+  opacity: 0.8
+}
+
+.center {
+  text-align : center;
+}
+.container {
+    width : 100%;
+}
+  .flex-between {
+    display : flex;
+    justify-content : space-between;
+  }
+.invisible {
+  opacity : 0;
+}
+
+.align-center {
+  display : flex;
+  justify-content : center;
+  align-content  :center;
+}
+
+.body {
+  display: flex;
+  background: rgba(233, 241, 251, 0.81);
+  justify-content center;
+  align-items : center;
+  width : 100%;
+  height: 100vh;
+}
+.text {
+  font-display : swap
+}
+.skip-link {
+  left: 0;
+  color: white;
+  padding: 0px;
+  z-index: 50;
+}
+.skip-link:focus {
+  top: 0;
+}
+</style>
