@@ -2,8 +2,8 @@
 
 context('Settings', () => {
     before(() => {
-      cy.visit('http://localhost:8080')
-      cy.get('[data-cy=settings]').click()
+      cy.visit('http://localhost:8080/settings')
+      // cy.get('[data-cy=settings]').click()
     })
 
     it('Should have a title card', () => {

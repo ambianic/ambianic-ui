@@ -118,7 +118,7 @@
             append-icon=""
             :class="item.class"
           >
-            <template v-slot:activator>
+            <template #activator>
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title>
@@ -150,7 +150,9 @@
             :class="item.class"
           >
             <v-list-item-action>
-              <v-icon :color="item.color">{{ item.icon }}</v-icon>
+              <v-icon :color="item.color">
+                {{ item.icon }}
+              </v-icon>
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title>

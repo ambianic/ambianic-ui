@@ -6,7 +6,7 @@
 
 context('RemoteConnections', () => {
     beforeEach(() => {
-      cy.visit('/')
+      cy.visit('http://localhost:8080/settings')
     })
 
     // NOTE: this test commented out because it depends on an external edge server
@@ -18,7 +18,7 @@ context('RemoteConnections', () => {
     // })
 
     it('Should switch to a remote Edge Peer ID', () => {
-        cy.get('#btn-settings').click()
+        // cy.get('#btn-settings').click()
         cy.get('#remotePeerID').type('917d5f0a-6469-4d33-b5c2-efd858118b74')
         cy.get('#btn-sendRemotePeerID').click()
         cy.get('#edgePeerID').contains('917d5f0a-6469-4d33-b5c2-efd858118b74')
