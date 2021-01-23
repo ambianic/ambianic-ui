@@ -71,8 +71,8 @@
   </v-row>
 </template>
 <script>
-import AmbListItem from '@/components/shared/ListItem.vue'
 import { mapState } from 'vuex'
+const AmbListItem = () => import('@/components/shared/ListItem.vue')
 
 export default {
   components: {

@@ -17,6 +17,7 @@
   "dependencies": {
     "codecov": "^3.7.0",
     "compression-webpack-plugin": "^6.0.4",
+    "copy-webpack-plugin": "^7.0.0",
     "idb": "^5.0.3",
     "konva": "^7.1.4",
     "moment": "^2.26.0",
@@ -31,7 +32,8 @@
     "vue-router": "^3.2.0",
     "vue-worker": "^1.2.1",
     "vuetify": "^2.2.29",
-    "vuex": "^3.4.0"
+    "vuex": "^3.4.0",
+    "webpack-bundle-analyzer": "^4.4.0"
   },
   "devDependencies": {
     "fs-vacuum": "^1.2.10",

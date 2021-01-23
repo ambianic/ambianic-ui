@@ -58,7 +58,7 @@
   </v-row>
 </template>
 <script>
-import AmbListItem from '@/components/shared/ListItem.vue'
+const AmbListItem = () => ('@/components/shared/ListItem.vue')
 
 export default {
   components: {

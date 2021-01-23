@@ -90,7 +90,9 @@
 </template>
 
 <script>
-import UpdateNotification from '@/components/UpdateNotification'
+// import { mapState } from 'vuex'
+
+const UpdateNotification = () => import('@/components/UpdateNotification')
 
 export default {
   name: 'Home',

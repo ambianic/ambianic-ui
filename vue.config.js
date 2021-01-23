@@ -1,10 +1,19 @@
 // Compress static text assets at build time
 const CompressionPlugin = require('compression-webpack-plugin')
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+// const CopyWebpackPlugin = require('copy-webpack-plugin')
+const webpack = require('webpack')
 
 module.exports = {
   publicPath: '/',
   configureWebpack: {
+    plugins: [
+      new webpack.IgnorePlugin({
+        resourceRegExp: /^\.\/locale$/,
+        contextRegExp: /moment$/
+      })
+    ],
     optimization: {
       moduleIds: 'hashed',
       runtimeChunk: 'single',
@@ -70,6 +79,8 @@ module.exports = {
     config.plugin('CompressionPlugin').use(CompressionPlugin)
     // VuetifyLoaderPlugin
     config.plugin('VuetifyLoaderPlugin').use(VuetifyLoaderPlugin)
+    // For debugging purposes
+    config.plugin('BundleAnalyzerPlugin').use(BundleAnalyzerPlugin)
   },
 
   productionSourceMap: false
