@@ -3,6 +3,7 @@
     :icon="isIcon"
     :to="to"
     :color="btnColor"
+    @click="$emit('click', $event)"
   >
     <v-badge
       v-if="withBadge"

@@ -61,6 +61,14 @@
       />
 
       <amb-button
+        with-badge
+        data-cy="dark"
+        is-icon
+        icon="theme-light-dark"
+        @click="$vuetify.theme.dark = !$vuetify.theme.dark"
+      />
+
+      <amb-button
         is-icon
         data-cy="about"
         to="about"
@@ -226,6 +234,11 @@ export default {
         return state.pnp.peerConnectionStatus === PEER_CONNECTED
       }
     })
+  },
+  methods: {
+    switchThemes () {
+      console.warn('clicked!')
+    }
   }
 }
 </script>
