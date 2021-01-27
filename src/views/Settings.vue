@@ -8,7 +8,7 @@
     >
       <v-card flat>
         <v-card-title
-          class="light teal lighten-4"
+          class="grey darken-3"
           data-cy="titlecard"
         >
           Ambianic Edge connection details
@@ -171,7 +171,7 @@
     >
       <v-card>
         <v-card-title
-          class="light teal lighten-4"
+          class="grey darken-3"
           data-cy="localtitlecard"
         >
           Pair with local Ambianic Edge device
@@ -218,7 +218,7 @@
     >
       <v-card>
         <v-card-title
-          class="light teal lighten-4"
+          class="grey darken-3"
           data-cy="remotetitlecard"
         >
           Pair with remote Ambianic Edge device
