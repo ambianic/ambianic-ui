@@ -5,7 +5,6 @@ context('AboutPage', () => {
   })
 
   it('Loads title and subtitle', () => {
-
     cy.get('#about-title > .v-list-item__content > .v-list-item__title')
       .should('contain.text', 'Cozy at Home')
 
@@ -31,5 +30,4 @@ context('AboutPage', () => {
     cy.get('#version-info > .v-list-item__content > .v-list-item__subtitle')
       .should('contain.text', 'Release Version')
   })
-
 })

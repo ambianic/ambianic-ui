@@ -47,24 +47,6 @@
 
           <v-card-actions class="align-center">
             <div
-              v-if="hasSetupSystem"
-              class="skip-link"
-            >
-              <v-btn
-                rounded
-                color="pink darken-4"
-                dark
-                data-cy="timeline"
-                class="ma-2 white--text"
-                :to="'timeline'"
-                id="btn-timeline"
-              >
-                Open Edge Console
-              </v-btn>
-            </div>
-
-            <div
-              v-else
               class="skip-link"
             >
               <v-btn
@@ -121,7 +103,7 @@ export default {
     const remotePeerId = this.edgePeerId
 
     if (setupStatus || remotePeerId) {
-      this.hasSetupSystem = true
+      this.$router.push('timeline')
     }
   }
 }
