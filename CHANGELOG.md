@@ -1,5 +1,17 @@
 # Semantic Versioning Changelog
 
+# [2.11.0](https://github.com/ambianic/ambianic-ui/compare/v2.10.0...v2.11.0) (2021-01-31)
+
+
+### Bug Fixes
+
+* adjust return users flow to navigate to timeline ([6193ee2](https://github.com/ambianic/ambianic-ui/commit/6193ee25e5be0c24ee6784c6595d3c36682513b3)), closes [#496](https://github.com/ambianic/ambianic-ui/issues/496)
+
+
+### Features
+
+* Adjusted return users flow to navigate to timeline ([c8c4877](https://github.com/ambianic/ambianic-ui/commit/c8c48774d95a27873b74e3aa040bac2ea3c01d54))
+
 # [2.10.0](https://github.com/ambianic/ambianic-ui/compare/v2.9.1...v2.10.0) (2021-01-23)
 
 
