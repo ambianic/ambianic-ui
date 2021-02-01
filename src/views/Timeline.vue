@@ -145,9 +145,9 @@
                 >
                   <v-col cols="7">
                     <v-tooltip bottom>
-                      <template #activator="{ on }">
+                      <template>
                         <v-btn
-                          v-on="on"
+                          v-on="showTemplate"
                           fab
                           color="success lighten-2"
                           class="mx-2"
@@ -158,9 +158,9 @@
                       <span>Looks fine</span>
                     </v-tooltip>
                     <v-tooltip bottom>
-                      <template #activator="{ on }">
+                      <template>
                         <v-btn
-                          v-on="on"
+                          v-on="showTemplate"
                           color="error lighten-2"
                           fab
                           class="mx-2"
@@ -173,10 +173,10 @@
                   </v-col>
                   <v-col cols="1">
                     <v-tooltip bottom>
-                      <template #activator="{ on }">
+                      <template>
                         <v-btn
                           icon
-                          v-on="on"
+                          v-on="showTemplate"
                         >
                           <v-icon>mdi-heart</v-icon>
                         </v-btn>
@@ -184,10 +184,10 @@
                       <span>Save to Favorites</span>
                     </v-tooltip>
                     <v-tooltip bottom>
-                      <template #activator="{ on }">
+                      <template>
                         <v-btn
                           icon
-                          v-on="on"
+                          v-on="showTemplate"
                         >
                           <v-icon>mdi-pen</v-icon>
                         </v-btn>
@@ -195,10 +195,10 @@
                       <span>Edit event details</span>
                     </v-tooltip>
                     <v-tooltip bottom>
-                      <template #activator="{ on }">
+                      <template>
                         <v-btn
                           icon
-                          v-on="on"
+                          v-on="showTemplate"
                         >
                           <v-icon>mdi-share-variant</v-icon>
                         </v-btn>
@@ -297,7 +297,7 @@ export default {
       clearTimeline: true, // flag to clear timeline when Edge Peer ID changes
       imageURL: {}, // map[id, fullURL] - maps unique event id to their full thumbnail URLs
       isImageLoaded: [],
-      on: true,
+      showTemplate: true,
       isBottomSpinnerVisible: false // flags whether the timeline is in the process of loading data
     }
   },
