@@ -12,7 +12,9 @@
           <v-list-item-title class="headline">
             <input
               :value="title"
+              :placeholder="title"
               disabled
+              id="peerId-container"
               :type="sensitive ? 'password' : 'text'"
             >
           </v-list-item-title>
@@ -27,6 +29,7 @@
         <v-icon
           style="padding-bottom: 15px"
           v-if="sensitive"
+          id="toggle-visibility"
           @click="sensitive = false"
         >
           mdi-eye
@@ -41,7 +44,7 @@
       </div>
     </v-list-item-content>
 
-    <v-list-item-content v-else >
+    <v-list-item-content v-else>
       <v-list-item-title class="headline">
         {{ title }}
       </v-list-item-title>
