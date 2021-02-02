@@ -6,51 +6,49 @@
         mdi-{{ iconName }}
       </v-icon>
     </v-list-item-icon>
-    <v-list-item-content>
-      <div v-if="sensitiveField">
-        <div style="display : flex; justify-content: space-between">
-          <div style="display : flex; flex-direction: column">
-            <v-list-item-title class="headline">
-              <input
-                :value="title"
-                disabled
-                :type="sensitive ? 'password' : 'text'"
-              >
-            </v-list-item-title>
+    <v-list-item-content v-if="sensitiveField">
+      <div style="display : flex; justify-content: space-between">
+        <div style="display : flex; flex-direction: column">
+          <v-list-item-title class="headline">
+            <input
+              :value="title"
+              disabled
+              :type="sensitive ? 'password' : 'text'"
+            >
+          </v-list-item-title>
 
-            <div style="display: flex; align-items: center; justify-content: center;">
-              <v-list-item-subtitle>
-                {{ subtitle }}
-              </v-list-item-subtitle>
-            </div>
+          <div style="display: flex; align-items: center; justify-content: center;">
+            <v-list-item-subtitle>
+              {{ subtitle }}
+            </v-list-item-subtitle>
           </div>
-
-          <v-icon
-            style="padding-bottom: 15px"
-            v-if="sensitive"
-            @click="sensitive = false"
-          >
-            mdi-eye
-          </v-icon>
-          <v-icon
-            style="padding-bottom: 15px"
-            v-else
-            @click="sensitive = true"
-          >
-            mdi-eye-off-outline
-          </v-icon>
         </div>
-      </div>
 
-      <div v-if="!sensitiveField">
-        <v-list-item-title>
-          {{ title }}
-        </v-list-item-title>
-
-        <v-list-item-subtitle>
-          {{ subtitle }}
-        </v-list-item-subtitle>
+        <v-icon
+          style="padding-bottom: 15px"
+          v-if="sensitive"
+          @click="sensitive = false"
+        >
+          mdi-eye
+        </v-icon>
+        <v-icon
+          style="padding-bottom: 15px"
+          v-else
+          @click="sensitive = true"
+        >
+          mdi-eye-off-outline
+        </v-icon>
       </div>
+    </v-list-item-content>
+
+    <v-list-item-content v-else >
+      <v-list-item-title class="headline">
+        {{ title }}
+      </v-list-item-title>
+
+      <v-list-item-subtitle>
+        {{ subtitle }}
+      </v-list-item-subtitle>
     </v-list-item-content>
   </v-list-item>
 </template>
@@ -60,7 +58,8 @@ export default {
   name: 'ListItem',
   props: {
     sensitiveField: {
-      type: Boolean
+      type: Boolean,
+      default: false
     },
     align: {
       type: String,

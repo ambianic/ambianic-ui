@@ -56,7 +56,7 @@
                     subtitle="Peer ID"
                     icon-name="identifier"
                     id="edgePeerID"
-                    :sensitive_field="true"
+                    :sensitive-field="true"
                   />
                   <amb-list-item
                     :title="version"
