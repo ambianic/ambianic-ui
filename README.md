@@ -64,6 +64,11 @@ npm run serve
 npm run build
 ```
 
+### Runs all tests
+```
+npm run test
+```
+
 # Community Support 
 
 If you have questions, ideas or cool projects you'd like to share with the Ambianic team and community, please use the [Ambianic Twitter channel](https://twitter.com/ambianicai).

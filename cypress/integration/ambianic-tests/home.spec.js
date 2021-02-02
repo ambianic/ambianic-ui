@@ -1,30 +1,32 @@
 /// <reference types="cypress" />
+import {CHANGE_REMOTE_PEER_ID} from '../../../src/store/action-types';
+
 context('HomePage', () => {
-  beforeEach(() => {
-    cy.visit('/')
-  })
+    beforeEach(() => {
+        cy.visit('/')
+    })
 
-  it('Loads title and subtitle', () => {
-    cy.get('.v-list-item__title')
-      .should('contain.text', 'Cozy at Home')
+    it('Loads title and subtitle', () => {
+        cy.get('.v-list-item__subtitle')
+            .should('contain.text', 'Cozy at Home - via Ambient Intelligence')
+    })
 
-    cy.get('.v-list-item__subtitle')
-      .should('contain.text', 'via Ambient Intelligence')
-  })
+    it('Loads firsttime installation button', () => {
+        cy.get('#btn-timeline > .v-btn__content')
+            .should('contain.text', 'Continue Setup')
+            .click()
+    })
 
-  it('Loads timeline button', () => {
-    cy.get('#btn-timeline > .v-btn__content')
-      .should('contain.text', 'View Timeline')
-      .click()
+    it('Ensures returning users are taken directly to timeline', () => {
+        cy.window().should('have.property', '__store__')
+        cy.window().then(win => {
+            win.__store__.dispatch(CHANGE_REMOTE_PEER_ID, '917d5f0a-6469-4d33-b5c2-efd858118b74')
+            cy.wait(1000)
 
-    cy.url().should('include', '/timeline')
-  })
+            // reload to use new values for testing
+            cy.reload()
 
-  it('Loads settings button', () => {
-    cy.get('#btn-settings > .v-btn__content')
-      .should('contain.text', 'Settings')
-      .click()
-
-    cy.url().should('include', '/settings')
-  })
+            cy.url().should('include', '/timeline')
+        })
+    })
 })
