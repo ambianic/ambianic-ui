@@ -4,7 +4,7 @@ const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 
 module.exports = {
   devServer: {
-    // setting to fix gitpod Ivalid Host Header error 
+    // setting to fix gitpod Ivalid Host Header error
     disableHostCheck: true
   },
   publicPath: '/',
@@ -58,7 +58,7 @@ module.exports = {
           }
         }
       ]
-    },
+    }
 
   },
 
