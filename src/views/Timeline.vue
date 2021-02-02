@@ -20,6 +20,7 @@
           <v-icon
             slot="icon"
             size="36"
+            color="pink"
           >
             mdi-wifi-off
           </v-icon>
@@ -40,7 +41,8 @@
 
         <v-card-actions>
           <v-btn
-            text
+            outlined
+            color="accent"
             id="btn-settings"
             data-cy="settings"
             to="/settings"
@@ -62,6 +64,15 @@
         dense
         class="pa-0 ma-0"
       >
+        <infinite-loading
+          direction="top"
+          @infinite="infiniteHandlerTop"
+          v-observe-visibility="topSpinnerVisibilityChanged"
+        >
+          <span slot="no-more">
+            There are no new timeline events.
+          </span>
+        </infinite-loading>
         <v-list-item
           data-cy="timelinedata"
           v-for="(sample, index) in timeline"
@@ -73,7 +84,7 @@
           >
             <v-img
               v-if="sample.args.thumbnail_file_name"
-              :src="imageURL[index]"
+              :src="imageURL[sample.args.id]"
               class="white--text align-start"
               alt="Object Detection"
               contain
@@ -134,9 +145,9 @@
                 >
                   <v-col cols="7">
                     <v-tooltip bottom>
-                      <template>
+                      <template #activator="{ on: tooltip }">
                         <v-btn
-                          v-on="on"
+                          v-on="tooltip"
                           fab
                           color="success lighten-2"
                           class="mx-2"
@@ -147,9 +158,9 @@
                       <span>Looks fine</span>
                     </v-tooltip>
                     <v-tooltip bottom>
-                      <template>
+                      <template #activator="{ on: tooltip }">
                         <v-btn
-                          v-on="on"
+                          v-on="tooltip"
                           color="error lighten-2"
                           fab
                           class="mx-2"
@@ -162,10 +173,10 @@
                   </v-col>
                   <v-col cols="1">
                     <v-tooltip bottom>
-                      <template>
+                      <template #activator="{ on: tooltip }">
                         <v-btn
                           icon
-                          v-on="on"
+                          v-on="tooltip"
                         >
                           <v-icon>mdi-heart</v-icon>
                         </v-btn>
@@ -173,10 +184,10 @@
                       <span>Save to Favorites</span>
                     </v-tooltip>
                     <v-tooltip bottom>
-                      <template>
+                      <template #activator="{ on: tooltip }">
                         <v-btn
                           icon
-                          v-on="on"
+                          v-on="tooltip"
                         >
                           <v-icon>mdi-pen</v-icon>
                         </v-btn>
@@ -184,10 +195,10 @@
                       <span>Edit event details</span>
                     </v-tooltip>
                     <v-tooltip bottom>
-                      <template>
+                      <template #activator="{ on: tooltip }">
                         <v-btn
                           icon
-                          v-on="on"
+                          v-on="tooltip"
                         >
                           <v-icon>mdi-share-variant</v-icon>
                         </v-btn>
@@ -244,7 +255,10 @@
             </v-timeline>
           </v-list-item-content>
         </v-list-item>
-        <infinite-loading @infinite="infiniteHandler">
+        <infinite-loading
+          @infinite="infiniteHandlerBottom"
+          v-if="!isTopSpinnerVisible"
+        >
           <span slot="no-more">
             There are no more timeline events.
           </span>
@@ -254,14 +268,16 @@
   </v-row>
 </template>
 <style lang="stylus" scoped>
-  .see-thru {
-    opacity: 0.8
-  }
+.see-thru {
+  opacity: 0.8
+}
 </style>
 <script>
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import InfiniteLoading from 'vue-infinite-loading'
 import DetectionBoxes from '@/components/DetectionBoxes.vue'
+import Vue from 'vue'
+import VueObserveVisibility from 'vue-observe-visibility'
 import { EdgeAPI } from '@/remote/edgeAPI'
 import { mapState } from 'vuex'
 import moment from 'moment'
@@ -269,17 +285,17 @@ import {
   PEER_CONNECTED,
   NEW_REMOTE_PEER_ID
 } from '@/store/mutation-types'
-
+Vue.use(VueObserveVisibility)
 const PAGE_SIZE = 5
-
 export default {
   data () {
     return {
       timeline: [],
       clearTimeline: true, // flag to clear timeline when Edge Peer ID changes
-      imageURL: [],
+      imageURL: {}, // map[id, fullURL] - maps unique event id to their full thumbnail URLs
       isImageLoaded: [],
-      on: true
+      on: true,
+      isTopSpinnerVisible: true // flags whether the timeline is in the process of loading data
     }
   },
   created () {
@@ -321,37 +337,87 @@ export default {
       // eslint-disable-next-line
       // console.log(`isImageLoaded[${index}]: ${this.isImageLoaded[index]}`)
     },
-    updateImageURL (relDir, fileName, index) {
+    updateImageURL (relDir, fileName, id) {
       this.edgeAPI.getImageURL(relDir, fileName).then(fullImageURL => {
-        this.$set(this.imageURL, index, fullImageURL)
+        this.$set(this.imageURL, id, fullImageURL)
       })
     },
-    async getTimelineSlice () {
-      const timelineEvents = await this.edgeAPI.getTimelinePage(this.timeline.length / PAGE_SIZE + 1)
-      console.debug('getTimelineSlice received data', { timelineEvents }) // eslint-disable-line no-console
+    async getTopTimelinePage () {
+      // get a page with the most recent timeline events
+      const timelineEvents = await this.edgeAPI.getTimelinePage(1)
+      console.debug('getTopTimelinePage received data', { timelineEvents }) // eslint-disable-line no-console
       return timelineEvents
     },
-    async infiniteHandler ($state) {
+    async getNextTimelinePage () {
+      const timelineEvents = await this.edgeAPI.getTimelinePage(this.timeline.length / PAGE_SIZE + 1)
+      console.debug('getNextTimelinePage received data', { timelineEvents }) // eslint-disable-line no-console
+      return timelineEvents
+    },
+    async topSpinnerVisibilityChanged (isVisible, entry) {
+      this.isTopSpinnerVisible = isVisible
+      console.debug(`topSpinnerVisibilityChanged: ${isVisible}`) // eslint-disable-line no-console
+    },
+    async infiniteHandlerTop ($state) {
       try {
         if (this.clearTimeline) {
           this.timeline.length = 0
           this.clearTimeline = false
         }
-        const data = await this.getTimelineSlice()
-        console.debug('Infinite handler received timeline slice', { data }) // eslint-disable-line no-console
+        const data = await this.getTopTimelinePage()
+        console.debug('Infinite handler received Top timeline page', { data }) // eslint-disable-line no-console
         // Are there any more timeline events left?
         if (data && data.timeline && data.timeline.length > 0) {
           // eslint-disable-next-line
           // console.debug('new timeline events: ', data.timeline.length)
           // eslint-disable-next-line
           // console.log('timeline slice: ' + JSON.stringify(data.timeline))
-          const startIndex = this.timeline.length
+          // remove any of events that have already been shown in the current timeline
+          let newEvents = data.timeline
+          if (this.timeline.length > 0) {
+            newEvents = data.timeline.filter(
+              (event, index) =>
+                Date.parse(this.timeline[0].args.datetime) <
+                    Date.parse(event.args.datetime)
+            )
+          }
           // update full image URLs
-          data.timeline.map(
+          newEvents.forEach(
             (sample, index) =>
               this.updateImageURL(sample.args.rel_dir,
-                sample.args.thumbnail_file_name,
-                startIndex + index)
+                sample.args.thumbnail_file_name, sample.args.id)
+          )
+          this.timeline = newEvents.concat(this.timeline)
+          $state.loaded()
+        } else {
+          // no new events available at this time
+          $state.loaded()
+        }
+      } catch (error) {
+        // display some kind of error to the user that
+        // the backend API call returned an error
+        // eslint-disable-next-line
+        console.error(error)
+      }
+    },
+    async infiniteHandlerBottom ($state) {
+      try {
+        if (this.clearTimeline) {
+          this.timeline.length = 0
+          this.clearTimeline = false
+        }
+        const data = await this.getNextTimelinePage()
+        console.debug('Infinite handler received Bottom timeline page', { data }) // eslint-disable-line no-console
+        // Are there any more timeline events left?
+        if (data && data.timeline && data.timeline.length > 0) {
+          // eslint-disable-next-line
+          // console.debug('new timeline events: ', data.timeline.length)
+          // eslint-disable-next-line
+          // console.log('timeline slice: ' + JSON.stringify(data.timeline))
+          // update full image URLs
+          data.timeline.forEach(
+            (sample, index) =>
+              this.updateImageURL(sample.args.rel_dir,
+                sample.args.thumbnail_file_name, sample.args.id)
           )
           this.timeline = this.timeline.concat(data.timeline)
           $state.loaded()
