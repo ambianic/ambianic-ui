@@ -2,7 +2,7 @@
 <template>
   <v-list-item :two-line="twoLine">
     <v-list-item-icon>
-      <v-icon>
+      <v-icon :color="iconColor">
         mdi-{{ iconName }}
       </v-icon>
     </v-list-item-icon>
@@ -85,6 +85,10 @@ export default {
     twoLine: {
       type: Boolean,
       default: false
+    },
+    iconColor: {
+      type: String,
+      default: null
     }
   },
   data () {

@@ -1,5 +1,53 @@
 # Semantic Versioning Changelog
 
+# [2.11.0](https://github.com/ambianic/ambianic-ui/compare/v2.10.0...v2.11.0) (2021-01-31)
+
+
+### Bug Fixes
+
+* adjust return users flow to navigate to timeline ([6193ee2](https://github.com/ambianic/ambianic-ui/commit/6193ee25e5be0c24ee6784c6595d3c36682513b3)), closes [#496](https://github.com/ambianic/ambianic-ui/issues/496)
+
+
+### Features
+
+* Adjusted return users flow to navigate to timeline ([c8c4877](https://github.com/ambianic/ambianic-ui/commit/c8c48774d95a27873b74e3aa040bac2ea3c01d54))
+
+# [2.10.0](https://github.com/ambianic/ambianic-ui/compare/v2.9.1...v2.10.0) (2021-01-23)
+
+
+### Features
+
+* new end to end installation flow, closes [#380](https://github.com/ambianic/ambianic-ui/issues/380) ([17175da](https://github.com/ambianic/ambianic-ui/commit/17175da96069c03e96dcff9c60df01e950550e40)), closes [#466](https://github.com/ambianic/ambianic-ui/issues/466)
+
+## [2.9.1](https://github.com/ambianic/ambianic-ui/compare/v2.9.0...v2.9.1) (2021-01-09)
+
+
+### Bug Fixes
+
+* simultaneous top/bottom timeline update spinner ([0d297cb](https://github.com/ambianic/ambianic-ui/commit/0d297cb540aa340dd0b9a84da0035b1907d5032b)), closes [#487](https://github.com/ambianic/ambianic-ui/issues/487)
+* simultaneous top/bottom timeline update spinner ([3a4b73f](https://github.com/ambianic/ambianic-ui/commit/3a4b73f83cb8a6164f1ca8d5b3cad676d2447bb3))
+
+# [2.9.0](https://github.com/ambianic/ambianic-ui/compare/v2.8.0...v2.9.0) (2021-01-08)
+
+
+### Features
+
+* timeline refresh to show new events, closes [#413](https://github.com/ambianic/ambianic-ui/issues/413) ([aac09d0](https://github.com/ambianic/ambianic-ui/commit/aac09d09574c2865f93e9e24262a168bb14276a6)), closes [#486](https://github.com/ambianic/ambianic-ui/issues/486)
+* timeline refresh, closes [#413](https://github.com/ambianic/ambianic-ui/issues/413) ([b27d14d](https://github.com/ambianic/ambianic-ui/commit/b27d14d7c734c581cf060ebcd66f291c80f47530))
+
+# [2.8.0](https://github.com/ambianic/ambianic-ui/compare/v2.7.0...v2.8.0) (2021-01-06)
+
+
+### Bug Fixes
+
+* tweak indentations ([c4926dc](https://github.com/ambianic/ambianic-ui/commit/c4926dc426969637096eea8498d1766240269f3f))
+
+
+### Features
+
+* change theme colors ([2c83edb](https://github.com/ambianic/ambianic-ui/commit/2c83edb1fd43a168a71c200983be7725ea82e384))
+* new theme colors ([81ec8b0](https://github.com/ambianic/ambianic-ui/commit/81ec8b07405140fdb7c8e21722924f626ab5c4a0)), closes [#445](https://github.com/ambianic/ambianic-ui/issues/445)
+
 # [2.7.0](https://github.com/ambianic/ambianic-ui/compare/v2.6.0...v2.7.0) (2020-11-26)
 
 

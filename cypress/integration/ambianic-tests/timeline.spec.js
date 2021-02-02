@@ -3,7 +3,8 @@
 context('Timeline', () => {
     before(() => {
       cy.visit('http://localhost:8080')
-      cy.get('[data-cy=timeline]').click()
+    //   cy.get('[data-cy=timeline]').click()
+      cy.visit("./timeline")
     })
 
     it('Should browse to timeline', () => {

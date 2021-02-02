@@ -16,21 +16,12 @@ context('Actions', () => {
 
   it('looks inside welcome message', () => {
     cy.get('#welcome-text')
-      .should('contain', 'home timeline')
+      .should('contain', "Let's setup your system" )
   })
-
-  it('looks at settings button', () => {
-    let btn = cy.get('#btn-settings')
-    btn.should('have.attr', 'href', '/settings')
-    btn.get('.v-btn__content')
-      .contains('settings', { matchCase: false })
-  })
-
-  it('looks at timeline button', () => {
+ 
+  it('looks at welcome button', () => {
     let btn = cy.get('#btn-timeline')
-    btn.should('have.attr', 'href', '/timeline')
     btn.get('.v-btn__content')
-      .contains('view timeline', { matchCase: false })
+      .contains('Continue Setup', { matchCase: false })
   })
-
 })

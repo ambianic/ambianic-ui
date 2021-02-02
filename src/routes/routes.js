@@ -18,6 +18,14 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "timeline" */ '../views/Timeline.vue')
   },
+  {
+    path: '/onboarding',
+    name: 'onboarding',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "onboarding" */ '../views/Onboarding.vue')
+  },
   // {
   // This might be connected again once we have better UX design
   //   path: '/edge-connect',
