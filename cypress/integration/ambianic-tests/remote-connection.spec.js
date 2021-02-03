@@ -22,6 +22,8 @@ context('RemoteConnections', () => {
         cy.get('#remotePeerID').type('917d5f0a-6469-4d33-b5c2-efd858118b74')
         cy.get('#btn-sendRemotePeerID').click()
 
+        // makes sure ID is hidden by default
+        cy.get('input').should('not.have.value', '917d5f0a-6469-4d33-b5c2-efd858118b74')
         // reveal hidden PeerID
         cy.get('#toggle-visibility').click()
         cy.get('#peerId-container').should('have.value', '917d5f0a-6469-4d33-b5c2-efd858118b74')
