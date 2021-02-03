@@ -279,7 +279,7 @@
 <script>
 import AmbBanner from '@/components/shared/Banner.vue'
 import AmbListItem from '@/components/shared/ListItem.vue'
-import ConnectedSettings from '@/views/connected-settings'
+import ConnectedSettings from '@/views/settings/connected-settings.vue'
 
 import { mapActions, mapState } from 'vuex'
 import {
