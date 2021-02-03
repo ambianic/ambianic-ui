@@ -145,7 +145,7 @@
                 >
                   <v-col cols="7">
                     <v-tooltip bottom>
-                      <template #activator="{ on }">
+                      <template>
                         <v-btn
                           v-on="on"
                           fab
@@ -158,7 +158,7 @@
                       <span>Looks fine</span>
                     </v-tooltip>
                     <v-tooltip bottom>
-                      <template #activator="{ on }">
+                      <template>
                         <v-btn
                           v-on="on"
                           color="error lighten-2"
@@ -173,7 +173,7 @@
                   </v-col>
                   <v-col cols="1">
                     <v-tooltip bottom>
-                      <template #activator="{ on }">
+                      <template>
                         <v-btn
                           icon
                           v-on="on"
@@ -184,7 +184,7 @@
                       <span>Save to Favorites</span>
                     </v-tooltip>
                     <v-tooltip bottom>
-                      <template #activator="{ on }">
+                      <template>
                         <v-btn
                           icon
                           v-on="on"
@@ -195,7 +195,7 @@
                       <span>Edit event details</span>
                     </v-tooltip>
                     <v-tooltip bottom>
-                      <template #activator="{ on }">
+                      <template>
                         <v-btn
                           icon
                           v-on="on"
@@ -268,9 +268,9 @@
   </v-row>
 </template>
 <style lang="stylus" scoped>
-  .see-thru {
-    opacity: 0.8
-  }
+.see-thru {
+  opacity: 0.8
+}
 </style>
 <script>
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
@@ -285,11 +285,8 @@ import {
   PEER_CONNECTED,
   NEW_REMOTE_PEER_ID
 } from '@/store/mutation-types'
-
 Vue.use(VueObserveVisibility)
-
 const PAGE_SIZE = 5
-
 export default {
   data () {
     return {
@@ -374,17 +371,15 @@ export default {
           // console.debug('new timeline events: ', data.timeline.length)
           // eslint-disable-next-line
           // console.log('timeline slice: ' + JSON.stringify(data.timeline))
-
           // remove any of events that have already been shown in the current timeline
           let newEvents = data.timeline
           if (this.timeline.length > 0) {
             newEvents = data.timeline.filter(
               (event, index) =>
                 Date.parse(this.timeline[0].args.datetime) <
-                Date.parse(event.args.datetime)
+                    Date.parse(event.args.datetime)
             )
           }
-
           // update full image URLs
           newEvents.forEach(
             (sample, index) =>
