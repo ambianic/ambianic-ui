@@ -8,7 +8,7 @@
       :width="7"
     />
     <div class="top-section">
-      <div v-if="peerConnectionStatus !== 'PEER_CONNECTED'">
+      <div v-if="peerConnectionStatus === 'PEER_CONNECTED'">
         <h1 class="top-title">
           Ambianic Edge Device connected!
         </h1>
@@ -23,13 +23,13 @@
       </div>
       <h1
         v-else
-        class="title"
+        class="top-title"
       >
         Connecting To Ambianic Edge Device ...
       </h1>
     </div>
 
-    <div style="background-color: #f9fafa; height: calc(100vh - 390px); ">
+    <div class="card-section">
       <div class="align-center">
         <v-card
           width="800"
@@ -38,9 +38,9 @@
           <div class="contents">
             <div style="height: 55px; display : flex; justify-content: center">
               <div style="display: flex; justify-content: center; align-items: center">
-                <h3 style="font-weight: normal; margin: 0 .3rem">
+                <h4 style="font-weight: normal;">
                   Edge Device Configuration
-                </h3>
+                </h4>
               </div>
             </div>
 
@@ -127,9 +127,9 @@ export default {
   align-items: center;
 }
 
-.id {
-  font-weight: normal;
-  font-size: 1rem;
+.card-section {
+  background-color: #f9fafa;
+  height: calc(100vh - 390px);
 }
 
 .card-box {
@@ -155,13 +155,32 @@ export default {
   color: #fff;
 }
 
-.title {
-  font-size: 2.7rem;
-  text-align: center;
-  font-weight: normal;
+.top-title {
+  font-weight: 500;
 }
 
 @media (max-width: 800px) {
+  .top-title {
+    text-align: center;
+    font-size: 1.7rem;
+    font-weight: normal;
+  }
+}
 
+@media (max-width: 400px) {
+  .top-title {
+    text-align: center;
+    padding: 0 1rem;
+    font-size: 1.35rem;
+  }
+
+  .top-section {
+    height: 270px;
+  }
+
+  .card-section {
+    background-color: #f9fafa;
+    height: calc(100vh - 100%);
+  }
 }
 </style>

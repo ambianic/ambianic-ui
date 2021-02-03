@@ -10,9 +10,9 @@
         <div style="display : flex; flex-direction: column;">
           <v-list-item-title class="headline">
             <input
-              style=" color: black; width: 450px;"
-              :value="title"
-              :placeholder="title"
+              style=" color: black; width: 100%;"
+              :value="sensitive ? divideIdValue(title) : title"
+              :placeholder="sensitive ? divideIdValue(title) : title"
               disabled
               id="peerId-container"
               :type="sensitive ? 'password' : 'text'"
@@ -46,7 +46,7 @@
 
     <v-list-item-content v-else>
       <v-list-item-title class="headline">
-        {{ title }}
+        <h3 class="title-text" > {{ title }} </h3>
       </v-list-item-title>
 
       <v-list-item-subtitle>
@@ -97,6 +97,31 @@ export default {
     return {
       sensitive: true
     }
+  },
+  methods: {
+    divideIdValue (id) {
+      const arr = id.split('')
+      arr.splice(0, arr.length / 2)
+      return arr.join('')
+    }
   }
 }
 </script>
+
+<style>
+.title-text {
+  font-weight: normal;
+}
+
+@media (max-width: 900px) {
+  .title-text {
+    font-size: 1.4rem !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .title-text {
+    font-size: 1.15rem !important;
+  }
+}
+</style>
