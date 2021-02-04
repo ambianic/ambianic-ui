@@ -7,7 +7,7 @@
       :size="50"
       :width="7"
     />
-    <div class="top-section">
+       <div class="top-section">
       <div v-if="peerConnectionStatus === 'PEER_CONNECTED'">
         <h1 class="top-title">
           Ambianic Edge Device connected!
