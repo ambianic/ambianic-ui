@@ -1,5 +1,5 @@
 <template>
-  <v-content class="body">
+  <v-main class="body">
     <v-container
       id="container"
       fluid
@@ -77,7 +77,7 @@
         </v-col>
       </v-row>
     </v-container>
-  </v-content>
+  </v-main>
 </template>
 
 <script>
