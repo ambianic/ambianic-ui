@@ -65,9 +65,9 @@
         class="pa-0 ma-0"
       >
         <infinite-loading
-          v-if="!isBottomSpinnerVisible"
           direction="top"
           @infinite="infiniteHandlerTop"
+          v-observe-visibility="topSpinnerVisibilityChanged"
         >
           <span slot="no-more">
             There are no new timeline events.
@@ -145,9 +145,9 @@
                 >
                   <v-col cols="7">
                     <v-tooltip bottom>
-                      <template>
+                      <template #activator="{ on: tooltip }">
                         <v-btn
-                          v-on="on"
+                          v-on="tooltip"
                           fab
                           color="success lighten-2"
                           class="mx-2"
@@ -158,9 +158,9 @@
                       <span>Looks fine</span>
                     </v-tooltip>
                     <v-tooltip bottom>
-                      <template>
+                      <template #activator="{ on: tooltip }">
                         <v-btn
-                          v-on="on"
+                          v-on="tooltip"
                           color="error lighten-2"
                           fab
                           class="mx-2"
@@ -173,10 +173,10 @@
                   </v-col>
                   <v-col cols="1">
                     <v-tooltip bottom>
-                      <template>
+                      <template #activator="{ on: tooltip }">
                         <v-btn
                           icon
-                          v-on="on"
+                          v-on="tooltip"
                         >
                           <v-icon>mdi-heart</v-icon>
                         </v-btn>
@@ -184,10 +184,10 @@
                       <span>Save to Favorites</span>
                     </v-tooltip>
                     <v-tooltip bottom>
-                      <template>
+                      <template #activator="{ on: tooltip }">
                         <v-btn
                           icon
-                          v-on="on"
+                          v-on="tooltip"
                         >
                           <v-icon>mdi-pen</v-icon>
                         </v-btn>
@@ -195,10 +195,10 @@
                       <span>Edit event details</span>
                     </v-tooltip>
                     <v-tooltip bottom>
-                      <template>
+                      <template #activator="{ on: tooltip }">
                         <v-btn
                           icon
-                          v-on="on"
+                          v-on="tooltip"
                         >
                           <v-icon>mdi-share-variant</v-icon>
                         </v-btn>
@@ -257,7 +257,7 @@
         </v-list-item>
         <infinite-loading
           @infinite="infiniteHandlerBottom"
-          v-observe-visibility="bottomSpinnerVisibilityChanged"
+          v-if="!isTopSpinnerVisible"
         >
           <span slot="no-more">
             There are no more timeline events.
@@ -295,7 +295,7 @@ export default {
       imageURL: {}, // map[id, fullURL] - maps unique event id to their full thumbnail URLs
       isImageLoaded: [],
       on: true,
-      isBottomSpinnerVisible: false // flags whether the timeline is in the process of loading data
+      isTopSpinnerVisible: true // flags whether the timeline is in the process of loading data
     }
   },
   created () {
@@ -353,9 +353,9 @@ export default {
       console.debug('getNextTimelinePage received data', { timelineEvents }) // eslint-disable-line no-console
       return timelineEvents
     },
-    async bottomSpinnerVisibilityChanged (isVisible, entry) {
-      this.isBottomSpinnerVisible = isVisible
-      console.debug(`bottomSpinnerVisibilityChanged: ${isVisible}`) // eslint-disable-line no-console
+    async topSpinnerVisibilityChanged (isVisible, entry) {
+      this.isTopSpinnerVisible = isVisible
+      console.debug(`topSpinnerVisibilityChanged: ${isVisible}`) // eslint-disable-line no-console
     },
     async infiniteHandlerTop ($state) {
       try {

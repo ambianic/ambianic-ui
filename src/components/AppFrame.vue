@@ -4,7 +4,7 @@
     <!-- nav goes here -->
     <NavBar />
 
-    <v-content>
+    <v-main>
       <v-container
         id="container"
         class="pa-0 ma-0"
@@ -14,7 +14,7 @@
           <p>App page content goes here...</p>
         </slot>
       </v-container>
-    </v-content>
+    </v-main>
 
     <v-footer
       app
