@@ -1,5 +1,27 @@
 # Semantic Versioning Changelog
 
+## [2.12.1](https://github.com/ambianic/ambianic-ui/compare/v2.12.0...v2.12.1) (2021-02-05)
+
+
+### Bug Fixes
+
+* on a brand new install timeline doesn't auto refresh ([0359433](https://github.com/ambianic/ambianic-ui/commit/03594338c8b4efa600d683e7605a2d07ebf90668)), closes [#516](https://github.com/ambianic/ambianic-ui/issues/516)
+* on a brand new install timeline doesn't auto refresh ([f5127f9](https://github.com/ambianic/ambianic-ui/commit/f5127f98f644a0df1554dcdc8da013268f63e693))
+
+# [2.12.0](https://github.com/ambianic/ambianic-ui/compare/v2.11.0...v2.12.0) (2021-02-03)
+
+
+### Bug Fixes
+
+* default protection of sensitive peerID ([6c07973](https://github.com/ambianic/ambianic-ui/commit/6c07973d50687b53df892cedebe2c687538dbd8b)), closes [#510](https://github.com/ambianic/ambianic-ui/issues/510)
+* fixed breaking updates ([2dded9f](https://github.com/ambianic/ambianic-ui/commit/2dded9f61fa3b26bfa5613eb504f6a88742cfb68))
+* update obselete test suite ([4e0e8de](https://github.com/ambianic/ambianic-ui/commit/4e0e8dea2d25398d4634d42a8c6be3da8ca7b858))
+
+
+### Features
+
+* added default protection of sensitive peerID ([d42f521](https://github.com/ambianic/ambianic-ui/commit/d42f521a7ac9728a70de3bc1c55854a01aad1274))
+
 # [2.11.0](https://github.com/ambianic/ambianic-ui/compare/v2.10.0...v2.11.0) (2021-01-31)
 
 
