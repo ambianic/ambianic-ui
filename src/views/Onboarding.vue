@@ -270,8 +270,7 @@
 
                     <div class="message-container">
                       <v-card-text class="step-text">
-                        Hi Blob, please send me an access invitation to your
-                        Ambianic Edge Device.
+                        {{ invitationMessage }}
                         <br>
                       </v-card-text>
                     </div>
@@ -620,6 +619,7 @@ export default {
       stepLevel: localStorage.getItem('lastOnboardingStage') || 1,
       stepContentName: localStorage.getItem('lastOnboardingStep') || '',
       isInstallingApp: false,
+      invitationMessage: 'Hi ____, please send me an access invitation to your Ambianic Edge Device.',
       appInstallationComplete: false,
       completedSteps: [],
       sendRequestDialog: false,
@@ -693,8 +693,7 @@ export default {
       if (navigator.share) {
         navigator.share({
           title: 'Ambianic Edge Device Access Request',
-          text:
-              'Hi Blob, please send me an access invitation to your Ambianic Edge Device'
+          text: this.invitationMessage
         })
       } else {
         this.sendRequestDialog = state

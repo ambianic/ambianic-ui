@@ -4,7 +4,13 @@
 
 /// <reference types="cypress" />
 
-context('RemoteConnections', () => {
+const checkViewPort = (cy, device) => {
+    cy.viewport(device)
+    cy.get('#toggle-visibility').should('be.visible')
+    cy.get('#peerId-container').should('be.visible')
+}
+
+context('RemoteConnections',    () => {
     beforeEach(() => {
       cy.visit('http://localhost:8080/settings')
     })
@@ -27,5 +33,23 @@ context('RemoteConnections', () => {
         // reveal hidden PeerID
         cy.get('#toggle-visibility').click()
         cy.get('#peerId-container').should('have.value', '917d5f0a-6469-4d33-b5c2-efd858118b74')
+    })
+
+    it('Displays elements in smaller viewports', () => {
+        cy.get('#remotePeerID').type('917d5f0a-6469-4d33-b5c2-efd858118b74')
+        cy.get('#btn-sendRemotePeerID').click()
+
+        // ensure elements are shown on smaller viewports
+        checkViewPort(cy, 'iphone-5')
+        checkViewPort(cy, 'iphone-6')
+        checkViewPort(cy, 'samsung-s10')
+        checkViewPort(cy, 'samsung-note9')
+        checkViewPort(cy, 'iphone-x')
+        checkViewPort(cy, 'iphone-xr')
+
+        checkViewPort(cy, 'ipad-mini')
+        checkViewPort(cy, 'ipad-2')
+        checkViewPort(cy, 'macbook-11')
+        checkViewPort(cy, 'macbook-13')
     })
 })

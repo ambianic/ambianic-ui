@@ -96,13 +96,6 @@ export default {
       default: null
     }
   },
-  methods: {
-    divideIdValue (id) {
-      const arr = id.split('')
-      arr.splice(0, arr.length / 2)
-      return arr.join('')
-    }
-  },
   data () {
     return {
       sensitive: true
