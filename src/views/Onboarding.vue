@@ -694,7 +694,7 @@ export default {
         navigator.share({
           title: 'Ambianic Edge Device Access Request',
           text:
-            'Hi Blob, please send me an access invitation to your Ambianic Edge Device'
+              'Hi Blob, please send me an access invitation to your Ambianic Edge Device'
         })
       } else {
         this.sendRequestDialog = state

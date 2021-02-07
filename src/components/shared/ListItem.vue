@@ -2,55 +2,48 @@
 <template>
   <v-list-item :two-line="twoLine">
     <v-list-item-icon>
-      <div v-if="!sensitiveField">
-        <v-icon :color="iconColor">
-          mdi-{{ iconName }}
-        </v-icon>
-      </div>
-      <div v-else>
-        <v-icon
-          style="padding-bottom: 14px"
-          v-if="sensitive"
-          id="toggle-visibility"
-          @click="sensitive = false"
-        >
-          mdi-eye
-        </v-icon>
-        <v-icon
-          style="padding-bottom: 15px"
-          v-else
-          @click="sensitive = true"
-        >
-          mdi-eye-off-outline
-        </v-icon>
-      </div>
+      <v-icon :color="iconColor">
+        mdi-{{ iconName }}
+      </v-icon>
     </v-list-item-icon>
     <v-list-item-content v-if="sensitiveField">
       <v-row dense>
         <v-col>
-          <div class="sensitive-ctn">
-            <v-list-item-title class="headline">
-              <input
-                :value="title"
-                :placeholder="title"
-                disabled
-                style="color: #000;"
-                id="peerId-container"
-                :type="sensitive ? 'password' : 'text'"
-              >
-            </v-list-item-title>
+          <v-list-item-title class="headline">
+            <input
+              :value="title"
+              :placeholder="title"
+              disabled
+              style="color: #000;"
+              id="peerId-container"
+              :type="sensitive ? 'password' : 'text'"
+            >
+          </v-list-item-title>
 
-            <div style="display: flex; align-items: center; justify-content: center;">
-              <v-list-item-subtitle>
-                {{ subtitle }}
-              </v-list-item-subtitle>
-            </div>
+          <div style="display: flex; align-items: center; justify-content: center;">
+            <v-list-item-subtitle>
+              {{ subtitle }}
+            </v-list-item-subtitle>
           </div>
         </v-col>
 
-        <!--        <v-col>-->
-        <!--        -->
-        <!--        </v-col>-->
+        <v-col>
+          <v-icon
+            style="padding-bottom: 14px"
+            v-if="sensitive"
+            id="toggle-visibility"
+            @click="sensitive = false"
+          >
+            mdi-eye
+          </v-icon>
+          <v-icon
+            style="padding-bottom: 15px"
+            v-else
+            @click="sensitive = true"
+          >
+            mdi-eye-off-outline
+          </v-icon>
+        </v-col>
       </v-row>
     </v-list-item-content>
 
@@ -117,16 +110,3 @@ export default {
   }
 }
 </script>
-
-<style lang="css" scoped >
-  .sensitive-ctn {
-    display : flex;
-    flex-direction: column;
-  }
-
-  @media (max-width: 400px) {
-    .sensitive-ctn {
-      /*width: 190px;*/
-    }
-  }
-</style>
