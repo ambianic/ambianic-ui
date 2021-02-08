@@ -1,5 +1,14 @@
 # Semantic Versioning Changelog
 
+## [2.12.2](https://github.com/ambianic/ambianic-ui/compare/v2.12.1...v2.12.2) (2021-02-08)
+
+
+### Bug Fixes
+
+* adjusted visibility container grid to use vuetify grids ([381cda3](https://github.com/ambianic/ambianic-ui/commit/381cda39290ddb207ba6124b126e8e8098ac9ab1))
+* make peer id visibility toggle icon responsive to small resolutions ([1bba341](https://github.com/ambianic/ambianic-ui/commit/1bba34100441c021f257c1d5d6a2faefa84889f8)), closes [#514](https://github.com/ambianic/ambianic-ui/issues/514)
+* update obselete test suite ([9e38fa0](https://github.com/ambianic/ambianic-ui/commit/9e38fa0a10c2c984b0e588913acd912143715c45))
+
 ## [2.12.1](https://github.com/ambianic/ambianic-ui/compare/v2.12.0...v2.12.1) (2021-02-05)
 
 
