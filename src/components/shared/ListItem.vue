@@ -7,13 +7,14 @@
       </v-icon>
     </v-list-item-icon>
     <v-list-item-content v-if="sensitiveField">
-      <div style="display : flex; justify-content: space-between">
-        <div style="display : flex; flex-direction: column">
+      <v-row dense>
+        <v-col>
           <v-list-item-title class="headline">
             <input
               :value="title"
               :placeholder="title"
               disabled
+              style="color: #000;"
               id="peerId-container"
               :type="sensitive ? 'password' : 'text'"
             >
@@ -24,24 +25,26 @@
               {{ subtitle }}
             </v-list-item-subtitle>
           </div>
-        </div>
+        </v-col>
 
-        <v-icon
-          style="padding-bottom: 15px"
-          v-if="sensitive"
-          id="toggle-visibility"
-          @click="sensitive = false"
-        >
-          mdi-eye
-        </v-icon>
-        <v-icon
-          style="padding-bottom: 15px"
-          v-else
-          @click="sensitive = true"
-        >
-          mdi-eye-off-outline
-        </v-icon>
-      </div>
+        <v-col>
+          <v-icon
+            style="padding-bottom: 14px"
+            v-if="sensitive"
+            id="toggle-visibility"
+            @click="sensitive = false"
+          >
+            mdi-eye
+          </v-icon>
+          <v-icon
+            style="padding-bottom: 15px"
+            v-else
+            @click="sensitive = true"
+          >
+            mdi-eye-off-outline
+          </v-icon>
+        </v-col>
+      </v-row>
     </v-list-item-content>
 
     <v-list-item-content v-else>
