@@ -1,5 +1,14 @@
 # Semantic Versioning Changelog
 
+## [2.12.3](https://github.com/ambianic/ambianic-ui/compare/v2.12.2...v2.12.3) (2021-02-10)
+
+
+### Bug Fixes
+
+* off colors ([ecae304](https://github.com/ambianic/ambianic-ui/commit/ecae304e79262037b93f151bb1f6da2edb7bcd65))
+* theme color issues; closes [#492](https://github.com/ambianic/ambianic-ui/issues/492); closes [#488](https://github.com/ambianic/ambianic-ui/issues/488) ([e03ed7d](https://github.com/ambianic/ambianic-ui/commit/e03ed7d8b0b4aa74313d14713b54724938540d9b)), closes [#518](https://github.com/ambianic/ambianic-ui/issues/518)
+* theme color issues; closes [#492](https://github.com/ambianic/ambianic-ui/issues/492); closes [#488](https://github.com/ambianic/ambianic-ui/issues/488) ([7fef043](https://github.com/ambianic/ambianic-ui/commit/7fef04324a705d2045e95cfc7eb4a28539b42af9))
+
 ## [2.12.2](https://github.com/ambianic/ambianic-ui/compare/v2.12.1...v2.12.2) (2021-02-08)
 
 
