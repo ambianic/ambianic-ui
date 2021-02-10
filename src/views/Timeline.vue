@@ -20,7 +20,6 @@
           <v-icon
             slot="icon"
             size="36"
-            color="pink"
           >
             mdi-wifi-off
           </v-icon>

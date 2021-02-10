@@ -1,6 +1,8 @@
 
 # Ambianic Client UI
 
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/ambianic/ambianic-ui)
+
 ![CI for Ambianic UI](https://github.com/ambianic/ambianic-ui/workflows/CI%20for%20Ambianic%20UI/badge.svg)
 [![npm version](https://badge.fury.io/js/ambianic-ui.svg)](https://badge.fury.io/js/ambianic-ui)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/70a4b25a-2765-4d6b-bbd8-a7e5dd6e98cb/deploy-status)](https://app.netlify.com/sites/happy-franklin-69b6d4/deploys)
@@ -9,8 +11,6 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/ambianic/ambianic-ui/badge)](https://www.codefactor.io/repository/github/ambianic/ambianic-ui)
 ![Lighthouse PWA CI](https://github.com/ambianic/ambianic-ui/workflows/Lighthouse%20CI/badge.svg)
 [![codecov](https://codecov.io/gh/ambianic/ambianic-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/ambianic/ambianic-ui)
-
-[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/ambianic/ambianic-ui)
 
 Ambianic Client UI is an Offline-first Progressive Web App (PWA) to manage Ambianic Edge deployments.
 

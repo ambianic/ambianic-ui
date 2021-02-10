@@ -20,17 +20,15 @@
             id="feedback-title"
             icon-name="comment-quote-outline"
             title="Send Feedback"
-            icon-color="accent"
             subtitle="We currently use github to gather user feedbaack. Click the button below to open an issue."
           />
         </v-list>
         <v-card-actions>
           <v-btn
             id="btn-feedback"
-            outlined
+            text
             href="https://github.com/ambianic/ambianic-ui/issues"
             target="_blank"
-            color="accent"
           >
             Open Feedback Page
           </v-btn>
