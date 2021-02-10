@@ -41,7 +41,6 @@
         <v-card-actions>
           <v-btn
             outlined
-            color="accent"
             id="btn-settings"
             data-cy="settings"
             to="/settings"

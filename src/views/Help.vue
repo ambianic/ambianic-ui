@@ -47,7 +47,6 @@
             <v-icon
               left
               dark
-              color="accent"
             >
               mdi-twitter
             </v-icon>
