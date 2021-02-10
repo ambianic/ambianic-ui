@@ -6,7 +6,6 @@
     <v-icon
       slot="icon"
       size="36"
-      :color="iconColor"
     >
       mdi-{{ icon }}
     </v-icon>
@@ -34,10 +33,6 @@ export default {
       default: null
     },
     text: {
-      type: String,
-      default: null
-    },
-    iconColor: {
       type: String,
       default: null
     },

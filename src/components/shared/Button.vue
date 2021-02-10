@@ -2,7 +2,6 @@
   <v-btn
     :icon="isIcon"
     :to="to"
-    :color="btnColor"
   >
     <v-badge
       v-if="withBadge"
@@ -45,10 +44,6 @@ export default {
       default: false
     },
     to: {
-      type: String,
-      default: null
-    },
-    btnColor: {
       type: String,
       default: null
     }

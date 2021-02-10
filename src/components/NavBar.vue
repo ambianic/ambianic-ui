@@ -7,7 +7,6 @@
     <v-app-bar
       app
       color="blue darken-3"
-      dark
     >
       <v-toolbar-title
         style="width: 300px"
@@ -46,7 +45,6 @@
         data-cy="heart"
         is-icon
         icon="heart"
-        btn-color="pink lighten-2"
         :badge-content="newFavorites"
         :badge-value="newFavorites"
       />
@@ -185,7 +183,7 @@ export default {
     newAlerts: 2,
     logo: '../assets/logo5.svg',
     items: [
-      { icon: 'history', color: 'warning', text: 'Timeline', link: '/timeline' },
+      { icon: 'history', text: 'Timeline', link: '/timeline' },
       // { icon: 'mdi-account-heart-outline', text: 'People', link: '/people' },
       // class: 'hidden-sm-and-down' ensures that an item is not shown
       // on small screens. For example flows are only visible on screens with
@@ -213,10 +211,10 @@ export default {
       // },
       // { icon: 'mdi-video-input-antenna', text: 'Connect', link: '/edge-connect' },
       // { icon: 'mdi-video-input-antenna', text: 'Connect Remote', link: '/remote-edge-connection' },
-      { icon: 'settings', color: 'blue lighten-3', text: 'Settings', link: '/settings' },
-      { icon: 'chat_bubble', color: 'accent', text: 'Send feedback', link: '/feedback' },
-      { icon: 'help', color: 'indigo lighten-2', text: 'Help', link: '/help' },
-      { icon: 'info', color: 'info', text: 'About Ambianic', link: '/about' }
+      { icon: 'settings', text: 'Settings', link: '/settings' },
+      { icon: 'chat_bubble', text: 'Send feedback', link: '/feedback' },
+      { icon: 'help', text: 'Help', link: '/help' },
+      { icon: 'info', text: 'About Ambianic', link: '/about' }
     ]
   }),
   computed: {

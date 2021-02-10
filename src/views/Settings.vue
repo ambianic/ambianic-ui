@@ -8,7 +8,6 @@
     >
       <v-card flat>
         <v-card-title
-          class="light teal lighten-4"
           data-cy="titlecard"
         >
           Ambianic Edge connection details
@@ -79,7 +78,7 @@
               <amb-banner
                 banner-class="text-left"
                 icon="wifi-off"
-                icon-color="pink"
+                icon-color="info"
                 text="Let's find your Ambianic Edge device and connect to it..."
               />
               <v-stepper
@@ -172,7 +171,6 @@
     >
       <v-card>
         <v-card-title
-          class="light teal lighten-4"
           data-cy="localtitlecard"
         >
           Pair with local Ambianic Edge device
@@ -219,7 +217,6 @@
     >
       <v-card>
         <v-card-title
-          class="light teal lighten-4"
           data-cy="remotetitlecard"
         >
           Pair with remote Ambianic Edge device
