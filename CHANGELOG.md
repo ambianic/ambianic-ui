@@ -1,5 +1,13 @@
 # Semantic Versioning Changelog
 
+## [2.12.4](https://github.com/ambianic/ambianic-ui/compare/v2.12.3...v2.12.4) (2021-02-11)
+
+
+### Bug Fixes
+
+* settings button styling ([86f83fa](https://github.com/ambianic/ambianic-ui/commit/86f83fa67ded1963d25b527a5062ad8dad8d21df)), closes [#519](https://github.com/ambianic/ambianic-ui/issues/519)
+* settings button styling ([f482d65](https://github.com/ambianic/ambianic-ui/commit/f482d659a17e566634c1b91e50eb065af3554d7a))
+
 ## [2.12.3](https://github.com/ambianic/ambianic-ui/compare/v2.12.2...v2.12.3) (2021-02-10)
 
 
