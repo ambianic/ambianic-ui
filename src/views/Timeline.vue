@@ -40,7 +40,7 @@
 
         <v-card-actions>
           <v-btn
-            outlined
+            text
             id="btn-settings"
             data-cy="settings"
             to="/settings"
