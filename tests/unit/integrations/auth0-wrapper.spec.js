@@ -3,11 +3,20 @@ import { mount, createLocalVue } from '@vue/test-utils'
 import Vuetify from 'vuetify'
 import VueX from 'vuex'
 import VueRouter from 'vue-router'
-import NavBar from '@/components/NavBar.vue'
 import { Auth0Plugin } from '@/auth'
 
-describe('NavBar', () => {
-// global
+const Component = {
+  template: `
+    <div>
+      <span id="authenticated">{{ $auth.isAuthenticated }}</span>
+      <span id="loading">{{ $auth.loading }}</span>
+      <span id="user">{{ $auth.user }}</span>
+    </div>
+  `
+}
+
+describe('AuthBarMenu', () => {
+  // global
   let wrapper
   const localVue = createLocalVue()
   Vue.use(Vuetify) // for shallowshallowMount use
@@ -20,7 +29,7 @@ describe('NavBar', () => {
   Vue.use(Auth0Plugin, {
     CLIENTDOMAIN,
     CLIENTSECRET,
-    onRedirectCallback: appState => {
+    onRedirectCallback: (appState) => {
       router.push(
         appState && appState.targetUrl
           ? appState.targetUrl
@@ -44,17 +53,13 @@ describe('NavBar', () => {
       }
     }
 
-    getters = {
-    //   ...
-    }
-
     store = new VueX.Store({
       state,
       getters
     })
 
     // using shallowMount with subtree components
-    wrapper = mount(NavBar, {
+    wrapper = mount(Component, {
       localVue,
       vuetify,
       router,
@@ -66,22 +71,10 @@ describe('NavBar', () => {
     wrapper.destroy()
   })
 
-  test('should load app bar', () => {
-    const bar = wrapper.find('.v-app-bar')
-    expect(bar.find('.v-toolbar__title').text()).toBe('Ambianic')
-    expect(bar.exists()).toBe(true)
-  })
-
-  test('should load 5 buttons', () => {
-    const btn = wrapper.findAll('.v-btn')
-    expect(btn.length).toBe(4)
-  })
-
-  test('should load navigation drawer', () => {
-    const nav = wrapper.find('.v-navigation-drawer')
-    const item = wrapper.findAll('.v-list-item')
-
-    expect(nav.exists()).toBe(true)
-    expect(item.length).toBe(5)
+  // find a way to convert to BOOL values
+  test('It should have initial authentication & user state', () => {
+    expect(wrapper.find('#authenticated').text()).toBe('false')
+    expect(wrapper.find('#loading').text()).toBe('true')
+    expect(wrapper.find('#user').text()).toBe('{}')
   })
 })

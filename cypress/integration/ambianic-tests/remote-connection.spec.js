@@ -4,7 +4,7 @@
 
 /// <reference types="cypress" />
 
-const checkViewPort = (cy, device) => {
+export const checkViewPort = (cy, device) => {
     cy.viewport(device)
     cy.get('#toggle-visibility').should('be.visible')
     cy.get('#peerId-container').should('be.visible')

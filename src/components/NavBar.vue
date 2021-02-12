@@ -58,21 +58,7 @@
         :badge-value="newAlerts"
       />
 
-      <amb-button
-        is-icon
-        data-cy="about"
-        to="about"
-      >
-        <v-avatar
-          size="32px"
-          item
-        >
-          <v-img
-            src="@/assets/logo5.svg"
-            alt="Ambianic.ai logo"
-          />
-        </v-avatar>
-      </amb-button>
+      <AuthBarMenu />
     </v-app-bar>
 
     <!-- drawer -->
@@ -173,10 +159,17 @@ import {
 export default {
   name: 'NavBar',
   components: {
-    AmbButton: () => import('./shared/Button.vue')
+    AmbButton: () => import('./shared/Button.vue'),
+    AuthBarMenu: () => import('./authBarMenu.vue')
   },
   data: () => ({
-    dialog: false,
+    // TESTING POPOVER
+    fav: true,
+    menu: true,
+    message: false,
+    hints: true,
+    // CLOSE POPOVER
+
     drawer: null, // hide drawer on mobile and show on desktop
     on: true,
     newFavorites: 0,
@@ -227,7 +220,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>
