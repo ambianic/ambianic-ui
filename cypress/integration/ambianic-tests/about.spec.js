@@ -29,5 +29,8 @@ context('AboutPage', () => {
   it('Loads version info', () => {
     cy.get('#version-info > .v-list-item__content > .v-list-item__subtitle')
       .should('contain.text', 'Release Version')
+
+      const versionNumber = require('../../../package.json').version
+      cy.get('[data-cy=title-text]').should('contain.text', versionNumber )
   })
 })
