@@ -1,4 +1,3 @@
-
 <template>
   <v-main class="body">
     <v-container
@@ -47,20 +46,24 @@
           </v-card-text>
 
           <v-card-actions class="align-center">
-            <v-btn
-              rounded
-              color="pink darken-4"
-              dark
-              data-cy="timeline"
-              class="ma-2 white--text"
-              :to="'onboarding'"
-              id="btn-timeline"
+            <div
+              class="skip-link"
             >
-              Continue Setup
-              <v-icon right>
-                mdi-arrow-right
-              </v-icon>
-            </v-btn>
+              <v-btn
+                rounded
+                color="pink darken-4"
+                dark
+                data-cy="timeline"
+                class="ma-2 white--text"
+                :to="'onboarding'"
+                id="btn-timeline"
+              >
+                Continue Setup
+                <v-icon right>
+                  mdi-arrow-right
+                </v-icon>
+              </v-btn>
+            </div>
           </v-card-actions>
         </v-card>
       </v-row>
