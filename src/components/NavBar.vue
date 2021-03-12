@@ -30,6 +30,7 @@
       <v-spacer />
 
       <amb-button
+        with-badge
         data-cy="timeline-icon"
         is-icon
         icon="history"
