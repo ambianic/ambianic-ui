@@ -31,6 +31,16 @@
 
       <amb-button
         with-badge
+        data-cy="timeline-icon"
+        is-icon
+        icon="history"
+        btn-color="secondary"
+        v-if="!isEdgeConnected"
+        to="timeline"
+      />
+
+      <amb-button
+        with-badge
         data-cy="download-off"
         is-icon
         icon="download-off"
