@@ -3,8 +3,18 @@
     align="start"
     justify="space-around"
   >
+    <!-- used by test runner to load mock data -->
+    <v-btn
+      data-cy="load-mock-data"
+      id="load-mock-data"
+      @click="loadMockData()"
+      style="opacity: 0;"
+    >
+      M
+    </v-btn>
+
     <v-col
-      v-if="!isEdgeConnected"
+      v-if="peerConnectionStatus !== 'PEER_CONNECTED'"
       style="max-width: 400px;"
       align="center"
       justify="center"
@@ -13,7 +23,7 @@
     >
       <v-card
         class="mx-auto"
-        data-cy="connectioncard"
+        id="connectionCard"
         outlined
       >
         <v-card-title>
@@ -33,9 +43,9 @@
         </v-card-title>
 
         <v-card-text>
-          In most cases, connecting to your edge device is automatic.
-          If you are not connected within a few moments, click the
-          button below to review settings.
+          In most cases, connecting to your edge device is automatic. If you are
+          not connected within a few moments, click the button below to review
+          settings.
         </v-card-text>
 
         <v-card-actions>
@@ -50,8 +60,10 @@
         </v-card-actions>
       </v-card>
     </v-col>
+
     <v-col
       v-else
+      id="timeline-data"
       style="max-width: 400px;"
       align="center"
       justify="center"
@@ -72,14 +84,11 @@
           </span>
         </infinite-loading>
         <v-list-item
-          data-cy="timelinedata"
           v-for="(sample, index) in timeline"
           :key="index"
           class="pa-0 ma-0"
         >
-          <v-list-item-content
-            class="pa-0 ma-0"
-          >
+          <v-list-item-content class="pa-0 ma-0">
             <v-img
               v-if="sample.args.thumbnail_file_name"
               :src="imageURL[sample.args.id]"
@@ -91,7 +100,6 @@
               <v-row
                 class="fill-height ma-0"
                 align="start"
-                justify="start"
               >
                 <template #placeholder>
                   <v-row
@@ -105,27 +113,14 @@
                     />
                   </v-row>
                 </template>
-                <template
-                  v-if="isImageLoaded[index]"
-                >
+                <template v-if="isImageLoaded[index]">
                   <detection-boxes
                     :detections="sample.args.inference_result"
-                    :tensor_image_size="sample.args.inference_meta.tensor_image_size"
+                    :tensor_image_size="
+                      sample.args.inference_meta.tensor_image_size
+                    "
                   />
-                  <v-avatar
-                    :color="eventColor(sample)"
-                    size="62"
-                    left
-                    align="top"
-                    class="font-weight-regular pa-4 ma-6 see-thru"
-                  >
-                    <v-icon
-                      dark
-                      large
-                    >
-                      {{ eventIcon(sample) }}
-                    </v-icon>
-                  </v-avatar>
+                  <event-icon :data="sample" />
                 </template>
               </v-row>
             </v-img>
@@ -138,15 +133,14 @@
                 hide-dot
                 v-if="sample.args.inference_result.length > 0"
               >
-                <v-row
-                  class="pt-1"
-                >
+                <v-row class="pt-1">
                   <v-col cols="7">
                     <v-tooltip bottom>
                       <template #activator="{ on: tooltip }">
                         <v-btn
                           v-on="tooltip"
                           fab
+                          data-cy="check-btn"
                           color="success lighten-2"
                           class="mx-2"
                         >
@@ -159,6 +153,7 @@
                       <template #activator="{ on: tooltip }">
                         <v-btn
                           v-on="tooltip"
+                          data-cy="bell-btn"
                           color="error lighten-2"
                           fab
                           class="mx-2"
@@ -174,6 +169,7 @@
                       <template #activator="{ on: tooltip }">
                         <v-btn
                           icon
+                          data-cy="heart-btn"
                           v-on="tooltip"
                         >
                           <v-icon>mdi-heart</v-icon>
@@ -185,6 +181,7 @@
                       <template #activator="{ on: tooltip }">
                         <v-btn
                           icon
+                          data-cy="edit-btn"
                           v-on="tooltip"
                         >
                           <v-icon>mdi-pen</v-icon>
@@ -196,6 +193,7 @@
                       <template #activator="{ on: tooltip }">
                         <v-btn
                           icon
+                          data-cy="share-btn"
                           v-on="tooltip"
                         >
                           <v-icon>mdi-share-variant</v-icon>
@@ -209,6 +207,7 @@
               <v-timeline-item
                 :color="eventColor(sample)"
                 small
+                data-cy="timeline-item"
               >
                 <v-row class="pt-1">
                   <v-col cols="3">
@@ -238,7 +237,9 @@
                     <strong>{{ inf.label }}</strong>
                   </v-col>
                   <v-col>
-                    <strong>{{ asPercentage(inf.confidence) }} confidence</strong>
+                    <strong>
+                      {{ asPercentage(inf.confidence) }} confidence
+                    </strong>
                   </v-col>
                 </v-row>
               </v-timeline-item>
@@ -274,18 +275,19 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import InfiniteLoading from 'vue-infinite-loading'
 import DetectionBoxes from '@/components/DetectionBoxes.vue'
+import EventIcon from '@/components/EventIcon.vue'
 import Vue from 'vue'
 import VueObserveVisibility from 'vue-observe-visibility'
 import { EdgeAPI } from '@/remote/edgeAPI'
 import { mapState } from 'vuex'
 import moment from 'moment'
-import {
-  PEER_CONNECTED,
-  NEW_REMOTE_PEER_ID
-} from '@/store/mutation-types'
+import { PEER_CONNECTED, NEW_REMOTE_PEER_ID } from '@/store/mutation-types'
+import MockData from '../assets/mock-data/timeline.json'
+
 Vue.use(VueObserveVisibility)
 const PAGE_SIZE = 5
 export default {
+  name: 'Timeline',
   data () {
     return {
       timeline: [],
@@ -313,20 +315,26 @@ export default {
   },
   components: {
     DetectionBoxes,
-    InfiniteLoading
+    InfiniteLoading,
+    EventIcon
   },
   computed: {
     ...mapState({
-      peerConnectionStatus: state => state.pnp.peerConnectionStatus,
+      peerConnectionStatus: (state) => state.pnp.peerConnectionStatus,
       // map this.edgeConnected to this.$store.state.edgeConnected
-      isEdgeConnected: state =>
+      isEdgeConnected: (state) =>
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
-      edgePeerId: state => state.pnp.remotePeerId,
-      peerFetch: state => state.pnp.peerFetch,
-      pnp: state => state.pnp
+      edgePeerId: (state) => state.pnp.remotePeerId,
+      peerFetch: (state) => state.pnp.peerFetch,
+      pnp: (state) => state.pnp
     })
   },
   methods: {
+    loadMockData () {
+      this.timeline = MockData
+      this.topSpinnerVisibilityChanged(false)
+      this.clearTimeline = false
+    },
     initEdgeAPI () {
       this.edgeAPI = new EdgeAPI(this.pnp)
     },
@@ -458,36 +466,6 @@ export default {
       // console.log('color: ' + color)
       return color
     },
-    eventIcon (event) {
-      let topLabel = 'none'
-      const inf = event.args.inference_result
-      if (inf.length > 0) {
-        topLabel = inf[0].label
-      }
-      let icon = 'mdi-crosshairs-question'
-      // eslint-disable-next-line
-      // console.log('label: ' + JSON.stringify(topLabel))
-      switch (topLabel) {
-        case 'person':
-          icon = 'mdi-human'
-          break
-        case 'face':
-          icon = 'mdi-face'
-          break
-        case 'car':
-          icon = 'mdi-car'
-          break
-        case 'cat':
-          icon = 'mdi-cat'
-          break
-        case 'dog':
-          icon = 'mdi-dog'
-          break
-      }
-      // eslint-disable-next-line
-      // console.log('icon: ' + icon)
-      return icon
-    },
     friendlyTime (datetime) {
       const dt = new Date()
       var tz = dt.getTimezoneOffset()
@@ -503,6 +481,12 @@ export default {
     asPercentage (number) {
       const p = Number(number).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 })
       return p
+    }
+  },
+  watch: {
+    peerConnectionStatus (value) {
+      // eslint-disable-next-line
+      this.connectionStatus = value
     }
   }
 }
