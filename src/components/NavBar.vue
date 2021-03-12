@@ -30,6 +30,15 @@
       <v-spacer />
 
       <amb-button
+        data-cy="timeline-icon"
+        id="timeline-icon"
+        is-icon
+        icon="history"
+        btn-color="secondary"
+        to="timeline"
+      />
+
+      <amb-button
         with-badge
         data-cy="download-off"
         is-icon

@@ -57,7 +57,7 @@ describe('NavBar', () => {
 
   test('should load 5 buttons', () => {
     const btn = wrapper.findAll('.v-btn')
-    expect(btn.length).toBe(5)
+    expect(btn.length).toBe(6)
   })
 
   test('should load navigation drawer', () => {
