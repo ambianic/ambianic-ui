@@ -1,5 +1,13 @@
 # Semantic Versioning Changelog
 
+# [2.13.0](https://github.com/ambianic/ambianic-ui/compare/v2.12.4...v2.13.0) (2021-03-12)
+
+
+### Features
+
+* added timeline icon to navbar ([ba64ac2](https://github.com/ambianic/ambianic-ui/commit/ba64ac27435d0990c6eb741817d6dbdcba44eac5))
+* corrected timeline button visibility ([85a071f](https://github.com/ambianic/ambianic-ui/commit/85a071fe953b0a5fe9e27f27c8887884eb92fd02))
+
 ## [2.12.4](https://github.com/ambianic/ambianic-ui/compare/v2.12.3...v2.12.4) (2021-02-11)
 
 
