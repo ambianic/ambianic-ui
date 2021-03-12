@@ -5,14 +5,14 @@ import { INITIALIZE_PNP } from './action-types.js'
 import { UPDATE_AVAILABLE } from './mutation-types'
 
 Vue.use(Vuex)
-let edgeVersion = require('@/../package.json').version
+let edgeDeviceVersion = require('@/../package.json').version
 
 try {
   fetch('http://localhost:8778/api/status')
     .then((res) => res.json())
     .then((response) => {
       if (response.version && response.status === 'OK') {
-        edgeVersion = response.version
+        edgeDeviceVersion = response.version
       }
     })
     .catch((e) => {
@@ -25,7 +25,7 @@ try {
 const store = new Vuex.Store({
   state: {
     updateToBeInstalled: undefined,
-    version: edgeVersion
+    version: edgeDeviceVersion
   },
   mutations: {
     [UPDATE_AVAILABLE] (state, updateToBeInstalled) {
