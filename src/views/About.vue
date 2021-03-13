@@ -5,9 +5,7 @@
     align-content="space-around"
   >
     <template>
-      <v-card
-        max-width="344"
-      >
+      <v-card max-width="344">
         <v-layout
           column
           wrap
@@ -27,10 +25,9 @@
         />
 
         <v-card-text id="about-info">
-          Review your home timeline for notable moments.
-          Configure input sensors and camers for Ambianic to observe.
-          Share, purge or backup your data
-          - it never slips out of your control.
+          Review your home timeline for notable moments. Configure input sensors
+          and camers for Ambianic to observe. Share, purge or backup your data -
+          it never slips out of your control.
         </v-card-text>
 
         <v-layout
@@ -72,6 +69,7 @@
 </template>
 <script>
 import AmbListItem from '@/components/shared/ListItem.vue'
+import { PEER_CONNECTED } from '@/store/mutation-types'
 import { mapState } from 'vuex'
 
 export default {
@@ -80,8 +78,31 @@ export default {
   },
   computed: {
     ...mapState({
-      version: state => state.version
+      version: (state) => state.version,
+      isEdgeConnected: (state) =>
+        state.pnp.peerConnectionStatus === PEER_CONNECTED,
+      peerFetch: (state) => state.pnp.peerFetch
     })
+  },
+  watch: {
+    isEdgeConnected: function (isConnected) {
+      if (isConnected) {
+        this.peerFetch
+          .get({
+            url: 'http://localhost:8778/api/status'
+          })
+          .then((response) => {
+            if (response.header.status === 200) {
+              const data = this.peerFetch.textDecode(response.content)
+
+              if (data.version) {
+                this.version = data.version
+              }
+            }
+          })
+          .catch((e) => {})
+      }
+    }
   }
 }
 </script>
