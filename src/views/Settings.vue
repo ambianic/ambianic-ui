@@ -357,6 +357,24 @@ export default {
     edgeAddress (value) {
       this.edgeAddress = value
       this.validateIP(value)
+    },
+    isEdgeConnected: function (isConnected) {
+      if (isConnected) {
+        this.peerFetch
+          .get({
+            url: 'http://localhost:8778/api/status'
+          })
+          .then((response) => {
+            if (response.header.status === 200) {
+              const data = this.peerFetch.textDecode(response.content)
+
+              if (data.version) {
+                this.version = data.version
+              }
+            }
+          })
+          .catch((e) => {})
+      }
     }
   }
 }
