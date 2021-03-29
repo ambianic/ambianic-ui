@@ -66,7 +66,7 @@ export default {
     resize
   },
   created () {
-    console.info('Drawing detection boxes for', this.detections) // eslint-disable-line no-console
+    //  console.info('Drawing detection boxes for', this.detections) // eslint-disable-line no-console
   },
   methods: {
     changeRect: function () {
