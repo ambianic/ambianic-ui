@@ -1,5 +1,14 @@
 # Semantic Versioning Changelog
 
+## [2.13.1](https://github.com/ambianic/ambianic-ui/compare/v2.13.0...v2.13.1) (2021-03-29)
+
+
+### Bug Fixes
+
+* comment out debug log ([3b6b200](https://github.com/ambianic/ambianic-ui/commit/3b6b2008d9df1f92aaed597cb7c0bda1c0845a43))
+* silent console error when trying to draw a detection box for falls ([8625e2a](https://github.com/ambianic/ambianic-ui/commit/8625e2afc181459ddbe902e00f299c73f302dfb9)), closes [#593](https://github.com/ambianic/ambianic-ui/issues/593)
+* silent console error when trying to draw a detection box for falls ([b2f0da2](https://github.com/ambianic/ambianic-ui/commit/b2f0da2ff7fff8507844708782be1f781bb44919))
+
 # [2.13.0](https://github.com/ambianic/ambianic-ui/compare/v2.12.4...v2.13.0) (2021-03-12)
 
 
