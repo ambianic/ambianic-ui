@@ -3,6 +3,7 @@
     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
     v-resize.initial="onResize"
     ref="container"
+    v-if="detections.length > 0 && detections[0].box !== undefined"
   >
     <v-overlay
       absolute
@@ -63,6 +64,9 @@ export default {
   },
   directives: {
     resize
+  },
+  created () {
+    console.info('Drawing detection boxes for', this.detections) // eslint-disable-line no-console
   },
   methods: {
     changeRect: function () {
