@@ -84,7 +84,7 @@
               v-if="sample.args.thumbnail_file_name"
               :src="imageURL[sample.args.id]"
               class="white--text align-start"
-              alt="Object Detection"
+              alt="Detection Event"
               contain
               @load="setImageLoaded(index)"
             >
@@ -110,7 +110,6 @@
                 >
                   <detection-boxes
                     :detections="sample.args.inference_result"
-                    :tensor_image_size="sample.args.inference_meta.tensor_image_size"
                   />
                   <v-avatar
                     :color="eventColor(sample)"
