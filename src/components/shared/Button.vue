@@ -2,6 +2,7 @@
   <v-btn
     :icon="isIcon"
     :to="to"
+    :color="color"
   >
     <v-badge
       v-if="withBadge"
@@ -25,7 +26,7 @@ export default {
   props: {
     isIcon: {
       type: Boolean,
-      default: false
+      default: true
     },
     badgeContent: {
       type: Number,
@@ -41,9 +42,13 @@ export default {
     },
     withBadge: {
       type: Boolean,
-      default: false
+      default: true
     },
     to: {
+      type: String,
+      default: null
+    },
+    color: {
       type: String,
       default: null
     }

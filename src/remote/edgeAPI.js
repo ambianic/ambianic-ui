@@ -1,4 +1,5 @@
 import { ambianicConf } from '@/config.js'
+import { PEER_CONNECTED } from '@/store/mutation-types'
 
 // const DEFAULT_API_ROOT = ambianicConf.AMBIANIC_API_FALLBACK_URI
 const API_HOST = ambianicConf.AMBIANIC_EDGE_HOST
@@ -16,7 +17,7 @@ export class EdgeAPI {
   }
 
   async _get (request) {
-    if (!this.pnp.peerFetch) {
+    if (this.pnp.peerConnectionStatus !== PEER_CONNECTED) {
       throw Error('Edge device peer not connected.')
     } else {
       const response = await this.pnp.peerFetch.get(request)
@@ -43,11 +44,7 @@ export class EdgeAPI {
         page: pageNum
       }
     }
-    try {
-      timelinePage = await this._getJSON(request)
-    } catch (error) {
-      console.error('Error fetching edge timeline', { error, request })
-    }
+    timelinePage = await this._getJSON(request)
     return timelinePage
   }
 
