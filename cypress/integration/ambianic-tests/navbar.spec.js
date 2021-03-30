@@ -35,4 +35,25 @@ context('Check Navbar Items', () => {
       assert.equal($result.children().children()[0].childElementCount, 5, 'Five links in the drawer')
     })
   })
+
+  it('Should be an about button', () => {
+    const t = cy.get('[data-cy=about]')
+    expect(t).to.exist
+  })
+
+  it('Should have a five links', () => {
+    cy.get('[data-cy=drawer]').then(($result) => { 
+      assert.equal($result.children().children()[0].childElementCount,5,'Five links in the drawer')
+    })
+  })
+
+  it('Should have a clickable timeline icon', () => {
+    const icon =  cy.get('[data-cy=timeline-icon]')
+    
+    icon.should("be.visible")
+
+    icon.click()
+
+    cy.url().should('include', '/timeline')
+  })
 })
