@@ -1,5 +1,5 @@
-image:
-  file: .gitpod.Dockerfile
+#image:
+#  file: .gitpod.Dockerfile
 
 tasks:
   - init:  && npm audit fix && npm run build
