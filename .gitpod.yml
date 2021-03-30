@@ -16,8 +16,8 @@ vscode:
   extensions:
     - octref.vetur@0.31.3:QHyAEoimIBiRDoL6WtEoRg==
 
-ports:
-  - port: 8080
+# ports:
+#  - port: 8080
 
 github:
   prebuilds:
