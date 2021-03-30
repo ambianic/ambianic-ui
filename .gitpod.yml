@@ -1,5 +1,8 @@
+image:
+  file: .gitpod.Dockerfile
+
 tasks:
-  - init: npm install && npm run build
+  - init:  && npm audit fix && npm run build
   - command: npm run serve
 
 vscode:

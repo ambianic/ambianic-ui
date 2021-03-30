@@ -1,5 +1,44 @@
 # Semantic Versioning Changelog
 
+## [2.13.2](https://github.com/ambianic/ambianic-ui/compare/v2.13.1...v2.13.2) (2021-03-30)
+
+
+### Bug Fixes
+
+* broken test ([acd7222](https://github.com/ambianic/ambianic-ui/commit/acd722282843a2b6e9bcb27bf55beff5ffd92019))
+* docker script ([ed11812](https://github.com/ambianic/ambianic-ui/commit/ed118128798915fd7e758699319674b8ebb32c59))
+* improve timeline UX when p2p connection is down ([ed47f5a](https://github.com/ambianic/ambianic-ui/commit/ed47f5a9bf794eda81dbd196c96897a1199d3c28)), closes [#594](https://github.com/ambianic/ambianic-ui/issues/594)
+* improve timeline UX when p2p connection is down ([3120cf3](https://github.com/ambianic/ambianic-ui/commit/3120cf3ad9f3481df3b28c3061e321963572f29a))
+* tests to match latest UX ([3cf0d69](https://github.com/ambianic/ambianic-ui/commit/3cf0d695ba5a0e2b96e8d35dbe03fbf47a84c859)), closes [#1](https://github.com/ambianic/ambianic-ui/issues/1)
+* tests to match latest UX ([e5bf76a](https://github.com/ambianic/ambianic-ui/commit/e5bf76a3415703899edd043014746748c5483e54))
+* update test to reflect latest UX ([4f99496](https://github.com/ambianic/ambianic-ui/commit/4f99496f171d2a56a2ce194470e089b580890576))
+* update tests to match latest UX ([a8b937f](https://github.com/ambianic/ambianic-ui/commit/a8b937f3f0e6ed6d03719c47f34460bbc58c68ea))
+
+## [2.13.1](https://github.com/ambianic/ambianic-ui/compare/v2.13.0...v2.13.1) (2021-03-29)
+
+
+### Bug Fixes
+
+* comment out debug log ([3b6b200](https://github.com/ambianic/ambianic-ui/commit/3b6b2008d9df1f92aaed597cb7c0bda1c0845a43))
+* silent console error when trying to draw a detection box for falls ([8625e2a](https://github.com/ambianic/ambianic-ui/commit/8625e2afc181459ddbe902e00f299c73f302dfb9)), closes [#593](https://github.com/ambianic/ambianic-ui/issues/593)
+* silent console error when trying to draw a detection box for falls ([b2f0da2](https://github.com/ambianic/ambianic-ui/commit/b2f0da2ff7fff8507844708782be1f781bb44919))
+
+# [2.13.0](https://github.com/ambianic/ambianic-ui/compare/v2.12.4...v2.13.0) (2021-03-12)
+
+
+### Features
+
+* added timeline icon to navbar ([ba64ac2](https://github.com/ambianic/ambianic-ui/commit/ba64ac27435d0990c6eb741817d6dbdcba44eac5))
+* corrected timeline button visibility ([85a071f](https://github.com/ambianic/ambianic-ui/commit/85a071fe953b0a5fe9e27f27c8887884eb92fd02))
+
+## [2.12.4](https://github.com/ambianic/ambianic-ui/compare/v2.12.3...v2.12.4) (2021-02-11)
+
+
+### Bug Fixes
+
+* settings button styling ([86f83fa](https://github.com/ambianic/ambianic-ui/commit/86f83fa67ded1963d25b527a5062ad8dad8d21df)), closes [#519](https://github.com/ambianic/ambianic-ui/issues/519)
+* settings button styling ([f482d65](https://github.com/ambianic/ambianic-ui/commit/f482d659a17e566634c1b91e50eb065af3554d7a))
+
 ## [2.12.3](https://github.com/ambianic/ambianic-ui/compare/v2.12.2...v2.12.3) (2021-02-10)
 
 
