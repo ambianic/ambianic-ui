@@ -2,12 +2,11 @@ image:
   file: .gitpod.Dockerfile
 
 tasks:
-  - init: npm install && npm install cypress && npm audit fix
+  - init: npm install && npm install cypress
     command: |
       echo "Starting Ambianic PWA in dev mode"
       npm run serve
-  - init: npm run build
-    command: |
+  - command: |
       echo "Waiting for Ambianic PWA web service to become avaibale"
       gp await-port 8080
       echo "Starting Ambianic PWA testsuite"
@@ -23,3 +22,4 @@ ports:
 github:
   prebuilds:
     addComment: true
+
