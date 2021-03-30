@@ -26,19 +26,14 @@ context('Check Navbar Items', () => {
   })
 
   it('Should have user profile component card', () => {
-    const t = cy.get('[data-cy=profile-component]')
-    expect(t).to.exist
+    cy.get('[data-cy=display-profile]').click()
+    cy.get('[data-cy=profile-toggle]').click()
   })
 
   it('Should have a five links', () => {
     cy.get('[data-cy=drawer]').then(($result) => {
       assert.equal($result.children().children()[0].childElementCount, 5, 'Five links in the drawer')
     })
-  })
-
-  it('Should be an about button', () => {
-    const t = cy.get('[data-cy=about]')
-    expect(t).to.exist
   })
 
   it('Should have a clickable timeline icon', () => {
