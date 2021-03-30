@@ -2,20 +2,11 @@ image:
   file: .gitpod.Dockerfile
 
 tasks:
-<<<<<<< HEAD
   - init: npm install && npm install cypress
     command: |
       echo "Starting Ambianic PWA in dev mode"
       npm run serve
   - command: |
-=======
-  - init: npm install && npm install cypress && npm audit fix
-    command: |
-      echo "Starting Ambianic PWA in dev mode"
-      npm run serve
-  - init: npm run build
-    command: |
->>>>>>> a69b74fab78b5c14fa73b9c1866c8dba25732bf9
       echo "Waiting for Ambianic PWA web service to become avaibale"
       gp await-port 8080
       echo "Starting Ambianic PWA testsuite"
