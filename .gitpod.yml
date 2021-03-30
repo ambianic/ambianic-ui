@@ -2,9 +2,12 @@ image:
   file: .gitpod.Dockerfile
 
 tasks:
-  - init:  && npm audit fix && npm run build
+  - init: npm --quiet --yes install && npm install cypress && npm audit fix && npm run build
   - command: npm run serve
 
 vscode:
   extensions:
     - octref.vetur@0.31.3:QHyAEoimIBiRDoL6WtEoRg==
+
+ports:
+  - port: 8080
