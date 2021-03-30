@@ -2,8 +2,17 @@ image:
   file: .gitpod.Dockerfile
 
 tasks:
-  - init: npm --quiet --yes install && npm install cypress && npm audit fix && npm run build
-  - command: npm run serve
+  - init: |
+      npm install
+    command: |
+      echo "Starting Ambianic PWA in dev mode"
+      npm run serve
+  - command: |
+      echo "Waiting for npm install to finish"
+      gp await-port 8080 && gp preview $(gp url 8080)/index.html
+      echo "Starting Ambianic PWA testsuite"
+      npm install cypress
+      npm run test
 
 vscode:
   extensions:
@@ -11,3 +20,8 @@ vscode:
 
 ports:
   - port: 8080
+
+github:
+  prebuilds:
+    addComment: true
+
