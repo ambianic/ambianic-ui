@@ -19,6 +19,7 @@
     "@auth0/auth0-spa-js": "^1.13.6",
     "@vue/babel-preset-app": "^4.5.10",
     "axios": "^0.21.1",
+    "axios-request-handler": "^1.0.4",
     "codecov": "^3.7.0",
     "compression-webpack-plugin": "^6.0.4",
     "idb": "^6.0.0",

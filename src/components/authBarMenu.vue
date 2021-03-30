@@ -12,9 +12,11 @@
     <div v-else>
       <SubscriptionDialog
         v-if="showSubscription"
-        :complete-subscription="() => fetchCustomers() "
+        :complete-subscription="() => handleCompletedSubscription()"
         :email="isSubscribed ? this.user.email : 'test@gmail.com'"
       />
+
+      <EdgeAuth0Sync v-if="showEdgeSync" />
       <div
         v-if="!$auth.isAuthenticated"
         style="display: flex"
@@ -32,7 +34,7 @@
           style="opacity: 0;"
           @click="$auth.handleTestLogin()"
         >
-          .aa
+          a
         </button>
         <!--      -->
         <div
@@ -177,11 +179,13 @@ export default {
     stripeId: null,
     text: 'Something here',
     isSubscribed: false,
-    showAuthenticationModal: false
+    showAuthenticationModal: false,
+    showEdgeSync: false
   }),
   components: {
     AmbButton: () => import('./shared/Button.vue'),
-    SubscriptionDialog: () => import('./subscriptionDialog')
+    SubscriptionDialog: () => import('./subscriptionDialog'),
+    EdgeAuth0Sync: () => import('./edge-auth0-sync')
   },
   created () {
     if (this.$auth.isAuthenticated) {
@@ -189,6 +193,10 @@ export default {
     }
   },
   methods: {
+    handleCompletedSubscription () {
+      this.fetchCustomers()
+      this.showEdgeSync = true
+    },
     cancelSubscription () {
       Axios.post(`${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/cancelSubscription?stripeId=${this.stripeId}`,
         {
@@ -229,10 +237,6 @@ export default {
     },
     handleMenu (state) {
       this.authMenu = state
-    },
-    completeAuth (user) {
-      this.user = user
-      this.isAuthenticated = true
     }
   },
   watch: {
