@@ -2,7 +2,7 @@ image:
   file: .gitpod.Dockerfile
 
 tasks:
-  - init: npm install && npm install cypress
+  - init: npm install
     command: |
       echo "Starting Ambianic PWA in dev mode"
       npm run serve
