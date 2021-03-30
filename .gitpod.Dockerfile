@@ -11,4 +11,4 @@ RUN sudo apt-get update \
 USER gitpod
 # Apply user-specific settings
 # ENV ...
-run npm install
+RUN npm install
