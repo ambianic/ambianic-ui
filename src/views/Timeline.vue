@@ -4,54 +4,6 @@
     justify="space-around"
   >
     <v-col
-      v-if="!isEdgeConnected"
-      style="max-width: 400px;"
-      align="center"
-      justify="center"
-      cols="12"
-      class="pa-0 ma-0 fill-height"
-    >
-      <v-card
-        class="mx-auto"
-        data-cy="connectioncard"
-        outlined
-      >
-        <v-card-title>
-          <v-icon
-            slot="icon"
-            size="36"
-          >
-            mdi-wifi-off
-          </v-icon>
-          Connecting to Ambianic Edge device...
-          <v-progress-linear
-            color="info"
-            indeterminate
-            :size="50"
-            :width="7"
-          />
-        </v-card-title>
-
-        <v-card-text>
-          In most cases, connecting to your edge device is automatic.
-          If you are not connected within a few moments, click the
-          button below to review settings.
-        </v-card-text>
-
-        <v-card-actions>
-          <v-btn
-            text
-            id="btn-settings"
-            data-cy="settings"
-            to="/settings"
-          >
-            Connection Settings
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-col>
-    <v-col
-      v-else
       style="max-width: 400px;"
       align="center"
       justify="center"
@@ -87,24 +39,25 @@
               alt="Detection Event"
               contain
               @load="setImageLoaded(index)"
+              lazy-src="/img/lazy-load-bg.gif"
             >
+              <template #placeholder>
+                    <v-row
+                    class="fill-height ma-0"
+                    align="center"
+                    justify="center"
+                    >
+                    <v-progress-circular
+                        indeterminate
+                        color="info lighten-2"
+                    />
+                    </v-row>
+              </template>
               <v-row
                 class="fill-height ma-0"
                 align="start"
                 justify="start"
               >
-                <template #placeholder>
-                  <v-row
-                    class="fill-height ma-0"
-                    align="center"
-                    justify="center"
-                  >
-                    <v-progress-circular
-                      indeterminate
-                      color="info lighten-2"
-                    />
-                  </v-row>
-                </template>
                 <template
                   v-if="isImageLoaded[index]"
                 >
@@ -292,11 +245,11 @@ export default {
       imageURL: {}, // map[id, fullURL] - maps unique event id to their full thumbnail URLs
       isImageLoaded: [],
       on: true,
-      isTopSpinnerVisible: true // flags whether the timeline is in the process of loading data
+      isTopSpinnerVisible: false // flags whether the timeline is in the process of loading data
     }
   },
   created () {
-    this.initEdgeAPI()
+    this.edgeAPI = new EdgeAPI(this.pnp)
     this.pnpUnsubscribe = this.$store.subscribe((mutation, state) => {
       if (mutation.type === NEW_REMOTE_PEER_ID) {
         // eslint-disable-next-line
@@ -304,6 +257,7 @@ export default {
         // eslint-disable-next-line
         console.debug('Clearing event timeline received from previous Peer ID')
         this.clearTimeline = true
+        this.isTopSpinnerVisible = true // enable auto refresh
       }
     })
   },
@@ -326,9 +280,6 @@ export default {
     })
   },
   methods: {
-    initEdgeAPI () {
-      this.edgeAPI = new EdgeAPI(this.pnp)
-    },
     setImageLoaded (index) {
       this.$set(this.isImageLoaded, index, true)
       // eslint-disable-next-line
@@ -339,15 +290,27 @@ export default {
         this.$set(this.imageURL, id, fullImageURL)
       })
     },
-    async getTopTimelinePage () {
-      // get a page with the most recent timeline events
-      const timelineEvents = await this.edgeAPI.getTimelinePage(1)
-      console.debug('getTopTimelinePage received data', { timelineEvents }) // eslint-disable-line no-console
+    async fetchTimelinePageUntilSuccess (pageno) {
+      // keep trying to fetch a timeline page until success
+      var timelineEvents
+      do {
+        try {
+          timelineEvents = await this.edgeAPI.getTimelinePage(pageno)
+        } catch (error) {
+          console.info('Unable to feetch timeline page. Will keep trying.', error) // eslint-disable-line no-console
+          await new Promise(resolve => setTimeout(resolve, 2000)) // sleep for 2 seconds
+        }
+      } while (timelineEvents === undefined)
+      console.debug('fetchTimelinePageUntilSuccess received data', { timelineEvents }) // eslint-disable-line no-console
       return timelineEvents
     },
-    async getNextTimelinePage () {
-      const timelineEvents = await this.edgeAPI.getTimelinePage(this.timeline.length / PAGE_SIZE + 1)
-      console.debug('getNextTimelinePage received data', { timelineEvents }) // eslint-disable-line no-console
+    async getTopTimelinePage () {
+      // get a page with the most recent timeline events
+      const timelineEvents = await this.fetchTimelinePageUntilSuccess(1)
+      return timelineEvents
+    },
+    async getBottomTimelinePage () {
+      const timelineEvents = await this.fetchTimelinePageUntilSuccess(this.timeline.length / PAGE_SIZE + 1)
       return timelineEvents
     },
     async topSpinnerVisibilityChanged (isVisible, entry) {
@@ -402,7 +365,7 @@ export default {
           this.timeline.length = 0
           this.clearTimeline = false
         }
-        const data = await this.getNextTimelinePage()
+        const data = await this.getBottomTimelinePage()
         console.debug('Infinite handler received Bottom timeline page', { data }) // eslint-disable-line no-console
         // Are there any more timeline events left?
         if (data && data.timeline && data.timeline.length > 0) {

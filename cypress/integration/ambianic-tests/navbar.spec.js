@@ -6,16 +6,18 @@ context('Check Navbar Items', () => {
     cy.get('[data-cy=timeline]').click()
   })
 
-  it('Should have a search bar', () => {
-      cy.get('[data-cy=container').find("#searchbar")
-  })
-
   it('Should be a download off button', () => {
     const t = cy.get('[data-cy=download-off]')
     expect(t).to.exist
   })
 
-  it('Should be a heart button', () => {
+
+  /** future buttons
+  it('Should not have a search bar', () => {
+      cy.get('[data-cy=container').find("#searchbar")
+  })
+
+  it('Should not have a heart button', () => {
     const t = cy.get('[data-cy=heart]')
     expect(t).to.exist
   })
@@ -24,6 +26,7 @@ context('Check Navbar Items', () => {
     const t = cy.get('[data-cy=bell]')
     expect(t).to.exist
   })
+   */
 
   it('Should be an about button', () => {
     const t = cy.get('[data-cy=about]')
