@@ -11,7 +11,7 @@ tasks:
       echo "Waiting for npm install to finish"
       gp await-port 8080 && gp preview $(gp url 8080)/index.html
       echo "Starting Ambianic PWA testsuite"
-      npm install cypress 
+      npm install cypress
       npm run test
 
 vscode:
