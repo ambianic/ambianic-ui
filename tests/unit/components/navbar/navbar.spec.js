@@ -72,7 +72,7 @@ describe('NavBar', () => {
     expect(bar.exists()).toBe(true)
   })
 
-  test('should load 5 buttons', () => {
+  test('should load 4 buttons', () => {
     const btn = wrapper.findAll('.v-btn')
     expect(btn.length).toBe(4)
   })
