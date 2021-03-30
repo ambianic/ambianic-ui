@@ -3,17 +3,13 @@ image:
 
 tasks:
   - init: |
-      touch /tmp/.npm-lock
       npm install
-      rm /tmp/.npm-lock
     command: |
       echo "Starting Ambianic PWA in dev mode"
       npm run serve
-  - init: |
-      sleep 1 && while [ -f /tmp/.npm-lock ]; do sleep 1; done
-    command: |
+  - command: |
       echo "Waiting for npm install to finish"
-      gp await-port 8080
+      gp await-port 8080 && gp preview $(gp url 8080)/index.html
       echo "Starting Ambianic PWA testsuite"
       npm run test
 
