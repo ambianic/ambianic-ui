@@ -1,9 +1,13 @@
 <template>
   <v-dialog
+    id="dialog"
     v-model="showModal"
     max-width="550"
   >
-    <v-card v-if="syncState === 'PENDING'">
+    <v-card
+      id="pending"
+      v-if="syncState === 'PENDING'"
+    >
       <div class="container">
         <h2 style="font-weight: normal;">
           Ambianic Edge Device
@@ -15,6 +19,7 @@
             <p>
               On your computer or mobile device browser, go to:
               <a
+                id="verification_url"
                 target="_blank"
                 :href="verification_url"
               >
@@ -25,7 +30,7 @@
           <v-list-item>
             <p>
               Confirm the following code shown:
-              <span class="code">{{ user_code }}</span>
+              <span class="code" id="verification_code" >{{ user_code }}</span>
             </p>
           </v-list-item>
         </v-list>
@@ -35,6 +40,7 @@
             Waiting for confirmation
           </p>
           <v-progress-circular
+            id="spinner"
             indeterminate
             :width="2.5"
             :size="20"
@@ -44,7 +50,10 @@
       </div>
     </v-card>
 
-    <v-card v-else-if="syncState === 'GRANTED'">
+    <v-card
+      id="granted"
+      v-else-if="syncState === 'GRANTED'"
+    >
       <div class="container">
         <h2 style="font-weight: normal;">
           Ambianic Edge Device
@@ -63,6 +72,7 @@
         <div>
           <v-btn
             color="primary"
+            id="dismiss-button"
             @click="showModal = false"
           >
             OK, Close and Continue
