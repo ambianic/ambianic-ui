@@ -69,7 +69,7 @@ const state = {
   /**
     Connection to the remote Ambianic Edge device
   */
-  peerConnection: null,
+  peerConnection: undefined,
   /**
     Status of current peer connection to remote peer
   */
@@ -81,14 +81,14 @@ const state = {
   /**
     PeerFetch instance
   */
-  peerFetch: PeerFetch
+  peerFetch: undefined
 }
 
 const mutations = {
   [PEER_DISCONNECTED] (state) {
-    state.peerConnection = null
+    state.peerConnection = undefined
     state.peerConnectionStatus = PEER_DISCONNECTED
-    state.peerFetch = null
+    state.peerFetch = undefined
   },
   [PEER_DISCOVERED] (state) {
     state.peerConnectionStatus = PEER_DISCOVERED
@@ -132,7 +132,7 @@ const mutations = {
   },
   [REMOTE_PEER_ID_REMOVED] (state) {
     console.log('Removing remote Peer Id from local storage')
-    state.remotePeerId = null
+    state.remotePeerId = undefined
     window.localStorage.removeItem(`${STORAGE_KEY}.remotePeerId`)
   },
   [PEER_FETCH] (state, peerFetch) {

@@ -66,6 +66,7 @@
     "fs-vacuum": "^1.2.10",
     "istanbul-lib-coverage": "^3.0.0",
     "jest": "^26.0.1",
+    "lodash": "^4.17.21",
     "nyc": "^15.0.1",
     "sass": "^1.26.5",
     "sass-loader": "^10.0.4",

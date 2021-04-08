@@ -5,8 +5,10 @@ tasks:
   - init: |
       npm install
     command: |
-      echo "Starting Ambianic PWA in dev mode"
-      npm run serve
+      echo "To start Ambianic UI in dev mode:"
+      echo "npm run serve"
+      echo "To run tests:"
+      echo "npm run test"
   # - command: |
   #    echo "Waiting for npm install to finish"
   #    gp await-port 8080 && gp preview $(gp url 8080)/index.html
