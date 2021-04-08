@@ -19,13 +19,13 @@
       <EdgeAuth0Sync v-if="showEdgeSync" />
       <div
         v-if="!$auth.isAuthenticated"
-        style="display: flex"
+        style="display: flex;"
       >
         <!-- Cypress cant test Netlify forms as it's injected into the DOM. This manually sets the Auth state-->
         <button
           data-cy="auth-btn"
-          style="opacity: 0; color: white"
-          @click="showSubscription= true"
+          style="opacity: 0; color: white;"
+          @click="showSubscription = true"
         >
           .
         </button>
@@ -65,9 +65,7 @@
               @click="handleMenu(!authMenu)"
               data-cy="profile-toggle"
             >
-              <amb-button
-                is-icon
-              >
+              <amb-button is-icon>
                 <v-avatar
                   size="32px"
                   item
@@ -75,7 +73,7 @@
                   v-on="on"
                 >
                   <v-img
-                    src="@/assets/user-placeholder.png"
+                    :src="$auth.user.picture || '@/assets/user-placeholder.png'"
                     :alt="$auth.user.name || user.name"
                   />
                 </v-avatar>
@@ -86,7 +84,7 @@
           <v-card>
             <v-list>
               <div
-                style="text-align: right; padding: .3rem .5rem;"
+                style="text-align: right; padding: 0.3rem 0.5rem;"
                 @click="handleMenu(false)"
               >
                 <v-icon right>
@@ -97,14 +95,18 @@
               <v-list-item>
                 <v-list-item-avatar>
                   <img
-                    src="@/assets/user-placeholder.png"
+                    :src="$auth.user.picture || '@/assets/user-placeholder.png'"
                     :alt="$auth.user.name || user.name"
                   >
                 </v-list-item-avatar>
 
                 <v-list-item-content>
-                  <v-list-item-title>{{ $auth.user.name || user.name }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ $auth.user.email || user.email }}</v-list-item-subtitle>
+                  <v-list-item-title>
+                    {{ $auth.user.name || user.name }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    {{ $auth.user.email || user.email }}
+                  </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
@@ -113,7 +115,7 @@
             <v-list>
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-subtitle style="color: black">
+                  <v-list-item-subtitle style="color: black;">
                     CURRENT SUBSCRIPTION
                   </v-list-item-subtitle>
                   <br>
@@ -124,15 +126,17 @@
                     data-cy="add-subscription"
                   >
                     <v-icon>mdi-plus</v-icon>
-                    <p style="margin: 1rem .3rem">
+                    <p style="margin: 1rem 0.3rem;">
                       Add Premium Subscription
                     </p>
                   </div>
                   <div
-                    style="display: flex; justify-content: space-between"
+                    style="display: flex; justify-content: space-between;"
                     v-else
                   >
-                    <v-list-item-title style="margin: .5rem .3rem; color: grey">
+                    <v-list-item-title
+                      style="margin: 0.5rem 0.3rem; color: grey;"
+                    >
                       Premium Subscription
                     </v-list-item-title>
 
@@ -180,7 +184,7 @@ export default {
     text: 'Something here',
     isSubscribed: false,
     showAuthenticationModal: false,
-    showEdgeSync: false
+    showEdgeSync: true
   }),
   components: {
     AmbButton: () => import('./shared/Button.vue'),
@@ -189,44 +193,50 @@ export default {
   },
   created () {
     if (this.$auth.isAuthenticated) {
-      this.fetchCustomers()
+      this.fetchCustomer()
     }
   },
   methods: {
     handleCompletedSubscription () {
-      this.fetchCustomers()
+      this.fetchCustomer()
       this.showEdgeSync = true
     },
     cancelSubscription () {
-      Axios.post(`${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/cancelSubscription?stripeId=${this.stripeId}`,
+      Axios.post(
+        `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/cancelSubscription?stripeId=${this.stripeId}`,
         {
           headers: {
             'Content-Type': 'application/json'
           }
-        })
+        }
+      )
         .then(() => {
           this.isSubscribed = false
-        }).catch(e => {
+        })
+        .catch((e) => {
           console.log('ERROR UNSUBSCRIBING')
         })
     },
     handleAuth () {
       this.$auth.loginWithRedirect()
     },
-    findUserSubscription ({ customers }) {
-      const subscription = customers.data.find(({ email }) =>
-        email.toLocaleLowerCase() === this.$auth.user ? this.$auth.user.email.toLocaleLowerCase() : this.user.email
+    fetchCustomer () {
+      Axios.get(
+        `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/stripe-data?userId=${this.$auth.user.sub}`
       )
+        .then(({ data }) => {
+          const details = data.data
 
-      if (subscription) {
-        this.stripeId = subscription.id
-        this.isSubscribed = true
-      }
-    },
-    fetchCustomers () {
-      Axios.get(`${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/getCustomers`)
-        .then(({ data }) => this.findUserSubscription(data))
-        .catch(e => {
+          if (details.user_metadata.stripeId) {
+            this.stripeId = details.user_metadata.stripeId
+            this.isSubscribed = true
+
+            if (!localStorage.getItem('isEdgeSynced')) {
+              this.showEdgeSync = true
+            }
+          }
+        })
+        .catch((e) => {
           console.log(e)
         })
     },
@@ -242,7 +252,7 @@ export default {
   watch: {
     isAuthenticated: function (value) {
       if (value) {
-        this.fetchCustomers()
+        this.fetchCustomer()
       }
     }
   }
@@ -254,7 +264,7 @@ export default {
   display: flex;
   color: grey;
   flex-direction: row;
-  justify-content: center
+  justify-content: center;
 }
 
 .add-btn:hover {

@@ -30,7 +30,10 @@
           <v-list-item>
             <p>
               Confirm the following code shown:
-              <span class="code" id="verification_code" >{{ user_code }}</span>
+              <span
+                class="code"
+                id="verification_code"
+              >{{ user_code }}</span>
             </p>
           </v-list-item>
         </v-list>
@@ -73,7 +76,7 @@
           <v-btn
             color="primary"
             id="dismiss-button"
-            @click="showModal = false"
+            @click="handleCompletion()"
           >
             OK, Close and Continue
           </v-btn>
@@ -86,6 +89,12 @@
 <script>
 import Axios from 'axios'
 import Request from 'axios-request-handler'
+import {
+  PEER_CONNECTED
+  // NEW_REMOTE_PEER_ID
+} from '@/store/mutation-types'
+import { EdgeAPI } from '@/remote/edgeAPI'
+import { mapState } from 'vuex'
 
 export default {
   name: 'EdgeAuth0Sync',
@@ -97,24 +106,43 @@ export default {
     user_code: '',
     device_code: ''
   }),
+  computed: {
+    ...mapState({
+      peerConnectionStatus: state => state.pnp.peerConnectionStatus,
+      isEdgeConnected: state =>
+        state.pnp.peerConnectionStatus === PEER_CONNECTED,
+      edgePeerId: state => state.pnp.remotePeerId,
+      peerFetch: state => state.pnp.peerFetch,
+      pnp: state => state.pnp
+    })
+  },
   created () {
-    Axios.post(
-      'https://8778-coral-cougar-28utrusj.ws-eu03.gitpod.io/api/auth/get-user-code',
-      {
-        client_id: process.env.VUE_APP_EDGE_AUTH0_CLIENTID,
-        domain: process.env.VUE_APP_EDGE_AUTH0_DOMAIN
-      }
-    )
-      .then(({ data }) => {
-        this.verification_url = data.verification_uri_complete
-        this.user_code = data.user_code
-        this.device_code = data.device_code
+    this.edgeAPI = new EdgeAPI(this.pnp)
 
-        this.checkStatus()
-      })
-      .catch((e) => console.log(e))
+    this.edgeAPI.getUserCode('testuser@gmail.com')
+
+    // Axios.post(
+    //   'https://8778-coral-cougar-28utrusj.ws-eu03.gitpod.io/api/auth/get-user-code',
+    //   {
+    //     client_id: process.env.VUE_APP_EDGE_AUTH0_CLIENTID,
+    //     domain: process.env.VUE_APP_EDGE_AUTH0_DOMAIN
+    //   }
+    // )
+    //   .then(({ data }) => {
+    //     this.verification_url = data.verification_uri_complete
+    //     this.user_code = data.user_code
+    //     this.device_code = data.device_code
+
+    //     this.checkStatus()
+    //   })
+    //   .catch((e) => console.log(e))
   },
   methods: {
+    handleCompletion () {
+      this.showModal = false
+
+      localStorage.setItem('isEdgeSynced', true)
+    },
     checkStatus () {
       const authRequest = new Request(
         'https://8778-coral-cougar-28utrusj.ws-eu03.gitpod.io/api/auth/verify-token',

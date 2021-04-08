@@ -70,4 +70,26 @@ export class EdgeAPI {
     }
     return imageUrl
   }
+
+  // Premium Subscribtion operations
+  async getUserCode () {
+    const apiRoot = this._getRootURL()
+
+    const request = {
+      url: `${apiRoot}auth/user-code`,
+      params: {
+        client_id: process.env.VUE_APP_EDGE_AUTH0_CLIENTID,
+        domain: process.env.VUE_APP_EDGE_AUTH0_DOMAIN
+      }
+    }
+
+    try {
+      const reqBody = await this._get(request)
+      console.log(reqBody, 'GET USER CODE HERE', console.log(request))
+
+      return reqBody
+    } catch (error) {
+
+    }
+  }
 }
