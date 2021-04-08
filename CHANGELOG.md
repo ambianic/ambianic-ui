@@ -1,5 +1,28 @@
 # Semantic Versioning Changelog
 
+# [2.14.0](https://github.com/ambianic/ambianic-ui/compare/v2.13.2...v2.14.0) (2021-04-07)
+
+
+### Bug Fixes
+
+* gitpod [skip ci] ([4cc85a8](https://github.com/ambianic/ambianic-ui/commit/4cc85a88647c2727c66701602492b2cdf295c6ad))
+* gitpod [skip ci] ([65586d8](https://github.com/ambianic/ambianic-ui/commit/65586d812af066cb19065ab03b639b30b7d93e1f))
+* gitpod [skip ci] ([c7fc765](https://github.com/ambianic/ambianic-ui/commit/c7fc765d5c86ea468c1bcc52c2e768a8d90824e4))
+* gitpod [skip ci] ([ffe2e86](https://github.com/ambianic/ambianic-ui/commit/ffe2e86ef5bd5b2d6ce4e7fe902454873f6c4dd6))
+* gitpod [skip ci] ([19e1d40](https://github.com/ambianic/ambianic-ui/commit/19e1d409910313b259d85a60f2a0f9a970938809))
+* gitpod [skip ci] ([060ee4c](https://github.com/ambianic/ambianic-ui/commit/060ee4c6ca563589774a7666378775b827f6a85e))
+* gitpod cypress port share [skip ci] ([408126c](https://github.com/ambianic/ambianic-ui/commit/408126c45b07a53482de006c2f4d9f4fe8d2e15b))
+* gitpod script [sckip-ci] ([1271c0c](https://github.com/ambianic/ambianic-ui/commit/1271c0cb8ee4f087681af7eaa270f6e87eeb7132))
+* lint [skip ci] ([fb6f346](https://github.com/ambianic/ambianic-ui/commit/fb6f346652bbd829bc5a259a7803050b67df8b0f))
+* merge branch 'master' of https://github.com/ivelin/ambianic-ui [skip ci] ([816320e](https://github.com/ambianic/ambianic-ui/commit/816320e431e0189bf573248188627df597f0cbfc))
+* merge branch 'master' of https://github.com/ivelin/ambianic-ui [skip ci] ([3a15a44](https://github.com/ambianic/ambianic-ui/commit/3a15a4499e94739de3af05afba3c7f0188077052))
+* multi PWA support on one device; closes [#300](https://github.com/ambianic/ambianic-ui/issues/300) ([6b110bd](https://github.com/ambianic/ambianic-ui/commit/6b110bd88a95517cff75a3cd5261a5d733d13f07))
+
+
+### Features
+
+* multiple UI PWA instances open on one device; closes [#300](https://github.com/ambianic/ambianic-ui/issues/300) ([ebcc65a](https://github.com/ambianic/ambianic-ui/commit/ebcc65a41fb39057f4420cf524cda968d39587e0)), closes [#600](https://github.com/ambianic/ambianic-ui/issues/600)
+
 ## [2.13.2](https://github.com/ambianic/ambianic-ui/compare/v2.13.1...v2.13.2) (2021-03-30)
 
 

@@ -26,7 +26,8 @@ import {
   PEER_CONNECT,
   PEER_AUTHENTICATE,
   REMOVE_REMOTE_PEER_ID,
-  CHANGE_REMOTE_PEER_ID
+  CHANGE_REMOTE_PEER_ID,
+  HANDLE_PEER_CONNECTION_ERROR
 } from './action-types.js'
 import { ambianicConf } from '@/config'
 import Peer from 'peerjs'
@@ -46,7 +47,7 @@ const state = {
     Reference to the ID of the PeerJS instance active
     in the current application. Persisted in browser localStorage.
   */
-  myPeerId: window.localStorage.getItem(`${STORAGE_KEY}.myPeerId`),
+  myPeerId: undefined, // window.localStorage.getItem(`${STORAGE_KEY}.myPeerId`),
   /**
     Reference to the ID of the remote PeerJS instance
     as registered with the PnP service.
@@ -56,7 +57,11 @@ const state = {
     Helper reference to the ID of the PeerJS instance active
     in the current application.
   */
-  lastPeerId: String,
+  lastPeerId: undefined,
+  /**
+   * Helper list of remote peers that have caused connection issues
+   */
+  problematicRemotePeers: new Set(),
   /**
     Connection status message for user to see
   */
@@ -118,7 +123,7 @@ const mutations = {
   },
   [NEW_PEER_ID] (state, newPeerId) {
     state.myPeerId = newPeerId
-    window.localStorage.setItem(`${STORAGE_KEY}.myPeerId`, newPeerId)
+    // window.localStorage.setItem(`${STORAGE_KEY}.myPeerId`, newPeerId)
   },
   [NEW_REMOTE_PEER_ID] (state, newRemotePeerId) {
     console.log('Setting state.remotePeerId to : ', newRemotePeerId)
@@ -156,8 +161,17 @@ async function discoverRemotePeerId ({ peer, state, commit }) {
     const { clientsIds } = await myRoom.getRoomMembers()
     const peerIds = clientsIds
     console.log('myRoom members', clientsIds)
-    const remotePeerId = peerIds.find(
-      pid => pid !== state.myPeerId)
+    // find a peerId that is different than this PWA peer ID and
+    //   is not in the problematic list of remote peers
+    var remotePeerId = peerIds.find(
+      pid => pid !== state.myPeerId && !state.problematicRemotePeers.has(pid))
+    if (remotePeerId === undefined && state.problematicRemotePeers.size > 0) {
+      // if no fresh remote peer is found, recycle the problematic peers list
+      // and try to connect to them again
+      console.log('recycling problematic peers', state.problematicRemotePeers)
+      remotePeerId = [...state.problematicRemotePeers][0]
+      state.problematicRemotePeers.clear()
+    }
     if (remotePeerId) {
       return remotePeerId
     } else {
@@ -269,15 +283,9 @@ function setPeerConnectionHandlers ({
 
   peerConnection.on('error', function (err) {
     clearTimeout(hungupConnectionResetTimer)
-    commit(PEER_CONNECTION_ERROR, err)
-    commit(USER_MESSAGE, 'Error in connection to remote peer.')
-    console.debug('######>>>>>>> p2p connection error', { err })
-    console.debug('Will try a new connection shortly.')
-    commit(PEER_DISCONNECTED)
-    setTimeout( // give the network a few moments to recover
-      () => dispatch(PEER_DISCOVER),
-      3000
-    )
+    commit(USER_MESSAGE, 'Error in connection to remote peer ID', peerConnection.peer)
+    console.info(`Error in connection to remote peer ID ${peerConnection.peer}`, err)
+    dispatch(HANDLE_PEER_CONNECTION_ERROR, { peerConnection, err })
   })
 }
 
@@ -378,7 +386,7 @@ const actions = {
         console.log('Remote peer Id found', remotePeerId)
         commit(PEER_DISCOVERED)
         // remote Edge peer discovered, let's connect to it
-        dispatch(PEER_CONNECT, remotePeerId)
+        await dispatch(PEER_CONNECT, remotePeerId)
       } else {
         setTimeout(discoveryLoopId, 3000) // retry in a few seconds
       }
@@ -417,10 +425,13 @@ const actions = {
       label: 'http-proxy', reliable: true, serialization: 'raw'
     })
     commit(PEER_CONNECTING)
-    // If we don't connect within a minute, there is a good chance
-    // the networking stack got corrupted. Let's reset it.
+    // If we don't connect within a few seconds, there is a good chance
+    // the remote peer is not available or the networking stack got corrupted.
+    // Let's mark the remote peer as problematic temporarily and reset the webrtc stack.
     const hungupConnectionResetTimer = setTimeout(() => {
       try {
+        state.problematicRemotePeers.add(remotePeerId)
+        console.debug('Problematic remote peer ID:', remotePeerId)
         peer.destroy()
       } catch (err) {
         console.warning('Error destroying peer.')
@@ -428,7 +439,7 @@ const actions = {
         console.info('It took too long to setup a connection. Resetting peer.')
         dispatch(INITIALIZE_PNP)
       }
-    }, 60 * 1000)
+    }, 30 * 1000) // 30 seconds timeout
     setPeerConnectionHandlers({
       state,
       commit,
@@ -448,16 +459,20 @@ const actions = {
     const request = {
       url: 'http://localhost:8778'
     }
-    const response = await state.peerFetch.get(request)
-    console.log('PEER_AUTHENTICATE', { request, response })
     let authPassed = false
-    if (response.header.status === 200) {
-      console.log('PEER_AUTHENTICATE status OK')
-      const text = state.peerFetch.textDecode(response.content)
-      // if data is authentication challenge response, verify it
-      // for now we naively check for Ambianic in the response.
-      authPassed = text.includes('Ambianic')
-      console.log(`PEER_AUTHENTICATE response body OK = ${authPassed}`)
+    try {
+      const response = await state.peerFetch.get(request)
+      console.log('PEER_AUTHENTICATE', { request, response })
+      if (response.header.status === 200) {
+        console.log('PEER_AUTHENTICATE status OK')
+        const text = state.peerFetch.textDecode(response.content)
+        // if data is authentication challenge response, verify it
+        // for now we naively check for Ambianic in the response.
+        authPassed = text.includes('Ambianic')
+        console.log(`PEER_AUTHENTICATE response body OK = ${authPassed}`)
+      }
+    } catch (err) {
+      console.log(`peerFetch.get() Error while connecting to remote peer ID: ${peerConnection.peer}`, err)
     }
     if (authPassed) {
       // console.debug('Remote peer authenticated as:', authMessage.name)
@@ -467,7 +482,7 @@ const actions = {
       commit(NEW_REMOTE_PEER_ID, peerConnection.peer)
     } else {
       commit(USER_MESSAGE, 'Remote peer authentication failed.')
-      commit(PEER_CONNECTION_ERROR)
+      await dispatch(HANDLE_PEER_CONNECTION_ERROR, { peerConnection, err: 'Remote peer authentication faied.' })
     }
     console.debug('DataChannel transport capabilities',
       peerConnection.dataChannel)
@@ -514,6 +529,18 @@ const actions = {
     }
     commit(REMOTE_PEER_ID_REMOVED)
     dispatch(PEER_DISCOVER)
+  },
+  async [HANDLE_PEER_CONNECTION_ERROR] ({ state, commit, dispatch }, { peerConnection, err }) {
+    console.info('######>>>>>>> p2p connection error', err)
+    console.info('Problematic remote peer ID:', peerConnection.peer)
+    state.problematicRemotePeers.add(peerConnection.peer)
+    commit(PEER_CONNECTION_ERROR, err)
+    console.info('Will try a new connection shortly.')
+    commit(PEER_DISCONNECTED)
+    setTimeout( // give the network a few moments to recover
+      () => dispatch(PEER_DISCOVER),
+      3000
+    )
   }
 }
 
