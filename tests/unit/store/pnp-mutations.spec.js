@@ -6,6 +6,7 @@ import VueRouter from 'vue-router'
 import { cloneDeep } from 'lodash'
 import pnp from '@/store/pnp.js'
 import {
+  PEER_NEW_INSTANCE,
   PEER_DISCONNECTED,
   PEER_CONNECTING,
   PEER_DISCOVERING,
@@ -46,6 +47,12 @@ describe('PnP state machine mutations - p2p communication layer', () => {
   })
   
   // test Vuex mutations
+
+  test('PEER_NEW_INSTANCE', () => {
+    expect(store.state.pnp.peer).toBe(undefined)
+    store.commit(PEER_NEW_INSTANCE, 'a new peer instance')
+    expect(store.state.pnp.peer).toBe('a new peer instance')
+  })
 
   test('PEER_DISCONNECTED', () => {
     expect(store.state.pnp.peerConnection).toBe(undefined)

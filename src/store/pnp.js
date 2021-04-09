@@ -2,6 +2,7 @@
   Manage plug and play connection status to Ambianic Edge.
 */
 import {
+  PEER_NEW_INSTANCE,
   PEER_DISCONNECTED,
   PEER_CONNECTING,
   PEER_DISCOVERING,
@@ -35,14 +36,12 @@ import { PeerRoom } from '@/remote/peer-room'
 import { PeerFetch } from '@/remote/peer-fetch'
 const STORAGE_KEY = 'ambianic-pnp-settings'
 
-/**
-  Reference to the PeerJS instance active
-  in the current global application scope (i.e. window scope).
-*/
-let peer = null // own peer object
-// let peerConnection = null
-
 const state = {
+  /**
+    Reference to the PeerJS instance active
+    in the current global application scope (i.e. window scope).
+  */
+  peer: undefined, // peerjs.Peer object local to the current browser window/tab session
   /**
     Reference to the ID of the PeerJS instance active
     in the current application. Persisted in browser localStorage.
@@ -85,6 +84,9 @@ const state = {
 }
 
 const mutations = {
+  [PEER_NEW_INSTANCE] (state, peer) {
+    state.peer = peer
+  },
   [PEER_DISCONNECTED] (state) {
     state.peerConnection = undefined
     state.peerConnectionStatus = PEER_DISCONNECTED
@@ -148,7 +150,8 @@ const mutations = {
   Once discovered, the remote peer Id will be saved
   and reused until explicitly reset by the user.
 */
-async function discoverRemotePeerId ({ peer, state, commit }) {
+async function discoverRemotePeerId ({ state, commit }) {
+  const peer = state.peer
   // first see if we got a remote Edge ID entered to connect to
   console.log(state)
   if (state.remotePeerId) {
@@ -187,7 +190,8 @@ async function discoverRemotePeerId ({ peer, state, commit }) {
 }
 
 function setPnPServiceConnectionHandlers (
-  { state, commit, dispatch }, peer) {
+  { state, commit, dispatch }) {
+  const peer = state.peer
   peer.on('open', function (id) {
     commit(PNP_SERVICE_CONNECTED)
     // Workaround for peer.reconnect deleting previous id
@@ -304,6 +308,7 @@ const actions = {
   * peer object.
   */
   async [PNP_SERVICE_CONNECT] ({ state, commit, dispatch }) {
+    let peer = state.peer
     // if connection to pnp service already open, then nothing to do
     if (peer && peer.open) { return }
     // if in the middle of pnp server connection cycle, skip
@@ -314,7 +319,7 @@ const actions = {
     // We expect that peerId is crypto secure. No need to replace.
     // Unless the user explicitly requests a refresh.
     console.log('pnp client: last saved myPeerId', state.myPeerId)
-    peer = new Peer(state.myPeerId,
+    const newPeer = new Peer(state.myPeerId,
       {
         host: ambianicConf.AMBIANIC_PNP_HOST,
         port: ambianicConf.AMBIANIC_PNP_PORT,
@@ -322,8 +327,9 @@ const actions = {
         debug: 3
       }
     )
+    commit(PEER_NEW_INSTANCE, newPeer)
     console.log('pnp client: peer created')
-    setPnPServiceConnectionHandlers({ state, commit, dispatch }, peer)
+    setPnPServiceConnectionHandlers({ state, commit, dispatch })
     commit(PNP_SERVICE_CONNECTING)
   },
   /**
@@ -334,6 +340,7 @@ const actions = {
   * peer object.
   */
   async [PNP_SERVICE_RECONNECT] ({ state, commit, dispatch }) {
+    const peer = state.peer
     // if connection to pnp service already open, then nothing to do
     if (peer.open) return
     // if in the middle of pnp server connection cycle, skip
@@ -372,7 +379,7 @@ const actions = {
       let remotePeerId
       try {
         if (state.pnpServiceConnectionStatus === PNP_SERVICE_CONNECTED) {
-          remotePeerId = await discoverRemotePeerId({ peer, state, commit })
+          remotePeerId = await discoverRemotePeerId({ state, commit })
         } else {
           // signaling server connection is still not ready, skip this cycle
           // and wait for the next scheduled retry
@@ -421,6 +428,7 @@ const actions = {
       state.peerConnection.close()
     }
     console.info('>>>>>> Opening new peer connection.')
+    const peer = state.peer
     const peerConnection = peer.connect(remotePeerId, {
       label: 'http-proxy', reliable: true, serialization: 'raw'
     })

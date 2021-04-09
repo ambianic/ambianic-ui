@@ -2,6 +2,7 @@
 Common mutation types
 */
 
+export const PEER_NEW_INSTANCE='PEER_NEW_INSTANCE'
 export const PEER_DISCONNECTED = 'PEER_DISCONNECTED'
 export const PEER_CONNECTING = 'PEER_CONNECTING'
 export const PEER_DISCOVERING = 'PEER_DISCOVERING'
