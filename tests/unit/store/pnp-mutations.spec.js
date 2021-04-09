@@ -22,19 +22,9 @@ import {
   REMOTE_PEER_ID_REMOVED,
   PEER_FETCH
 } from '@/store/mutation-types.js'
-import {
-  INITIALIZE_PNP,
-  PNP_SERVICE_CONNECT,
-  PNP_SERVICE_RECONNECT,
-  PEER_DISCOVER,
-  PEER_CONNECT,
-  PEER_AUTHENTICATE,
-  REMOVE_REMOTE_PEER_ID,
-  CHANGE_REMOTE_PEER_ID,
-  HANDLE_PEER_CONNECTION_ERROR
-} from '@/store/action-types.js'
+const STORAGE_KEY = 'ambianic-pnp-settings'
 
-describe('PnP state machine tests - p2p communication layer', () => {
+describe('PnP state machine mutations - p2p communication layer', () => {
 // global
   
   // localVue is used for tests instead of the production Vue instance
@@ -55,7 +45,7 @@ describe('PnP state machine tests - p2p communication layer', () => {
   afterEach(() => {
   })
   
-  // test mutations
+  // test Vuex mutations
 
   test('PEER_DISCONNECTED', () => {
     expect(store.state.pnp.peerConnection).toBe(undefined)
@@ -133,11 +123,13 @@ describe('PnP state machine tests - p2p communication layer', () => {
   test('NEW_REMOTE_PEER_ID', () => {
     store.commit(NEW_REMOTE_PEER_ID, 'a new remote peer id')
     expect(store.state.pnp.remotePeerId).toBe('a new remote peer id')
+    expect(window.localStorage.getItem(`${STORAGE_KEY}.remotePeerId`)).toBe('a new remote peer id')
   })
 
   test('REMOTE_PEER_ID_REMOVED', () => {
     store.commit(REMOTE_PEER_ID_REMOVED)
     expect(store.state.pnp.remotePeerId).toBe(undefined)
+    expect(window.localStorage.getItem(`${STORAGE_KEY}.remotePeerId`)).toBe(null)
   })
 
   test('PEER_FETCH', () => {
@@ -145,8 +137,5 @@ describe('PnP state machine tests - p2p communication layer', () => {
     expect(store.state.pnp.peerFetch).toBe('a peerFetch instance')
   })
 
-
-
-  // test actions
 
 })

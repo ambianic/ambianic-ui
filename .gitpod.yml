@@ -5,16 +5,14 @@ tasks:
   - init: |
       npm install
     command: |
-      echo "To start Ambianic UI in dev mode:"
-      echo "npm run serve"
-      echo "To run tests:"
-      echo "npm run test"
-  # - command: |
-  #    echo "Waiting for npm install to finish"
-  #    gp await-port 8080 && gp preview $(gp url 8080)/index.html
-  #    echo "Starting Ambianic PWA testsuite"
-  #    npm install cypress
-  #    npm run test
+      echo "Starting Ambianic UI in dev mode:"
+      npm run serve
+  - command: |
+      echo "Waiting for npm install to finish"
+      gp await-port 8080 && gp preview $(gp url 8080)/index.html
+      echo "Starting Ambianic PWA testsuite"
+      npm install cypress
+      npm run test
 
 vscode:
   extensions:
