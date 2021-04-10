@@ -1,4 +1,5 @@
 [[headers]]
-for = "/*"
-[headers.values]
-Access-Control-Allow-Origin = "*"
+    for = "/*"
+    [headers.values]
+        Content-Type = "application/json"
+        # Access-Control-Allow-Origin = "*"

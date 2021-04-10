@@ -172,6 +172,10 @@
 
 <script>
 import Axios from 'axios'
+import { mapState } from 'vuex'
+import {
+  PEER_CONNECTED
+} from '@/store/mutation-types'
 
 export default {
   name: 'AuthBarMenu',
@@ -181,7 +185,6 @@ export default {
     isAuthenticated: false,
     showSubscription: false,
     stripeId: null,
-    text: 'Something here',
     isSubscribed: false,
     showAuthenticationModal: false,
     showEdgeSync: true
@@ -191,14 +194,9 @@ export default {
     SubscriptionDialog: () => import('./subscriptionDialog'),
     EdgeAuth0Sync: () => import('./edge-auth0-sync')
   },
-  created () {
-    if (this.$auth.isAuthenticated) {
-      this.fetchCustomer()
-    }
-  },
   methods: {
     handleCompletedSubscription () {
-      this.fetchCustomer()
+      this.fetchStripeId()
       this.showEdgeSync = true
     },
     cancelSubscription () {
@@ -206,7 +204,7 @@ export default {
         `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/cancelSubscription?stripeId=${this.stripeId}`,
         {
           headers: {
-            'Content-Type': 'application/json'
+            'content-type': 'application/json'
           }
         }
       )
@@ -220,9 +218,9 @@ export default {
     handleAuth () {
       this.$auth.loginWithRedirect()
     },
-    fetchCustomer () {
+    fetchStripeId () {
       Axios.get(
-        `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/stripe-data?userId=${this.$auth.user.sub}`
+        `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data?userId=${this.$auth.user.sub}`
       )
         .then(({ data }) => {
           const details = data.data
@@ -240,6 +238,17 @@ export default {
           console.log(e)
         })
     },
+    fetchCustomer () {
+      Axios.get(
+        `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data?userId=${this.$auth.user.sub}`
+      )
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+    },
     handleLogout () {
       this.$auth.logout({
         returnTo: window.location.origin
@@ -249,10 +258,16 @@ export default {
       this.authMenu = state
     }
   },
+  computed: {
+    ...mapState({
+      isEdgeConnected: state =>
+        state.pnp.peerConnectionStatus === PEER_CONNECTED
+    })
+  },
   watch: {
-    isAuthenticated: function (value) {
-      if (value) {
-        this.fetchCustomer()
+    isEdgeConnected: function (value) {
+      if (value && this.$auth.user) {
+        this.fetchStripeId()
       }
     }
   }

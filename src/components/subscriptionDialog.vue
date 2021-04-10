@@ -3,13 +3,16 @@
     v-model="showDialog"
     max-width="550"
   >
-    <v-card style="display: flex; flex-direction: column; overflow: hidden">
+    <v-card style="display: flex; flex-direction: column; overflow: hidden;">
       <v-card-title class="headline">
         Premium Subscription Model
       </v-card-title>
-      <v-card-text>Subscribe to Ambianic's Edge Premium Subscription Model for more extra added values</v-card-text>
+      <v-card-text>
+        Subscribe to Ambianic's Edge Premium Subscription Model for more extra
+        added values
+      </v-card-text>
       <div>
-        <h3 style="font-weight: 500; text-align: center">
+        <h3 style="font-weight: 500; text-align: center;">
           $5 Monthly Fee
         </h3>
         <br>
@@ -122,7 +125,7 @@
       </v-card-actions>
 
       <v-card-actions
-        style="display: flex; justify-content: space-between"
+        style="display: flex; justify-content: space-between;"
         v-else
       >
         <v-btn
@@ -139,9 +142,9 @@
           data-cy="confirm-btn"
           :disabled="!cardNumberIsValid"
           @click="submitSubscription()"
-          style="display: flex"
+          style="display: flex;"
         >
-          {{ loading ? "Confirming Details" : "Confirm Details" }}
+          {{ loading ? 'Confirming Details' : 'Confirm Details' }}
           <v-progress-circular
             style="padding-left: 40px;"
             indeterminate
@@ -157,7 +160,7 @@
 </template>
 
 <script>
-
+import Axios from 'axios'
 const cardValidator = /^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/
 
 export default {
@@ -165,12 +168,14 @@ export default {
   data: () => ({
     showDialog: true,
     showInputs: false,
-    cardNumber: '',
-    expiryMonth: '',
-    expiryYear: '',
-    cvc: '',
-    fullName: '',
-    cardNumberIsValid: false,
+    cardNumber: '5200828282828210',
+    expiryMonth: '8',
+    expiryYear: '2022',
+    cvc: '451',
+    fullName: 'Test user',
+
+    // TODO: change later
+    cardNumberIsValid: true,
     emailAddress: '',
     loading: false
   }),
@@ -184,41 +189,51 @@ export default {
     },
     completeSubscription: {
       type: Function,
-      default: () => {
-      }
+      default: () => {}
     }
   },
   methods: {
     submitSubscription () {
       this.loading = true
-
-      const cardDetails = JSON.stringify({
-        number: this.cardNumber,
-        cvc: this.cvc,
-        cardName: this.fullName,
-        exp_year: this.expiryYear,
-        exp_month: this.expiryMonth
-      })
-
-      // TODO: Figure out how to pass data into function using req body
-      fetch(`${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscriptions?email=${this.emailAddress}&card=${cardDetails}`, {
-        method: 'POST',
-        body: JSON.stringify(cardDetails),
-        headers: {
+      Axios(
+        `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscribe?email=${this.email}&number=${this.cardNumber}&cvc=${this.cvc}&exp_year=${this.expiryYear}&exp_month=${this.expiryMonth}`,
+        {
+          method: 'GET',
           headers: {
-            accept: 'Accept: application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': true
+            'content-type': 'application/json'
           }
         }
-      }).then(() => {
-        this.loading = false
-        this.showDialog = false
-        this.completeSubscription()
-      }).catch(error => {
-        console.log(error)
-        this.showDialog = false
-      })
+      )
+        .then(({ data }) => {
+          this.saveStripeId(data.customerID)
+        })
+        .catch((error) => {
+          console.log(error, 'ERROR FROM STRIPE')
+          this.showDialog = false
+        })
+    },
+    saveStripeId (id) {
+      Axios.post(
+        `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data`,
+        {
+          stripeId: id,
+          user_id: this.$auth.user.sub
+        },
+        {
+          headers: {
+            'content-type': 'application/json'
+          }
+        }
+      )
+        .then(() => {
+          this.loading = false
+          this.showDialog = false
+          this.completeSubscription()
+        })
+        .catch((error) => {
+          console.log(error, 'error saving stripeid')
+          this.showDialog = false
+        })
     },
     validateCardNumber (number) {
       if (cardValidator.test(number)) {
@@ -234,6 +249,4 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

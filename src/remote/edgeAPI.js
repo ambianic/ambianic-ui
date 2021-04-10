@@ -84,12 +84,48 @@ export class EdgeAPI {
     }
 
     try {
-      const reqBody = await this._get(request)
-      console.log(reqBody, 'GET USER CODE HERE', console.log(request))
+      const reqBody = await this._getJSON(request)
 
       return reqBody
     } catch (error) {
 
+    }
+  }
+
+  async checkUserAuthorizationStatus (deviceCode) {
+    const apiRoot = this._getRootURL()
+
+    const request = {
+      url: `${apiRoot}auth/verify-token`,
+      params: { device_code: deviceCode }
+    }
+
+    try {
+      const reqBody = await this._getJSON(request)
+
+      return reqBody
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async saveUserToken ({ token, email }) {
+    const apiRoot = this._getRootURL()
+
+    const apiKey = process.env.EMAIL_API_KEY
+    const domain = process.env.EMAIL_DOMAIN
+
+    const request = {
+      url: `${apiRoot}auth/save-token`,
+      params: { token, email, apiKey, domain }
+    }
+
+    try {
+      const reqBody = await this._getJSON(request)
+
+      return reqBody
+    } catch (e) {
+      console.log(e)
     }
   }
 }
