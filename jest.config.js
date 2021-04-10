@@ -14,7 +14,7 @@ module.exports = {
   },
   collectCoverage: true,
   coverageDirectory: './coverage/jest/',
-  coverageReporters: ['json'],
+  coverageReporters: ['json', 'text'],
   collectCoverageFrom: [
     '<rootDir>/**/*.vue',
     '../src/'
