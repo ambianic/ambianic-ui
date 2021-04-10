@@ -1,22 +1,26 @@
 <template>
   <v-dialog
+    id="subscription-dialog"
     v-model="showDialog"
     max-width="550"
   >
     <v-card style="display: flex; flex-direction: column; overflow: hidden;">
-      <v-card-title class="headline">
-        Premium Subscription Model
-      </v-card-title>
-      <v-card-text>
-        Subscribe to Ambianic's Edge Premium Subscription Model for more extra
-        added values
-      </v-card-text>
-      <div>
-        <h3 style="font-weight: 500; text-align: center;">
-          $5 Monthly Fee
-        </h3>
-        <br>
+      <div id="subscription-details">
+        <v-card-title class="headline">
+          Premium Subscription Model
+        </v-card-title>
+        <v-card-text>
+          Subscribe to Ambianic's Edge Premium Subscription Model for more extra
+          added values
+        </v-card-text>
+        <div>
+          <h3 style="font-weight: 500; text-align: center;">
+            $5 Monthly Fee
+          </h3>
+          <br>
+        </div>
       </div>
+
       <v-spacer />
       <v-list-item v-if="showInputs">
         <v-col>
@@ -195,28 +199,35 @@ export default {
   methods: {
     submitSubscription () {
       this.loading = true
-      Axios(
-        `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscribe?email=${this.email}&number=${this.cardNumber}&cvc=${this.cvc}&exp_year=${this.expiryYear}&exp_month=${this.expiryMonth}`,
+      Axios.post(`${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscribe`,
         {
-          method: 'GET',
+          email: this.email,
+          number: this.cardNumber,
+          cvc: this.cvc,
+          exp_year: this.expiryYear,
+          exp_month: this.expiryMonth
+        },
+        {
           headers: {
             'content-type': 'application/json'
           }
         }
       )
         .then(({ data }) => {
-          this.saveStripeId(data.customerID)
+          const { userStripeId, userSubscriptionId } = data
+          this.saveStripeData(userStripeId, userSubscriptionId)
         })
         .catch((error) => {
           console.log(error, 'ERROR FROM STRIPE')
           this.showDialog = false
         })
     },
-    saveStripeId (id) {
+    saveStripeData (userStripeId, userSubscriptionId) {
       Axios.post(
         `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data`,
         {
-          stripeId: id,
+          userStripeId,
+          userSubscriptionId,
           user_id: this.$auth.user.sub
         },
         {

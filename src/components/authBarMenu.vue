@@ -13,7 +13,7 @@
       <SubscriptionDialog
         v-if="showSubscription"
         :complete-subscription="() => handleCompletedSubscription()"
-        :email="isSubscribed ? this.user.email : 'test@gmail.com'"
+        :email="isSubscribed ? this.$auth.user.email : 'test@gmail.com'"
       />
 
       <EdgeAuth0Sync v-if="showEdgeSync" />
@@ -21,7 +21,6 @@
         v-if="!$auth.isAuthenticated"
         style="display: flex;"
       >
-        <!-- Cypress cant test Netlify forms as it's injected into the DOM. This manually sets the Auth state-->
         <button
           data-cy="auth-btn"
           style="opacity: 0; color: white;"
@@ -176,6 +175,10 @@ import { mapState } from 'vuex'
 import {
   PEER_CONNECTED
 } from '@/store/mutation-types'
+import Moment from 'moment'
+import { extendMoment } from 'moment-range'
+
+const moment = extendMoment(Moment)
 
 export default {
   name: 'AuthBarMenu',
@@ -184,15 +187,24 @@ export default {
     authMenu: false,
     isAuthenticated: false,
     showSubscription: false,
-    stripeId: null,
+    userSubscriptionId: null,
+    userStripeId: null,
     isSubscribed: false,
     showAuthenticationModal: false,
-    showEdgeSync: true
+    showEdgeSync: false
   }),
   components: {
     AmbButton: () => import('./shared/Button.vue'),
     SubscriptionDialog: () => import('./subscriptionDialog'),
     EdgeAuth0Sync: () => import('./edge-auth0-sync')
+  },
+  async created () {
+    // waits for the auth0 client to be fully loaded
+    setTimeout(() => {
+      if (this.$auth.user.sub) {
+        this.fetchStripeId()
+      }
+    }, 1500)
   },
   methods: {
     handleCompletedSubscription () {
@@ -200,8 +212,30 @@ export default {
       this.showEdgeSync = true
     },
     cancelSubscription () {
+      Axios.delete(`${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription?stripeId=${this.userSubscriptionId}`,
+        {
+          data: {
+            stripeId: this.userSubscriptionId
+          },
+          headers: {
+            'content-type': 'application/json'
+          }
+        }
+      )
+        .then(() => {
+          this.removeStripeId()
+        })
+        .catch((e) => {
+          console.log('ERROR UNSUBSCRIBING', e)
+        })
+    },
+    removeStripeId () {
       Axios.post(
-        `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/cancelSubscription?stripeId=${this.stripeId}`,
+        `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data`,
+        {
+          user_id: this.$auth.user.sub,
+          userStripeId: this.userStripeId
+        },
         {
           headers: {
             'content-type': 'application/json'
@@ -210,9 +244,11 @@ export default {
       )
         .then(() => {
           this.isSubscribed = false
+          localStorage.setItem('edgeSyncStatus', JSON.stringify({ isSynced: false }))
         })
-        .catch((e) => {
-          console.log('ERROR UNSUBSCRIBING')
+        .catch((error) => {
+          console.log(error, 'error saving stripeid')
+          this.isSubscribed = false
         })
     },
     handleAuth () {
@@ -223,27 +259,28 @@ export default {
         `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data?userId=${this.$auth.user.sub}`
       )
         .then(({ data }) => {
-          const details = data.data
+          const { userSubscriptionId, userStripeId, duration } = data.user.user_metadata
+          const today = Moment(new Date())
 
-          if (details.user_metadata.stripeId) {
-            this.stripeId = details.user_metadata.stripeId
+          const subscriptionRange = moment.range(duration.start_date, duration.end_date)
+          const isActive = subscriptionRange.contains(today)
+
+          if (isActive) {
+            this.userSubscriptionId = userSubscriptionId
+            this.userStripeId = userStripeId
             this.isSubscribed = true
 
-            if (!localStorage.getItem('isEdgeSynced')) {
+            try {
+              const syncStatus = JSON.parse(localStorage.getItem('edgeSyncStatus'))
+
+              if (!syncStatus.isSynced) {
+                this.showEdgeSync = true
+              }
+            } catch (e) {
+              // new device without a previous sync record
               this.showEdgeSync = true
             }
           }
-        })
-        .catch((e) => {
-          console.log(e)
-        })
-    },
-    fetchCustomer () {
-      Axios.get(
-        `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data?userId=${this.$auth.user.sub}`
-      )
-        .then((response) => {
-          console.log(response)
         })
         .catch((e) => {
           console.log(e)

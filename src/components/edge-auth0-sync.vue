@@ -21,8 +21,8 @@
           </div>
 
           <div
-            class="align-center"
-            @click="showModal = false"
+            class="icon"
+            @click="handleClose()"
           >
             <v-icon
               style="margin: 0.5rem 0;"
@@ -35,11 +35,11 @@
         </div>
 
         <hr>
-        <p>To securely authenticate with your running Edge Device;</p>
+        <br>
         <v-list>
           <v-list-item>
             <p>
-              On your computer or mobile device browser, go to:
+              To authorize your running Edge Device, from your computer or mobile device browser, go to:
               <a
                 id="verification_url"
                 target="_blank"
@@ -52,17 +52,19 @@
           <v-list-item>
             <p>
               Confirm the following code shown:
-              <span
+              <code
                 class="code"
                 id="verification_code"
-              >{{ user_code }}</span>
+              >{{ user_code }}</code>
+              , valid for 15 minutes.
             </p>
           </v-list-item>
         </v-list>
         <hr>
+        <br>
         <div class="flex">
           <p style="margin-right: 10px;">
-            Waiting for confirmation
+            {{ !isEdgeConnected ? "Connecting to edge device ..." : "Waiting for your confirmation..." }}
           </p>
           <v-progress-circular
             id="spinner"
@@ -80,9 +82,9 @@
       v-else-if="syncState === 'GRANTED'"
     >
       <div class="container">
-        <h2 style="font-weight: normal;">
+        <h3 style="font-weight: normal;">
           Ambianic Edge Device
-        </h2>
+        </h3>
         <hr>
         <div style="margin: 1rem 0;">
           <v-icon
@@ -119,7 +121,7 @@ export default {
   name: 'EdgeAuth0Sync',
   isLoading: true,
   data: (_) => ({
-    showModal: false,
+    showModal: true,
     syncState: 'PENDING',
     verification_url: '',
     user_code: '',
@@ -137,12 +139,37 @@ export default {
   },
   created () {
     this.edgeAPI = new EdgeAPI(this.pnp)
+
+    if (this.isEdgeConnected) {
+      this.getUserCode()
+    }
   },
   methods: {
     handleCompletion () {
       this.showModal = false
 
-      localStorage.setItem('isEdgeSynced', true)
+      localStorage.setItem('edgeSyncStatus', JSON.stringify({ isSynced: true }))
+    },
+    handleClose () {
+      localStorage.setItem('edgeSyncStatus', JSON.stringify({ isSynced: false }))
+
+      this.showModal = false
+    },
+    getUserCode () {
+      this.edgeAPI
+        .getUserCode()
+        .then((response) => {
+          if (response) {
+            this.verification_url = response.verification_uri_complete
+            this.user_code = response.user_code
+            this.device_code = response.device_code
+
+            this.checkStatus()
+          }
+        })
+        .catch((e) => {
+          console.log('ERROR RESPONSE FROM EDGE', e)
+        })
     },
     checkStatus () {
       this.edgeAPI
@@ -161,10 +188,8 @@ export default {
                 email: this.$auth.user.email,
                 token: response.access_token
               })
-              .then((response) => {
+              .then(() => {
                 this.syncState = 'GRANTED'
-
-                console.log(response, 'SAVE TOKEN RESPONSE')
               })
               .catch((e) => {
                 console.log(e, 'ERROR SAVING TOKEN')
@@ -172,29 +197,14 @@ export default {
           }
         })
         .catch((e) => {
-          console.log(e, 'error from verify-token')
+          console.log(e, 'error from verify token')
         })
     }
   },
   watch: {
-    isEdgeConnected (value) {
-      const isEdgeSynced = localStorage.getItem('isEdgeSynced')
-
-      if (value && !isEdgeSynced) {
-        this.edgeAPI
-          .getUserCode()
-          .then((response) => {
-            if (response) {
-              this.verification_url = response.verification_uri_complete
-              this.user_code = response.user_code
-              this.device_code = response.device_code
-
-              this.checkStatus()
-            }
-          })
-          .catch((e) => {
-            console.log('ERROR RESPONSE FROM EDGE', e)
-          })
+    isEdgeConnected: function (value) {
+      if (value) {
+        this.getUserCode()
       }
     }
   }
@@ -217,5 +227,13 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.icon:hover {
+  cursor: pointer;
+}
+
+.code {
+  font-weight: bold;
 }
 </style>
