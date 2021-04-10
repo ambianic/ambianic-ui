@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "@vue/babel-preset-app": "^4.5.10",
-    "codecov": "^3.7.0",
     "compression-webpack-plugin": "^6.0.4",
     "idb": "^6.0.0",
     "konva": "^7.1.4",
@@ -56,6 +55,7 @@
     "babel-eslint": "^10.1.0",
     "babel-plugin-istanbul": "^6.0.0",
     "babel-plugin-transform-imports": "^2.0.0",
+    "codecov": "^3.8.1",
     "cypress": "^6.9.1",
     "eslint": "^6.6.0",
     "eslint-plugin-import": "^2.20.2",
