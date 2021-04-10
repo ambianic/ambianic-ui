@@ -80,7 +80,11 @@ const state = {
   /**
     PeerFetch instance
   */
-  peerFetch: undefined
+  peerFetch: undefined,
+  /**
+   * The duration in milliseconds to pause between pair discovery retries
+   */
+  discoveryLoopPause: 3000
 }
 
 const mutations = {
@@ -153,7 +157,6 @@ const mutations = {
 async function discoverRemotePeerId ({ state, commit }) {
   const peer = state.peer
   // first see if we got a remote Edge ID entered to connect to
-  console.log(state)
   if (state.remotePeerId) {
     return state.remotePeerId
   } else {
@@ -308,7 +311,7 @@ const actions = {
   * peer object.
   */
   async [PNP_SERVICE_CONNECT] ({ state, commit, dispatch }) {
-    let peer = state.peer
+    const peer = state.peer
     // if connection to pnp service already open, then nothing to do
     if (peer && peer.open) { return }
     // if in the middle of pnp server connection cycle, skip
@@ -395,7 +398,7 @@ const actions = {
         // remote Edge peer discovered, let's connect to it
         await dispatch(PEER_CONNECT, remotePeerId)
       } else {
-        setTimeout(discoveryLoopId, 3000) // retry in a few seconds
+        setTimeout(discoveryLoopId, state.discoveryLoopPause) // retry in a few seconds
       }
     }
     await discoveryLoopId()

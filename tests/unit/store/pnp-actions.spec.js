@@ -55,9 +55,18 @@ describe('PnP state machine actions - p2p communication layer', () => {
     // const state = store.state
     // console.debug("store.state:", { state } )
     Peer.mockClear()
+    // mocking window.RTCPeerConnection
+    const mockPeerConnection = jest.fn()
+    // mocking the RTCPeerConnection.on() method
+    mockPeerConnection.on = jest.fn()
+    // mocking Peer.connect() to return an RTCPeerConnection mock
+    jest.spyOn(Peer.prototype, 'connect').mockImplementation(() => mockPeerConnection)
+    // fast forward js timers during testing
+    jest.useFakeTimers()
   })
 
   afterEach(() => {
+    // jest.restoreAllMocks();    
   })
   
   // test Vuex actions
@@ -125,7 +134,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
 
   test('PNP_SERVICE_RECONNECT assuming existing peer disconnected', () => {
     expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_DISCONNECTED)
-    // emulate a mock Peer instance
+    // emulate via mock Peer instance
     const peer = new Peer()
     store.state.pnp.peer = peer
     peer.id = 'some ID'
@@ -141,7 +150,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
 
   test('PNP_SERVICE_RECONNECT when peer lost id', () => {
     expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_DISCONNECTED)
-    // emulate a mock Peer instance
+    // emulate via mock Peer instance
     const peer = new Peer()
     store.state.pnp.peer = peer
     store.state.pnp.myPeerId = 'some ID'
@@ -156,17 +165,57 @@ describe('PnP state machine actions - p2p communication layer', () => {
     })
   })
 
-  test('PNP_SERVICE_RECONNECT when peer is already connected', () => {
-    expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_DISCONNECTED)
-    // emulate a mock Peer instance
-    const peer = new Peer()
-    store.state.pnp.peer = peer
-    // emulate that peer is connected
-    peer.open = true
-    store.dispatch(PNP_SERVICE_RECONNECT).then( (res) => {
-      expect(peer.reconnect).toHaveBeenCalledTimes(0)
+  test('PEER_DISCOVER when peer is connected', () => {
+    store.state.pnp.peerConnectionStatus = PEER_CONNECTED
+    store.dispatch(PEER_DISCOVER).then( (res) => {
+      expect(store.state.pnp.peerConnectionStatus).not.toBe(PEER_DISCOVERING)
+      expect(store.state.pnp.peerConnectionStatus).toBe(PEER_CONNECTED)
     }).catch( (err) => {
       fail( err )
     })
   })
+
+  const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+  test('PEER_DISCOVER when peer is disconnected and local and remote peer ids are known', () => {
+    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
+    expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_DISCONNECTED)
+    // emulate peer instance exists and local peer id is known
+    const peer = new Peer()
+    store.state.pnp.peer = peer
+    peer.id = 'some_ID'
+    store.state.pnp.myPeerId = 'some_saved_ID'
+    store.dispatch(PEER_DISCOVER).then( (res) => {
+      expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCOVERING)
+      // wait a bit to let the test go through parts of the code 
+      // that run when the PNP service is disconnected
+
+      // At this point in time, there should have been a single call to
+      // setTimeout to schedule another peer discovery loop.
+      expect(setTimeout).toHaveBeenCalledTimes(1);
+      expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), store.state.pnp.discoveryLoopPause);
+
+      // emulate the use case when remotePeerId is already known 
+      // and connection is established
+      store.state.pnp.remotePeerId = 'a_known_remote_peer_id'
+      store.state.pnp.pnpServiceConnectionStatus = PNP_SERVICE_CONNECTED
+      // Fast forward and exhaust only currently pending timers
+      // (but not any new timers that get created during that process)
+      console.debug('jest running pending timers')
+      jest.runOnlyPendingTimers();
+
+      // give it a little time (20ms) for the next discovery loop to complete
+      wait(20).then( () => {
+        // There should not have been another loop.
+        // The discovery process should have ended.
+        expect(setTimeout).toHaveBeenCalledTimes(1)
+
+        expect(store.state.pnp.peerConnectionStatus).toBe(PEER_CONNECTING)
+      })
+
+    }).catch( (err) => {
+      fail( err )
+    })
+  })
+
 })
