@@ -1,11 +1,14 @@
 import Vue from 'vue'
 import createAuth0Client from '@auth0/auth0-spa-js'
 
-export const createAuthLink = async () => await createAuth0Client({
-  domain: process.env.VUE_APP_AUTH0_DOMAIN,
-  client_id: process.env.VUE_APP_AUTH0_CLIENTID,
-  redirect_uri: process.env.VUE_APP_REDIRECT_URL
-})
+// fix for window.crypto is required bug. See #522
+export const createAuthLink = async () =>
+  !navigator.userAgent.includes('jsdom') &&
+  (await createAuth0Client({
+    domain: process.env.VUE_APP_AUTH0_DOMAIN,
+    client_id: process.env.VUE_APP_AUTH0_CLIENTID,
+    redirect_uri: process.env.VUE_APP_REDIRECT_URL
+  }))
 
 /** Define a default action to perform after authentication */
 const DEFAULT_REDIRECT_CALLBACK = () =>
@@ -93,7 +96,7 @@ export const useAuth0 = ({
         // If the user is returning to the app after authentication..
         if (
           window.location.search.includes('code=') &&
-                    window.location.search.includes('state=')
+          window.location.search.includes('state=')
         ) {
           // handle the redirect and retrieve tokens
           const { appState } = await this.auth0Client.handleRedirectCallback()

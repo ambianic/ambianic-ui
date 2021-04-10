@@ -29,7 +29,7 @@ describe('NavBar', () => {
     }
   })
 
-  let store, state, getters
+  let store, state
 
   // global
   localVue.use(VueRouter)
@@ -44,13 +44,8 @@ describe('NavBar', () => {
       }
     }
 
-    getters = {
-    //   ...
-    }
-
     store = new VueX.Store({
-      state,
-      getters
+      state
     })
 
     // using shallowMount with subtree components

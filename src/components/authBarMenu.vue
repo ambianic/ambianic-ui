@@ -13,7 +13,7 @@
       <SubscriptionDialog
         v-if="showSubscription"
         :complete-subscription="() => handleCompletedSubscription()"
-        :email="isSubscribed ? this.user.email : 'test@gmail.com'"
+        :email="isSubscribed ? this.$auth.user.email : 'test@gmail.com'"
       />
 
       <EdgeAuth0Sync v-if="showEdgeSync" />
@@ -187,12 +187,23 @@ export default {
     stripeId: null,
     isSubscribed: false,
     showAuthenticationModal: false,
-    showEdgeSync: true
+    showEdgeSync: false
   }),
   components: {
     AmbButton: () => import('./shared/Button.vue'),
     SubscriptionDialog: () => import('./subscriptionDialog'),
     EdgeAuth0Sync: () => import('./edge-auth0-sync')
+  },
+  async created () {
+    console.log(this.$auth.user, 'AUTH0 DETAILS \n \n \n')
+    // waits for the auth0 client to be fully loaded
+    setTimeout(() => {
+      console.log(this.$auth)
+      if (this.$auth.user.sub) {
+        // alert(this.$auth.user.sub, 'sub')
+        this.fetchStripeId()
+      }
+    }, 1500)
   },
   methods: {
     handleCompletedSubscription () {
@@ -200,8 +211,29 @@ export default {
       this.showEdgeSync = true
     },
     cancelSubscription () {
+      Axios.delete(`${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription?stripeId=${this.stripeId}`,
+        {
+          data: {
+            stripeId: this.stripeId
+          },
+          headers: {
+            'content-type': 'application/json'
+          }
+        }
+      )
+        .then(() => {
+          this.removeStripeId()
+        })
+        .catch((e) => {
+          console.log('ERROR UNSUBSCRIBING', e)
+        })
+    },
+    removeStripeId () {
       Axios.post(
-        `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/cancelSubscription?stripeId=${this.stripeId}`,
+        `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data`,
+        {
+          user_id: this.$auth.user.sub
+        },
         {
           headers: {
             'content-type': 'application/json'
@@ -210,9 +242,11 @@ export default {
       )
         .then(() => {
           this.isSubscribed = false
+          localStorage.setItem('edgeSyncStatus', JSON.stringify({ isSynced: false }))
         })
-        .catch((e) => {
-          console.log('ERROR UNSUBSCRIBING')
+        .catch((error) => {
+          console.log(error, 'error saving stripeid')
+          this.isSubscribed = false
         })
     },
     handleAuth () {
@@ -223,27 +257,24 @@ export default {
         `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data?userId=${this.$auth.user.sub}`
       )
         .then(({ data }) => {
-          const details = data.data
+          const id = data.user.user_metadata.stripeId
 
-          if (details.user_metadata.stripeId) {
-            this.stripeId = details.user_metadata.stripeId
+          if (id) {
+            this.stripeId = id
             this.isSubscribed = true
 
-            if (!localStorage.getItem('isEdgeSynced')) {
+            try {
+              const syncStatus = JSON.parse(localStorage.getItem('edgeSyncStatus'))
+
+              // alert(`${syncStatus.isSynced}, typeof: ${typeof syncStatus.isSynced}` )
+              if (!syncStatus.isSynced) {
+                this.showEdgeSync = true
+              }
+            } catch (e) {
+              // new device without a previous sync record
               this.showEdgeSync = true
             }
           }
-        })
-        .catch((e) => {
-          console.log(e)
-        })
-    },
-    fetchCustomer () {
-      Axios.get(
-        `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data?userId=${this.$auth.user.sub}`
-      )
-        .then((response) => {
-          console.log(response)
         })
         .catch((e) => {
           console.log(e)

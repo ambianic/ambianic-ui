@@ -1,29 +1,28 @@
 import { mount, createLocalVue } from '@vue/test-utils'
-import Vuetify from 'vuetify'
-import VueRouter from 'vue-router'
+import Peer from 'peerjs'
+import pnp from '@/store/pnp.js'
+import Vuex from 'vuex'
+import { cloneDeep } from 'lodash'
 
 import EdgeAuth0Sync from '../../../src/components/edge-auth0-sync.vue'
 
-describe('AuthBarMenu', () => {
-  // global
-  let wrapper
-  const localVue = createLocalVue()
+jest.mock('peerjs')
 
+const localVue = createLocalVue()
+localVue.use(Vuex)
+
+describe('AuthBarMenu', () => {
+  let wrapper
   let store
 
-  // global
-  localVue.use(VueRouter)
-
-  const vuetify = new Vuetify()
-  const router = new VueRouter()
-
   beforeEach(() => {
-    // using shallowMount with subtree components
+    Peer.mockClear()
+    // mocking window.RTCPeerConnection
+    store = new Vuex.Store({ modules: { pnp: cloneDeep(pnp) } })
+
     wrapper = mount(EdgeAuth0Sync, {
-      localVue,
-      vuetify,
-      router,
-      store
+      store,
+      localVue
     })
   })
 
@@ -33,6 +32,7 @@ describe('AuthBarMenu', () => {
 
   test('It displays the modal dialog', () => {
     const dialog = wrapper.find('#dialog')
+
     expect(dialog.exists()).toBe(true)
   })
 
@@ -42,7 +42,9 @@ describe('AuthBarMenu', () => {
   })
 
   test('It displays the granted card', async () => {
-    const component = mount(EdgeAuth0Sync)
+    const component = mount(EdgeAuth0Sync, {
+      store, localVue
+    })
 
     await component.setData({ syncState: 'GRANTED' })
 
@@ -53,7 +55,7 @@ describe('AuthBarMenu', () => {
   })
 
   test('It displays the correct elements', () => {
-    const card = wrapper.find('h2')
+    const card = wrapper.find('h3')
     expect(card.exists()).toBe(true)
     card.contains('Ambianic Edge', { matchCase: true })
 
@@ -61,7 +63,9 @@ describe('AuthBarMenu', () => {
   })
 
   test('It displays verification_code and URL', async () => {
-    const component = mount(EdgeAuth0Sync)
+    const component = mount(EdgeAuth0Sync, {
+      store, localVue
+    })
 
     await component.setData({
       verification_url: 'https://testing.com',
