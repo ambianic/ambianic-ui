@@ -72,108 +72,96 @@ describe('PnP state machine actions - p2p communication layer', () => {
   
   // test Vuex actions
 
-  test('INITIALIZE_PNP on app start', () => {
+  // Tests functions are async since Vuex actions are async.
+  // This allows use of await which makes the code more readable.
+
+  test('INITIALIZE_PNP on app start', async () => {
     expect(store.state.pnp.peerConnection).toBe(undefined)
     expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
     expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_DISCONNECTED)
     expect(store.state.pnp.peerFetch).toBe(undefined)
-    store.dispatch(INITIALIZE_PNP).then( (res) => {
-      expect(store.state.pnp.peerConnection).toBe(undefined)
-      expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
-      expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_CONNECTING)
-      expect(store.state.pnp.peerFetch).toBe(undefined)
-      expect(Peer).toHaveBeenCalledTimes(1);
-      expect(Peer).toHaveBeenCalledWith(store.state.myPeerId,
-        {
-          host: ambianicConf.AMBIANIC_PNP_HOST,
-          port: ambianicConf.AMBIANIC_PNP_PORT,
-          secure: ambianicConf.AMBIANIC_PNP_SECURE,
-          debug: 3
-        });
-    }).catch( (err) => {
-      fail( err )
-    })
+    await store.dispatch(INITIALIZE_PNP)
+    expect(store.state.pnp.peerConnection).toBe(undefined)
+    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
+    expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_CONNECTING)
+    expect(store.state.pnp.peerFetch).toBe(undefined)
+    expect(Peer).toHaveBeenCalledTimes(1);
+    expect(Peer).toHaveBeenCalledWith(store.state.myPeerId,
+      {
+        host: ambianicConf.AMBIANIC_PNP_HOST,
+        port: ambianicConf.AMBIANIC_PNP_PORT,
+        secure: ambianicConf.AMBIANIC_PNP_SECURE,
+        debug: 3
+      });
   })
 
-  test('PNP_SERVICE_CONNECT on app start', () => {
+  test('PNP_SERVICE_CONNECT on app start', async () => {
     expect(store.state.pnp.peerConnection).toBe(undefined)
     expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
     expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_DISCONNECTED)
     expect(store.state.pnp.peerFetch).toBe(undefined)
-    store.dispatch(PNP_SERVICE_CONNECT).then( (res) => {
-      expect(store.state.pnp.peerConnection).toBe(undefined)
-      expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
-      expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_CONNECTING)
-      expect(store.state.pnp.peerFetch).toBe(undefined)
-      expect(Peer).toHaveBeenCalledTimes(1)
-      const peer = store.state.pnp.peer
-      expect(peer.on).toHaveBeenCalledTimes(5)
-      expect(peer.on).toHaveBeenCalledWith(
-        'open',
-        expect.anything()
-      )
-      expect(peer.on).toHaveBeenCalledWith(
-        'disconnected',
-        expect.anything()
-      )      
-      expect(peer.on).toHaveBeenCalledWith(
-        'close',
-        expect.anything()
-      )      
-      expect(peer.on).toHaveBeenCalledWith(
-        'error',
-        expect.anything()
-      )      
-      expect(peer.on).toHaveBeenCalledWith(
-        'connection',
-        expect.anything()
-      )      
-    }).catch( (err) => {
-      fail( err )
-    })
+    await store.dispatch(PNP_SERVICE_CONNECT)
+    expect(store.state.pnp.peerConnection).toBe(undefined)
+    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
+    expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_CONNECTING)
+    expect(store.state.pnp.peerFetch).toBe(undefined)
+    expect(Peer).toHaveBeenCalledTimes(1)
+    const peer = store.state.pnp.peer
+    expect(peer.on).toHaveBeenCalledTimes(5)
+    expect(peer.on).toHaveBeenCalledWith(
+      'open',
+      expect.anything()
+    )
+    expect(peer.on).toHaveBeenCalledWith(
+      'disconnected',
+      expect.anything()
+    )      
+    expect(peer.on).toHaveBeenCalledWith(
+      'close',
+      expect.anything()
+    )      
+    expect(peer.on).toHaveBeenCalledWith(
+      'error',
+      expect.anything()
+    )      
+    expect(peer.on).toHaveBeenCalledWith(
+      'connection',
+      expect.anything()
+    )      
   })
 
-  test('PNP_SERVICE_RECONNECT assuming existing peer disconnected', () => {
+  test('PNP_SERVICE_RECONNECT assuming existing peer disconnected', async () => {
     expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_DISCONNECTED)
     // emulate via mock Peer instance
     const peer = new Peer()
     store.state.pnp.peer = peer
     peer.id = 'some ID'
     store.state.pnp.myPeerId = 'some saved ID'
-    store.dispatch(PNP_SERVICE_RECONNECT).then( (res) => {
-      expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_CONNECTING)
-      expect(peer._lastServerId).toBe('some saved ID')
-      expect(peer.reconnect).toHaveBeenCalledTimes(1)
-    }).catch( (err) => {
-      fail( err )
-    })
+    await store.dispatch(PNP_SERVICE_RECONNECT)
+    expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_CONNECTING)
+    expect(peer._lastServerId).toBe('some saved ID')
+    expect(peer.reconnect).toHaveBeenCalledTimes(1)
   })
 
-  test('PNP_SERVICE_RECONNECT when peer lost id', () => {
+  test('PNP_SERVICE_RECONNECT when peer lost id', async () => {
     expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_DISCONNECTED)
     // emulate via mock Peer instance
     const peer = new Peer()
     store.state.pnp.peer = peer
     store.state.pnp.myPeerId = 'some ID'
     peer.id = undefined
-    store.dispatch(PNP_SERVICE_RECONNECT).then( (res) => {
-      expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_CONNECTING)
-      expect(peer._id).toBe('some ID')
-      expect(peer._lastServerId).toBe('some ID')
-      expect(peer.reconnect).toHaveBeenCalledTimes(1)
-    }).catch( (err) => {
-      fail( err )
-    })
+    await store.dispatch(PNP_SERVICE_RECONNECT)
+    expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_CONNECTING)
+    expect(peer._id).toBe('some ID')
+    expect(peer._lastServerId).toBe('some ID')
+    expect(peer.reconnect).toHaveBeenCalledTimes(1)
   })
 
-  test('PEER_DISCOVER when peer is connected', () => {
+  test('PEER_DISCOVER when peer is connected', async () => {
     store.state.pnp.peerConnectionStatus = PEER_CONNECTED
-    store.dispatch(PEER_DISCOVER).then( (res) => {
-      expect(store.state.pnp.peerConnectionStatus).not.toBe(PEER_DISCOVERING)
-      expect(store.state.pnp.peerConnectionStatus).toBe(PEER_CONNECTED)
-    }).catch( (err) => {
-      fail( err )
-    })
+    await store.dispatch(PEER_DISCOVER)
+    expect(store.state.pnp.peerConnectionStatus).not.toBe(PEER_DISCOVERING)
+    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_CONNECTED)
   })
 
   const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
