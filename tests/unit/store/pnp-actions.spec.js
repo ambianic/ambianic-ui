@@ -66,7 +66,8 @@ describe('PnP state machine actions - p2p communication layer', () => {
   })
 
   afterEach(() => {
-    // jest.restoreAllMocks();    
+    jest.clearAllTimers()
+    jest.restoreAllMocks()
   })
   
   // test Vuex actions
@@ -177,7 +178,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
 
   const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-  test('PEER_DISCOVER when peer is disconnected and local and remote peer ids are known', () => {
+  test('PEER_DISCOVER when peer is disconnected and local and remote peer ids are known', async () => {
     expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
     expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_DISCONNECTED)
     // emulate peer instance exists and local peer id is known
@@ -185,37 +186,78 @@ describe('PnP state machine actions - p2p communication layer', () => {
     store.state.pnp.peer = peer
     peer.id = 'some_ID'
     store.state.pnp.myPeerId = 'some_saved_ID'
-    store.dispatch(PEER_DISCOVER).then( (res) => {
-      expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCOVERING)
-      // wait a bit to let the test go through parts of the code 
-      // that run when the PNP service is disconnected
+    await store.dispatch(PEER_DISCOVER)
+    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCOVERING)
+    // At this point in time, there should have been a single call to
+    // setTimeout to schedule another peer discovery loop.
+    expect(setTimeout).toHaveBeenCalledTimes(1);
+    expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), store.state.pnp.discoveryLoopPause);
+    // emulate the use case when remotePeerId is already known 
+    // and connection is established
+    store.state.pnp.remotePeerId = 'a_known_remote_peer_id'
+    store.state.pnp.pnpServiceConnectionStatus = PNP_SERVICE_CONNECTED
+    // Fast forward and exhaust only currently pending timers
+    // (but not any new timers that get created during that process)
+    console.debug('jest running pending timers')
+    await jest.runOnlyPendingTimers()
+    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_CONNECTING)
+  })
 
-      // At this point in time, there should have been a single call to
-      // setTimeout to schedule another peer discovery loop.
-      expect(setTimeout).toHaveBeenCalledTimes(1);
-      expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), store.state.pnp.discoveryLoopPause);
+  test('PEER_CONNECT attempt connection to a remote peer that is not responding', async () => {
+    // emulate peer is disconnected
+    store.state.pnp.peerConnectionStatus = PEER_DISCONNECTED
+    // emulate PNP signaling service connection exists
+    store.state.pnp.pnpServiceConnectionStatus = PNP_SERVICE_CONNECTED
+    // emulate peer instance exists and local peer id is known
+    const peer = new Peer()
+    store.state.pnp.peer = peer
+    peer.id = 'some_ID'
+    expect(Peer).toHaveBeenCalledTimes(1)
+    store.state.pnp.myPeerId = 'some_saved_ID'
+    // emulate a dangling peerConnection still exists
+    const peerConnection = jest.fn()
+    store.state.pnp.peerConnection = peerConnection
+    peerConnection.close = jest.fn()
+    // emulate a known remote peer id
+    const remotePeerId = 'a_known_remote_peer_id'
+    // emulate PEER_CONNECT vuex action
+    await store.dispatch(PEER_CONNECT, remotePeerId)
 
-      // emulate the use case when remotePeerId is already known 
-      // and connection is established
-      store.state.pnp.remotePeerId = 'a_known_remote_peer_id'
-      store.state.pnp.pnpServiceConnectionStatus = PNP_SERVICE_CONNECTED
-      // Fast forward and exhaust only currently pending timers
-      // (but not any new timers that get created during that process)
-      console.debug('jest running pending timers')
-      jest.runOnlyPendingTimers();
+    expect(store.state.pnp.peerConnection.close).toHaveBeenCalledTimes(1)
+    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_CONNECTING)
 
-      // give it a little time (20ms) for the next discovery loop to complete
-      wait(20).then( () => {
-        // There should not have been another loop.
-        // The discovery process should have ended.
-        expect(setTimeout).toHaveBeenCalledTimes(1)
+    // At this point in time, there should have been a single call to
+    // setTimeout to schedule a check on pending connections in 30 seconds
+    expect(setTimeout).toHaveBeenCalledTimes(1)
+    expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 30000)
 
-        expect(store.state.pnp.peerConnectionStatus).toBe(PEER_CONNECTING)
-      })
+    // Fast forward and exhaust only currently pending timers
+    // (but not any new timers that get created during that process)
+    console.debug('jest running pending timers')
+    await jest.runOnlyPendingTimers();
 
-    }).catch( (err) => {
-      fail( err )
-    })
+    // existing peer should have been destroyed
+    expect(peer.destroy).toHaveBeenCalledTimes(1)
+    // new peer instance should have been created
+    console.debug('Peer constructor calls', Peer.mock.calls)
+    expect(Peer).toHaveBeenCalledTimes(2)
+    expect(store.state.pnp.peer).not.toBe(peer)
+    // reconnect sequence should have been started
+    expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_CONNECTING)
+  })
+
+  test('peer connection error callback: Peer.on("error")', async () => {
+    await store.dispatch(PNP_SERVICE_CONNECT)
+    const peer = store.state.pnp.peer
+    console.debug('peer.on.mock.calls', peer.on.mock.calls)
+    const onErrorCallback = peer.on.mock.calls.find(callbackDetails => callbackDetails[0] === 'error');
+    console.debug('onErrorCallback', onErrorCallback)
+    onErrorCallback[1]('a_network_error')
+    expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_DISCONNECTED)
+    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
+    // setTimeout should be called to INITIALIZE_PNP
+    expect(setTimeout).toHaveBeenCalledTimes(1)
+    expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 3000)
   })
 
 })
