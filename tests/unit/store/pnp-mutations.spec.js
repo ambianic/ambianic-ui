@@ -144,5 +144,12 @@ describe('PnP state machine mutations - p2p communication layer', () => {
     expect(store.state.pnp.peerFetch).toBe('a peerFetch instance')
   })
 
+  test('getter isEdgeConnected', () => {
+    store.state.pnp.peerConnectionStatus = PEER_CONNECTED
+    console.debug('store.getters', store.getters)
+    expect(store.getters.isEdgeConnected).toBeTruthy()
+    store.state.pnp.peerConnectionStatus = PEER_DISCONNECTED
+    expect(store.getters.isEdgeConnected).toBeFalsy()
+  })
 
 })

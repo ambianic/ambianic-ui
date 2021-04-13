@@ -423,7 +423,7 @@ const actions = {
       // in case of multiple connection errors
       return
     }
-    console.log(`#####>>>> PNP Service connection status: ${state.pnpServiceConnectionStatus}`)
+    console.debug(`#####>>>> PNP Service connection status: ${state.pnpServiceConnectionStatus}`)
     console.debug('#####>>>>>>> Connecting to remote peer', remotePeerId)
     if (state.peerConnection) {
       // make sure any previous connection is closed and cleaned up
