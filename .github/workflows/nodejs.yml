@@ -13,6 +13,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Skip CI if the commit message includes the string '[skip ci]'
+    if: "! contains(github.event.head_commit.message, '[skip ci]')"    
     strategy:
       matrix:
         node-version: [12.x]
@@ -49,7 +51,10 @@ jobs:
           ./coverage/coverage-final.json
           ./coverage/jest/coverage-final.json
         fail_ci_if_error: true # optional (default = false)
-    
+        path_to_write_report: ./coverage/codecov_report.txt
+    - name: Show Coverage Report
+      run: |
+        cat ./coverage/codecov_report.txt
     - name: Build PWA distribution for production
       run: |
           npm run build --if-present
@@ -72,4 +77,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-

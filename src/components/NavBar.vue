@@ -18,6 +18,23 @@
         />
         <span class="hidden-sm-and-down">Ambianic</span>
       </v-toolbar-title>
+
+      <nav-button
+        data-cy="timeline-icon"
+        icon="history"
+        to="timeline"
+      />
+
+      <nav-button
+        data-cy="download-off"
+        icon="download-off"
+        color="warning"
+        v-if="!isEdgeConnected"
+        to="edge-connect"
+      />
+
+      <!-- Future navbar icons
+
       <v-text-field
         id="searchbar"
         flat
@@ -29,37 +46,24 @@
       />
       <v-spacer />
 
-      <amb-button
-        with-badge
-        data-cy="download-off"
-        is-icon
-        icon="download-off"
-        btn-color="secondary"
-        v-if="!isEdgeConnected"
-        @click="$router.push('edge-connect')"
-      />
-
-      <!-- test -->
-      <amb-button
+      <nav-button
         with-badge
         data-cy="heart"
-        is-icon
         icon="heart"
         :badge-content="newFavorites"
         :badge-value="newFavorites"
       />
 
-      <amb-button
+      <nav-button
         with-badge
         data-cy="bell"
-        is-icon
         icon="bell"
         :badge-content="newAlerts"
         :badge-value="newAlerts"
       />
+      -->
 
-      <amb-button
-        is-icon
+      <nav-button
         data-cy="about"
         to="about"
       >
@@ -72,7 +76,7 @@
             alt="Ambianic.ai logo"
           />
         </v-avatar>
-      </amb-button>
+      </nav-button>
     </v-app-bar>
 
     <!-- drawer -->
@@ -173,7 +177,7 @@ import {
 export default {
   name: 'NavBar',
   components: {
-    AmbButton: () => import('./shared/Button.vue')
+    NavButton: () => import('./shared/Button.vue')
   },
   data: () => ({
     dialog: false,

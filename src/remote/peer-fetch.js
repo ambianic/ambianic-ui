@@ -97,11 +97,17 @@ export class PeerFetch {
       // update request-response map entry with this response
       const pair = peerFetch._requestMap.get(ticket)
       if (pair) {
+        // we expect the remote peer to respond with two consequetive data packates
+        // the first one containing the http header info
+        // and the second contatning the http body
         if (!pair.response) {
           console.debug('Processing response header')
           // this is the first data message from the responses
           const header = peerFetch.jsonify(data)
-          if (header.status === 202) {
+          if (header.status === undefined) {
+            console.warn('Expected http header packet with status attribute.', { ticket, header })
+            console.warn('Remote peer may not be using a compatible protocol.')
+          } else if (header.status === 202) {
             console.debug('Received keepalive ping')
             // server accepted the request but still working
             // ignore and keep waiting until result or timeout
@@ -267,7 +273,7 @@ export class PeerFetch {
   }
 
   async _receiveResponse (ticket) {
-    const timeout = 10 * 60 * 1000 // 10 minutes
+    const timeout = 20 * 1000 // 10 seconds
     const timerStart = Date.now()
     let timeElapsed = 0
     let response = null

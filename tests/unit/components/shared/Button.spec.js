@@ -32,8 +32,8 @@ describe('Button', () => {
 
     console.log(button.attributes())
 
-    expect(button.exists()).toBe(true)
-    expect(badge.exists()).toBe(false)
+    expect(button.exists()).toBe(true) // button attribute is on by default
+    expect(badge.exists()).toBe(true) // badge attribute is on by default
     // should load the custom slot
     expect(testSlot.exists()).toBe(true)
     expect(testSlot.text()).toBe('hello from slot')
