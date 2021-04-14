@@ -12,7 +12,7 @@ context("Timeline", () => {
   });
 
   it("Should render connection card", () => {
-    cy.get("[data-cy=connectioncard]").contains(
+    cy.get("#connectionCard").contains(
       "Connecting to Ambianic Edge device..."
     );
   });

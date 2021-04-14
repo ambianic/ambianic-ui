@@ -5,78 +5,53 @@
     fluid
   >
     <v-app-bar
-      app
       color="blue darken-3"
     >
-      <v-toolbar-title
-        style="width: 300px"
-        class="ml-0 pl-4"
-      >
-        <v-app-bar-nav-icon
-          id="drawer"
-          @click.stop="drawer = !drawer"
-        />
-        <span class="hidden-sm-and-down">Ambianic</span>
-      </v-toolbar-title>
-
-      <nav-button
-        data-cy="timeline-icon"
-        icon="history"
-        to="timeline"
-      />
-
-      <nav-button
-        data-cy="download-off"
-        icon="download-off"
-        color="warning"
-        v-if="!isEdgeConnected"
-        to="edge-connect"
-      />
-
-      <!-- Future navbar icons
-
-      <v-text-field
-        id="searchbar"
-        flat
-        solo-inverted
-        hide-details
-        prepend-inner-icon="search"
-        label="Search"
-        class="hidden-sm-and-down"
-      />
-      <v-spacer />
-
-      <nav-button
-        with-badge
-        data-cy="heart"
-        icon="heart"
-        :badge-content="newFavorites"
-        :badge-value="newFavorites"
-      />
-
-      <nav-button
-        with-badge
-        data-cy="bell"
-        icon="bell"
-        :badge-content="newAlerts"
-        :badge-value="newAlerts"
-      />
-      -->
-
-      <nav-button
-        data-cy="about"
-        to="about"
-      >
-        <v-avatar
-          size="32px"
-          item
+      <div class="navbar">
+        <v-toolbar-title
+          style="width: 300px"
+          class="ml-10 pl-4"
         >
-          <v-img
-            src="@/assets/logo5.svg"
-            alt="Ambianic.ai logo"
+          <v-app-bar-nav-icon
+            id="drawer"
+            @click.stop="drawer = !drawer"
           />
-        </v-avatar>
-      </nav-button>
+          <span class="hidden-sm-and-down">Ambianic</span>
+        </v-toolbar-title>
+
+        <div right>
+          <nav-button
+            right
+            data-cy="timeline-icon"
+            icon="history"
+            style="text-align: right;"
+            to="timeline"
+          />
+
+          <nav-button
+            data-cy="download-off"
+            icon="download-off"
+            color="warning"
+            v-if="!isEdgeConnected"
+            to="edge-connect"
+          />
+
+          <nav-button
+            data-cy="about"
+            to="about"
+          >
+            <v-avatar
+              size="32px"
+              item
+            >
+              <v-img
+                src="@/assets/logo5.svg"
+                alt="Ambianic.ai logo"
+              />
+            </v-avatar>
+          </nav-button>
+        </div>
+      </div>
     </v-app-bar>
 
     <!-- drawer -->
@@ -233,5 +208,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.navbar {
+   width: 100%;
+   display: flex;
+   flex : 1;
+   justify-content: space-between;
+}
 </style>

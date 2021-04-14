@@ -1,8 +1,5 @@
 <template>
-  <v-row
-    align="start"
-    justify="space-around"
-  >
+  <div>
     <!-- used by test runner to load mock data -->
     <v-btn
       data-cy="load-mock-data"
@@ -13,258 +10,263 @@
       M
     </v-btn>
 
-    <v-col
-      v-if="peerConnectionStatus !== 'PEER_CONNECTED'"
-      style="max-width: 400px;"
-      align="center"
-      justify="center"
-      cols="12"
-      class="pa-0 ma-0 fill-height"
+    <v-row
+      align="start"
+      justify="space-around"
     >
-      <v-card
-        class="mx-auto"
-        id="connectionCard"
-        outlined
+      <v-col
+        v-if="peerConnectionStatus !== 'PEER_CONNECTED'"
+        style="max-width: 400px;"
+        align="center"
+        justify="center"
+        cols="12"
+        class="pa-0 ma-0 fill-height"
       >
-        <v-card-title>
-          <v-icon
-            slot="icon"
-            size="36"
-          >
-            mdi-wifi-off
-          </v-icon>
-          Connecting to Ambianic Edge device...
-          <v-progress-linear
-            color="info"
-            indeterminate
-            :size="50"
-            :width="7"
-          />
-        </v-card-title>
-
-        <v-card-text>
-          In most cases, connecting to your edge device is automatic. If you are
-          not connected within a few moments, click the button below to review
-          settings.
-        </v-card-text>
-
-        <v-card-actions>
-          <v-btn
-            text
-            id="btn-settings"
-            data-cy="settings"
-            to="/settings"
-          >
-            Connection Settings
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-col>
-
-    <v-col
-      v-else
-      id="timeline-data"
-      style="max-width: 400px;"
-      align="center"
-      justify="center"
-      cols="12"
-      class="pa-0 ma-0 fill-height"
-    >
-      <v-list
-        dense
-        class="pa-0 ma-0"
-      >
-        <infinite-loading
-          direction="top"
-          @infinite="infiniteHandlerTop"
-          v-observe-visibility="topSpinnerVisibilityChanged"
+        <v-card
+          class="mx-auto"
+          id="connectionCard"
+          outlined
         >
-          <span slot="no-more">
-            There are no new timeline events.
-          </span>
-        </infinite-loading>
-        <v-list-item
-          v-for="(sample, index) in timeline"
-          :key="index"
+          <v-card-title>
+            <v-icon
+              slot="icon"
+              size="36"
+            >
+              mdi-wifi-off
+            </v-icon>
+            Connecting to Ambianic Edge device...
+            <v-progress-linear
+              color="info"
+              indeterminate
+              :size="50"
+              :width="7"
+            />
+          </v-card-title>
+
+          <v-card-text>
+            In most cases, connecting to your edge device is automatic. If you are
+            not connected within a few moments, click the button below to review
+            settings.
+          </v-card-text>
+
+          <v-card-actions>
+            <v-btn
+              text
+              id="btn-settings"
+              data-cy="settings"
+              to="/settings"
+            >
+              Connection Settings
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+
+      <v-col
+        v-else
+        id="timeline-data"
+        style="max-width: 400px;"
+        align="center"
+        justify="center"
+        cols="12"
+        class="pa-0 ma-0 fill-height"
+      >
+        <v-list
+          dense
           class="pa-0 ma-0"
         >
-          <v-list-item-content class="pa-0 ma-0">
-            <v-img
-              v-if="sample.args.thumbnail_file_name"
-              :src="imageURL[sample.args.id]"
-              class="white--text align-start"
-              alt="Object Detection"
-              contain
-              @load="setImageLoaded(index)"
-            >
-              <v-row
-                class="fill-height ma-0"
-                align="start"
+          <infinite-loading
+            direction="top"
+            @infinite="infiniteHandlerTop"
+            v-observe-visibility="topSpinnerVisibilityChanged"
+          >
+            <span slot="no-more">
+              There are no new timeline events.
+            </span>
+          </infinite-loading>
+          <v-list-item
+            v-for="(sample, index) in timeline"
+            :key="index"
+            class="pa-0 ma-0"
+          >
+            <v-list-item-content class="pa-0 ma-0">
+              <v-img
+                v-if="sample.args.thumbnail_file_name"
+                :src="imageURL[sample.args.id]"
+                class="white--text align-start"
+                alt="Object Detection"
+                contain
+                @load="setImageLoaded(index)"
               >
-                <template #placeholder>
-                  <v-row
-                    class="fill-height ma-0"
-                    align="center"
-                    justify="center"
-                  >
-                    <v-progress-circular
-                      indeterminate
-                      color="info lighten-2"
+                <v-row
+                  class="fill-height ma-0"
+                  align="start"
+                >
+                  <template #placeholder>
+                    <v-row
+                      class="fill-height ma-0"
+                      align="center"
+                      justify="center"
+                    >
+                      <v-progress-circular
+                        indeterminate
+                        color="info lighten-2"
+                      />
+                    </v-row>
+                  </template>
+                  <template v-if="isImageLoaded[index]">
+                    <detection-boxes
+                      :detections="sample.args.inference_result"
+                      :tensor_image_size="
+                        sample.args.inference_meta.tensor_image_size
+                      "
                     />
+                    <event-icon :data="sample" />
+                  </template>
+                </v-row>
+              </v-img>
+              <v-timeline
+                align-top
+                clipped
+                dense
+              >
+                <v-timeline-item
+                  hide-dot
+                  v-if="sample.args.inference_result.length > 0"
+                >
+                  <v-row class="pt-1">
+                    <v-col cols="7">
+                      <v-tooltip bottom>
+                        <template #activator="{ on: tooltip }">
+                          <v-btn
+                            v-on="tooltip"
+                            fab
+                            data-cy="check-btn"
+                            color="success lighten-2"
+                            class="mx-2"
+                          >
+                            <v-icon>mdi-check</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Looks fine</span>
+                      </v-tooltip>
+                      <v-tooltip bottom>
+                        <template #activator="{ on: tooltip }">
+                          <v-btn
+                            v-on="tooltip"
+                            data-cy="bell-btn"
+                            color="error lighten-2"
+                            fab
+                            class="mx-2"
+                          >
+                            <v-icon>mdi-bell</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Mark as Suspicious</span>
+                      </v-tooltip>
+                    </v-col>
+                    <v-col cols="1">
+                      <v-tooltip bottom>
+                        <template #activator="{ on: tooltip }">
+                          <v-btn
+                            icon
+                            data-cy="heart-btn"
+                            v-on="tooltip"
+                          >
+                            <v-icon>mdi-heart</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Save to Favorites</span>
+                      </v-tooltip>
+                      <v-tooltip bottom>
+                        <template #activator="{ on: tooltip }">
+                          <v-btn
+                            icon
+                            data-cy="edit-btn"
+                            v-on="tooltip"
+                          >
+                            <v-icon>mdi-pen</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Edit event details</span>
+                      </v-tooltip>
+                      <v-tooltip bottom>
+                        <template #activator="{ on: tooltip }">
+                          <v-btn
+                            icon
+                            data-cy="share-btn"
+                            v-on="tooltip"
+                          >
+                            <v-icon>mdi-share-variant</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Share event</span>
+                      </v-tooltip>
+                    </v-col>
                   </v-row>
-                </template>
-                <template v-if="isImageLoaded[index]">
-                  <detection-boxes
-                    :detections="sample.args.inference_result"
-                    :tensor_image_size="
-                      sample.args.inference_meta.tensor_image_size
-                    "
-                  />
-                  <event-icon :data="sample" />
-                </template>
-              </v-row>
-            </v-img>
-            <v-timeline
-              align-top
-              clipped
-              dense
-            >
-              <v-timeline-item
-                hide-dot
-                v-if="sample.args.inference_result.length > 0"
-              >
-                <v-row class="pt-1">
-                  <v-col cols="7">
-                    <v-tooltip bottom>
-                      <template #activator="{ on: tooltip }">
-                        <v-btn
-                          v-on="tooltip"
-                          fab
-                          data-cy="check-btn"
-                          color="success lighten-2"
-                          class="mx-2"
-                        >
-                          <v-icon>mdi-check</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>Looks fine</span>
-                    </v-tooltip>
-                    <v-tooltip bottom>
-                      <template #activator="{ on: tooltip }">
-                        <v-btn
-                          v-on="tooltip"
-                          data-cy="bell-btn"
-                          color="error lighten-2"
-                          fab
-                          class="mx-2"
-                        >
-                          <v-icon>mdi-bell</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>Mark as Suspicious</span>
-                    </v-tooltip>
-                  </v-col>
-                  <v-col cols="1">
-                    <v-tooltip bottom>
-                      <template #activator="{ on: tooltip }">
-                        <v-btn
-                          icon
-                          data-cy="heart-btn"
-                          v-on="tooltip"
-                        >
-                          <v-icon>mdi-heart</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>Save to Favorites</span>
-                    </v-tooltip>
-                    <v-tooltip bottom>
-                      <template #activator="{ on: tooltip }">
-                        <v-btn
-                          icon
-                          data-cy="edit-btn"
-                          v-on="tooltip"
-                        >
-                          <v-icon>mdi-pen</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>Edit event details</span>
-                    </v-tooltip>
-                    <v-tooltip bottom>
-                      <template #activator="{ on: tooltip }">
-                        <v-btn
-                          icon
-                          data-cy="share-btn"
-                          v-on="tooltip"
-                        >
-                          <v-icon>mdi-share-variant</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>Share event</span>
-                    </v-tooltip>
-                  </v-col>
-                </v-row>
-              </v-timeline-item>
-              <v-timeline-item
-                :color="eventColor(sample)"
-                small
-                data-cy="timeline-item"
-              >
-                <v-row class="pt-1">
-                  <v-col cols="3">
-                    <strong>{{ friendlyTime(sample.args.datetime) }}</strong>
-                  </v-col>
-                  <v-col>
-                    <div class="subtitle-2">
-                      {{ sample.message }}
-                    </div>
-                    <div class="body-2">
-                      {{ sample.pipeline_display_name }} -
-                      {{ sample.args.inference_meta.display }}
-                    </div>
-                  </v-col>
-                </v-row>
-              </v-timeline-item>
+                </v-timeline-item>
+                <v-timeline-item
+                  :color="eventColor(sample)"
+                  small
+                  data-cy="timeline-item"
+                >
+                  <v-row class="pt-1">
+                    <v-col cols="3">
+                      <strong>{{ friendlyTime(sample.args.datetime) }}</strong>
+                    </v-col>
+                    <v-col>
+                      <div class="subtitle-2">
+                        {{ sample.message }}
+                      </div>
+                      <div class="body-2">
+                        {{ sample.pipeline_display_name }} -
+                        {{ sample.args.inference_meta.display }}
+                      </div>
+                    </v-col>
+                  </v-row>
+                </v-timeline-item>
 
-              <v-timeline-item
-                color="teal lighten-3"
-                small
-                v-for="(inf, inf_index) in sample.args.inference_result"
-                :key="inf_index"
-                :data-num="inf_index + 1"
-              >
-                <v-row class="pt-1">
-                  <v-col cols="3">
-                    <strong>{{ inf.label }}</strong>
-                  </v-col>
-                  <v-col>
-                    <strong>
-                      {{ asPercentage(inf.confidence) }} confidence
-                    </strong>
-                  </v-col>
-                </v-row>
-              </v-timeline-item>
-              <v-timeline-item
-                hide-dot
-                v-if="sample.args.inference_result.length > 0"
-              >
-                <v-row class="pt-1">
-                  <v-col cols="1" />
-                </v-row>
-              </v-timeline-item>
-            </v-timeline>
-          </v-list-item-content>
-        </v-list-item>
-        <infinite-loading
-          @infinite="infiniteHandlerBottom"
-          v-if="!isTopSpinnerVisible"
-        >
-          <span slot="no-more">
-            There are no more timeline events.
-          </span>
-        </infinite-loading>
-      </v-list>
-    </v-col>
-  </v-row>
+                <v-timeline-item
+                  color="teal lighten-3"
+                  small
+                  v-for="(inf, inf_index) in sample.args.inference_result"
+                  :key="inf_index"
+                  :data-num="inf_index + 1"
+                >
+                  <v-row class="pt-1">
+                    <v-col cols="3">
+                      <strong>{{ inf.label }}</strong>
+                    </v-col>
+                    <v-col>
+                      <strong>
+                        {{ asPercentage(inf.confidence) }} confidence
+                      </strong>
+                    </v-col>
+                  </v-row>
+                </v-timeline-item>
+                <v-timeline-item
+                  hide-dot
+                  v-if="sample.args.inference_result.length > 0"
+                >
+                  <v-row class="pt-1">
+                    <v-col cols="1" />
+                  </v-row>
+                </v-timeline-item>
+              </v-timeline>
+            </v-list-item-content>
+          </v-list-item>
+          <infinite-loading
+            @infinite="infiniteHandlerBottom"
+            v-if="!isTopSpinnerVisible"
+          >
+            <span slot="no-more">
+              There are no more timeline events.
+            </span>
+          </infinite-loading>
+        </v-list>
+      </v-col>
+    </v-row>
+  </div>
 </template>
 <style lang="stylus" scoped>
 .see-thru {
