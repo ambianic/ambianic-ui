@@ -198,7 +198,7 @@ function setPnPServiceConnectionHandlers (
   peer.on('open', function (id) {
     commit(PNP_SERVICE_CONNECTED)
     // Workaround for peer.reconnect deleting previous id
-    if (peer.id === null) {
+    if (!peer.id) {
       console.log('pnp client: Received null id from peer open')
       peer.id = state.myPeerId
     } else {
