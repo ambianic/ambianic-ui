@@ -423,7 +423,7 @@ const actions = {
       // in case of multiple connection errors
       return
     }
-    console.log(`#####>>>> PNP Service connection status: ${state.pnpServiceConnectionStatus}`)
+    console.debug(`#####>>>> PNP Service connection status: ${state.pnpServiceConnectionStatus}`)
     console.debug('#####>>>>>>> Connecting to remote peer', remotePeerId)
     if (state.peerConnection) {
       // make sure any previous connection is closed and cleaned up
@@ -490,7 +490,10 @@ const actions = {
       commit(PEER_CONNECTED, peerConnection)
       // remote Peer ID authenticated,
       // lets store it for future (re)connections
-      commit(NEW_REMOTE_PEER_ID, peerConnection.peer)
+      // if its not already stored
+      if (!state.remotePeerId === peerConnection.peer) {
+        commit(NEW_REMOTE_PEER_ID, peerConnection.peer)
+      }
     } else {
       commit(USER_MESSAGE, 'Remote peer authentication failed.')
       await dispatch(HANDLE_PEER_CONNECTION_ERROR, { peerConnection, err: 'Remote peer authentication faied.' })
