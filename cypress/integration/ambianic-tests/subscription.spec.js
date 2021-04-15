@@ -7,14 +7,33 @@ context('SubscriptionModal', () => {
 
   it('Should launch subscription modal', () => {
     cy.get('[data-cy=auth-btn]').click()
+
+    cy.get('.headline').contains('Premium Subscription')
   })
 
-  it('It displays input fields', () => {
-    cy.get('[data-cy=subscribe]').click()
+  it('It displays subscription details', () => {
+    const detail = cy.get('[data-cy=detail]')
+    const price = cy.get('[data-cy=price]')
+    
+    detail.should('be.visible')
+    price.should('be.visible').contains(`$5 Monthly Fee`)
+  })
 
-    cy.get('[name=cardHolderName]').should('be.visible')
-    cy.get('[name=cardNumber]').should('be.visible')
-    cy.get('[name=emailAddress]').should('be.visible')
+  it('It displays input fields and accept values', () => {
+    cy.get('[data-cy=subscribe]').click()
+    
+    const name = cy.get('[name=cardHolderName]')
+    const number = cy.get('[name=cardNumber]')
+    const email = cy.get('[name=emailAddress]')
+
+    name.should('be.visible')
+    name.type('john doe')
+
+    number.should('be.visible')
+    number.type('1212-4545-5454-1234')
+
+    email.should('be.visible')
+    email.type('johndoe@gmail.com')
   })
 
   it('It validates card-number regex is functional', () => {
@@ -30,7 +49,9 @@ context('SubscriptionModal', () => {
     cy.get('input').its('length').should('be.eq', 7)
   })
 
-  it('should dismiss subscription modal', () => {
+  it('It should dismiss subscription modal after subscription', () => {
     cy.get('[data-cy=dismiss-modal]').click()
+
+    cy.get('#subscription-dialog').should('not.contain')
   })
 })

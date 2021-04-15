@@ -7,14 +7,17 @@
     <v-card style="display: flex; flex-direction: column; overflow: hidden;">
       <div id="subscription-details">
         <v-card-title class="headline">
-          Premium Subscription Model
+          Premium Subscription
         </v-card-title>
-        <v-card-text>
+        <v-card-text data-cy="detail">
           Subscribe to Ambianic's Edge Premium Subscription Model for more extra
           added values
         </v-card-text>
         <div>
-          <h3 style="font-weight: 500; text-align: center;">
+          <h3
+            data-cy="price"
+            style="font-weight: 500; text-align: center;"
+          >
             $5 Monthly Fee
           </h3>
           <br>
@@ -222,29 +225,30 @@ export default {
           this.showDialog = false
         })
     },
-    saveStripeData (userStripeId, userSubscriptionId) {
-      Axios.post(
-        `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data`,
-        {
-          userStripeId,
-          userSubscriptionId,
-          user_id: this.$auth.user.sub
-        },
-        {
-          headers: {
-            'content-type': 'application/json'
-          }
-        }
-      )
-        .then(() => {
-          this.loading = false
-          this.showDialog = false
-          this.completeSubscription()
-        })
-        .catch((error) => {
-          console.log(error, 'error saving stripeid')
-          this.showDialog = false
-        })
+    async saveStripeData (userStripeId, userSubscriptionId) {
+      try {
+        const userId = this.$auth.user
+        await Axios.post(
+              `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data`,
+              {
+                userStripeId,
+                userSubscriptionId,
+                user_id: userId
+              },
+              {
+                headers: {
+                  'content-type': 'application/json'
+                }
+              }
+        )
+
+        this.loading = false
+        this.showDialog = false
+        this.completeSubscription()
+      } catch (error) {
+        console.log(error, 'error saving stripeid')
+        this.showDialog = false
+      }
     },
     validateCardNumber (number) {
       if (cardValidator.test(number)) {

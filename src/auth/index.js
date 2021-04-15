@@ -60,7 +60,8 @@ export const useAuth0 = ({
         this.loading = false
         this.user = {
           email: 'test@gmail.com',
-          name: 'Test User'
+          name: 'Test User',
+          sub: 'auth0|121212121212'
         }
         this.isAuthenticated = true
       },

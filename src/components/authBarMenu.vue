@@ -201,7 +201,7 @@ export default {
   async created () {
     // waits for the auth0 client to be fully loaded
     setTimeout(() => {
-      if (this.$auth.user.sub) {
+      if (this.$auth.user) {
         this.fetchStripeId()
       }
     }, 1500)
