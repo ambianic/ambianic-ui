@@ -21,7 +21,6 @@
         v-if="!$auth.isAuthenticated"
         style="display: flex;"
       >
-        <!-- Cypress cant test Netlify forms as it's injected into the DOM. This manually sets the Auth state-->
         <button
           data-cy="auth-btn"
           style="opacity: 0; color: white;"
@@ -176,6 +175,10 @@ import { mapState } from 'vuex'
 import {
   PEER_CONNECTED
 } from '@/store/mutation-types'
+import Moment from 'moment'
+import { extendMoment } from 'moment-range'
+
+const moment = extendMoment(Moment)
 
 export default {
   name: 'AuthBarMenu',
@@ -184,7 +187,8 @@ export default {
     authMenu: false,
     isAuthenticated: false,
     showSubscription: false,
-    stripeId: null,
+    userSubscriptionId: null,
+    userStripeId: null,
     isSubscribed: false,
     showAuthenticationModal: false,
     showEdgeSync: false
@@ -195,12 +199,9 @@ export default {
     EdgeAuth0Sync: () => import('./edge-auth0-sync')
   },
   async created () {
-    console.log(this.$auth.user, 'AUTH0 DETAILS \n \n \n')
     // waits for the auth0 client to be fully loaded
     setTimeout(() => {
-      console.log(this.$auth)
       if (this.$auth.user.sub) {
-        // alert(this.$auth.user.sub, 'sub')
         this.fetchStripeId()
       }
     }, 1500)
@@ -211,10 +212,10 @@ export default {
       this.showEdgeSync = true
     },
     cancelSubscription () {
-      Axios.delete(`${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription?stripeId=${this.stripeId}`,
+      Axios.delete(`${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription?stripeId=${this.userSubscriptionId}`,
         {
           data: {
-            stripeId: this.stripeId
+            stripeId: this.userSubscriptionId
           },
           headers: {
             'content-type': 'application/json'
@@ -232,7 +233,8 @@ export default {
       Axios.post(
         `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data`,
         {
-          user_id: this.$auth.user.sub
+          user_id: this.$auth.user.sub,
+          userStripeId: this.userStripeId
         },
         {
           headers: {
@@ -257,16 +259,20 @@ export default {
         `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data?userId=${this.$auth.user.sub}`
       )
         .then(({ data }) => {
-          const id = data.user.user_metadata.stripeId
+          const { userSubscriptionId, userStripeId, duration } = data.user.user_metadata
+          const today = Moment(new Date())
 
-          if (id) {
-            this.stripeId = id
+          const subscriptionRange = moment.range(duration.start_date, duration.end_date)
+          const isActive = subscriptionRange.contains(today)
+
+          if (isActive) {
+            this.userSubscriptionId = userSubscriptionId
+            this.userStripeId = userStripeId
             this.isSubscribed = true
 
             try {
               const syncStatus = JSON.parse(localStorage.getItem('edgeSyncStatus'))
 
-              // alert(`${syncStatus.isSynced}, typeof: ${typeof syncStatus.isSynced}` )
               if (!syncStatus.isSynced) {
                 this.showEdgeSync = true
               }

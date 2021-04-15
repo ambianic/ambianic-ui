@@ -52,10 +52,11 @@
           <v-list-item>
             <p>
               Confirm the following code shown:
-              <span
+              <code
                 class="code"
                 id="verification_code"
-              >{{ user_code }}</span>
+              >{{ user_code }}</code>
+              , valid for 15 minutes.
             </p>
           </v-list-item>
         </v-list>
@@ -63,7 +64,7 @@
         <br>
         <div class="flex">
           <p style="margin-right: 10px;">
-            {{ !isEdgeConnected ? "Connecting to edge device ..." : "Waiting for confirmation" }}
+            {{ !isEdgeConnected ? "Connecting to edge device ..." : "Waiting for your confirmation..." }}
           </p>
           <v-progress-circular
             id="spinner"
@@ -140,7 +141,21 @@ export default {
     this.edgeAPI = new EdgeAPI(this.pnp)
 
     if (this.isEdgeConnected) {
-      console.log('HERE')
+      this.getUserCode()
+    }
+  },
+  methods: {
+    handleCompletion () {
+      this.showModal = false
+
+      localStorage.setItem('edgeSyncStatus', JSON.stringify({ isSynced: true }))
+    },
+    handleClose () {
+      localStorage.setItem('edgeSyncStatus', JSON.stringify({ isSynced: false }))
+
+      this.showModal = false
+    },
+    getUserCode () {
       this.edgeAPI
         .getUserCode()
         .then((response) => {
@@ -155,18 +170,6 @@ export default {
         .catch((e) => {
           console.log('ERROR RESPONSE FROM EDGE', e)
         })
-    }
-  },
-  methods: {
-    handleCompletion () {
-      this.showModal = false
-
-      localStorage.setItem('edgeSyncStatus', JSON.stringify({ isSynced: true }))
-    },
-    handleClose () {
-      localStorage.setItem('edgeSyncStatus', JSON.stringify({ isSynced: false }))
-
-      this.showModal = false
     },
     checkStatus () {
       this.edgeAPI
@@ -180,8 +183,6 @@ export default {
               this.checkStatus()
             }, 4000)
           } else if (response.access_token) {
-            console.log(response, 'RESPONSE \n \n \n \n \n')
-
             this.edgeAPI
               .saveUserToken({
                 email: this.$auth.user.email,
@@ -198,6 +199,13 @@ export default {
         .catch((e) => {
           console.log(e, 'error from verify token')
         })
+    }
+  },
+  watch: {
+    isEdgeConnected: function (value) {
+      if (value) {
+        this.getUserCode()
+      }
     }
   }
 }
@@ -223,5 +231,9 @@ export default {
 
 .icon:hover {
   cursor: pointer;
+}
+
+.code {
+  font-weight: bold;
 }
 </style>

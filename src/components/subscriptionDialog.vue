@@ -214,18 +214,20 @@ export default {
         }
       )
         .then(({ data }) => {
-          this.saveStripeId(data.customerID)
+          const { userStripeId, userSubscriptionId } = data
+          this.saveStripeData(userStripeId, userSubscriptionId)
         })
         .catch((error) => {
           console.log(error, 'ERROR FROM STRIPE')
           this.showDialog = false
         })
     },
-    saveStripeId (id) {
+    saveStripeData (userStripeId, userSubscriptionId) {
       Axios.post(
         `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data`,
         {
-          stripeId: id,
+          userStripeId,
+          userSubscriptionId,
           user_id: this.$auth.user.sub
         },
         {
