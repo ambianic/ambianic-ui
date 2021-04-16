@@ -32,6 +32,7 @@ describe('AuthBarMenu', () => {
 
   test('It displays the modal dialog', () => {
     const dialog = wrapper.find('#dialog')
+    expect(dialog.find('#dialog').isVisible()).toBe(true)
 
     expect(dialog.exists()).toBe(true)
   })
@@ -50,6 +51,7 @@ describe('AuthBarMenu', () => {
 
     const card = component.find('#granted')
     expect(card.exists()).toBe(true)
+    expect(component.find('#success').exists()).toBe(true)
 
     await component.find('#dismiss-button').trigger('click')
   })
@@ -62,7 +64,7 @@ describe('AuthBarMenu', () => {
     expect(wrapper.find('#spinner').exists()).toBe(true)
   })
 
-  test('It displays verification_code and URL', async () => {
+  test('It displays a verification_code and URL', async () => {
     const component = mount(EdgeAuth0Sync, {
       store, localVue
     })
@@ -72,7 +74,7 @@ describe('AuthBarMenu', () => {
       user_code: '12121212'
     })
 
-    expect(wrapper.find('#verification_code').exists()).toBe(true)
-    expect(wrapper.find('#verification_url').exists()).toBe(true)
+    expect(component.find('#verification_code').exists()).toBe(true)
+    expect(component.find('#verification_url').exists()).toBe(true)
   })
 })

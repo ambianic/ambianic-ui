@@ -8,13 +8,9 @@ describe('SubscriptionDialog', () => {
   localVue.use(Vuex)
 
   beforeEach(() => {
-    state = {
+    state = {}
 
-    }
-
-    store = new Vuex.Store({
-      state
-    })
+    store = new Vuex.Store({ state })
 
     wrapper = mount(SubscriptionDialog, {
       store

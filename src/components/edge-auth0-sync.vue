@@ -94,7 +94,9 @@
           >
             mdi-check-circle-outline
           </v-icon>
-          <p>Ambianic Edge Device Authenticated Successfully!</p>
+          <p id="success">
+            Ambianic Edge Device Authenticated Successfully!
+          </p>
         </div>
         <div>
           <v-btn
