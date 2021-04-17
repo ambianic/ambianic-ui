@@ -72,14 +72,13 @@ export class EdgeAPI {
   }
 
   // Premium Subscribtion operations
-  async getUserCode () {
+  async initializePremiumNotification ({ userId }) {
     const apiRoot = this._getRootURL()
 
     const request = {
-      url: `${apiRoot}auth/user-code`,
+      url: `${apiRoot}auth/premium-notification`,
       params: {
-        client_id: process.env.VUE_APP_EDGE_AUTH0_CLIENTID,
-        domain: process.env.VUE_APP_EDGE_AUTH0_DOMAIN
+        userId
       }
     }
 
@@ -89,43 +88,6 @@ export class EdgeAPI {
       return reqBody
     } catch (error) {
 
-    }
-  }
-
-  async checkUserAuthorizationStatus (deviceCode) {
-    const apiRoot = this._getRootURL()
-
-    const request = {
-      url: `${apiRoot}auth/verify-token`,
-      params: { device_code: deviceCode }
-    }
-
-    try {
-      const reqBody = await this._getJSON(request)
-
-      return reqBody
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  async saveUserToken ({ token, email }) {
-    const apiRoot = this._getRootURL()
-
-    const apiKey = process.env.EMAIL_API_KEY
-    const domain = process.env.EMAIL_DOMAIN
-
-    const request = {
-      url: `${apiRoot}auth/save-token`,
-      params: { token, email, apiKey, domain }
-    }
-
-    try {
-      const reqBody = await this._getJSON(request)
-
-      return reqBody
-    } catch (e) {
-      console.log(e)
     }
   }
 }

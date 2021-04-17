@@ -11,7 +11,7 @@ jest.mock('peerjs')
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
-describe('AuthBarMenu', () => {
+describe('EdgeSyncModal', () => {
   let wrapper
   let store
 
@@ -30,51 +30,20 @@ describe('AuthBarMenu', () => {
     wrapper.destroy()
   })
 
-  test('It displays the modal dialog', () => {
-    const dialog = wrapper.find('#dialog')
-    expect(dialog.find('#dialog').isVisible()).toBe(true)
+  test('It displays the notification dialog', () => {
+    const dialog = wrapper.find('#notification-dialog')
+    expect(dialog.isVisible()).toBe(true)
 
     expect(dialog.exists()).toBe(true)
   })
 
-  test('It displays the pending card', () => {
-    const card = wrapper.find('#pending')
-    expect(card.exists()).toBe(true)
-  })
+  test('It displays the notification details', async () => {
+    expect(wrapper.find('#success-icon').exists()).toBe(true)
+    expect(wrapper.find('#close-icon').exists()).toBe(true)
 
-  test('It displays the granted card', async () => {
-    const component = mount(EdgeAuth0Sync, {
-      store, localVue
-    })
+    const text = wrapper.find('#explanation')
+    expect(text.exists()).toBe(true)
 
-    await component.setData({ syncState: 'GRANTED' })
-
-    const card = component.find('#granted')
-    expect(card.exists()).toBe(true)
-    expect(component.find('#success').exists()).toBe(true)
-
-    await component.find('#dismiss-button').trigger('click')
-  })
-
-  test('It displays the correct elements', () => {
-    const card = wrapper.find('h3')
-    expect(card.exists()).toBe(true)
-    card.contains('Ambianic Edge', { matchCase: true })
-
-    expect(wrapper.find('#spinner').exists()).toBe(true)
-  })
-
-  test('It displays a verification_code and URL', async () => {
-    const component = mount(EdgeAuth0Sync, {
-      store, localVue
-    })
-
-    await component.setData({
-      verification_url: 'https://testing.com',
-      user_code: '12121212'
-    })
-
-    expect(component.find('#verification_code').exists()).toBe(true)
-    expect(component.find('#verification_url').exists()).toBe(true)
+    await wrapper.find('#dismiss-button').trigger('click')
   })
 })
