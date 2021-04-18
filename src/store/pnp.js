@@ -172,8 +172,8 @@ async function discoverRemotePeerId ({ state, commit }) {
     //   is not in the problematic list of remote peers
     var remotePeerId = peerIds.find(
       pid => pid !== state.myPeerId && !state.problematicRemotePeers.has(pid))
-    console.debug(`remotePeerId: ${ remotePeerId } found among myRoom members: $ { peerIds }`)
-      if (remotePeerId === undefined && state.problematicRemotePeers.size > 0) {
+    console.debug(`remotePeerId: ${remotePeerId} found among myRoom members: ${peerIds}`)
+    if (remotePeerId === undefined && state.problematicRemotePeers.size > 0) {
       // if no fresh remote peer is found, recycle the problematic peers list
       // and try to connect to them again
       console.log('recycling problematic peers', state.problematicRemotePeers)
