@@ -18,13 +18,16 @@ const router = new VueRouter({
 Vue.use(VueRouter)
 Vue.use(VuePageTransition)
 
-new Vue({
+const VueApp = new Vue({
   router,
   store,
   vuetify,
   render: h => h(App)
-}).$mount('#app')
+})
+
+VueApp.$mount('#app')
 
 if (window.Cypress) {
   window.__store__ = store
+  window.vue = VueApp
 }
