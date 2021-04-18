@@ -14,7 +14,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     # Skip CI if the commit message includes the string '[skip ci]'
-    if: "! contains(github.event.head_commit.message, '[skip ci]')"    
+    if: "! contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       matrix:
         node-version: [12.x]
@@ -42,7 +42,7 @@ jobs:
         command: npm test
       env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Upload Cypress test recorded videos for debugging
       uses: actions/upload-artifact@v2
       if: always()
@@ -54,7 +54,7 @@ jobs:
       if: always()
       with:
         name: cypress-screenshots
-        path: cypress/screenshots          
+        path: cypress/screenshots
     - name: Code Coverage Report
       uses: codecov/codecov-action@v1
       with:
