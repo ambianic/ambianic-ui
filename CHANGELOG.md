@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.14.1](https://github.com/ambianic/ambianic-ui/compare/v2.14.0...v2.14.1) (2021-04-18)
+
+
+### Bug Fixes
+
+* js linting error ([4b6b974](https://github.com/ambianic/ambianic-ui/commit/4b6b9747710a7ca7eb749dcb1b5826791fed6298))
+
 # [2.14.0](https://github.com/ambianic/ambianic-ui/compare/v2.13.2...v2.14.0) (2021-04-07)
 
 
