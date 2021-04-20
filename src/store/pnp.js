@@ -449,7 +449,7 @@ const actions = {
         console.debug('Problematic remote peer ID:', remotePeerId)
         peer.destroy()
       } catch (err) {
-        console.warning('Error destroying peer.')
+        console.warn('Error destroying peer.')
       } finally {
         console.info('It took too long to setup a connection. Resetting peer.')
         dispatch(INITIALIZE_PNP)
