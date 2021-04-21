@@ -161,16 +161,18 @@ async function discoverRemotePeerId ({ state, commit }) {
     return state.remotePeerId
   } else {
   // first try to find the remote peer ID in the same room
-    console.log(peer)
+    console.debug(peer)
     const myRoom = new PeerRoom(peer)
-    console.log('Fetching room members', myRoom)
-    const { clientsIds } = await myRoom.getRoomMembers()
-    const peerIds = clientsIds
-    console.log('myRoom members', clientsIds)
+    console.debug('Fetching room members', myRoom)
+    const roomMembers = await myRoom.getRoomMembers()
+    console.debug('Fetched roomMembers', roomMembers)
+    const peerIds = roomMembers.clientsIds
+    console.debug('myRoom members', peerIds)
     // find a peerId that is different than this PWA peer ID and
     //   is not in the problematic list of remote peers
     var remotePeerId = peerIds.find(
       pid => pid !== state.myPeerId && !state.problematicRemotePeers.has(pid))
+    console.debug(`remotePeerId: ${remotePeerId} found among myRoom members: ${peerIds}`)
     if (remotePeerId === undefined && state.problematicRemotePeers.size > 0) {
       // if no fresh remote peer is found, recycle the problematic peers list
       // and try to connect to them again
@@ -198,7 +200,7 @@ function setPnPServiceConnectionHandlers (
   peer.on('open', function (id) {
     commit(PNP_SERVICE_CONNECTED)
     // Workaround for peer.reconnect deleting previous id
-    if (peer.id === null) {
+    if (!peer.id) {
       console.log('pnp client: Received null id from peer open')
       peer.id = state.myPeerId
     } else {
@@ -294,6 +296,8 @@ function setPeerConnectionHandlers ({
     console.info(`Error in connection to remote peer ID ${peerConnection.peer}`, err)
     dispatch(HANDLE_PEER_CONNECTION_ERROR, { peerConnection, err })
   })
+
+  console.debug('peerConnection.on(event) handlers all set.')
 }
 
 const actions = {
@@ -445,7 +449,7 @@ const actions = {
         console.debug('Problematic remote peer ID:', remotePeerId)
         peer.destroy()
       } catch (err) {
-        console.warning('Error destroying peer.')
+        console.warn('Error destroying peer.')
       } finally {
         console.info('It took too long to setup a connection. Resetting peer.')
         dispatch(INITIALIZE_PNP)
