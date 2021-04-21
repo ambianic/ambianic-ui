@@ -233,7 +233,7 @@ export default {
               {
                 userStripeId,
                 userSubscriptionId,
-                user_id: userId
+                user_id: userId.sub || 'auth0121212'
               },
               {
                 headers: {

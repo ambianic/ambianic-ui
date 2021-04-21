@@ -43,9 +43,9 @@
             mdi-check-circle-outline
           </v-icon>
 
-          <v-text id="explanation">
+          <p id="explanation">
             Your premium subscription has been successfully extended to your connected Edge Device. <br> <br> You would now get email notifications about object detections from your running edge device.
-          </v-text>
+          </p>
 
           <v-btn
             color="primary"
