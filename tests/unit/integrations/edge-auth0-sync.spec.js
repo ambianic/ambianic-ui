@@ -32,16 +32,25 @@ describe('EdgeSyncModal', () => {
 
   test('It displays the notification dialog', () => {
     const dialog = wrapper.find('#notification-dialog')
-    expect(dialog.isVisible()).toBe(true)
 
+    expect(wrapper.find('#close-icon').exists()).toBe(true)
+    expect(dialog.isVisible()).toBe(true)
     expect(dialog.exists()).toBe(true)
   })
 
-  test('It displays the notification details', async () => {
+  test('It displays loading state', () => {
+    expect(wrapper.find('#loading-sync').exists()).toBe(true)
+
+    expect(wrapper.find('#loading-explanation').exists())
+  })
+
+  test('It displays a sync granted state', async () => {
+    await wrapper.setData({ isEdgeSynced: true })
+
     expect(wrapper.find('#success-icon').exists()).toBe(true)
-    expect(wrapper.find('#close-icon').exists()).toBe(true)
 
     const text = wrapper.find('#explanation')
+
     expect(text.exists()).toBe(true)
 
     await wrapper.find('#dismiss-button').trigger('click')

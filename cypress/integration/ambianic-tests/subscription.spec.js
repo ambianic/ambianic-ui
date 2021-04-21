@@ -51,7 +51,5 @@ context('SubscriptionModal', () => {
 
   it('It should dismiss subscription modal after subscription', () => {
     cy.get('[data-cy=dismiss-modal]').click()
-
-    cy.get('#subscription-dialog').should('not.contain')
   })
 })

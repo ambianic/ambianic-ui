@@ -10,8 +10,8 @@
           Premium Subscription
         </v-card-title>
         <v-card-text data-cy="detail">
-          Subscribe to Ambianic's Edge Premium Subscription Model for more extra
-          added values
+          Subscribe to Ambianic Premium Services to enable advanced
+          features, such as Notification, Multiple Edge Displayed, Reports.
         </v-card-text>
         <div>
           <h3
@@ -22,6 +22,15 @@
           </h3>
           <br>
         </div>
+      </div>
+
+      <div
+        id="error"
+        v-if="subscriptionError"
+      >
+        <p class="error-text">
+          An error occurred while adding your subscription. Please try again
+        </p>
       </div>
 
       <v-spacer />
@@ -146,6 +155,7 @@
         <v-btn
           color="primary"
           text
+          id="confirm-btn"
           data-cy="confirm-btn"
           :disabled="!cardNumberIsValid"
           @click="submitSubscription()"
@@ -180,6 +190,7 @@ export default {
     expiryYear: '2022',
     cvc: '451',
     fullName: 'Test user',
+    subscriptionError: null,
 
     // TODO: change later
     cardNumberIsValid: true,
@@ -202,7 +213,8 @@ export default {
   methods: {
     submitSubscription () {
       this.loading = true
-      Axios.post(`${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscribe`,
+      Axios.post(
+        `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscribe`,
         {
           email: this.email,
           number: this.cardNumber,
@@ -222,24 +234,24 @@ export default {
         })
         .catch((error) => {
           console.log(error, 'ERROR FROM STRIPE')
-          this.showDialog = false
+          this.subscriptionError = error
         })
     },
     async saveStripeData (userStripeId, userSubscriptionId) {
       try {
         const userId = this.$auth.user
         await Axios.post(
-              `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data`,
-              {
-                userStripeId,
-                userSubscriptionId,
-                user_id: userId.sub || 'auth0121212'
-              },
-              {
-                headers: {
-                  'content-type': 'application/json'
-                }
-              }
+          `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data`,
+          {
+            userStripeId,
+            userSubscriptionId,
+            user_id: userId.sub || 'auth0121212'
+          },
+          {
+            headers: {
+              'content-type': 'application/json'
+            }
+          }
         )
 
         this.loading = false
@@ -264,4 +276,9 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.error-text {
+  color: #ff0033;
+  text-align: center;
+}
+</style>

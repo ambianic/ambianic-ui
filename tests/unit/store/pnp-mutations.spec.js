@@ -30,14 +30,21 @@ describe('PnP state machine mutations - p2p communication layer', () => {
   // the Vuex store we will be testing against
   let store
 
+  beforeAll(() => {
+    global.Storage.prototype.setItem = jest.fn()
+    global.Storage.prototype.getItem = jest.fn()
+    global.Storage.prototype.removeItem = jest.fn()
+  })
+
   beforeEach(() => {
     localVue = createLocalVue()
     localVue.use(Vuex)
     store = new Vuex.Store({ modules: { pnp: cloneDeep(pnp) } })
-    // console.debug("store:", store )
+    window.localStorage.clear()
   })
 
   afterEach(() => {
+    jest.resetAllMocks()
   })
 
   // test Vuex mutations
@@ -122,19 +129,28 @@ describe('PnP state machine mutations - p2p communication layer', () => {
   })
 
   test('NEW_REMOTE_PEER_ID', () => {
-    store.commit(NEW_REMOTE_PEER_ID, 'a new remote peer id')
-    expect(store.state.pnp.remotePeerId).toBe('a new remote peer id')
-    expect(window.localStorage.getItem(`${STORAGE_KEY}.remotePeerId`)).toBe('a new remote peer id')
+    store.commit(NEW_REMOTE_PEER_ID, 'a_new_remote_peer_id')
+    expect(window.localStorage.setItem).toHaveBeenCalledTimes(1)
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(`${STORAGE_KEY}.remotePeerId`, 'a_new_remote_peer_id')
   })
 
   test('REMOTE_PEER_ID_REMOVED', () => {
     store.commit(REMOTE_PEER_ID_REMOVED)
     expect(store.state.pnp.remotePeerId).toBe(undefined)
-    expect(window.localStorage.getItem(`${STORAGE_KEY}.remotePeerId`)).toBe(null)
+    expect(window.localStorage.removeItem).toHaveBeenCalledTimes(1)
+    expect(window.localStorage.removeItem).toHaveBeenCalledWith(`${STORAGE_KEY}.remotePeerId`)
   })
 
   test('PEER_FETCH', () => {
     store.commit(PEER_FETCH, 'a peerFetch instance')
     expect(store.state.pnp.peerFetch).toBe('a peerFetch instance')
+  })
+
+  test('getter isEdgeConnected', () => {
+    store.state.pnp.peerConnectionStatus = PEER_CONNECTED
+    console.debug('store.getters', store.getters)
+    expect(store.getters.isEdgeConnected).toBeTruthy()
+    store.state.pnp.peerConnectionStatus = PEER_DISCONNECTED
+    expect(store.getters.isEdgeConnected).toBeFalsy()
   })
 })

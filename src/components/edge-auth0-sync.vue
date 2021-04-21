@@ -13,13 +13,13 @@
         >
           <div class="align-center">
             <h3 style="font-weight: normal;">
-              Ambianic Edge Device
+              Ambianic Edge Device Sync
             </h3>
           </div>
 
           <div
             class="icon"
-            @click="handleClose()"
+            @click="handleClose('DENIED')"
           >
             <v-icon
               style="margin: 0.5rem 0;"
@@ -33,7 +33,26 @@
         </div>
 
         <hr>
-        <v-list>
+        <v-list v-if="!isEdgeSynced">
+          <br>
+          <v-progress-circular
+            indeterminate
+            :width="3.5"
+            id="loading-sync"
+            :size="40"
+            color="primary"
+          />
+          <br>
+          <br>
+          <p id="loading-explanation">
+            Your premium subscription is being extended to your connected Edge Device.
+          </p>
+
+          <br>
+          <br>
+        </v-list>
+
+        <v-list v-else>
           <v-icon
             style="margin: 0.5rem 0;"
             center
@@ -49,8 +68,9 @@
 
           <v-btn
             color="primary"
+            :disabled="!isEdgeSynced"
             id="dismiss-button"
-            @click="handleClose()"
+            @click="handleClose('GRANTED')"
           >
             Okay, I understand
           </v-btn>
@@ -70,7 +90,8 @@ import { mapState } from 'vuex'
 export default {
   name: 'EdgeAuth0Sync',
   data: (_) => ({
-    showModal: true
+    showModal: true,
+    isEdgeSynced: false
   }),
   computed: {
     ...mapState({
@@ -90,14 +111,17 @@ export default {
     }
   },
   methods: {
-    handleClose () {
-      localStorage.setItem('edgeSyncStatus', JSON.stringify({ isSynced: false }))
+    handleClose (state) {
+      localStorage.setItem('edgeSyncStatus', JSON.stringify({ status: state }))
 
       this.showModal = false
     },
     submitUserId () {
       this.edgeAPI
         .initializePremiumNotification(this.$auth.user.sub)
+        .then(() => {
+          this.isEdgeSynced = true
+        })
         .catch((e) => {
           console.log('ERROR RESPONSE FROM EDGE', e)
         })

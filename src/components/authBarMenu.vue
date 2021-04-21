@@ -1,6 +1,10 @@
 <template>
   <div>
-    <div v-if="$auth.loading">
+    <div
+      class="spinner"
+      @click="handleMock()"
+      v-if="$auth.loading"
+    >
       <v-progress-circular
         indeterminate
         :width="2.5"
@@ -11,12 +15,17 @@
 
     <div v-else>
       <SubscriptionDialog
+        id="subscription"
         v-if="showSubscription"
         :complete-subscription="() => handleCompletedSubscription()"
         :email="isSubscribed ? this.$auth.user.email : 'test@gmail.com'"
       />
 
-      <EdgeAuth0Sync v-if="showEdgeSync" />
+      <EdgeAuth0Sync
+        id="edgeSync"
+        v-if="showEdgeSync"
+      />
+
       <div
         v-if="!$auth.isAuthenticated"
         style="display: flex;"
@@ -35,18 +44,30 @@
         >
           a
         </button>
-        <!--      -->
-        <div
-          @click="handleAuth()"
-          data-cy="profile-component"
-        >
-          <amb-button
-            with-badge
-            data-cy="login"
-            is-icon
-            icon="login"
-          />
-        </div>
+        <v-tooltip bottom>
+          <template #activator="{ on, attrs }">
+            <v-btn
+              color="transparent"
+              @click="handleAuth()"
+              class="service-btn"
+              data-cy="profile-component"
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon
+                data-cy="login"
+                is-icon
+              >
+                mdi-plus
+              </v-icon>
+
+              <div class="center">
+                <p>Premium Service</p>
+              </div>
+            </v-btn>
+          </template>
+          <p> Ambianic Premium service provides Notifications and Reports </p>
+        </v-tooltip>
       </div>
 
       <div v-else>
@@ -86,7 +107,10 @@
                 style="text-align: right; padding: 0.3rem 0.5rem;"
                 @click="handleMenu(false)"
               >
-                <v-icon right>
+                <v-icon
+                  class="icon"
+                  right
+                >
                   mdi-close
                 </v-icon>
               </div>
@@ -114,8 +138,11 @@
             <v-list>
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-subtitle style="color: black;">
-                    CURRENT SUBSCRIPTION
+                  <v-list-item-subtitle
+                    id="title"
+                    style="color: black;"
+                  >
+                    SUBSCRIPTION
                   </v-list-item-subtitle>
                   <br>
                   <div
@@ -132,15 +159,36 @@
                   <div
                     style="display: flex; justify-content: space-between;"
                     v-else
+                    class="premium-subscription"
                   >
                     <v-list-item-title
-                      style="margin: 0.5rem 0.3rem; color: grey;"
+                      style="margin: 0.5rem 0.3rem;"
                     >
-                      Premium Subscription
+                      Premium Subscription <br> <span
+                        id="time"
+                        style="color: grey; margin-top: 7px;"
+                      > {{ subscriptionStatus.status }} </span>
                     </v-list-item-title>
 
-                    <v-btn @click="cancelSubscription()">
-                      Cancel
+                    <v-btn
+                      v-if="subscriptionStatus.shouldRenew"
+                      class="renew-btn"
+                      color="primary"
+                      :disabled="subscriptionStatus.canCancel"
+                      style="background: #ff0033; color: #fff; margin-top: 10px;"
+                      @click="renewSubscription()"
+                    >
+                      {{ loading ? "Renewing" : "Renew" }}
+                    </v-btn>
+
+                    <v-btn
+                      v-else
+                      class="subscription-btn"
+                      :disabled="!subscriptionStatus.canCancel"
+                      style="background: #ff0033; color: #fff; margin-top: 10px;"
+                      @click="cancelSubscription()"
+                    >
+                      {{ loading ? "Canceling" : "Cancel" }}
                     </v-btn>
                   </div>
                 </v-list-item-content>
@@ -187,11 +235,13 @@ export default {
     authMenu: false,
     isAuthenticated: false,
     showSubscription: false,
+    subscriptionStatus: {},
     userSubscriptionId: null,
     userStripeId: null,
     isSubscribed: false,
     showAuthenticationModal: false,
-    showEdgeSync: false
+    showEdgeSync: false,
+    loading: false
   }),
   components: {
     AmbButton: () => import('./shared/Button.vue'),
@@ -200,19 +250,27 @@ export default {
   },
   async created () {
     // waits for the auth0 client to be fully loaded
-    setTimeout(() => {
-      if (this.$auth.user) {
-        this.fetchStripeId()
-      }
-    }, 1500)
+    // setTimeout(() => {
+    if (this.$auth.isAuthenticated) {
+      this.fetchStripeId()
+    }
+    // }, 1500)
   },
   methods: {
+    renewSubscription () {
+      this.loading = true
+      this.showSubscription = true
+      // setTimeout(() => {
+      //   this.loading = false
+      // }, 1000)
+    },
     handleCompletedSubscription () {
       this.fetchStripeId()
       this.showEdgeSync = true
     },
     cancelSubscription () {
-      Axios.delete(`${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription?stripeId=${this.userSubscriptionId}`,
+      this.loading = true
+      Axios.delete(`${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription?userSubscriptionId=${this.userSubscriptionId}`,
         {
           data: {
             stripeId: this.userSubscriptionId
@@ -223,68 +281,67 @@ export default {
         }
       )
         .then(() => {
-          this.removeStripeId()
+          this.fetchStripeId()
         })
         .catch((e) => {
           console.log('ERROR UNSUBSCRIBING', e)
         })
     },
-    removeStripeId () {
-      Axios.post(
-        `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data`,
-        {
-          user_id: this.$auth.user.sub,
-          userStripeId: this.userStripeId
-        },
-        {
-          headers: {
-            'content-type': 'application/json'
-          }
-        }
-      )
-        .then(() => {
-          this.isSubscribed = false
-          localStorage.setItem('edgeSyncStatus', JSON.stringify({ isSynced: false }))
-        })
-        .catch((error) => {
-          console.log(error, 'error saving stripeid')
-          this.isSubscribed = false
-        })
-    },
     handleAuth () {
       this.$auth.loginWithRedirect()
     },
-    fetchStripeId () {
-      Axios.get(
+    async fetchStripeId () {
+      try {
+        const { data } = await Axios.get(
         `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data?userId=${this.$auth.user.sub}`
-      )
-        .then(({ data }) => {
-          const { userSubscriptionId, userStripeId, duration } = data.user.user_metadata
-          const today = Moment(new Date())
+        )
 
-          const subscriptionRange = moment.range(duration.start_date, duration.end_date)
-          const isActive = subscriptionRange.contains(today)
+        const { userSubscriptionId, userStripeId } = data.user_metadata
+        const { current_period_end: end, status } = data.sub_details
 
-          if (isActive) {
-            this.userSubscriptionId = userSubscriptionId
-            this.userStripeId = userStripeId
-            this.isSubscribed = true
+        this.userSubscriptionId = userSubscriptionId
+        this.userStripeId = userStripeId
+        this.isSubscribed = true
 
-            try {
-              const syncStatus = JSON.parse(localStorage.getItem('edgeSyncStatus'))
+        this.handleSubscriptionStatus(status, moment(end).format('ddd, MMM Do YYYY'))
 
-              if (!syncStatus.isSynced) {
-                this.showEdgeSync = true
-              }
-            } catch (e) {
-              // new device without a previous sync record
-              this.showEdgeSync = true
-            }
+        try {
+          const syncStatus = JSON.parse(localStorage.getItem('edgeSyncStatus'))
+
+          if (!syncStatus.status) {
+            this.showEdgeSync = true
           }
-        })
-        .catch((e) => {
-          console.log(e)
-        })
+        } catch (e) {
+          // new device without a previous sync record
+          this.showEdgeSync = true
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    handleSubscriptionStatus (status, endDate) {
+      console.log(`Recieved Status : ${status} \n \n \n \n \n \n`)
+
+      switch (status) {
+        case 'past_due':
+          this.subscriptionStatus = { status: `Expired ${endDate}`, shouldRenew: true }
+          break
+
+        case 'active':
+          this.subscriptionStatus = { status: `Expires ${endDate}`, shouldRenew: false, canCancel: true }
+          break
+
+        case 'incomplete_expired':
+          this.subscriptionStatus = { status: `Expired ${endDate}`, shouldRenew: true }
+          break
+
+        case 'canceled':
+          this.subscriptionStatus = { status: `Active till ${endDate}`, shouldRenew: false, canCancel: false }
+          break
+
+        default:
+          break
+      }
     },
     handleLogout () {
       this.$auth.logout({
@@ -293,6 +350,9 @@ export default {
     },
     handleMenu (state) {
       this.authMenu = state
+    },
+    handleMock () {
+      this.$auth.handleTestLogin()
     }
   },
   computed: {
@@ -323,4 +383,25 @@ export default {
   cursor: pointer;
   color: #000;
 }
+
+.icon:hover {
+  cursor: pointer;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.service-btn {
+  display: flex;
+  color: #fff
+}
+
+.service-btn:hover {
+  cursor: pointer;
+}
+
 </style>

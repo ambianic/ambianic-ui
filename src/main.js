@@ -21,12 +21,12 @@ Vue.use(VueRouter)
 Vue.use(VuePageTransition)
 
 const CLIENTDOMAIN = process.env.VUE_APP_AUTH0_DOMAIN
-const CLIENTSECRET = process.env.VUE_APP_AUTH0_CLIENTID
+const CLIENTID = process.env.VUE_APP_AUTH0_CLIENTID
 
 // AUTH0 PLUGIN
 Vue.use(Auth0Plugin, {
   CLIENTDOMAIN,
-  CLIENTSECRET,
+  CLIENTID,
   onRedirectCallback: appState => {
     router.push(
       appState && appState.targetUrl

@@ -9,13 +9,20 @@ import {
   PEER_CONNECTED,
   PNP_SERVICE_DISCONNECTED,
   PNP_SERVICE_CONNECTING,
-  PNP_SERVICE_CONNECTED
+  PNP_SERVICE_CONNECTED,
+  USER_MESSAGE,
+  NEW_PEER_ID,
+  NEW_REMOTE_PEER_ID
 } from '@/store/mutation-types.js'
 import {
   INITIALIZE_PNP,
   PNP_SERVICE_CONNECT,
   PNP_SERVICE_RECONNECT,
-  PEER_DISCOVER
+  PEER_DISCOVER,
+  PEER_CONNECT,
+  PEER_AUTHENTICATE,
+  REMOVE_REMOTE_PEER_ID,
+  CHANGE_REMOTE_PEER_ID
 } from '@/store/action-types.js'
 import { ambianicConf } from '@/config'
 
@@ -27,8 +34,7 @@ jest.mock('peerjs') // Peer is now a mock class
 jest.mock('@/remote/peer-room') // PeerRoom is now a mock class
 jest.mock('@/remote/peer-fetch') // PeerFetch is now a mock class
 
-
-jest.mock('peerjs')
+const STORAGE_KEY = 'ambianic-pnp-settings'
 
 describe('PnP state machine actions - p2p communication layer', () => {
 // global
@@ -38,6 +44,15 @@ describe('PnP state machine actions - p2p communication layer', () => {
 
   // the Vuex store we will be testing against
   let store
+
+  // browser window mock
+  /// let windowSpy
+
+  beforeAll(() => {
+    global.Storage.prototype.setItem = jest.fn()
+    global.Storage.prototype.getItem = jest.fn()
+    global.Storage.prototype.removeItem = jest.fn()
+  })
 
   beforeEach(() => {
     localVue = createLocalVue()
@@ -60,30 +75,30 @@ describe('PnP state machine actions - p2p communication layer', () => {
 
   // test Vuex actions
 
-  test('INITIALIZE_PNP on app start', () => {
+  // Tests functions are async since Vuex actions are async.
+  // This allows use of await which makes the code more readable.
+
+  test('INITIALIZE_PNP on app start', async () => {
     expect(store.state.pnp.peerConnection).toBe(undefined)
     expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
     expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_DISCONNECTED)
     expect(store.state.pnp.peerFetch).toBe(undefined)
-    store.dispatch(INITIALIZE_PNP).then((res) => {
-      expect(store.state.pnp.peerConnection).toBe(undefined)
-      expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
-      expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_CONNECTING)
-      expect(store.state.pnp.peerFetch).toBe(undefined)
-      expect(Peer).toHaveBeenCalledTimes(1)
-      expect(Peer).toHaveBeenCalledWith(store.state.myPeerId,
-        {
-          host: ambianicConf.AMBIANIC_PNP_HOST,
-          port: ambianicConf.AMBIANIC_PNP_PORT,
-          secure: ambianicConf.AMBIANIC_PNP_SECURE,
-          debug: 3
-        })
-    }).catch((err) => {
-      console.log(err)
-    })
+    await store.dispatch(INITIALIZE_PNP)
+    expect(store.state.pnp.peerConnection).toBe(undefined)
+    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
+    expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_CONNECTING)
+    expect(store.state.pnp.peerFetch).toBe(undefined)
+    expect(Peer).toHaveBeenCalledTimes(1)
+    expect(Peer).toHaveBeenCalledWith(store.state.myPeerId,
+      {
+        host: ambianicConf.AMBIANIC_PNP_HOST,
+        port: ambianicConf.AMBIANIC_PNP_PORT,
+        secure: ambianicConf.AMBIANIC_PNP_SECURE,
+        debug: 3
+      })
   })
 
-  test('PNP_SERVICE_CONNECT on app start', () => {
+  test('PNP_SERVICE_CONNECT on app start', async () => {
     expect(store.state.pnp.peerConnection).toBe(undefined)
     expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
     expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_DISCONNECTED)
@@ -118,47 +133,38 @@ describe('PnP state machine actions - p2p communication layer', () => {
     )
   })
 
-  test('PNP_SERVICE_RECONNECT assuming existing peer disconnected', () => {
+  test('PNP_SERVICE_RECONNECT assuming existing peer disconnected', async () => {
     expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_DISCONNECTED)
     // emulate via mock Peer instance
     const peer = new Peer()
     store.state.pnp.peer = peer
     peer.id = 'some ID'
     store.state.pnp.myPeerId = 'some saved ID'
-    store.dispatch(PNP_SERVICE_RECONNECT).then((res) => {
-      expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_CONNECTING)
-      expect(peer._lastServerId).toBe('some saved ID')
-      expect(peer.reconnect).toHaveBeenCalledTimes(1)
-    }).catch((err) => {
-      console.log(err)
-    })
+    await store.dispatch(PNP_SERVICE_RECONNECT)
+    expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_CONNECTING)
+    expect(peer._lastServerId).toBe('some saved ID')
+    expect(peer.reconnect).toHaveBeenCalledTimes(1)
   })
 
-  test('PNP_SERVICE_RECONNECT when peer lost id', () => {
+  test('PNP_SERVICE_RECONNECT when peer lost id', async () => {
     expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_DISCONNECTED)
     // emulate via mock Peer instance
     const peer = new Peer()
     store.state.pnp.peer = peer
     store.state.pnp.myPeerId = 'some ID'
     peer.id = undefined
-    store.dispatch(PNP_SERVICE_RECONNECT).then((res) => {
-      expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_CONNECTING)
-      expect(peer._id).toBe('some ID')
-      expect(peer._lastServerId).toBe('some ID')
-      expect(peer.reconnect).toHaveBeenCalledTimes(1)
-    }).catch((err) => {
-      console.log(err)
-    })
+    await store.dispatch(PNP_SERVICE_RECONNECT)
+    expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_CONNECTING)
+    expect(peer._id).toBe('some ID')
+    expect(peer._lastServerId).toBe('some ID')
+    expect(peer.reconnect).toHaveBeenCalledTimes(1)
   })
 
-  test('PEER_DISCOVER when peer is connected', () => {
+  test('PEER_DISCOVER when peer is connected', async () => {
     store.state.pnp.peerConnectionStatus = PEER_CONNECTED
-    store.dispatch(PEER_DISCOVER).then((res) => {
-      expect(store.state.pnp.peerConnectionStatus).not.toBe(PEER_DISCOVERING)
-      expect(store.state.pnp.peerConnectionStatus).toBe(PEER_CONNECTED)
-    }).catch((err) => {
-      console.log(err)
-    })
+    await store.dispatch(PEER_DISCOVER)
+    expect(store.state.pnp.peerConnectionStatus).not.toBe(PEER_DISCOVERING)
+    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_CONNECTED)
   })
 
   test('PEER_DISCOVER when peer is disconnected and local and remote peer ids are known', async () => {
@@ -174,7 +180,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
     // At this point in time, there should have been a single call to
     // setTimeout to schedule another peer discovery loop.
     expect(setTimeout).toHaveBeenCalledTimes(1)
-    expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), store.state.pnp.discoveryLoopPause);
+    expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), store.state.pnp.discoveryLoopPause)
     // emulate the use case when remotePeerId is already known
     // and connection is established
     store.state.pnp.remotePeerId = 'a_known_remote_peer_id'
@@ -209,7 +215,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
     expect(PeerRoom.prototype.getRoomMembers).toHaveBeenCalledTimes(1)
     expect(Peer.prototype.connect).toHaveBeenCalledTimes(1)
     expect(Peer.prototype.connect).toHaveBeenLastCalledWith(
-      'a_remote_peer_id', 
+      'a_remote_peer_id',
       { label: 'http-proxy', reliable: true, serialization: 'raw' }
     )
   })
@@ -226,7 +232,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
     const aProblematicRemotePeerId = 'a_problematic_remote_peer_id'
     store.state.pnp.problematicRemotePeers.clear()
     store.state.pnp.problematicRemotePeers.add(aProblematicRemotePeerId)
-    const roomMembers = { clientsIds: [peer.id, aProblematicRemotePeerId ] }
+    const roomMembers = { clientsIds: [peer.id, aProblematicRemotePeerId] }
     jest.spyOn(PeerRoom.prototype, 'getRoomMembers').mockImplementationOnce(
       () => {
         console.debug('mock roomMembers', roomMembers)
@@ -240,7 +246,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
     expect(PeerRoom.prototype.getRoomMembers).toHaveBeenCalledTimes(1)
     expect(Peer.prototype.connect).toHaveBeenCalledTimes(1)
     expect(Peer.prototype.connect).toHaveBeenLastCalledWith(
-      aProblematicRemotePeerId, 
+      aProblematicRemotePeerId,
       { label: 'http-proxy', reliable: true, serialization: 'raw' }
     )
   })
@@ -463,7 +469,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
     await store.dispatch(PNP_SERVICE_CONNECT)
     const peer = store.state.pnp.peer
     console.debug('peer.on.mock.calls', peer.on.mock.calls)
-    const onErrorCallback = peer.on.mock.calls.find(callbackDetails => callbackDetails[0] === 'error');
+    const onErrorCallback = peer.on.mock.calls.find(callbackDetails => callbackDetails[0] === 'error')
     console.debug('onErrorCallback', onErrorCallback)
     onErrorCallback[1]('a_network_error')
     expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_DISCONNECTED)
@@ -526,7 +532,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
     const peer = store.state.pnp.peer
     // emulate peer is in connected state to the signaling/pnp service before the disconnect takes place
     store.state.pnp.pnpServiceConnectionStatus = PNP_SERVICE_CONNECT
-    const onDisconnectedCallback = peer.on.mock.calls.find(callbackDetails => callbackDetails[0] === 'disconnected');
+    const onDisconnectedCallback = peer.on.mock.calls.find(callbackDetails => callbackDetails[0] === 'disconnected')
     onDisconnectedCallback[1]()
     expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_DISCONNECTED)
   })
@@ -659,4 +665,214 @@ describe('PnP state machine actions - p2p communication layer', () => {
     expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCOVERING)
   })
 
+  test('PEER_AUTHENTICATE with 200 response and authentication passing and reused remote peer id.', async () => {
+    // emulate an RTCPeerConnection has been established
+    const peerConnection = jest.fn()
+    peerConnection.dataChannel = jest.fn()
+    // emulate peerConnection remote peer has been assigned
+    peerConnection.peer = 'a_remote_peer_id'
+    // mock a peerfetch object
+    const peerFetch = new PeerFetch()
+    // mock return of expected successful peerfetch get
+    jest.spyOn(PeerFetch.prototype, 'get').mockImplementationOnce(
+      (request) => {
+        console.debug('mock get', request)
+        const response = jest.fn()
+        response.header = jest.fn()
+        response.header.status = 200
+        return response
+      }
+    )
+    // mock return of expected successful authentication string
+    jest.spyOn(PeerFetch.prototype, 'textDecode').mockImplementationOnce(
+      (content) => {
+        console.debug('mock textDecode', content)
+        return 'Ambianic'
+      }
+    )
+    store.state.pnp.peerFetch = peerFetch
+    // mock reused remote peer id
+    store.state.pnp.remotePeerId = peerConnection.peer
+    let newRemotePeerIdCommitted = false
+    let newRemotePeerIdValue
+    const unsub = store.subscribe((mutation, state) => {
+      if (mutation.type === NEW_REMOTE_PEER_ID) {
+        newRemotePeerIdCommitted = true
+        newRemotePeerIdValue = mutation.payload
+      }
+      console.debug('mutation.type', mutation.type)
+      console.debug('mutation.payload', mutation.payload)
+    })
+    await store.dispatch(PEER_AUTHENTICATE, peerConnection)
+    expect(peerFetch.get).toHaveBeenCalledTimes(1)
+    expect(peerFetch.get).toHaveBeenCalledWith({ url: 'http://localhost:8778' })
+    expect(store.state.pnp.peerConnection).toBe(peerConnection)
+    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_CONNECTED)
+    expect(window.localStorage.setItem).not.toHaveBeenCalled()
+    expect(newRemotePeerIdCommitted).toBeFalsy()
+    expect(newRemotePeerIdValue).toBeUndefined()
+    // release mutation subscription
+    unsub()
+  })
+
+  test('PEER_AUTHENTICATE with 200 response and authentication passing and a new remote peer id.', async () => {
+    // emulate an RTCPeerConnection has been established
+    const peerConnection = jest.fn()
+    peerConnection.dataChannel = jest.fn()
+    // emulate peerConnection remote peer has been assigned
+    peerConnection.peer = 'a_new_remote_peer_id'
+    // mock a peerfetch object
+    const peerFetch = new PeerFetch()
+    // mock return of expected successful peerfetch get
+    jest.spyOn(PeerFetch.prototype, 'get').mockImplementationOnce(
+      (request) => {
+        console.debug('mock get', request)
+        const response = jest.fn()
+        response.header = jest.fn()
+        response.header.status = 200
+        return response
+      }
+    )
+    // mock return of expected successful authentication string
+    jest.spyOn(PeerFetch.prototype, 'textDecode').mockImplementationOnce(
+      (content) => {
+        console.debug('mock textDecode', content)
+        return 'Ambianic'
+      }
+    )
+    store.state.pnp.peerFetch = peerFetch
+    // mock using a new remote peer id
+    store.state.pnp.remotePeerId = 'a_saved_remote_peer_id'
+    let newRemotePeerIdCommitted = false
+    let newRemotePeerIdValue
+    const unsub = store.subscribe((mutation, state) => {
+      if (mutation.type === NEW_REMOTE_PEER_ID) {
+        newRemotePeerIdCommitted = true
+        newRemotePeerIdValue = mutation.payload
+      }
+      console.debug('mutation.type', mutation.type)
+      console.debug('mutation.payload', mutation.payload)
+    })
+    await store.dispatch(PEER_AUTHENTICATE, peerConnection)
+    expect(peerFetch.get).toHaveBeenCalledTimes(1)
+    expect(peerFetch.get).toHaveBeenCalledWith({ url: 'http://localhost:8778' })
+    expect(store.state.pnp.peerConnection).toBe(peerConnection)
+    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_CONNECTED)
+    console.debug('window.localStorage', window.localStorage)
+    expect(newRemotePeerIdCommitted).toBeTruthy()
+    expect(newRemotePeerIdValue).toBe('a_new_remote_peer_id')
+    // release mutation subscription
+    unsub()
+    expect(window.localStorage.setItem).toHaveBeenCalledTimes(1)
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(`${STORAGE_KEY}.remotePeerId`, 'a_new_remote_peer_id')
+  })
+
+  test('Exception thrown while handling PEER_AUTHENTICATE.', async () => {
+    // emulate an RTCPeerConnection has been established
+    const peerConnection = jest.fn()
+    peerConnection.dataChannel = jest.fn()
+    // emulate peerConnection remote peer has been assigned
+    peerConnection.peer = 'a_new_remote_peer_id'
+    // mock a peerfetch object
+    const peerFetch = new PeerFetch()
+    // mock exception thrown by peerfetch get
+    jest.spyOn(PeerFetch.prototype, 'get').mockImplementationOnce(
+      (request) => {
+        throw new Error('Problem occured during peer discovery.')
+      }
+    )
+    store.state.pnp.peerFetch = peerFetch
+    let userMessage
+    const unsub = store.subscribe((mutation, state) => {
+      if (mutation.type === USER_MESSAGE) {
+        userMessage = mutation.payload
+      }
+      console.debug('mutation.type', mutation.type)
+      console.debug('mutation.payload', mutation.payload)
+    })
+    await store.dispatch(PEER_AUTHENTICATE, peerConnection)
+    expect(peerFetch.get).toHaveBeenCalledTimes(1)
+    expect(peerFetch.get).toHaveBeenCalledWith({ url: 'http://localhost:8778' })
+    expect(userMessage).toBe('Remote peer authentication failed.')
+    // release mutation subscription
+    unsub()
+    expect(store.state.pnp.problematicRemotePeers).toContain('a_new_remote_peer_id')
+  })
+
+  test('CHANGE_REMOTE_PEER_ID action', async () => {
+    // emulate existing peer instance
+    store.state.pnp.peer = new Peer()
+    let newRemotePeerIdCommitted = false
+    let newRemotePeerIdValue
+    const unsub = store.subscribe((mutation, state) => {
+      if (mutation.type === NEW_REMOTE_PEER_ID) {
+        newRemotePeerIdCommitted = true
+        newRemotePeerIdValue = mutation.payload
+      }
+      console.debug('mutation.type', mutation.type)
+      console.debug('mutation.payload', mutation.payload)
+    })
+    await store.dispatch(CHANGE_REMOTE_PEER_ID, 'a_new_remote_peer_id')
+    expect(newRemotePeerIdCommitted).toBeTruthy()
+    expect(newRemotePeerIdValue).toBe('a_new_remote_peer_id')
+    // release mutation subscription
+    unsub()
+    expect(store.state.pnp.remotePeerId).toBe('a_new_remote_peer_id')
+    expect(window.localStorage.setItem).toHaveBeenCalledTimes(1)
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(`${STORAGE_KEY}.remotePeerId`, 'a_new_remote_peer_id')
+    expect(store.state.pnp.peerConnection).toBeUndefined()
+    expect(store.state.pnp.peerFetch).toBeUndefined()
+    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_CONNECTING)
+  })
+
+  test('REMOVE_REMOTE_PEER_ID action', async () => {
+    // emulate existing peer instance
+    store.state.pnp.peer = new Peer()
+    // emulate existing peerConnection
+    store.state.pnp.peerConnectionStatus = PEER_CONNECTED
+    const peerConnection = jest.fn()
+    peerConnection.close = jest.fn()
+    store.state.pnp.peerConnection = peerConnection
+    const mutations = []
+    const unsub = store.subscribe((mutation, state) => {
+      mutations.push(mutation.type)
+      console.debug('mutation.type', mutation.type)
+      console.debug('mutation.payload', mutation.payload)
+    })
+    await store.dispatch(REMOVE_REMOTE_PEER_ID)
+    // release mutation subscription
+    unsub()
+    expect(mutations[0]).toBe('PEER_DISCONNECTED')
+    expect(mutations[1]).toBe('REMOTE_PEER_ID_REMOVED')
+    expect(mutations[2]).toBe('PEER_DISCOVERING')
+    expect(peerConnection.close).toHaveBeenCalledTimes(1)
+  })
+
+  test('exception on peerConnection.close() in REMOVE_REMOTE_PEER_ID action', async () => {
+    // emulate existing peer instance
+    store.state.pnp.peer = new Peer()
+    // emulate existing peerConnection
+    store.state.pnp.peerConnectionStatus = PEER_CONNECTED
+    const peerConnection = jest.fn()
+    // emulate exception thrown on connection close
+    peerConnection.close = jest.fn().mockImplementationOnce(
+      () => {
+        throw new Error('Error while closing peerConnection.')
+      }
+    )
+    store.state.pnp.peerConnection = peerConnection
+    const mutations = []
+    const unsub = store.subscribe((mutation, state) => {
+      mutations.push(mutation.type)
+      console.debug('mutation.type', mutation.type)
+      console.debug('mutation.payload', mutation.payload)
+    })
+    await store.dispatch(REMOVE_REMOTE_PEER_ID)
+    // release mutation subscription
+    unsub()
+    expect(mutations[0]).toBe('PEER_DISCONNECTED')
+    expect(mutations[1]).toBe('REMOTE_PEER_ID_REMOVED')
+    expect(mutations[2]).toBe('PEER_DISCOVERING')
+    expect(peerConnection.close).toHaveBeenCalledTimes(1)
+  })
 })

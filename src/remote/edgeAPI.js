@@ -78,7 +78,8 @@ export class EdgeAPI {
     const request = {
       url: `${apiRoot}auth/premium-notification`,
       params: {
-        userId
+        userId,
+        notification_endpoint: process.env.VUE_APP_FUNCTIONS_ENDPOINT
       }
     }
 

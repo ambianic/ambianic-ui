@@ -8,14 +8,20 @@ import { Auth0Plugin } from '@/auth'
 const Component = {
   template: `
     <div>
-      <span id="authenticated">{{ $auth.isAuthenticated }}</span>
-      <span id="loading">{{ $auth.loading }}</span>
-      <span id="user">{{ $auth.user }}</span>
+
+    <button id="login" @click="$auth.handleTestLogin()"> Login </button>
+    <p id="user-details" > {{ $auth.user }} </p>
+
+      <div  id="authenticated" v-if="$auth.isAuthenticated" >
+          <span id="user">{{ $auth.user }}</span>
+      </div>
+     
+      <button  id="logout" @click="" > Logout </button>
     </div>
   `
 }
 
-describe('AuthBarMenu', () => {
+describe('Auth0Wrapper', () => {
   // global
   let wrapper
   const localVue = createLocalVue()
@@ -63,7 +69,8 @@ describe('AuthBarMenu', () => {
       localVue,
       vuetify,
       router,
-      store
+      store,
+      methods: {}
     })
   })
 
@@ -71,10 +78,17 @@ describe('AuthBarMenu', () => {
     wrapper.destroy()
   })
 
+  test('It loads application in unauthenticated state on first use', async () => {
+    expect(wrapper.find('#user-details').text()).toBe('{}')
+
+    expect(wrapper.find('#isAuthenticated').exists()).toBe(false)
+  })
+
   // find a way to convert to BOOL values
-  test('It should have initial authentication & user state', () => {
-    expect(wrapper.find('#authenticated').text()).toBe('false')
-    expect(wrapper.find('#loading').text()).toBe('true')
-    expect(wrapper.find('#user').text()).toBe('{}')
+  test('It should have initial authentication & user state', async () => {
+    await wrapper.find('#login').trigger('click')
+    expect(wrapper.find('#authenticated').exists()).toBe(true)
+
+    expect(typeof wrapper.find('#user').text()).toBe('string')
   })
 })
