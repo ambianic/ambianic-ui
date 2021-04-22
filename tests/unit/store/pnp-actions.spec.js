@@ -664,4 +664,22 @@ describe('PnP state machine actions - p2p communication layer', () => {
     expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCOVERING)
   })
 
+  test('PEER_AUTHENTICATE with 200 response and authentication passing.', async () => {
+    // emulate an RTCPeerConnection has been established
+    const peerConnection = jest.fn()
+    // emulate peerConnection remote peer has been assigned
+    peerConnection.peer = 'a_remote_peer_id'
+    // mock a peerfetch object
+    const peerFetch = new PeerFetch()
+    // mock return of expected successful authentication string
+    jest.spyOn(PeerFetch.prototype, 'textDecode').mockImplementationOnce(
+      (content) => {
+        console.debug('mock textDecode', content)
+        return 'Ambianic'
+      }
+    )
+    store.state.pnp.peerFetch = peerFetch
+    await store.dispatch(PEER_AUTHENTICATE, peerConnection)
+    expect(peerFetch.get).toHaveBeenCalledTimes(1)
+  })
 })
