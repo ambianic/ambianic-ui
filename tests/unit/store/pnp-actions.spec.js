@@ -806,4 +806,81 @@ describe('PnP state machine actions - p2p communication layer', () => {
     unsub()
     expect(store.state.pnp.problematicRemotePeers).toContain('a_new_remote_peer_id')
   })
+
+  test('CHANGE_REMOTE_PEER_ID action', async () => {
+    // emulate existing peer instance
+    store.state.pnp.peer = new Peer()
+    let newRemotePeerIdCommitted = false
+    let newRemotePeerIdValue
+    const unsub = store.subscribe((mutation, state) => {
+      if (mutation.type === NEW_REMOTE_PEER_ID) {
+        newRemotePeerIdCommitted = true
+        newRemotePeerIdValue = mutation.payload
+      }
+      console.debug('mutation.type', mutation.type)
+      console.debug('mutation.payload', mutation.payload)
+    })
+    await store.dispatch(CHANGE_REMOTE_PEER_ID, 'a_new_remote_peer_id')
+    expect(newRemotePeerIdCommitted).toBeTruthy()
+    expect(newRemotePeerIdValue).toBe('a_new_remote_peer_id')
+    // release mutation subscription
+    unsub()
+    expect(store.state.pnp.remotePeerId).toBe('a_new_remote_peer_id')
+    expect(window.localStorage.setItem).toHaveBeenCalledTimes(1)
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(`${STORAGE_KEY}.remotePeerId`, 'a_new_remote_peer_id')
+    expect(store.state.pnp.peerConnection).toBeUndefined()
+    expect(store.state.pnp.peerFetch).toBeUndefined()
+    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_CONNECTING)
+  })
+
+  test('REMOVE_REMOTE_PEER_ID action', async () => {
+    // emulate existing peer instance
+    store.state.pnp.peer = new Peer()
+    // emulate existing peerConnection
+    store.state.pnp.peerConnectionStatus = PEER_CONNECTED
+    const peerConnection = jest.fn()
+    peerConnection.close = jest.fn()
+    store.state.pnp.peerConnection = peerConnection
+    const mutations = []
+    const unsub = store.subscribe((mutation, state) => {
+      mutations.push(mutation.type)
+      console.debug('mutation.type', mutation.type)
+      console.debug('mutation.payload', mutation.payload)
+    })
+    await store.dispatch(REMOVE_REMOTE_PEER_ID)
+    // release mutation subscription
+    unsub()
+    expect(mutations[0]).toBe('PEER_DISCONNECTED')
+    expect(mutations[1]).toBe('REMOTE_PEER_ID_REMOVED')
+    expect(mutations[2]).toBe('PEER_DISCOVERING')
+    expect(peerConnection.close).toHaveBeenCalledTimes(1)
+  })
+
+  test('exception on peerConnection.close() in REMOVE_REMOTE_PEER_ID action', async () => {
+    // emulate existing peer instance
+    store.state.pnp.peer = new Peer()
+    // emulate existing peerConnection
+    store.state.pnp.peerConnectionStatus = PEER_CONNECTED
+    const peerConnection = jest.fn()
+    // emulate exception thrown on connection close
+    peerConnection.close = jest.fn().mockImplementationOnce(
+      () => {
+        throw new Error('Error while closing peerConnection.')
+      }
+    )
+    store.state.pnp.peerConnection = peerConnection
+    const mutations = []
+    const unsub = store.subscribe((mutation, state) => {
+      mutations.push(mutation.type)
+      console.debug('mutation.type', mutation.type)
+      console.debug('mutation.payload', mutation.payload)
+    })
+    await store.dispatch(REMOVE_REMOTE_PEER_ID)
+    // release mutation subscription
+    unsub()
+    expect(mutations[0]).toBe('PEER_DISCONNECTED')
+    expect(mutations[1]).toBe('REMOTE_PEER_ID_REMOVED')
+    expect(mutations[2]).toBe('PEER_DISCOVERING')
+    expect(peerConnection.close).toHaveBeenCalledTimes(1)
+  })
 })
