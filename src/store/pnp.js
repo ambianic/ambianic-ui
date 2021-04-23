@@ -132,17 +132,17 @@ const mutations = {
     // window.localStorage.setItem(`${STORAGE_KEY}.myPeerId`, newPeerId)
   },
   [NEW_REMOTE_PEER_ID] (state, newRemotePeerId) {
-    console.log('Setting state.remotePeerId to : ', newRemotePeerId)
+    console.debug('NEW_REMOTE_PEER_ID: Setting state.remotePeerId to : ', newRemotePeerId)
     state.remotePeerId = newRemotePeerId
     window.localStorage.setItem(`${STORAGE_KEY}.remotePeerId`, newRemotePeerId)
   },
   [REMOTE_PEER_ID_REMOVED] (state) {
-    console.log('Removing remote Peer Id from local storage')
+    console.debug('REMOTE_PEER_ID_REMOVED: Removing remote Peer Id from local storage')
     state.remotePeerId = undefined
     window.localStorage.removeItem(`${STORAGE_KEY}.remotePeerId`)
   },
   [PEER_FETCH] (state, peerFetch) {
-    console.debug('Setting PeerFetch instance.')
+    console.debug('PEER_FETCH: Setting PeerFetch instance.')
     state.peerFetch = peerFetch
   }
 }
@@ -495,7 +495,7 @@ const actions = {
       // remote Peer ID authenticated,
       // lets store it for future (re)connections
       // if its not already stored
-      if (!state.remotePeerId === peerConnection.peer) {
+      if (state.remotePeerId !== peerConnection.peer) {
         commit(NEW_REMOTE_PEER_ID, peerConnection.peer)
       }
     } else {
