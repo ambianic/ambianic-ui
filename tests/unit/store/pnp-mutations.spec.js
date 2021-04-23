@@ -136,7 +136,7 @@ describe('PnP state machine mutations - p2p communication layer', () => {
   test('REMOTE_PEER_ID_REMOVED', () => {
     store.commit(REMOTE_PEER_ID_REMOVED)
     expect(store.state.pnp.remotePeerId).toBe(undefined)
-    expect(window.localStorage.getItem(`${STORAGE_KEY}.remotePeerId`)).toBe(null)
+    expect(window.localStorage.getItem(`${STORAGE_KEY}.remotePeerId`)).toBeFalsy()
   })
 
   test('PEER_FETCH', () => {
