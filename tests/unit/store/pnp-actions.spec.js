@@ -60,6 +60,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
   beforeAll(() => {
     global.Storage.prototype.setItem = jest.fn()
     global.Storage.prototype.getItem = jest.fn()
+    global.Storage.prototype.removeItem = jest.fn()
   })
 
   beforeEach(() => {
