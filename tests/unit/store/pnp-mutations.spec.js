@@ -36,11 +36,9 @@ describe('PnP state machine mutations - p2p communication layer', () => {
 
   beforeEach(() => {
     localVue = createLocalVue()
-    localVue.use(Vuex)    
+    localVue.use(Vuex)
     store = new Vuex.Store({ modules: { pnp: cloneDeep(pnp) } })
-    // console.debug("store:", store )
-    const state = store.state
-    // console.debug("store.state:", { state } )
+    window.localStorage.clear()
   })
 
   afterEach(() => {
@@ -151,5 +149,4 @@ describe('PnP state machine mutations - p2p communication layer', () => {
     store.state.pnp.peerConnectionStatus = PEER_DISCONNECTED
     expect(store.getters.isEdgeConnected).toBeFalsy()
   })
-
 })
