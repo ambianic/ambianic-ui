@@ -1,7 +1,7 @@
 <template>
   <v-dialog
     id="subscription-dialog"
-    v-model="showDialog"
+    v-model="showSubscriptionDialog"
     max-width="550"
   >
     <v-card style="display: flex; flex-direction: column; overflow: hidden;">
@@ -11,7 +11,7 @@
         </v-card-title>
         <v-card-text data-cy="detail">
           Subscribe to Ambianic Premium Services to enable advanced
-          features, such as Notification, Multiple Edge Displayed, Reports.
+          features, such as instant email notification.
         </v-card-text>
         <div>
           <h3
@@ -34,7 +34,10 @@
       </div>
 
       <v-spacer />
-      <v-list-item v-if="showInputs">
+      <v-list-item
+        class="inputs-ctn"
+        v-if="showInputs"
+      >
         <v-col>
           <v-text-field
             v-model="fullName"
@@ -125,7 +128,7 @@
         <v-btn
           color="grey"
           text
-          @click="showDialog = false"
+          @click="$store.dispatch('HANDLE_SUBSCRIPTION_DIALOG', false)"
           data-cy="dismiss-modal"
         >
           Subscribe Later
@@ -148,7 +151,7 @@
           color="grey"
           data-cy="dismiss-modal"
           text
-          @click="showDialog = false"
+          @click="$store.dispatch('HANDLE_SUBSCRIPTION_DIALOG', false)"
         >
           Cancel
         </v-btn>
@@ -177,13 +180,15 @@
 </template>
 
 <script>
-import Axios from 'axios'
+import {
+  HANDLE_SUBSCRIPTION_DIALOG, HANDLE_EDGE_SYNC_DIALOG, FETCH_USER_SUBSCRIPTION
+} from '@/store/action-types'
+import { mapActions, mapState } from 'vuex'
 const cardValidator = /^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/
 
 export default {
   name: 'SubcriptionDialog',
   data: () => ({
-    showDialog: true,
     showInputs: false,
     cardNumber: '5200828282828210',
     expiryMonth: '8',
@@ -204,62 +209,61 @@ export default {
     email: {
       type: String,
       default: ''
-    },
-    completeSubscription: {
-      type: Function,
-      default: () => {}
     }
   },
   methods: {
-    submitSubscription () {
+    ...mapActions([HANDLE_SUBSCRIPTION_DIALOG, FETCH_USER_SUBSCRIPTION, HANDLE_EDGE_SYNC_DIALOG]),
+    async submitSubscription () {
       this.loading = true
-      Axios.post(
-        `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscribe`,
-        {
-          email: this.email,
-          number: this.cardNumber,
-          cvc: this.cvc,
-          exp_year: this.expiryYear,
-          exp_month: this.expiryMonth
-        },
-        {
+
+      try {
+        const req = await fetch(`${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscribe`, {
+          method: 'POST',
+          body: JSON.stringify({
+            email: this.email,
+            number: this.cardNumber,
+            cvc: this.cvc,
+            exp_year: this.expiryYear,
+            exp_month: this.expiryMonth
+          }),
           headers: {
             'content-type': 'application/json'
           }
-        }
-      )
-        .then(({ data }) => {
-          const { userStripeId, userSubscriptionId } = data
-          this.saveStripeData(userStripeId, userSubscriptionId)
         })
-        .catch((error) => {
-          console.log(error, 'ERROR FROM STRIPE')
-          this.subscriptionError = error
-        })
+
+        const { userStripeId, userSubscriptionId } = await req.json()
+        this.saveStripeData(userStripeId, userSubscriptionId)
+      } catch (e) {
+        console.log(e, 'ERROR FROM STRIPE')
+        this.subscriptionError = e
+      } finally {
+        this.loading = false
+      }
     },
     async saveStripeData (userStripeId, userSubscriptionId) {
       try {
-        const userId = this.$auth.user
-        await Axios.post(
-          `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data`,
-          {
-            userStripeId,
-            userSubscriptionId,
-            user_id: userId.sub || 'auth0121212'
-          },
-          {
-            headers: {
-              'content-type': 'application/json'
-            }
-          }
-        )
+        await fetch(
+            `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data`,
+            {
+              method: 'POST',
+              body: JSON.stringify({
+                userStripeId,
+                userSubscriptionId,
+                user_id: this.user.sub
+              }),
+              headers: {
+                'content-type': 'application/json'
 
+              }
+            }
+        )
         this.loading = false
-        this.showDialog = false
-        this.completeSubscription()
+        this.$store.dispatch(HANDLE_SUBSCRIPTION_DIALOG, false)
+        this.$store.dispatch(FETCH_USER_SUBSCRIPTION, this.user.sub)
+        this.$store.dispatch(HANDLE_EDGE_SYNC_DIALOG, true)
       } catch (error) {
         console.log(error, 'error saving stripeid')
-        this.showDialog = false
+        this.$store.dispatch(HANDLE_SUBSCRIPTION_DIALOG, false)
       }
     },
     validateCardNumber (number) {
@@ -267,6 +271,12 @@ export default {
         this.cardNumberIsValid = true
       }
     }
+  },
+  computed: {
+    ...mapState({
+      showSubscriptionDialog: state => state.premiumService.showSubscriptionDialog,
+      user: state => state.premiumService.user
+    })
   },
   watch: {
     cardNumber: function (numbers) {

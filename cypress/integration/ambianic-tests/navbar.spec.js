@@ -1,5 +1,10 @@
 /// <reference types="cypress" />
 
+export const checkViewPort = (cy, device) => {
+  cy.viewport(device)
+  expect(cy.get("[data-cy=login]")).to.exist
+}
+
 context('Check Navbar Items', () => {
   before(() => {
     cy.visit('http://localhost:8080')
@@ -25,9 +30,24 @@ context('Check Navbar Items', () => {
     expect(t).to.exist
   })
 
-  it('Should have user profile component card', () => {
-    cy.get('[data-cy=display-profile]').click()
-    cy.get('[data-cy=profile-toggle]').click()
+  it('Should display upgrade icon on different viewports', () => {
+    expect(cy.get("[data-cy=profile-component]")).to.exist
+
+    expect(cy.get("[data-cy=login]")).to.exist
+    expect(cy.get(".upgrade-text")).to.exist
+
+    checkViewPort(cy, 'ipad-mini')
+    checkViewPort(cy, 'ipad-2')
+    checkViewPort(cy, 'macbook-11')
+    checkViewPort(cy, 'macbook-13')
+    expect(cy.get(".upgrade-text")).to.exist
+
+    checkViewPort(cy, 'iphone-5')
+    checkViewPort(cy, 'iphone-6')
+    checkViewPort(cy, 'samsung-s10')
+    checkViewPort(cy, 'samsung-note9')
+    checkViewPort(cy, 'iphone-x')
+    checkViewPort(cy, 'iphone-xr')
   })
 
   it('Should have a five links', () => {

@@ -5,6 +5,7 @@ import VueX from 'vuex'
 import VueRouter from 'vue-router'
 import NavBar from '@/components/NavBar.vue'
 import { Auth0Plugin } from '@/auth'
+import VueTour from 'vue-tour'
 
 describe('NavBar', () => {
 // global
@@ -12,6 +13,7 @@ describe('NavBar', () => {
   const localVue = createLocalVue()
   Vue.use(Vuetify) // for shallowshallowMount use
   localVue.use(VueX)
+  Vue.use(VueTour)
 
   const CLIENTDOMAIN = process.env.VUE_APP_AUTH0_DOMAIN
   const CLIENTSECRET = process.env.VUE_APP_AUTH0_CLIENTID
@@ -45,7 +47,16 @@ describe('NavBar', () => {
     }
 
     store = new VueX.Store({
-      state
+      state,
+      modules: {
+        premiumService: {
+          showSubscriptionDialog: true,
+          showEdgeSyncModal: false,
+
+          subscriptionDetails: null,
+          loadingSubscription: false
+        }
+      }
     })
 
     // using shallowMount with subtree components
@@ -67,9 +78,9 @@ describe('NavBar', () => {
     expect(bar.exists()).toBe(true)
   })
 
-  test('should load 5 buttons', () => {
+  test('should load 6 buttons', () => {
     const btn = wrapper.findAll('.v-btn')
-    expect(btn.length).toBe(5)
+    expect(btn.length).toBe(6)
   })
 
   test('should load navigation drawer', () => {

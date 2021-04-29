@@ -6,10 +6,15 @@ import './registerServiceWorker'
 import vuetify from './plugins/vuetify'
 import VueRouter from 'vue-router'
 import VuePageTransition from 'vue-page-transition'
+import VueTour from 'vue-tour'
 
 import { Auth0Plugin } from './auth/'
+
+require('vue-tour/dist/vue-tour.css')
+
 require('dotenv').config()
 Vue.config.productionTip = false
+Vue.use(VueTour)
 
 const router = new VueRouter({
   mode: 'history',

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import PNPStore from './pnp.js'
+import PremiumServiceStore from './premium-service'
 import { INITIALIZE_PNP } from './action-types.js'
 import { UPDATE_AVAILABLE } from './mutation-types'
 
@@ -19,7 +20,8 @@ const store = new Vuex.Store({
   actions: {
   },
   modules: {
-    pnp: PNPStore
+    pnp: PNPStore,
+    premiumService: PremiumServiceStore
   }
 })
 

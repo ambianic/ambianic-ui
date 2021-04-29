@@ -8,15 +8,11 @@ import { Auth0Plugin } from '@/auth'
 const Component = {
   template: `
     <div>
-
-    <button id="login" @click="$auth.handleTestLogin()"> Login </button>
-    <p id="user-details" > {{ $auth.user }} </p>
-
-      <div  id="authenticated" v-if="$auth.isAuthenticated" >
-          <span id="user">{{ $auth.user }}</span>
-      </div>
-     
-      <button  id="logout" @click="" > Logout </button>
+    <button id="login" @click="$auth.loginWithRedirect()"> Login </button>
+    <p id="client"> {{ $auth.auth0Client }} </p>
+    <button id="logout" @click="$auth.$auth.logout({
+      returnTo: window.location.origin
+    })"> Login </button>
     </div>
   `
 }
@@ -78,17 +74,9 @@ describe('Auth0Wrapper', () => {
     wrapper.destroy()
   })
 
-  test('It loads application in unauthenticated state on first use', async () => {
-    expect(wrapper.find('#user-details').text()).toBe('{}')
-
-    expect(wrapper.find('#isAuthenticated').exists()).toBe(false)
-  })
-
-  // find a way to convert to BOOL values
-  test('It should have initial authentication & user state', async () => {
-    await wrapper.find('#login').trigger('click')
-    expect(wrapper.find('#authenticated').exists()).toBe(true)
-
-    expect(typeof wrapper.find('#user').text()).toBe('string')
+  test('It contains auth0 methods', async () => {
+    expect(wrapper.find('#login').exists()).toBe(true)
+    expect(wrapper.find('#client').exists()).toBe(true)
+    expect(wrapper.find('#logout').exists()).toBe(true)
   })
 })

@@ -1,48 +1,89 @@
 <template>
   <div>
-    <div
-      class="spinner"
-      @click="handleMock()"
-      v-if="$auth.loading"
+    <v-menu
+      offset-y
+      max-width="370px"
+      right
+      bottom
+      :close-on-content-click="false"
+      v-model="showGuide"
     >
-      <v-progress-circular
-        indeterminate
-        :width="2.5"
-        :size="30"
-        color="white"
-      />
-    </div>
+      <template #activator="{ on, attrs }">
+        <div
+          v-bind="attrs"
+          v-on="on"
+          class="guide-ctn"
+        >
+          <v-tour
+            :options="guideOpts"
+            name="myTour"
+            :steps="steps"
+          >
+            <template slot-scope="tour">
+              <transition name="fade">
+                <v-step
+                  v-if="isAuthenticated && showTour"
+                  :key="tour.currentStep"
+                  :step="tour.steps[tour.currentStep]"
+                  :previous-step="tour.previousStep"
+                  :next-step="tour.nextStep"
+                  :stop="tour.stop"
+                  :skip="tour.skip"
+                  :is-first="tour.isFirst"
+                  :is-last="tour.isLast"
+                  :labels="tour.labels"
+                >
+                  <div
+                    slot="actions"
+                    v-if="tour.currentStep === 0"
+                  >
+                    <button
+                      style="border: 1px solid #fff; padding: .3rem .6rem; border-radius: 3px;"
+                      @click="setTourStatus()"
+                    >
+                      I Understand
+                    </button>
+                  </div>
+                </v-step>
+              </transition>
+            </template>
+          </v-tour>
+          <div
+            class="spinner"
+            @click="handleMock()"
+            v-if="loadingAuth"
+          >
+            <v-progress-circular
+              indeterminate
+              :width="2.5"
+              :size="30"
+              color="white"
+            />
+          </div>
+        </div>
+      </template>
+    </v-menu>
 
-    <div v-else>
+    <div v-if="!loadingAuth">
       <SubscriptionDialog
         id="subscription"
-        v-if="showSubscription"
-        :complete-subscription="() => handleCompletedSubscription()"
-        :email="isSubscribed ? this.$auth.user.email : 'test@gmail.com'"
+        :email="isSubscribed ? user.email : 'test@gmail.com'"
       />
 
       <EdgeAuth0Sync
         id="edgeSync"
-        v-if="showEdgeSync"
       />
 
       <div
-        v-if="!$auth.isAuthenticated"
+        v-if="!isAuthenticated"
         style="display: flex;"
       >
         <button
           data-cy="auth-btn"
           style="opacity: 0; color: white;"
-          @click="showSubscription = true"
+          @click="$store.dispatch('HANDLE_SUBSCRIPTION_DIALOG', true)"
         >
           .
-        </button>
-        <button
-          data-cy="display-profile"
-          style="opacity: 0;"
-          @click="$auth.handleTestLogin()"
-        >
-          a
         </button>
         <v-tooltip bottom>
           <template #activator="{ on, attrs }">
@@ -54,15 +95,16 @@
               v-bind="attrs"
               v-on="on"
             >
-              <v-icon
+              <v-img
+                src="@/assets/upgrade.png"
+                alt="upgrade to premium"
                 data-cy="login"
                 is-icon
-              >
-                mdi-plus
-              </v-icon>
+                style="width: 30px"
+              />
 
-              <div class="center">
-                <p>Premium Service</p>
+              <div class="center upgrade-text">
+                <p>Upgrade To Premium</p>
               </div>
             </v-btn>
           </template>
@@ -85,7 +127,10 @@
               @click="handleMenu(!authMenu)"
               data-cy="profile-toggle"
             >
-              <amb-button is-icon>
+              <amb-button
+                is-icon
+                class="user-img"
+              >
                 <v-avatar
                   size="32px"
                   item
@@ -93,8 +138,8 @@
                   v-on="on"
                 >
                   <v-img
-                    :src="$auth.user.picture || '@/assets/user-placeholder.png'"
-                    :alt="$auth.user.name || user.name"
+                    :src="user.picture || '@/assets/user-placeholder.png'"
+                    :alt="user.name"
                   />
                 </v-avatar>
               </amb-button>
@@ -118,17 +163,17 @@
               <v-list-item>
                 <v-list-item-avatar>
                   <img
-                    :src="$auth.user.picture || '@/assets/user-placeholder.png'"
-                    :alt="$auth.user.name || user.name"
+                    :src="user.picture || '@/assets/user-placeholder.png'"
+                    :alt="user.name"
                   >
                 </v-list-item-avatar>
 
                 <v-list-item-content>
                   <v-list-item-title>
-                    {{ $auth.user.name || user.name }}
+                    {{ user.name }}
                   </v-list-item-title>
                   <v-list-item-subtitle>
-                    {{ $auth.user.email || user.email }}
+                    {{ user.email }}
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
@@ -145,51 +190,72 @@
                     SUBSCRIPTION
                   </v-list-item-subtitle>
                   <br>
+
                   <div
-                    class="add-btn"
-                    @click="showSubscription = true"
-                    v-if="!isSubscribed"
-                    data-cy="add-subscription"
+                    v-if="loadingSubscription"
+                    class="center"
+                    style="display: flex;"
                   >
-                    <v-icon>mdi-plus</v-icon>
-                    <p style="margin: 1rem 0.3rem;">
-                      Add Premium Subscription
-                    </p>
+                    <v-progress-circular
+                      indeterminate
+                      :width="2.5"
+                      :size="25"
+                    />
+                    <div
+                      style="padding: 0 .8rem;"
+                      class="center"
+                    >
+                      <p>Loading Subscription ...</p>
+                    </div>
                   </div>
-                  <div
-                    style="display: flex; justify-content: space-between;"
-                    v-else
-                    class="premium-subscription"
-                  >
-                    <v-list-item-title
-                      style="margin: 0.5rem 0.3rem;"
-                    >
-                      Premium Subscription <br> <span
-                        id="time"
-                        style="color: grey; margin-top: 7px;"
-                      > {{ subscriptionStatus.status }} </span>
-                    </v-list-item-title>
 
-                    <v-btn
-                      v-if="subscriptionStatus.shouldRenew"
-                      class="renew-btn"
-                      color="primary"
-                      :disabled="subscriptionStatus.canCancel"
-                      style="background: #ff0033; color: #fff; margin-top: 10px;"
-                      @click="renewSubscription()"
+                  <div v-else>
+                    <div
+                      class="add-btn"
+                      @click="$store.dispatch('HANDLE_SUBSCRIPTION_DIALOG', true)"
+                      v-if="!isSubscribed"
+                      data-cy="add-subscription"
                     >
-                      {{ loading ? "Renewing" : "Renew" }}
-                    </v-btn>
-
-                    <v-btn
+                      <v-icon>mdi-plus</v-icon>
+                      <p style="margin: 1rem 0.3rem;">
+                        Add Premium Subscription
+                      </p>
+                    </div>
+                    <div
+                      style="display: flex; justify-content: space-between;"
                       v-else
-                      class="subscription-btn"
-                      :disabled="!subscriptionStatus.canCancel"
-                      style="background: #ff0033; color: #fff; margin-top: 10px;"
-                      @click="cancelSubscription()"
+                      class="premium-subscription"
                     >
-                      {{ loading ? "Canceling" : "Cancel" }}
-                    </v-btn>
+                      <v-list-item-title
+                        style="margin: 0.5rem 0.3rem;"
+                      >
+                        Premium Subscription <br> <span
+                          id="time"
+                          style="color: grey; margin-top: 7px;"
+                        > {{ subscriptionStatus.status }} </span>
+                      </v-list-item-title>
+
+                      <v-btn
+                        v-if="subscriptionStatus.shouldRenew"
+                        class="renew-btn"
+                        color="primary"
+                        :disabled="subscriptionStatus.canCancel"
+                        style="background: #ff0033; color: #fff; margin-top: 10px;"
+                        @click="renewSubscription()"
+                      >
+                        {{ loading ? "Renewing" : "Renew" }}
+                      </v-btn>
+
+                      <v-btn
+                        v-else
+                        class="subscription-btn"
+                        :disabled="!subscriptionStatus.canCancel"
+                        style="background: #ff0033; color: #fff; margin-top: 10px;"
+                        @click="cancelSubscription()"
+                      >
+                        {{ loading ? "Canceling" : "Cancel" }}
+                      </v-btn>
+                    </div>
                   </div>
                 </v-list-item-content>
               </v-list-item>
@@ -218,130 +284,102 @@
 </template>
 
 <script>
-import Axios from 'axios'
-import { mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import {
   PEER_CONNECTED
 } from '@/store/mutation-types'
-import Moment from 'moment'
-import { extendMoment } from 'moment-range'
+import {
+  HANDLE_SUBSCRIPTION_DIALOG, HANDLE_EDGE_SYNC_DIALOG, FETCH_USER_SUBSCRIPTION
+} from '@/store/action-types'
+import { handleSubscriptionStatus } from '../store/premium-service'
 
-const moment = extendMoment(Moment)
+import Moment from 'moment'
 
 export default {
   name: 'AuthBarMenu',
+  mounted: function () {
+    try {
+    // eslint-disable-next-line
+    this.$tours['myTour'].start()
+    } catch (e) { }
+  },
   data: () => ({
-    user: null,
+    showGuide: true,
     authMenu: false,
-    isAuthenticated: false,
-    showSubscription: false,
     subscriptionStatus: {},
     userSubscriptionId: null,
     userStripeId: null,
     isSubscribed: false,
     showAuthenticationModal: false,
-    showEdgeSync: false,
-    loading: false
+    loading: false,
+    showTour: true,
+    guideOpts: {
+      useKeyboardNavigation: true
+    },
+    steps: [
+      {
+        target: '.guide-ctn',
+        header: {
+          title: 'Ambianic Guide'
+        },
+        content: 'Open the profile menu to view and manage your Premium subscription on your Ambianic Account'
+      }
+    ]
   }),
   components: {
     AmbButton: () => import('./shared/Button.vue'),
     SubscriptionDialog: () => import('./subscriptionDialog'),
     EdgeAuth0Sync: () => import('./edge-auth0-sync')
   },
-  async created () {
-    // waits for the auth0 client to be fully loaded
-    // setTimeout(() => {
-    if (this.$auth.isAuthenticated) {
-      this.fetchStripeId()
+  created () {
+    try {
+      const syncStatus = JSON.parse(localStorage.getItem('premiumTourStatus'))
+      if (syncStatus.hasTakenTour) {
+        this.showTour = false
+      }
+    } catch (e) {
+
     }
-    // }, 1500)
   },
   methods: {
+    ...mapActions([HANDLE_SUBSCRIPTION_DIALOG, HANDLE_EDGE_SYNC_DIALOG]),
     renewSubscription () {
       this.loading = true
-      this.showSubscription = true
-      // setTimeout(() => {
-      //   this.loading = false
-      // }, 1000)
+
+      this.$store.dispatch(HANDLE_SUBSCRIPTION_DIALOG, true)
+
+      this.loading = false
     },
-    handleCompletedSubscription () {
-      this.fetchStripeId()
-      this.showEdgeSync = true
+    setTourStatus () {
+      localStorage.setItem('premiumTourStatus', JSON.stringify({ hasTakenTour: true }))
+      this.showTour = false
     },
-    cancelSubscription () {
+    async cancelSubscription () {
       this.loading = true
-      Axios.delete(`${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription?userSubscriptionId=${this.userSubscriptionId}`,
+
+      try {
+        await fetch(
+        `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription?userSubscriptionId=${this.userSubscriptionId}`,
         {
-          data: {
+          method: 'DELETE',
+          body: JSON.stringify({
             stripeId: this.userSubscriptionId
-          },
+          }),
           headers: {
             'content-type': 'application/json'
           }
-        }
-      )
-        .then(() => {
-          this.fetchStripeId()
         })
-        .catch((e) => {
-          console.log('ERROR UNSUBSCRIBING', e)
-        })
+
+        this.$store.dispatch(FETCH_USER_SUBSCRIPTION, this.user.sub)
+      } catch (e) {
+        console.log('ERROR UNSUBSCRIBING', e)
+      }
     },
     handleAuth () {
       this.$auth.loginWithRedirect()
     },
-    async fetchStripeId () {
-      try {
-        const { data } = await Axios.get(
-        `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data?userId=${this.$auth.user.sub}`
-        )
-
-        const { userSubscriptionId, userStripeId } = data.user_metadata
-        const { current_period_end: end, status } = data.sub_details
-
-        this.userSubscriptionId = userSubscriptionId
-        this.userStripeId = userStripeId
-        this.isSubscribed = true
-
-        this.handleSubscriptionStatus(status, moment(end).format('ddd, MMM Do YYYY'))
-
-        try {
-          const syncStatus = JSON.parse(localStorage.getItem('edgeSyncStatus'))
-
-          if (!syncStatus.status) {
-            this.showEdgeSync = true
-          }
-        } catch (e) {
-          // new device without a previous sync record
-          this.showEdgeSync = true
-        }
-      } catch (e) {
-        console.log(e)
-      }
-    },
-    handleSubscriptionStatus (status, endDate) {
-      console.log(`Recieved Status : ${status} \n \n \n \n \n \n`)
-
-      switch (status) {
-        case 'past_due':
-          this.subscriptionStatus = { status: `Expired ${endDate}`, shouldRenew: true }
-          break
-
-        case 'active':
-          this.subscriptionStatus = { status: `Expires ${endDate}`, shouldRenew: false, canCancel: true }
-          break
-
-        case 'incomplete_expired':
-          this.subscriptionStatus = { status: `Expired ${endDate}`, shouldRenew: true }
-          break
-
-        case 'canceled':
-          this.subscriptionStatus = { status: `Active till ${endDate}`, shouldRenew: false, canCancel: false }
-          break
-
-        default:
-          break
-      }
+    setSubscriptionStatus (status, endDate) {
+      this.subscriptionStatus = handleSubscriptionStatus(status, endDate)
     },
     handleLogout () {
       this.$auth.logout({
@@ -350,21 +388,41 @@ export default {
     },
     handleMenu (state) {
       this.authMenu = state
-    },
-    handleMock () {
-      this.$auth.handleTestLogin()
     }
   },
   computed: {
     ...mapState({
       isEdgeConnected: state =>
-        state.pnp.peerConnectionStatus === PEER_CONNECTED
+        state.pnp.peerConnectionStatus === PEER_CONNECTED,
+      subscriptionDetails: state => state.premiumService.subscriptionDetails,
+      loadingSubscription: state => state.premiumService.loadingSubscription,
+      user: state => state.premiumService.user,
+      loadingAuth: state => state.premiumService.loadingAuth,
+      isAuthenticated: state => state.premiumService.isAuthenticated
     })
   },
   watch: {
-    isEdgeConnected: function (value) {
-      if (value && this.$auth.user) {
-        this.fetchStripeId()
+    subscriptionDetails: function (value) {
+      if (value) {
+        const { userSubscriptionId, userStripeId } = this.subscriptionDetails.user_metadata
+        const { current_period_end: end, status } = this.subscriptionDetails.sub_details
+
+        this.userSubscriptionId = userSubscriptionId
+        this.userStripeId = userStripeId
+        this.isSubscribed = true
+
+        this.setSubscriptionStatus(status, Moment(end).format('ddd, MMM Do YYYY'))
+
+        try {
+          const syncStatus = JSON.parse(localStorage.getItem('edgeSyncStatus'))
+
+          if (!syncStatus.status) {
+            this.$store.dispatch(HANDLE_EDGE_SYNC_DIALOG, true)
+          }
+        } catch (e) {
+          // new device without a previous sync record
+          this.$store.dispatch(HANDLE_EDGE_SYNC_DIALOG, true)
+        }
       }
     }
   }
@@ -402,6 +460,12 @@ export default {
 
 .service-btn:hover {
   cursor: pointer;
+}
+
+@media (max-width: 800px) {
+  .upgrade-text {
+    display: none;
+  }
 }
 
 </style>

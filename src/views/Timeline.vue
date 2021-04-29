@@ -155,6 +155,24 @@
                       </template>
                       <span>Share event</span>
                     </v-tooltip>
+                    <v-tooltip bottom>
+                      <template
+                        v-if="!user.isAuthenticated"
+                        #activator="{ on: tooltip }"
+                      >
+                        <v-btn
+                          icon
+                          @click="$auth.loginWithRedirect()"
+                          color="primary"
+                          v-on="tooltip"
+                        >
+                          <v-icon>mdi-email-send</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>
+                        Subscribe to Ambianic Premium services to recieve email notifications.
+                      </span>
+                    </v-tooltip>
                   </v-col>
                 </v-row>
               </v-timeline-item>
@@ -236,6 +254,7 @@ import {
   NEW_REMOTE_PEER_ID
 } from '@/store/mutation-types'
 Vue.use(VueObserveVisibility)
+
 const PAGE_SIZE = 5
 export default {
   data () {
@@ -245,10 +264,12 @@ export default {
       imageURL: {}, // map[id, fullURL] - maps unique event id to their full thumbnail URLs
       isImageLoaded: [],
       on: true,
+      isSubscribed: false,
       isTopSpinnerVisible: false // flags whether the timeline is in the process of loading data
     }
   },
   created () {
+    // eslint-disable-next-line
     this.edgeAPI = new EdgeAPI(this.pnp)
     this.pnpUnsubscribe = this.$store.subscribe((mutation, state) => {
       if (mutation.type === NEW_REMOTE_PEER_ID) {
@@ -276,7 +297,10 @@ export default {
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
       edgePeerId: state => state.pnp.remotePeerId,
       peerFetch: state => state.pnp.peerFetch,
-      pnp: state => state.pnp
+      pnp: state => state.pnp,
+      premiumService: state => state.premiumService,
+      showSubscriptionDialog: state => state.premiumService.showSubscriptionDialog,
+      user: state => state.premiumService.user
     })
   },
   methods: {

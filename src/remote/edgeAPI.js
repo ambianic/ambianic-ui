@@ -72,7 +72,7 @@ export class EdgeAPI {
   }
 
   // Premium Subscribtion operations
-  async initializePremiumNotification ({ userId }) {
+  async initializePremiumNotification (userId) {
     const apiRoot = this._getRootURL()
 
     const request = {

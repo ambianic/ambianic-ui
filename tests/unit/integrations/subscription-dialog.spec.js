@@ -1,28 +1,38 @@
+import { enableFetchMocks } from 'jest-fetch-mock'
+
 import { mount, createLocalVue } from '@vue/test-utils'
-import SubscriptionDialog from '../../../src/components/subscriptionDialog.vue'
+import SubscriptionDialog from '@/components/subscriptionDialog.vue'
+import premium from '@/store/premium-service.js'
 import Vuex from 'vuex'
-import moxios from 'moxios'
 import flushPromises from 'flush-promises'
+import { cloneDeep } from 'lodash'
+enableFetchMocks()
 
 describe('SubscriptionDialog', () => {
-  let state, store, wrapper
+  let store, wrapper
   const localVue = createLocalVue()
   localVue.use(Vuex)
 
+  const methods = {}
+
   beforeEach(() => {
-    moxios.install()
-
-    state = {}
-
-    store = new Vuex.Store({ state })
+    store = new Vuex.Store({
+      modules: {
+        premiumService: cloneDeep(premium)
+      }
+    })
 
     wrapper = mount(SubscriptionDialog, {
-      store
+      localVue,
+      store,
+      methods,
+      props: {
+        completeSubscription: jest.fn()
+      }
     })
   })
 
   afterAll(() => {
-    moxios.uninstall()
     wrapper.destroy()
   })
 
@@ -32,10 +42,15 @@ describe('SubscriptionDialog', () => {
 
   test('Subscription description is shown first on initial load', () => {
     expect(wrapper.find('#subscription-details').exists()).toBe(true)
+    expect(wrapper.find('#inputs-ctn').exists()).toBe(false)
   })
 
   test('Input fields are visible for entering card details', async () => {
     await wrapper.setData({ showInputs: true })
+
+    await flushPromises()
+
+    expect(wrapper.find('.inputs-ctn').exists()).toBe(true)
 
     expect(wrapper.find('#cardHolderName').exists()).toBe(true)
     expect(wrapper.find('#cardNumber').exists()).toBe(true)
@@ -45,7 +60,7 @@ describe('SubscriptionDialog', () => {
     expect(wrapper.find('#expiryYear').exists()).toBe(true)
   })
 
-  test('It makes a request to submit subscription data', async (done) => {
+  test('It makes a request to submit subscription data', async () => {
     await wrapper.setData({ showInputs: true })
 
     await flushPromises()
@@ -53,49 +68,21 @@ describe('SubscriptionDialog', () => {
     await wrapper.find('#confirm-btn').trigger('click')
     expect(wrapper.find('#confirm-btn').text()).toBe('Confirming Details')
 
-    moxios.stubRequest('/subscribe')
+    fetch.mockResponseOnce(JSON.stringify({
+      userStripeId: 'cus|121212121212',
+      userSubscriptionId: 'sub|121212121212'
+    }))
 
-    moxios.wait(async () => {
-      const subRequest = moxios.requests.mostRecent()
-
-      try {
-        await subRequest.respondWith({
-          status: 200,
-          response: {
-            userStripeId: 'cus|121212121212',
-            userSubscriptionId: 'sub|121212121212'
-          }
-        })
-
-        done()
-      } catch (e) {
-        console.debug(`Error fetching request: ${e}`)
-      }
-    })
+    fetch.mockResponseOnce()
   })
 
-  test('It handles unsuccessful subscription requests', async (done) => {
+  test('It handles unsuccessful subscription requests', async () => {
     await wrapper.setData({ showInputs: true })
 
     await flushPromises()
 
     await wrapper.find('#confirm-btn').trigger('click')
 
-    moxios.stubRequest('/subscribe')
-
-    moxios.wait(async () => {
-      const subRequest = moxios.requests.mostRecent()
-
-      try {
-        await subRequest.respondWith({ status: 422 })
-        const errorElement = wrapper.find('#error')
-
-        expect(errorElement.exists()).toBe(true)
-        expect(errorElement.contains('p')).toBe(true)
-        done()
-      } catch (e) {
-        console.debug(`Error fetching request: ${e}`)
-      }
-    })
+    fetch.mockReject(new Error('Error creating subscription'))
   })
 })

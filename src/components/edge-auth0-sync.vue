@@ -2,7 +2,7 @@
   <v-dialog
     id="notification-dialog"
     persistent
-    v-model="showModal"
+    v-model="showEdgeSyncModal"
     max-width="550"
   >
     <v-card>
@@ -63,7 +63,7 @@
           </v-icon>
 
           <p id="explanation">
-            Your premium subscription has been successfully extended to your connected Edge Device. <br> <br> You would now get email notifications about object detections from your running edge device.
+            Your premium subscription has been successfully extended to your connected Edge Device. <br> <br> You would now get email notifications about detections events from your running edge device.
           </p>
 
           <v-btn
@@ -84,23 +84,27 @@
 import {
   PEER_CONNECTED
 } from '@/store/mutation-types'
+import {
+  HANDLE_EDGE_SYNC_DIALOG
+} from '@/store/action-types'
 import { EdgeAPI } from '@/remote/edgeAPI'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'EdgeAuth0Sync',
   data: (_) => ({
-    showModal: true,
     isEdgeSynced: false
   }),
   computed: {
     ...mapState({
+      showEdgeSyncModal: state => state.premiumService.showEdgeSyncModal,
       peerConnectionStatus: (state) => state.pnp.peerConnectionStatus,
       isEdgeConnected: (state) =>
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
       edgePeerId: (state) => state.pnp.remotePeerId,
       peerFetch: (state) => state.pnp.peerFetch,
-      pnp: (state) => state.pnp
+      pnp: (state) => state.pnp,
+      user: state => state.premiumService.user
     })
   },
   created () {
@@ -111,14 +115,15 @@ export default {
     }
   },
   methods: {
+    ...mapActions([HANDLE_EDGE_SYNC_DIALOG]),
     handleClose (state) {
       localStorage.setItem('edgeSyncStatus', JSON.stringify({ status: state }))
 
-      this.showModal = false
+      this.$store.dispatch(HANDLE_EDGE_SYNC_DIALOG, false)
     },
     submitUserId () {
       this.edgeAPI
-        .initializePremiumNotification(this.$auth.user.sub)
+        .initializePremiumNotification(this.user.sub)
         .then(() => {
           this.isEdgeSynced = true
         })
