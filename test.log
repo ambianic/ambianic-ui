@@ -1,0 +1,3044 @@
+
+> ambianic-ui@2.14.1 test:unit /workspace/ambianic-ui
+> jest "tests/unit/store/"
+
+FAIL tests/unit/store/pnp-mutations.spec.js
+  ● Console
+
+    console.debug
+      NEW_REMOTE_PEER_ID: Setting state.remotePeerId to :  a_new_remote_peer_id
+
+      at Store.debug (src/store/pnp.js:135:13)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      REMOTE_PEER_ID_REMOVED: Removing remote Peer Id from local storage
+
+      at Store.debug (src/store/pnp.js:140:13)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      PEER_FETCH: Setting PeerFetch instance.
+
+      at Store.debug (src/store/pnp.js:145:13)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      store.getters { isEdgeConnected: [Getter] }
+
+      at Object.debug (tests/unit/store/pnp-mutations.spec.js:156:13)
+
+  ● PnP state machine mutations - p2p communication layer › NEW_REMOTE_PEER_ID
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "a new remote peer id"
+    Received: "a_new_remote_peer_id"
+
+      135 |   test('NEW_REMOTE_PEER_ID', () => {
+      136 |     store.commit(NEW_REMOTE_PEER_ID, 'a_new_remote_peer_id')
+    > 137 |     expect(store.state.pnp.remotePeerId).toBe('a new remote peer id')
+          |                                          ^
+      138 |     expect(window.localStorage.setItem).toHaveBeenCalledTimes(1)
+      139 |     expect(window.localStorage.setItem).toHaveBeenCalledWith(`${STORAGE_KEY}.remotePeerId`, 'a_new_remote_peer_id')
+      140 |   })
+
+      at Object.toBe (tests/unit/store/pnp-mutations.spec.js:137:42)
+
+PASS tests/unit/store/pnp-actions.spec.js
+  ● Console
+
+    console.log
+      pnp client: creating peer
+
+      at Store.log (src/store/pnp.js:324:13)
+
+    console.log
+      pnp client: last saved myPeerId undefined
+
+      at Store.log (src/store/pnp.js:328:13)
+
+    console.log
+      pnp client: peer created
+
+      at Store.log (src/store/pnp.js:338:13)
+
+    console.log
+      pnp client: creating peer
+
+      at Store.log (src/store/pnp.js:324:13)
+
+    console.log
+      pnp client: last saved myPeerId undefined
+
+      at Store.log (src/store/pnp.js:328:13)
+
+    console.log
+      pnp client: peer created
+
+      at Store.log (src/store/pnp.js:338:13)
+
+    console.log
+      pnp client: reconnecting peer...
+
+      at Store.log (src/store/pnp.js:355:13)
+
+    console.log
+      pnp client: reconnecting peer...
+
+      at Store.log (src/store/pnp.js:355:13)
+
+    console.log
+      BUG WORKAROUND: Peer lost ID. Resetting to last known ID.
+
+      at Store.log (src/store/pnp.js:358:15)
+
+    console.log
+      ######## >>>>> peerConnectionStatus = PEER_CONNECTED
+
+      at Store.log (src/store/pnp.js:370:13)
+
+    console.log
+      ######## >>>>> peerConnectionStatus = PEER_DISCONNECTED
+
+      at Store.log (src/store/pnp.js:370:13)
+
+    console.log
+      Discovering remote peer...
+
+      at log (src/store/pnp.js:379:15)
+
+    console.log
+      PNP Service disconnected. Reconnecting...
+
+      at log (src/store/pnp.js:383:17)
+
+    console.log
+      pnp client: reconnecting peer...
+
+      at Store.log (src/store/pnp.js:355:13)
+
+    console.log
+      PNP Service still not connected. Will retry shortly.
+
+      at log (src/store/pnp.js:393:19)
+
+    console.debug
+      jest running pending timers
+
+      at Object.debug (tests/unit/store/pnp-actions.spec.js:199:13)
+
+    console.log
+      Discovering remote peer...
+
+      at log (src/store/pnp.js:379:15)
+          at Array.forEach (<anonymous>)
+
+    console.log
+      Remote peer Id found a_known_remote_peer_id
+
+      at log (src/store/pnp.js:400:17)
+
+    console.debug
+      #####>>>> PNP Service connection status: PNP_SERVICE_CONNECTED
+
+      at Store.debug (src/store/pnp.js:430:13)
+
+    console.debug
+      #####>>>>>>> Connecting to remote peer a_known_remote_peer_id
+
+      at Store.debug (src/store/pnp.js:431:13)
+
+    console.info
+      >>>>>> Opening new peer connection.
+
+      at Store.info (src/store/pnp.js:437:13)
+
+    console.debug
+      peerConnection.on(event) handlers all set.
+
+      at debug (src/store/pnp.js:300:11)
+
+    console.log
+      ######## >>>>> peerConnectionStatus = PEER_DISCONNECTED
+
+      at Store.log (src/store/pnp.js:370:13)
+
+    console.log
+      Discovering remote peer...
+
+      at log (src/store/pnp.js:379:15)
+
+    console.debug
+      i {
+        _createServerConnection: [Getter/Setter],
+        _initialize: [Getter/Setter],
+        _handleMessage: [Getter/Setter],
+        _storeMessage: [Getter/Setter],
+        _getMessages: [Getter/Setter],
+        connect: [Getter/Setter],
+        call: [Getter/Setter],
+        _addConnection: [Getter/Setter],
+        _removeConnection: [Getter/Setter],
+        getConnection: [Getter/Setter],
+        _delayedAbort: [Getter/Setter],
+        _abort: [Getter/Setter],
+        emitError: [Getter/Setter],
+        destroy: [Getter/Setter],
+        _cleanup: [Getter/Setter],
+        _cleanupPeer: [Getter/Setter],
+        disconnect: [Getter/Setter],
+        reconnect: [Getter/Setter],
+        listAllPeers: [Getter/Setter],
+        eventNames: [Getter/Setter],
+        listeners: [Getter/Setter],
+        listenerCount: [Getter/Setter],
+        emit: [Getter/Setter],
+        on: [Getter/Setter],
+        once: [Getter/Setter],
+        removeListener: [Getter/Setter],
+        removeAllListeners: [Getter/Setter],
+        id: 'my_local_peer_id'
+      }
+
+      at debug (src/store/pnp.js:164:13)
+
+    console.debug
+      Fetching room members PeerRoom {
+        _buildUrl: [Function: $buildUrl] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          _protoImpl: [Function: $buildUrl] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)]
+          }
+        },
+        _restCall: [Function: $restCall] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          constructor: [Function: AsyncFunction] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)]
+          },
+          _protoImpl: [Function: $restCall] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)],
+            constructor: [Function]
+          }
+        },
+        _getRoomId: [Function: $getRoomId] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          constructor: undefined,
+          _protoImpl: [Function: $getRoomId] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)],
+            constructor: [Function]
+          }
+        },
+        _joinRoom: [Function: $joinRoom] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          constructor: undefined,
+          _protoImpl: [Function: $joinRoom] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)],
+            constructor: [Function]
+          }
+        },
+        getRoomMembers: [Function: getRoomMembers] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          constructor: undefined,
+          _protoImpl: [Function: getRoomMembers] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)],
+            constructor: [Function]
+          }
+        },
+        join: [Function: join] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          constructor: undefined,
+          _protoImpl: [Function: join] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)],
+            constructor: [Function]
+          }
+        }
+      }
+
+      at debug (src/store/pnp.js:166:13)
+
+    console.debug
+      mock roomMembers { clientsIds: [ 'my_local_peer_id', 'a_remote_peer_id' ] }
+
+      at PeerRoom.debug (tests/unit/store/pnp-actions.spec.js:216:17)
+
+    console.debug
+      Fetched roomMembers { clientsIds: [ 'my_local_peer_id', 'a_remote_peer_id' ] }
+
+      at debug (src/store/pnp.js:168:13)
+
+    console.debug
+      myRoom members [ 'my_local_peer_id', 'a_remote_peer_id' ]
+
+      at debug (src/store/pnp.js:170:13)
+
+    console.debug
+      remotePeerId: a_remote_peer_id found among myRoom members: my_local_peer_id,a_remote_peer_id
+
+      at debug (src/store/pnp.js:175:13)
+
+    console.log
+      Remote peer Id found a_remote_peer_id
+
+      at log (src/store/pnp.js:400:17)
+
+    console.debug
+      #####>>>> PNP Service connection status: PNP_SERVICE_CONNECTED
+
+      at Store.debug (src/store/pnp.js:430:13)
+
+    console.debug
+      #####>>>>>>> Connecting to remote peer a_remote_peer_id
+
+      at Store.debug (src/store/pnp.js:431:13)
+
+    console.info
+      >>>>>> Opening new peer connection.
+
+      at Store.info (src/store/pnp.js:437:13)
+
+    console.debug
+      peerConnection.on(event) handlers all set.
+
+      at debug (src/store/pnp.js:300:11)
+
+    console.log
+      ######## >>>>> peerConnectionStatus = PEER_DISCONNECTED
+
+      at Store.log (src/store/pnp.js:370:13)
+
+    console.log
+      Discovering remote peer...
+
+      at log (src/store/pnp.js:379:15)
+
+    console.debug
+      i {
+        _createServerConnection: [Getter/Setter],
+        _initialize: [Getter/Setter],
+        _handleMessage: [Getter/Setter],
+        _storeMessage: [Getter/Setter],
+        _getMessages: [Getter/Setter],
+        connect: [Getter/Setter],
+        call: [Getter/Setter],
+        _addConnection: [Getter/Setter],
+        _removeConnection: [Getter/Setter],
+        getConnection: [Getter/Setter],
+        _delayedAbort: [Getter/Setter],
+        _abort: [Getter/Setter],
+        emitError: [Getter/Setter],
+        destroy: [Getter/Setter],
+        _cleanup: [Getter/Setter],
+        _cleanupPeer: [Getter/Setter],
+        disconnect: [Getter/Setter],
+        reconnect: [Getter/Setter],
+        listAllPeers: [Getter/Setter],
+        eventNames: [Getter/Setter],
+        listeners: [Getter/Setter],
+        listenerCount: [Getter/Setter],
+        emit: [Getter/Setter],
+        on: [Getter/Setter],
+        once: [Getter/Setter],
+        removeListener: [Getter/Setter],
+        removeAllListeners: [Getter/Setter],
+        id: 'my_local_peer_id'
+      }
+
+      at debug (src/store/pnp.js:164:13)
+
+    console.debug
+      Fetching room members PeerRoom {
+        _buildUrl: [Function: $buildUrl] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          _protoImpl: [Function: $buildUrl] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)]
+          }
+        },
+        _restCall: [Function: $restCall] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          constructor: [Function: AsyncFunction] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)]
+          },
+          _protoImpl: [Function: $restCall] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)],
+            constructor: [Function]
+          }
+        },
+        _getRoomId: [Function: $getRoomId] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          constructor: undefined,
+          _protoImpl: [Function: $getRoomId] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)],
+            constructor: [Function]
+          }
+        },
+        _joinRoom: [Function: $joinRoom] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          constructor: undefined,
+          _protoImpl: [Function: $joinRoom] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)],
+            constructor: [Function]
+          }
+        },
+        getRoomMembers: [Function: getRoomMembers] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          constructor: undefined,
+          _protoImpl: [Function: getRoomMembers] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)],
+            constructor: [Function]
+          }
+        },
+        join: [Function: join] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          constructor: undefined,
+          _protoImpl: [Function: join] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)],
+            constructor: [Function]
+          }
+        }
+      }
+
+      at debug (src/store/pnp.js:166:13)
+
+    console.debug
+      mock roomMembers { clientsIds: [ 'my_local_peer_id', 'a_problematic_remote_peer_id' ] }
+
+      at PeerRoom.debug (tests/unit/store/pnp-actions.spec.js:247:17)
+
+    console.debug
+      Fetched roomMembers { clientsIds: [ 'my_local_peer_id', 'a_problematic_remote_peer_id' ] }
+
+      at debug (src/store/pnp.js:168:13)
+
+    console.debug
+      myRoom members [ 'my_local_peer_id', 'a_problematic_remote_peer_id' ]
+
+      at debug (src/store/pnp.js:170:13)
+
+    console.debug
+      remotePeerId: undefined found among myRoom members: my_local_peer_id,a_problematic_remote_peer_id
+
+      at debug (src/store/pnp.js:175:13)
+
+    console.log
+      recycling problematic peers Set(1) { 'a_problematic_remote_peer_id' }
+
+      at log (src/store/pnp.js:179:15)
+
+    console.log
+      Remote peer Id found a_problematic_remote_peer_id
+
+      at log (src/store/pnp.js:400:17)
+
+    console.debug
+      #####>>>> PNP Service connection status: PNP_SERVICE_CONNECTED
+
+      at Store.debug (src/store/pnp.js:430:13)
+
+    console.debug
+      #####>>>>>>> Connecting to remote peer a_problematic_remote_peer_id
+
+      at Store.debug (src/store/pnp.js:431:13)
+
+    console.info
+      >>>>>> Opening new peer connection.
+
+      at Store.info (src/store/pnp.js:437:13)
+
+    console.debug
+      peerConnection.on(event) handlers all set.
+
+      at debug (src/store/pnp.js:300:11)
+
+    console.log
+      ######## >>>>> peerConnectionStatus = PEER_DISCONNECTED
+
+      at Store.log (src/store/pnp.js:370:13)
+
+    console.log
+      Discovering remote peer...
+
+      at log (src/store/pnp.js:379:15)
+
+    console.debug
+      i {
+        _createServerConnection: [Getter/Setter],
+        _initialize: [Getter/Setter],
+        _handleMessage: [Getter/Setter],
+        _storeMessage: [Getter/Setter],
+        _getMessages: [Getter/Setter],
+        connect: [Getter/Setter],
+        call: [Getter/Setter],
+        _addConnection: [Getter/Setter],
+        _removeConnection: [Getter/Setter],
+        getConnection: [Getter/Setter],
+        _delayedAbort: [Getter/Setter],
+        _abort: [Getter/Setter],
+        emitError: [Getter/Setter],
+        destroy: [Getter/Setter],
+        _cleanup: [Getter/Setter],
+        _cleanupPeer: [Getter/Setter],
+        disconnect: [Getter/Setter],
+        reconnect: [Getter/Setter],
+        listAllPeers: [Getter/Setter],
+        eventNames: [Getter/Setter],
+        listeners: [Getter/Setter],
+        listenerCount: [Getter/Setter],
+        emit: [Getter/Setter],
+        on: [Getter/Setter],
+        once: [Getter/Setter],
+        removeListener: [Getter/Setter],
+        removeAllListeners: [Getter/Setter],
+        id: 'my_local_peer_id'
+      }
+
+      at debug (src/store/pnp.js:164:13)
+
+    console.debug
+      Fetching room members PeerRoom {
+        _buildUrl: [Function: $buildUrl] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          _protoImpl: [Function: $buildUrl] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)]
+          }
+        },
+        _restCall: [Function: $restCall] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          constructor: [Function: AsyncFunction] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)]
+          },
+          _protoImpl: [Function: $restCall] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)],
+            constructor: [Function]
+          }
+        },
+        _getRoomId: [Function: $getRoomId] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          constructor: undefined,
+          _protoImpl: [Function: $getRoomId] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)],
+            constructor: [Function]
+          }
+        },
+        _joinRoom: [Function: $joinRoom] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          constructor: undefined,
+          _protoImpl: [Function: $joinRoom] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)],
+            constructor: [Function]
+          }
+        },
+        getRoomMembers: [Function: getRoomMembers] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          constructor: undefined,
+          _protoImpl: [Function: getRoomMembers] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)],
+            constructor: [Function]
+          }
+        },
+        join: [Function: join] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          constructor: undefined,
+          _protoImpl: [Function: join] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)],
+            constructor: [Function]
+          }
+        }
+      }
+
+      at debug (src/store/pnp.js:166:13)
+
+    console.debug
+      mock roomMembers { clientsIds: [ 'my_local_peer_id' ] }
+
+      at PeerRoom.debug (tests/unit/store/pnp-actions.spec.js:275:17)
+
+    console.debug
+      Fetched roomMembers { clientsIds: [ 'my_local_peer_id' ] }
+
+      at debug (src/store/pnp.js:168:13)
+
+    console.debug
+      myRoom members [ 'my_local_peer_id' ]
+
+      at debug (src/store/pnp.js:170:13)
+
+    console.debug
+      remotePeerId: undefined found among myRoom members: my_local_peer_id
+
+      at debug (src/store/pnp.js:175:13)
+
+    console.log
+      ######## >>>>> peerConnectionStatus = PEER_DISCONNECTED
+
+      at Store.log (src/store/pnp.js:370:13)
+
+    console.log
+      Discovering remote peer...
+
+      at log (src/store/pnp.js:379:15)
+
+    console.debug
+      i {
+        _createServerConnection: [Getter/Setter],
+        _initialize: [Getter/Setter],
+        _handleMessage: [Getter/Setter],
+        _storeMessage: [Getter/Setter],
+        _getMessages: [Getter/Setter],
+        connect: [Getter/Setter],
+        call: [Getter/Setter],
+        _addConnection: [Getter/Setter],
+        _removeConnection: [Getter/Setter],
+        getConnection: [Getter/Setter],
+        _delayedAbort: [Getter/Setter],
+        _abort: [Getter/Setter],
+        emitError: [Getter/Setter],
+        destroy: [Getter/Setter],
+        _cleanup: [Getter/Setter],
+        _cleanupPeer: [Getter/Setter],
+        disconnect: [Getter/Setter],
+        reconnect: [Getter/Setter],
+        listAllPeers: [Getter/Setter],
+        eventNames: [Getter/Setter],
+        listeners: [Getter/Setter],
+        listenerCount: [Getter/Setter],
+        emit: [Getter/Setter],
+        on: [Getter/Setter],
+        once: [Getter/Setter],
+        removeListener: [Getter/Setter],
+        removeAllListeners: [Getter/Setter],
+        id: 'my_local_peer_id'
+      }
+
+      at debug (src/store/pnp.js:164:13)
+
+    console.debug
+      Fetching room members PeerRoom {
+        _buildUrl: [Function: $buildUrl] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          _protoImpl: [Function: $buildUrl] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)]
+          }
+        },
+        _restCall: [Function: $restCall] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          constructor: [Function: AsyncFunction] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)]
+          },
+          _protoImpl: [Function: $restCall] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)],
+            constructor: [Function]
+          }
+        },
+        _getRoomId: [Function: $getRoomId] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          constructor: undefined,
+          _protoImpl: [Function: $getRoomId] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)],
+            constructor: [Function]
+          }
+        },
+        _joinRoom: [Function: $joinRoom] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          constructor: undefined,
+          _protoImpl: [Function: $joinRoom] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)],
+            constructor: [Function]
+          }
+        },
+        getRoomMembers: [Function: getRoomMembers] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          constructor: undefined,
+          _protoImpl: [Function: getRoomMembers] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)],
+            constructor: [Function]
+          }
+        },
+        join: [Function: join] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          constructor: undefined,
+          _protoImpl: [Function: join] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)],
+            constructor: [Function]
+          }
+        }
+      }
+
+      at debug (src/store/pnp.js:166:13)
+
+    console.log
+      Error while looking for remote peer. Will retry shortly. Error: Problem occured during peer discovery.
+          at PeerRoom.<anonymous> (/workspace/ambianic-ui/tests/unit/store/pnp-actions.spec.js:299:15)
+          at /workspace/ambianic-ui/node_modules/jest-mock/build/index.js:480:41
+          at PeerRoom.<anonymous> (/workspace/ambianic-ui/node_modules/jest-mock/build/index.js:489:13)
+          at PeerRoom.mockConstructor (/workspace/ambianic-ui/node_modules/jest-mock/build/index.js:182:19)
+          at PeerRoom.getRoomMembers (eval at _createMockFunction (/workspace/ambianic-ui/node_modules/jest-mock/build/index.js:674:31), <anonymous>:3:58)
+          at /workspace/ambianic-ui/node_modules/jest-mock/build/index.js:485:35
+          at PeerRoom.<anonymous> (/workspace/ambianic-ui/node_modules/jest-mock/build/index.js:489:13)
+          at PeerRoom.mockConstructor (/workspace/ambianic-ui/node_modules/jest-mock/build/index.js:182:19)
+          at PeerRoom.getRoomMembers (eval at _createMockFunction (/workspace/ambianic-ui/node_modules/jest-mock/build/index.js:674:31), <anonymous>:3:58)
+          at getRoomMembers (/workspace/ambianic-ui/src/store/pnp.js:167:38)
+          at discoverRemotePeerId (/workspace/ambianic-ui/src/store/pnp.js:389:32)
+          at Store.discoveryLoopId (/workspace/ambianic-ui/src/store/pnp.js:408:11)
+          at Array.wrappedActionHandler (/workspace/ambianic-ui/node_modules/vuex/dist/vuex.common.js:849:23)
+          at Store.dispatch (/workspace/ambianic-ui/node_modules/vuex/dist/vuex.common.js:514:15)
+          at Store.boundDispatch [as dispatch] (/workspace/ambianic-ui/node_modules/vuex/dist/vuex.common.js:404:21)
+          at Object.dispatch (/workspace/ambianic-ui/tests/unit/store/pnp-actions.spec.js:302:17)
+          at Object.asyncJestTest (/workspace/ambianic-ui/node_modules/jest/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:106:37)
+          at /workspace/ambianic-ui/node_modules/jest/node_modules/jest-jasmine2/build/queueRunner.js:45:12
+          at new Promise (<anonymous>)
+          at mapper (/workspace/ambianic-ui/node_modules/jest/node_modules/jest-jasmine2/build/queueRunner.js:28:19)
+          at /workspace/ambianic-ui/node_modules/jest/node_modules/jest-jasmine2/build/queueRunner.js:75:41
+          at processTicksAndRejections (node:internal/process/task_queues:94:5)
+
+      at log (src/store/pnp.js:396:17)
+
+    console.debug
+      #####>>>> PNP Service connection status: PNP_SERVICE_CONNECTED
+
+      at Store.debug (src/store/pnp.js:430:13)
+
+    console.debug
+      #####>>>>>>> Connecting to remote peer a_known_remote_peer_id
+
+      at Store.debug (src/store/pnp.js:431:13)
+
+    console.info
+      >>>>>>> Closing and cleaning up existing peer connection.
+
+      at Store.info (src/store/pnp.js:434:15)
+
+    console.info
+      >>>>>> Opening new peer connection.
+
+      at Store.info (src/store/pnp.js:437:13)
+
+    console.debug
+      peerConnection.on(event) handlers all set.
+
+      at debug (src/store/pnp.js:300:11)
+
+    console.debug
+      jest running pending timers
+
+      at Object.debug (tests/unit/store/pnp-actions.spec.js:349:13)
+
+    console.debug
+      Problematic remote peer ID: a_known_remote_peer_id
+
+      at debug (src/store/pnp.js:449:17)
+          at Array.forEach (<anonymous>)
+
+    console.warn
+      Error destroying peer.
+
+      450 |         peer.destroy()
+      451 |       } catch (err) {
+    > 452 |         console.warn('Error destroying peer.')
+          |                 ^
+      453 |       } finally {
+      454 |         console.info('It took too long to setup a connection. Resetting peer.')
+      455 |         dispatch(INITIALIZE_PNP)
+
+      at warn (src/store/pnp.js:452:17)
+      at node_modules/@jest/fake-timers/build/jestFakeTimers.js:524:25
+      at callback (node_modules/@jest/fake-timers/build/jestFakeTimers.js:516:29)
+      at FakeTimers._runTimerHandle (node_modules/@jest/fake-timers/build/jestFakeTimers.js:560:9)
+      at node_modules/@jest/fake-timers/build/jestFakeTimers.js:228:40
+          at Array.forEach (<anonymous>)
+      at FakeTimers.runOnlyPendingTimers (node_modules/@jest/fake-timers/build/jestFakeTimers.js:228:8)
+
+    console.info
+      It took too long to setup a connection. Resetting peer.
+
+      at info (src/store/pnp.js:454:17)
+          at Array.forEach (<anonymous>)
+
+    console.log
+      pnp client: creating peer
+
+      at Store.log (src/store/pnp.js:324:13)
+
+    console.log
+      pnp client: last saved myPeerId some_saved_ID
+
+      at Store.log (src/store/pnp.js:328:13)
+
+    console.log
+      pnp client: peer created
+
+      at Store.log (src/store/pnp.js:338:13)
+
+    console.debug
+      Peer constructor calls [
+        [],
+        [
+          'some_saved_ID',
+          {
+            host: 'ambianic-pnp.herokuapp.com',
+            port: 443,
+            secure: true,
+            debug: 3
+          }
+        ]
+      ]
+
+      at Object.debug (tests/unit/store/pnp-actions.spec.js:355:13)
+
+    console.debug
+      #####>>>> PNP Service connection status: PNP_SERVICE_CONNECTED
+
+      at Store.debug (src/store/pnp.js:430:13)
+
+    console.debug
+      #####>>>>>>> Connecting to remote peer a_known_remote_peer_id
+
+      at Store.debug (src/store/pnp.js:431:13)
+
+    console.info
+      >>>>>>> Closing and cleaning up existing peer connection.
+
+      at Store.info (src/store/pnp.js:434:15)
+
+    console.info
+      >>>>>> Opening new peer connection.
+
+      at Store.info (src/store/pnp.js:437:13)
+
+    console.debug
+      peerConnection.on(event) handlers all set.
+
+      at debug (src/store/pnp.js:300:11)
+
+    console.debug
+      jest running pending timers
+
+      at Object.debug (tests/unit/store/pnp-actions.spec.js:392:13)
+
+    console.debug
+      Problematic remote peer ID: a_known_remote_peer_id
+
+      at debug (src/store/pnp.js:449:17)
+          at Array.forEach (<anonymous>)
+
+    console.info
+      It took too long to setup a connection. Resetting peer.
+
+      at info (src/store/pnp.js:454:17)
+          at Array.forEach (<anonymous>)
+
+    console.log
+      pnp client: creating peer
+
+      at Store.log (src/store/pnp.js:324:13)
+
+    console.log
+      pnp client: last saved myPeerId some_saved_ID
+
+      at Store.log (src/store/pnp.js:328:13)
+
+    console.log
+      pnp client: peer created
+
+      at Store.log (src/store/pnp.js:338:13)
+
+    console.debug
+      Peer constructor calls [
+        [],
+        [
+          'some_saved_ID',
+          {
+            host: 'ambianic-pnp.herokuapp.com',
+            port: 443,
+            secure: true,
+            debug: 3
+          }
+        ]
+      ]
+
+      at Object.debug (tests/unit/store/pnp-actions.spec.js:398:13)
+
+    console.log
+      PNP Service disconnected. Reconnecting...
+
+      at Store.log (src/store/pnp.js:420:15)
+
+    console.log
+      pnp client: reconnecting peer...
+
+      at Store.log (src/store/pnp.js:355:13)
+
+    console.debug
+      #####>>>> PNP Service connection status: PNP_SERVICE_CONNECTING
+
+      at Store.debug (src/store/pnp.js:430:13)
+
+    console.debug
+      #####>>>>>>> Connecting to remote peer a_known_remote_peer_id
+
+      at Store.debug (src/store/pnp.js:431:13)
+
+    console.info
+      >>>>>> Opening new peer connection.
+
+      at Store.info (src/store/pnp.js:437:13)
+
+    console.debug
+      peerConnection.on(event) handlers all set.
+
+      at debug (src/store/pnp.js:300:11)
+
+    console.log
+      pnp client: creating peer
+
+      at Store.log (src/store/pnp.js:324:13)
+
+    console.log
+      pnp client: last saved myPeerId undefined
+
+      at Store.log (src/store/pnp.js:328:13)
+
+    console.log
+      pnp client: peer created
+
+      at Store.log (src/store/pnp.js:338:13)
+
+    console.debug
+      peer.on.mock.calls [
+        [ 'open', [Function (anonymous)] ],
+        [ 'disconnected', [Function (anonymous)] ],
+        [ 'close', [Function (anonymous)] ],
+        [ 'error', [Function (anonymous)] ],
+        [ 'connection', [Function (anonymous)] ]
+      ]
+
+      at Object.debug (tests/unit/store/pnp-actions.spec.js:480:13)
+
+    console.debug
+      onErrorCallback [ 'error', [Function (anonymous)] ]
+
+      at Object.debug (tests/unit/store/pnp-actions.spec.js:482:13)
+
+    console.log
+      PnP service connection error a_network_error
+
+      at Array.log (src/store/pnp.js:238:13)
+
+    console.log
+      pnp service connection error { err: 'a_network_error' }
+
+      at Array.log (src/store/pnp.js:245:13)
+
+    console.log
+      Will try to reconnect to PnP server...
+
+      at Array.log (src/store/pnp.js:246:13)
+
+    console.log
+      pnp client: creating peer
+
+      at Store.log (src/store/pnp.js:324:13)
+
+    console.log
+      pnp client: last saved myPeerId undefined
+
+      at Store.log (src/store/pnp.js:328:13)
+
+    console.log
+      pnp client: peer created
+
+      at Store.log (src/store/pnp.js:338:13)
+
+    console.log
+      pnp client: creating peer
+
+      at Store.log (src/store/pnp.js:324:13)
+
+    console.log
+      pnp client: last saved myPeerId undefined
+
+      at Store.log (src/store/pnp.js:328:13)
+
+    console.log
+      pnp client: peer created
+
+      at Store.log (src/store/pnp.js:338:13)
+
+    console.debug
+      peer.on.mock.calls [
+        [ 'open', [Function (anonymous)] ],
+        [ 'disconnected', [Function (anonymous)] ],
+        [ 'close', [Function (anonymous)] ],
+        [ 'error', [Function (anonymous)] ],
+        [ 'connection', [Function (anonymous)] ]
+      ]
+
+      at Object.debug (tests/unit/store/pnp-actions.spec.js:497:13)
+
+    console.debug
+      onConnectionCallback [ 'connection', [Function (anonymous)] ]
+
+      at Object.debug (tests/unit/store/pnp-actions.spec.js:499:13)
+
+    console.debug
+      #####>>>>> remote peer trying to establish connection
+
+      at Array.debug (src/store/pnp.js:254:13)
+
+    console.debug
+      peerConnection.on(event) handlers all set.
+
+      at debug (src/store/pnp.js:300:11)
+
+    console.log
+      pnp client: creating peer
+
+      at Store.log (src/store/pnp.js:324:13)
+
+    console.log
+      pnp client: last saved myPeerId undefined
+
+      at Store.log (src/store/pnp.js:328:13)
+
+    console.log
+      pnp client: peer created
+
+      at Store.log (src/store/pnp.js:338:13)
+
+    console.debug
+      onCloseCallback [ 'close', [Function (anonymous)] ]
+
+      at Object.debug (tests/unit/store/pnp-actions.spec.js:524:13)
+
+    console.log
+      Connection to PnP server destroyed
+
+      at Array.log (src/store/pnp.js:229:13)
+
+    console.log
+      Reconnecting to PnP server...
+
+      at Array.log (src/store/pnp.js:230:13)
+
+    console.log
+      pnp client: creating peer
+
+      at Store.log (src/store/pnp.js:324:13)
+
+    console.log
+      pnp client: last saved myPeerId undefined
+
+      at Store.log (src/store/pnp.js:328:13)
+
+    console.log
+      pnp client: peer created
+
+      at Store.log (src/store/pnp.js:338:13)
+
+    console.log
+      pnp client: creating peer
+
+      at Store.log (src/store/pnp.js:324:13)
+
+    console.log
+      pnp client: last saved myPeerId undefined
+
+      at Store.log (src/store/pnp.js:328:13)
+
+    console.log
+      pnp client: peer created
+
+      at Store.log (src/store/pnp.js:338:13)
+
+    console.log
+      pnp client: Connection lost. Please reconnect.
+
+      at Array.log (src/store/pnp.js:224:13)
+
+    console.log
+      pnp client: creating peer
+
+      at Store.log (src/store/pnp.js:324:13)
+
+    console.log
+      pnp client: last saved myPeerId undefined
+
+      at Store.log (src/store/pnp.js:328:13)
+
+    console.log
+      pnp client: peer created
+
+      at Store.log (src/store/pnp.js:338:13)
+
+    console.log
+      pnp client: Received null id from peer open
+
+      at Array.log (src/store/pnp.js:204:15)
+
+    console.log
+      pnp client: myPeerId:  a_saved_peer_id_567
+
+      at Array.log (src/store/pnp.js:216:13)
+
+    console.log
+      ######## >>>>> peerConnectionStatus = PEER_DISCONNECTED
+
+      at Store.log (src/store/pnp.js:370:13)
+
+    console.log
+      Discovering remote peer...
+
+      at log (src/store/pnp.js:379:15)
+
+    console.log
+      Remote peer Id found a_known_remote_peer_id
+
+      at log (src/store/pnp.js:400:17)
+
+    console.debug
+      #####>>>> PNP Service connection status: PNP_SERVICE_CONNECTED
+
+      at Store.debug (src/store/pnp.js:430:13)
+
+    console.debug
+      #####>>>>>>> Connecting to remote peer a_known_remote_peer_id
+
+      at Store.debug (src/store/pnp.js:431:13)
+
+    console.info
+      >>>>>> Opening new peer connection.
+
+      at Store.info (src/store/pnp.js:437:13)
+
+    console.debug
+      peerConnection.on(event) handlers all set.
+
+      at debug (src/store/pnp.js:300:11)
+
+    console.log
+      pnp client: creating peer
+
+      at Store.log (src/store/pnp.js:324:13)
+
+    console.log
+      pnp client: last saved myPeerId undefined
+
+      at Store.log (src/store/pnp.js:328:13)
+
+    console.log
+      pnp client: peer created
+
+      at Store.log (src/store/pnp.js:338:13)
+
+    console.debug
+      mutation.type PNP_SERVICE_CONNECTED
+
+      at debug (tests/unit/store/pnp-actions.spec.js:585:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload undefined
+
+      at debug (tests/unit/store/pnp-actions.spec.js:586:15)
+          at Array.forEach (<anonymous>)
+
+    console.log
+      pnp client: Service returned new peerId. Old, New a_saved_peer_id_567 a_known_peer_id_123
+
+      at Array.log (src/store/pnp.js:208:17)
+
+    console.debug
+      mutation.type NEW_PEER_ID
+
+      at debug (tests/unit/store/pnp-actions.spec.js:585:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload a_known_peer_id_123
+
+      at debug (tests/unit/store/pnp-actions.spec.js:586:15)
+          at Array.forEach (<anonymous>)
+
+    console.log
+      pnp client: myPeerId:  a_known_peer_id_123
+
+      at Array.log (src/store/pnp.js:216:13)
+
+    console.log
+      ######## >>>>> peerConnectionStatus = PEER_DISCONNECTED
+
+      at Store.log (src/store/pnp.js:370:13)
+
+    console.debug
+      mutation.type PEER_DISCOVERING
+
+      at debug (tests/unit/store/pnp-actions.spec.js:585:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload undefined
+
+      at debug (tests/unit/store/pnp-actions.spec.js:586:15)
+          at Array.forEach (<anonymous>)
+
+    console.log
+      Discovering remote peer...
+
+      at log (src/store/pnp.js:379:15)
+
+    console.log
+      Remote peer Id found a_known_remote_peer_id
+
+      at log (src/store/pnp.js:400:17)
+
+    console.debug
+      #####>>>> PNP Service connection status: PNP_SERVICE_CONNECTED
+
+      at Store.debug (src/store/pnp.js:430:13)
+
+    console.debug
+      #####>>>>>>> Connecting to remote peer a_known_remote_peer_id
+
+      at Store.debug (src/store/pnp.js:431:13)
+
+    console.info
+      >>>>>> Opening new peer connection.
+
+      at Store.info (src/store/pnp.js:437:13)
+
+    console.debug
+      peerConnection.on(event) handlers all set.
+
+      at debug (src/store/pnp.js:300:11)
+
+    console.log
+      pnp client: creating peer
+
+      at Store.log (src/store/pnp.js:324:13)
+
+    console.log
+      pnp client: last saved myPeerId undefined
+
+      at Store.log (src/store/pnp.js:328:13)
+
+    console.log
+      pnp client: peer created
+
+      at Store.log (src/store/pnp.js:338:13)
+
+    console.debug
+      peer.on.mock.calls [
+        [ 'open', [Function (anonymous)] ],
+        [ 'disconnected', [Function (anonymous)] ],
+        [ 'close', [Function (anonymous)] ],
+        [ 'error', [Function (anonymous)] ],
+        [ 'connection', [Function (anonymous)] ]
+      ]
+
+      at Object.debug (tests/unit/store/pnp-actions.spec.js:601:13)
+
+    console.debug
+      #####>>>>> remote peer trying to establish connection
+
+      at Array.debug (src/store/pnp.js:254:13)
+
+    console.debug
+      peerConnection.on(event) handlers all set.
+
+      at debug (src/store/pnp.js:300:11)
+
+    console.debug
+      Peer DataConnection is now open. Creating PeerFetch wrapper.
+
+      at Array.debug (src/store/pnp.js:271:13)
+
+    console.debug
+      PEER_FETCH: Setting PeerFetch instance.
+
+      at Store.debug (src/store/pnp.js:145:13)
+          at Array.forEach (<anonymous>)
+
+    console.log
+      pnp client: creating peer
+
+      at Store.log (src/store/pnp.js:324:13)
+
+    console.log
+      pnp client: last saved myPeerId undefined
+
+      at Store.log (src/store/pnp.js:328:13)
+
+    console.log
+      pnp client: peer created
+
+      at Store.log (src/store/pnp.js:338:13)
+
+    console.debug
+      peer.on.mock.calls [
+        [ 'open', [Function (anonymous)] ],
+        [ 'disconnected', [Function (anonymous)] ],
+        [ 'close', [Function (anonymous)] ],
+        [ 'error', [Function (anonymous)] ],
+        [ 'connection', [Function (anonymous)] ]
+      ]
+
+      at Object.debug (tests/unit/store/pnp-actions.spec.js:626:13)
+
+    console.debug
+      #####>>>>> remote peer trying to establish connection
+
+      at Array.debug (src/store/pnp.js:254:13)
+
+    console.debug
+      peerConnection.on(event) handlers all set.
+
+      at debug (src/store/pnp.js:300:11)
+
+    console.debug
+      #########>>>>>>>>> p2p connection closed
+
+      at Array.debug (src/store/pnp.js:285:13)
+
+    console.debug
+      Will try to open a new peer connection shortly.
+
+      at Array.debug (src/store/pnp.js:286:13)
+
+    console.log
+      ######## >>>>> peerConnectionStatus = PEER_DISCONNECTED
+
+      at Store.log (src/store/pnp.js:370:13)
+
+    console.log
+      Discovering remote peer...
+
+      at log (src/store/pnp.js:379:15)
+
+    console.log
+      PNP Service disconnected. Reconnecting...
+
+      at log (src/store/pnp.js:383:17)
+
+    console.log
+      PNP Service still not connected. Will retry shortly.
+
+      at log (src/store/pnp.js:393:19)
+
+    console.log
+      pnp client: creating peer
+
+      at Store.log (src/store/pnp.js:324:13)
+
+    console.log
+      pnp client: last saved myPeerId undefined
+
+      at Store.log (src/store/pnp.js:328:13)
+
+    console.log
+      pnp client: peer created
+
+      at Store.log (src/store/pnp.js:338:13)
+
+    console.debug
+      peer.on.mock.calls [
+        [ 'open', [Function (anonymous)] ],
+        [ 'disconnected', [Function (anonymous)] ],
+        [ 'close', [Function (anonymous)] ],
+        [ 'error', [Function (anonymous)] ],
+        [ 'connection', [Function (anonymous)] ]
+      ]
+
+      at Object.debug (tests/unit/store/pnp-actions.spec.js:651:13)
+
+    console.debug
+      #####>>>>> remote peer trying to establish connection
+
+      at Array.debug (src/store/pnp.js:254:13)
+
+    console.debug
+      peerConnection.on(event) handlers all set.
+
+      at debug (src/store/pnp.js:300:11)
+
+    console.info
+      Error in connection to remote peer ID a_remote_peer_id undefined
+
+      at Array.info (src/store/pnp.js:296:13)
+
+    console.info
+      ######>>>>>>> p2p connection error undefined
+
+      at Store.info (src/store/pnp.js:552:13)
+
+    console.info
+      Problematic remote peer ID: a_remote_peer_id
+
+      at Store.info (src/store/pnp.js:553:13)
+
+    console.info
+      Will try a new connection shortly.
+
+      at Store.info (src/store/pnp.js:556:13)
+
+    console.log
+      ######## >>>>> peerConnectionStatus = PEER_DISCONNECTED
+
+      at Store.log (src/store/pnp.js:370:13)
+
+    console.log
+      Discovering remote peer...
+
+      at log (src/store/pnp.js:379:15)
+
+    console.log
+      PNP Service disconnected. Reconnecting...
+
+      at log (src/store/pnp.js:383:17)
+
+    console.log
+      PNP Service still not connected. Will retry shortly.
+
+      at log (src/store/pnp.js:393:19)
+
+    console.debug
+      mutation.type PEER_AUTHENTICATING
+
+      at debug (tests/unit/store/pnp-actions.spec.js:712:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload undefined
+
+      at debug (tests/unit/store/pnp-actions.spec.js:713:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.type USER_MESSAGE
+
+      at debug (tests/unit/store/pnp-actions.spec.js:712:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload Authenticating remote peer: a_remote_peer_id
+
+      at debug (tests/unit/store/pnp-actions.spec.js:713:15)
+          at Array.forEach (<anonymous>)
+
+    console.log
+      Authenticating remote Peer ID:  a_remote_peer_id
+
+      at Store.log (src/store/pnp.js:473:13)
+
+    console.debug
+      mock get { url: 'http://localhost:8778' }
+
+      at PeerFetch.debug (tests/unit/store/pnp-actions.spec.js:688:17)
+
+    console.log
+      PEER_AUTHENTICATE {
+        request: { url: 'http://localhost:8778' },
+        response: [Function: mockConstructor] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          header: [Function: mockConstructor] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)],
+            status: 200
+          }
+        }
+      }
+
+      at Store.log (src/store/pnp.js:480:15)
+
+    console.log
+      PEER_AUTHENTICATE status OK
+
+      at Store.log (src/store/pnp.js:482:17)
+
+    console.debug
+      mock textDecode undefined
+
+      at PeerFetch.debug (tests/unit/store/pnp-actions.spec.js:698:17)
+
+    console.log
+      PEER_AUTHENTICATE response body OK = true
+
+      at Store.log (src/store/pnp.js:487:17)
+
+    console.debug
+      mutation.type PEER_CONNECTED
+
+      at debug (tests/unit/store/pnp-actions.spec.js:712:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload [Function: mockConstructor] {
+        _isMockFunction: true,
+        getMockImplementation: [Function (anonymous)],
+        mock: [Getter/Setter],
+        mockClear: [Function (anonymous)],
+        mockReset: [Function (anonymous)],
+        mockRestore: [Function (anonymous)],
+        mockReturnValueOnce: [Function (anonymous)],
+        mockResolvedValueOnce: [Function (anonymous)],
+        mockRejectedValueOnce: [Function (anonymous)],
+        mockReturnValue: [Function (anonymous)],
+        mockResolvedValue: [Function (anonymous)],
+        mockRejectedValue: [Function (anonymous)],
+        mockImplementationOnce: [Function (anonymous)],
+        mockImplementation: [Function (anonymous)],
+        mockReturnThis: [Function (anonymous)],
+        mockName: [Function (anonymous)],
+        getMockName: [Function (anonymous)],
+        dataChannel: [Function: mockConstructor] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)]
+        },
+        peer: 'a_remote_peer_id'
+      }
+
+      at debug (tests/unit/store/pnp-actions.spec.js:713:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      DataChannel transport capabilities [Function: mockConstructor] {
+        _isMockFunction: true,
+        getMockImplementation: [Function (anonymous)],
+        mock: [Getter/Setter],
+        mockClear: [Function (anonymous)],
+        mockReset: [Function (anonymous)],
+        mockRestore: [Function (anonymous)],
+        mockReturnValueOnce: [Function (anonymous)],
+        mockResolvedValueOnce: [Function (anonymous)],
+        mockRejectedValueOnce: [Function (anonymous)],
+        mockReturnValue: [Function (anonymous)],
+        mockResolvedValue: [Function (anonymous)],
+        mockRejectedValue: [Function (anonymous)],
+        mockImplementationOnce: [Function (anonymous)],
+        mockImplementation: [Function (anonymous)],
+        mockReturnThis: [Function (anonymous)],
+        mockName: [Function (anonymous)],
+        getMockName: [Function (anonymous)]
+      }
+
+      at Store.debug (src/store/pnp.js:505:13)
+
+    console.debug
+      mutation.type PEER_AUTHENTICATING
+
+      at debug (tests/unit/store/pnp-actions.spec.js:762:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload undefined
+
+      at debug (tests/unit/store/pnp-actions.spec.js:763:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.type USER_MESSAGE
+
+      at debug (tests/unit/store/pnp-actions.spec.js:762:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload Authenticating remote peer: a_new_remote_peer_id
+
+      at debug (tests/unit/store/pnp-actions.spec.js:763:15)
+          at Array.forEach (<anonymous>)
+
+    console.log
+      Authenticating remote Peer ID:  a_new_remote_peer_id
+
+      at Store.log (src/store/pnp.js:473:13)
+
+    console.debug
+      mock get { url: 'http://localhost:8778' }
+
+      at PeerFetch.debug (tests/unit/store/pnp-actions.spec.js:738:17)
+
+    console.log
+      PEER_AUTHENTICATE {
+        request: { url: 'http://localhost:8778' },
+        response: [Function: mockConstructor] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)],
+          header: [Function: mockConstructor] {
+            _isMockFunction: true,
+            getMockImplementation: [Function (anonymous)],
+            mock: [Getter/Setter],
+            mockClear: [Function (anonymous)],
+            mockReset: [Function (anonymous)],
+            mockRestore: [Function (anonymous)],
+            mockReturnValueOnce: [Function (anonymous)],
+            mockResolvedValueOnce: [Function (anonymous)],
+            mockRejectedValueOnce: [Function (anonymous)],
+            mockReturnValue: [Function (anonymous)],
+            mockResolvedValue: [Function (anonymous)],
+            mockRejectedValue: [Function (anonymous)],
+            mockImplementationOnce: [Function (anonymous)],
+            mockImplementation: [Function (anonymous)],
+            mockReturnThis: [Function (anonymous)],
+            mockName: [Function (anonymous)],
+            getMockName: [Function (anonymous)],
+            status: 200
+          }
+        }
+      }
+
+      at Store.log (src/store/pnp.js:480:15)
+
+    console.log
+      PEER_AUTHENTICATE status OK
+
+      at Store.log (src/store/pnp.js:482:17)
+
+    console.debug
+      mock textDecode undefined
+
+      at PeerFetch.debug (tests/unit/store/pnp-actions.spec.js:748:17)
+
+    console.log
+      PEER_AUTHENTICATE response body OK = true
+
+      at Store.log (src/store/pnp.js:487:17)
+
+    console.debug
+      mutation.type PEER_CONNECTED
+
+      at debug (tests/unit/store/pnp-actions.spec.js:762:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload [Function: mockConstructor] {
+        _isMockFunction: true,
+        getMockImplementation: [Function (anonymous)],
+        mock: [Getter/Setter],
+        mockClear: [Function (anonymous)],
+        mockReset: [Function (anonymous)],
+        mockRestore: [Function (anonymous)],
+        mockReturnValueOnce: [Function (anonymous)],
+        mockResolvedValueOnce: [Function (anonymous)],
+        mockRejectedValueOnce: [Function (anonymous)],
+        mockReturnValue: [Function (anonymous)],
+        mockResolvedValue: [Function (anonymous)],
+        mockRejectedValue: [Function (anonymous)],
+        mockImplementationOnce: [Function (anonymous)],
+        mockImplementation: [Function (anonymous)],
+        mockReturnThis: [Function (anonymous)],
+        mockName: [Function (anonymous)],
+        getMockName: [Function (anonymous)],
+        dataChannel: [Function: mockConstructor] {
+          _isMockFunction: true,
+          getMockImplementation: [Function (anonymous)],
+          mock: [Getter/Setter],
+          mockClear: [Function (anonymous)],
+          mockReset: [Function (anonymous)],
+          mockRestore: [Function (anonymous)],
+          mockReturnValueOnce: [Function (anonymous)],
+          mockResolvedValueOnce: [Function (anonymous)],
+          mockRejectedValueOnce: [Function (anonymous)],
+          mockReturnValue: [Function (anonymous)],
+          mockResolvedValue: [Function (anonymous)],
+          mockRejectedValue: [Function (anonymous)],
+          mockImplementationOnce: [Function (anonymous)],
+          mockImplementation: [Function (anonymous)],
+          mockReturnThis: [Function (anonymous)],
+          mockName: [Function (anonymous)],
+          getMockName: [Function (anonymous)]
+        },
+        peer: 'a_new_remote_peer_id'
+      }
+
+      at debug (tests/unit/store/pnp-actions.spec.js:763:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      NEW_REMOTE_PEER_ID: Setting state.remotePeerId to :  a_new_remote_peer_id
+
+      at Store.debug (src/store/pnp.js:135:13)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.type NEW_REMOTE_PEER_ID
+
+      at debug (tests/unit/store/pnp-actions.spec.js:762:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload a_new_remote_peer_id
+
+      at debug (tests/unit/store/pnp-actions.spec.js:763:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      DataChannel transport capabilities [Function: mockConstructor] {
+        _isMockFunction: true,
+        getMockImplementation: [Function (anonymous)],
+        mock: [Getter/Setter],
+        mockClear: [Function (anonymous)],
+        mockReset: [Function (anonymous)],
+        mockRestore: [Function (anonymous)],
+        mockReturnValueOnce: [Function (anonymous)],
+        mockResolvedValueOnce: [Function (anonymous)],
+        mockRejectedValueOnce: [Function (anonymous)],
+        mockReturnValue: [Function (anonymous)],
+        mockResolvedValue: [Function (anonymous)],
+        mockRejectedValue: [Function (anonymous)],
+        mockImplementationOnce: [Function (anonymous)],
+        mockImplementation: [Function (anonymous)],
+        mockReturnThis: [Function (anonymous)],
+        mockName: [Function (anonymous)],
+        getMockName: [Function (anonymous)]
+      }
+
+      at Store.debug (src/store/pnp.js:505:13)
+
+    console.debug
+      window.localStorage Storage {}
+
+      at Object.debug (tests/unit/store/pnp-actions.spec.js:770:13)
+
+    console.debug
+      mutation.type PEER_AUTHENTICATING
+
+      at debug (tests/unit/store/pnp-actions.spec.js:799:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload undefined
+
+      at debug (tests/unit/store/pnp-actions.spec.js:800:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.type USER_MESSAGE
+
+      at debug (tests/unit/store/pnp-actions.spec.js:799:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload Authenticating remote peer: a_new_remote_peer_id
+
+      at debug (tests/unit/store/pnp-actions.spec.js:800:15)
+          at Array.forEach (<anonymous>)
+
+    console.log
+      Authenticating remote Peer ID:  a_new_remote_peer_id
+
+      at Store.log (src/store/pnp.js:473:13)
+
+    console.log
+      peerFetch.get() Error while connecting to remote peer ID: a_new_remote_peer_id Error: Problem occured during peer discovery.
+          at PeerFetch.<anonymous> (/workspace/ambianic-ui/tests/unit/store/pnp-actions.spec.js:790:15)
+          at /workspace/ambianic-ui/node_modules/jest-mock/build/index.js:480:41
+          at PeerFetch.<anonymous> (/workspace/ambianic-ui/node_modules/jest-mock/build/index.js:489:13)
+          at PeerFetch.mockConstructor (/workspace/ambianic-ui/node_modules/jest-mock/build/index.js:182:19)
+          at PeerFetch.get (eval at _createMockFunction (/workspace/ambianic-ui/node_modules/jest-mock/build/index.js:674:31), <anonymous>:3:47)
+          at /workspace/ambianic-ui/node_modules/jest-mock/build/index.js:485:35
+          at PeerFetch.<anonymous> (/workspace/ambianic-ui/node_modules/jest-mock/build/index.js:489:13)
+          at PeerFetch.mockConstructor (/workspace/ambianic-ui/node_modules/jest-mock/build/index.js:182:19)
+          at PeerFetch.get (eval at _createMockFunction (/workspace/ambianic-ui/node_modules/jest-mock/build/index.js:674:31), <anonymous>:3:47)
+          at Store.get (/workspace/ambianic-ui/src/store/pnp.js:479:46)
+          at Array.wrappedActionHandler (/workspace/ambianic-ui/node_modules/vuex/dist/vuex.common.js:849:23)
+          at Store.dispatch (/workspace/ambianic-ui/node_modules/vuex/dist/vuex.common.js:514:15)
+          at Store.boundDispatch [as dispatch] (/workspace/ambianic-ui/node_modules/vuex/dist/vuex.common.js:404:21)
+          at Object.dispatch (/workspace/ambianic-ui/tests/unit/store/pnp-actions.spec.js:802:17)
+          at Object.asyncJestTest (/workspace/ambianic-ui/node_modules/jest/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:106:37)
+          at /workspace/ambianic-ui/node_modules/jest/node_modules/jest-jasmine2/build/queueRunner.js:45:12
+          at new Promise (<anonymous>)
+          at mapper (/workspace/ambianic-ui/node_modules/jest/node_modules/jest-jasmine2/build/queueRunner.js:28:19)
+          at /workspace/ambianic-ui/node_modules/jest/node_modules/jest-jasmine2/build/queueRunner.js:75:41
+          at processTicksAndRejections (node:internal/process/task_queues:94:5)
+
+      at Store.log (src/store/pnp.js:490:15)
+
+    console.debug
+      mutation.type USER_MESSAGE
+
+      at debug (tests/unit/store/pnp-actions.spec.js:799:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload Remote peer authentication failed.
+
+      at debug (tests/unit/store/pnp-actions.spec.js:800:15)
+          at Array.forEach (<anonymous>)
+
+    console.info
+      ######>>>>>>> p2p connection error Remote peer authentication faied.
+
+      at Store.info (src/store/pnp.js:552:13)
+
+    console.info
+      Problematic remote peer ID: a_new_remote_peer_id
+
+      at Store.info (src/store/pnp.js:553:13)
+
+    console.debug
+      mutation.type PEER_CONNECTION_ERROR
+
+      at debug (tests/unit/store/pnp-actions.spec.js:799:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload Remote peer authentication faied.
+
+      at debug (tests/unit/store/pnp-actions.spec.js:800:15)
+          at Array.forEach (<anonymous>)
+
+    console.info
+      Will try a new connection shortly.
+
+      at Store.info (src/store/pnp.js:556:13)
+
+    console.debug
+      mutation.type PEER_DISCONNECTED
+
+      at debug (tests/unit/store/pnp-actions.spec.js:799:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload undefined
+
+      at debug (tests/unit/store/pnp-actions.spec.js:800:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      DataChannel transport capabilities [Function: mockConstructor] {
+        _isMockFunction: true,
+        getMockImplementation: [Function (anonymous)],
+        mock: [Getter/Setter],
+        mockClear: [Function (anonymous)],
+        mockReset: [Function (anonymous)],
+        mockRestore: [Function (anonymous)],
+        mockReturnValueOnce: [Function (anonymous)],
+        mockResolvedValueOnce: [Function (anonymous)],
+        mockRejectedValueOnce: [Function (anonymous)],
+        mockReturnValue: [Function (anonymous)],
+        mockResolvedValue: [Function (anonymous)],
+        mockRejectedValue: [Function (anonymous)],
+        mockImplementationOnce: [Function (anonymous)],
+        mockImplementation: [Function (anonymous)],
+        mockReturnThis: [Function (anonymous)],
+        mockName: [Function (anonymous)],
+        getMockName: [Function (anonymous)]
+      }
+
+      at Store.debug (src/store/pnp.js:505:13)
+
+    console.debug
+      NEW_REMOTE_PEER_ID: Setting state.remotePeerId to :  a_new_remote_peer_id
+
+      at Store.debug (src/store/pnp.js:135:13)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.type NEW_REMOTE_PEER_ID
+
+      at debug (tests/unit/store/pnp-actions.spec.js:821:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload a_new_remote_peer_id
+
+      at debug (tests/unit/store/pnp-actions.spec.js:822:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.type PEER_DISCONNECTED
+
+      at debug (tests/unit/store/pnp-actions.spec.js:821:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload undefined
+
+      at debug (tests/unit/store/pnp-actions.spec.js:822:15)
+          at Array.forEach (<anonymous>)
+
+    console.log
+      PNP Service disconnected. Reconnecting...
+
+      at Store.log (src/store/pnp.js:420:15)
+
+    console.log
+      pnp client: reconnecting peer...
+
+      at Store.log (src/store/pnp.js:355:13)
+
+    console.log
+      BUG WORKAROUND: Peer lost ID. Resetting to last known ID.
+
+      at Store.log (src/store/pnp.js:358:15)
+
+    console.debug
+      mutation.type PNP_SERVICE_CONNECTING
+
+      at debug (tests/unit/store/pnp-actions.spec.js:821:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload undefined
+
+      at debug (tests/unit/store/pnp-actions.spec.js:822:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      #####>>>> PNP Service connection status: PNP_SERVICE_CONNECTING
+
+      at Store.debug (src/store/pnp.js:430:13)
+
+    console.debug
+      #####>>>>>>> Connecting to remote peer a_new_remote_peer_id
+
+      at Store.debug (src/store/pnp.js:431:13)
+
+    console.info
+      >>>>>> Opening new peer connection.
+
+      at Store.info (src/store/pnp.js:437:13)
+
+    console.debug
+      mutation.type PEER_CONNECTING
+
+      at debug (tests/unit/store/pnp-actions.spec.js:821:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload undefined
+
+      at debug (tests/unit/store/pnp-actions.spec.js:822:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      peerConnection.on(event) handlers all set.
+
+      at debug (src/store/pnp.js:300:11)
+
+    console.debug
+      mutation.type PEER_DISCONNECTED
+
+      at debug (tests/unit/store/pnp-actions.spec.js:848:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload undefined
+
+      at debug (tests/unit/store/pnp-actions.spec.js:849:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      REMOTE_PEER_ID_REMOVED: Removing remote Peer Id from local storage
+
+      at Store.debug (src/store/pnp.js:140:13)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.type REMOTE_PEER_ID_REMOVED
+
+      at debug (tests/unit/store/pnp-actions.spec.js:848:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload undefined
+
+      at debug (tests/unit/store/pnp-actions.spec.js:849:15)
+          at Array.forEach (<anonymous>)
+
+    console.log
+      ######## >>>>> peerConnectionStatus = PEER_DISCONNECTED
+
+      at Store.log (src/store/pnp.js:370:13)
+
+    console.debug
+      mutation.type PEER_DISCOVERING
+
+      at debug (tests/unit/store/pnp-actions.spec.js:848:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload undefined
+
+      at debug (tests/unit/store/pnp-actions.spec.js:849:15)
+          at Array.forEach (<anonymous>)
+
+    console.log
+      Discovering remote peer...
+
+      at log (src/store/pnp.js:379:15)
+
+    console.log
+      PNP Service disconnected. Reconnecting...
+
+      at log (src/store/pnp.js:383:17)
+
+    console.log
+      pnp client: reconnecting peer...
+
+      at Store.log (src/store/pnp.js:355:13)
+
+    console.log
+      BUG WORKAROUND: Peer lost ID. Resetting to last known ID.
+
+      at Store.log (src/store/pnp.js:358:15)
+
+    console.debug
+      mutation.type PNP_SERVICE_CONNECTING
+
+      at debug (tests/unit/store/pnp-actions.spec.js:848:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload undefined
+
+      at debug (tests/unit/store/pnp-actions.spec.js:849:15)
+          at Array.forEach (<anonymous>)
+
+    console.log
+      PNP Service still not connected. Will retry shortly.
+
+      at log (src/store/pnp.js:393:19)
+
+    console.debug
+      Error while closing peer DataConnection. Error: Error while closing peerConnection.
+          at Function.<anonymous> (/workspace/ambianic-ui/tests/unit/store/pnp-actions.spec.js:869:15)
+          at /workspace/ambianic-ui/node_modules/jest-mock/build/index.js:480:41
+          at Function.<anonymous> (/workspace/ambianic-ui/node_modules/jest-mock/build/index.js:489:13)
+          at Function.mockConstructor [as close] (/workspace/ambianic-ui/node_modules/jest-mock/build/index.js:182:19)
+          at Store.close (/workspace/ambianic-ui/src/store/pnp.js:541:16)
+          at Array.wrappedActionHandler (/workspace/ambianic-ui/node_modules/vuex/dist/vuex.common.js:849:23)
+          at Store.dispatch (/workspace/ambianic-ui/node_modules/vuex/dist/vuex.common.js:514:15)
+          at Store.boundDispatch [as dispatch] (/workspace/ambianic-ui/node_modules/vuex/dist/vuex.common.js:404:21)
+          at Object.dispatch (/workspace/ambianic-ui/tests/unit/store/pnp-actions.spec.js:879:17)
+          at Object.asyncJestTest (/workspace/ambianic-ui/node_modules/jest/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:106:37)
+          at /workspace/ambianic-ui/node_modules/jest/node_modules/jest-jasmine2/build/queueRunner.js:45:12
+          at new Promise (<anonymous>)
+          at mapper (/workspace/ambianic-ui/node_modules/jest/node_modules/jest-jasmine2/build/queueRunner.js:28:19)
+          at /workspace/ambianic-ui/node_modules/jest/node_modules/jest-jasmine2/build/queueRunner.js:75:41
+          at processTicksAndRejections (node:internal/process/task_queues:94:5)
+
+      at Store.debug (src/store/pnp.js:543:19)
+
+    console.debug
+      mutation.type PEER_DISCONNECTED
+
+      at debug (tests/unit/store/pnp-actions.spec.js:876:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload undefined
+
+      at debug (tests/unit/store/pnp-actions.spec.js:877:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      REMOTE_PEER_ID_REMOVED: Removing remote Peer Id from local storage
+
+      at Store.debug (src/store/pnp.js:140:13)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.type REMOTE_PEER_ID_REMOVED
+
+      at debug (tests/unit/store/pnp-actions.spec.js:876:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload undefined
+
+      at debug (tests/unit/store/pnp-actions.spec.js:877:15)
+          at Array.forEach (<anonymous>)
+
+    console.log
+      ######## >>>>> peerConnectionStatus = PEER_DISCONNECTED
+
+      at Store.log (src/store/pnp.js:370:13)
+
+    console.debug
+      mutation.type PEER_DISCOVERING
+
+      at debug (tests/unit/store/pnp-actions.spec.js:876:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload undefined
+
+      at debug (tests/unit/store/pnp-actions.spec.js:877:15)
+          at Array.forEach (<anonymous>)
+
+    console.log
+      Discovering remote peer...
+
+      at log (src/store/pnp.js:379:15)
+
+    console.log
+      PNP Service disconnected. Reconnecting...
+
+      at log (src/store/pnp.js:383:17)
+
+    console.log
+      pnp client: reconnecting peer...
+
+      at Store.log (src/store/pnp.js:355:13)
+
+    console.log
+      BUG WORKAROUND: Peer lost ID. Resetting to last known ID.
+
+      at Store.log (src/store/pnp.js:358:15)
+
+    console.debug
+      mutation.type PNP_SERVICE_CONNECTING
+
+      at debug (tests/unit/store/pnp-actions.spec.js:876:15)
+          at Array.forEach (<anonymous>)
+
+    console.debug
+      mutation.payload undefined
+
+      at debug (tests/unit/store/pnp-actions.spec.js:877:15)
+          at Array.forEach (<anonymous>)
+
+    console.log
+      PNP Service still not connected. Will retry shortly.
+
+      at log (src/store/pnp.js:393:19)
+
+-------------------------|---------|----------|---------|---------|---------------------
+File                     | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s   
+-------------------------|---------|----------|---------|---------|---------------------
+All files                |   38.34 |    29.03 |   29.53 |   38.61 |                     
+ src                     |      50 |      100 |     100 |      50 |                     
+  App.vue                |       0 |      100 |     100 |       0 | 19                  
+  config.js              |     100 |      100 |     100 |     100 |                     
+ src/components          |       0 |        0 |       0 |       0 |                     
+  AppFrame.vue           |       0 |      100 |       0 |       0 | 29-36               
+  DetectionBoxes.vue     |       0 |        0 |       0 |       0 | 43-96               
+  NavBar.vue             |       0 |      100 |       0 |       0 | 172-228             
+  UpdateNotification.vue |       0 |      100 |       0 |       0 | 21-35               
+ src/components/shared   |       0 |      100 |       0 |       0 |                     
+  ListItem.vue           |       0 |      100 |       0 |       0 | 96                  
+ src/remote              |       0 |        0 |       0 |       0 |                     
+  peer-fetch.js          |       0 |        0 |       0 |       0 | 8-301               
+  peer-room.js           |       0 |        0 |       0 |       0 | 10-84               
+ src/store               |   98.35 |    86.54 |   97.78 |     100 |                     
+  action-types.js        |     100 |      100 |     100 |     100 |                     
+  mutation-types.js      |     100 |      100 |     100 |     100 |                     
+  pnp.js                 |   98.16 |    86.54 |   97.78 |     100 | 207-352,481,537-539 
+ src/views               |       0 |        0 |       0 |       0 |                     
+  About.vue              |       0 |      100 |       0 |       0 | 74-83               
+  Feedback.vue           |       0 |      100 |     100 |       0 | 41                  
+  Help.vue               |       0 |      100 |     100 |       0 | 61                  
+  Home.vue               |       0 |        0 |       0 |       0 | 84-106              
+  Onboarding.vue         |       0 |        0 |       0 |       0 | 586-724             
+  Settings.vue           |       0 |        0 |       0 |       0 | 268-359             
+  Timeline.vue           |       0 |        0 |       0 |       0 | 227-467             
+-------------------------|---------|----------|---------|---------|---------------------
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       1 failed, 45 passed, 46 total
+Snapshots:   0 total
+Time:        9.248 s
+Ran all test suites matching /tests\/unit\/store\//i.
+npm ERR! code ELIFECYCLE
+npm ERR! errno 1
+npm ERR! ambianic-ui@2.14.1 test:unit: `jest "tests/unit/store/"`
+npm ERR! Exit status 1
+npm ERR! 
+npm ERR! Failed at the ambianic-ui@2.14.1 test:unit script.
+npm ERR! This is probably not a problem with npm. There is likely additional logging output above.
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /home/gitpod/.npm/_logs/2021-04-23T16_37_44_160Z-debug.log

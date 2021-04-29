@@ -29,8 +29,9 @@ export class PeerRoom {
   async _restCall ({ method = 'GET', path }) {
     console.log('REST Call', method, path)
     const url = this._buildUrl(path)
+    let response
     try {
-      const response = await fetch(url, { method })
+      response = await fetch(url, { method })
       if (response.status !== 200) {
         throw new Error(`
           REST Error for ${path}.
@@ -42,6 +43,7 @@ export class PeerRoom {
     } catch (error) {
       const msg = `REST call failed for ${path}`
       console.error(msg, error)
+      console.error('Response: ', response)
       throw new Error(msg, error)
     }
   }
