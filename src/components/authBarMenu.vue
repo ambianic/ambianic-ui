@@ -165,14 +165,15 @@
                   <img
                     :src="user.picture || '@/assets/user-placeholder.png'"
                     :alt="user.name"
+                    data-cy="user_avatar"
                   >
                 </v-list-item-avatar>
 
                 <v-list-item-content>
-                  <v-list-item-title>
+                  <v-list-item-title data-cy="fullname" >
                     {{ user.name }}
                   </v-list-item-title>
-                  <v-list-item-subtitle>
+                  <v-list-item-subtitle data-cy="email" >
                     {{ user.email }}
                   </v-list-item-subtitle>
                 </v-list-item-content>

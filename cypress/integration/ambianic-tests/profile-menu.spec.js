@@ -6,19 +6,31 @@ context('Profile menu', () => {
   })
 
   it('Should start authentication with Auth0', () => {
-    cy.get('[data-cy=display-profile]').click()
+    cy.window().then(win => {
+      win.__store__.dispatch("SAVE_AUTHENTICATED_USER", {
+        user: {
+          email: 'test@mail.com',
+          sub: 'auth0|12121212',
+          name: 'test user'
+        },
+        loadingAuth: false,
+        isAuthenticated: true
+      })
+    })
 
+    cy.get('[data-cy=profile-toggle]').click()
   })
 
   it('Confirm Profile Card Elements', () => {
-    cy.get('[data-cy=profile-toggle]').click()
-    cy.get('.v-list-item__title')
-      .should('contain.text', 'Test User')
-  
-    cy.get('.v-list-item__subtitle')
-      .should('contain.text', 'test@gmail.com')
-  
-    cy.get('[data-cy=logout-button]').should('be.visible')
+      expect(cy.get('[data-cy=user_avatar]')).exist
+
+      cy.get('[data-cy=fullname]')
+        .should('contain.text', 'test user')
+    
+      cy.get('[data-cy=email]')
+        .should('contain.text', 'test@mail.com')
+    
+      cy.get('[data-cy=logout-button]').should('be.visible')
   })
   
   it('Should open subscription modal', () => {
