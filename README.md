@@ -56,6 +56,14 @@ cd ambianic-ui
 npm install
 ```
 
+### Enviornment Variables
+To use the notifications feature, the PWA requires the `VUE_APP_FUNCTIONS_ENDPOINT` which should point to the [Cloud API](https://github.com/ambianic/ambianic-subscriptions) either running in production or locally.
+
+```
+VUE_APP_FUNCTIONS_ENDPOINT=<CLOUD_API_ENDPOINT>/.netlify/functions
+```
+
+
 ### Compiles and hot-reloads for development
 ```
 npm run serve
