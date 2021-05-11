@@ -1,11 +1,11 @@
 import { PeerRoom } from '@/remote/peer-room.js'
-import fetchMock, { enableFetchMocks } from 'jest-fetch-mock'
+import fetchMock from 'jest-fetch-mock'
 
 describe('PeerRoom class coverage - p2p communication layer', () => {
 // global
 
   beforeAll(() => {
-    enableFetchMocks()
+    fetchMock.enableMocks()
   })
 
   // mock peer instance
