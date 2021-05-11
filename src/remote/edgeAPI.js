@@ -66,7 +66,8 @@ export class EdgeAPI {
       var urlCreator = window.URL || window.webkitURL
       imageUrl = urlCreator.createObjectURL(blob)
     } catch (error) {
-      console.error('Error fetching edge timeline', { error, request })
+      console.error('Error fetching image file from edge', { error, request })
+      imageUrl = undefined
     }
     return imageUrl
   }
