@@ -67,7 +67,6 @@
     <div v-if="!loadingAuth">
       <SubscriptionDialog
         id="subscription"
-        :email="isSubscribed ? user.email : 'test@gmail.com'"
       />
 
       <EdgeAuth0Sync

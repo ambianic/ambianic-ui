@@ -67,7 +67,7 @@
             v-model="emailAddress"
             type="text"
             label="Billing Email Address"
-            :placeholder="this.email"
+            :placeholder="this.user.email"
             id="emailAddress"
             outlined
             dense
@@ -190,26 +190,19 @@ export default {
   name: 'SubcriptionDialog',
   data: () => ({
     showInputs: false,
-    cardNumber: '5200828282828210',
-    expiryMonth: '8',
-    expiryYear: '2022',
-    cvc: '451',
-    fullName: 'Test user',
+    cardNumber: '',
+    expiryMonth: '',
+    expiryYear: '',
+    cvc: '',
+    fullName: '',
     subscriptionError: null,
 
-    // TODO: change later
-    cardNumberIsValid: true,
+    cardNumberIsValid: false,
     emailAddress: '',
     loading: false
   }),
   created () {
     this.emailAddress = this.email
-  },
-  props: {
-    email: {
-      type: String,
-      default: ''
-    }
   },
   methods: {
     ...mapActions([HANDLE_SUBSCRIPTION_DIALOG, FETCH_USER_SUBSCRIPTION, HANDLE_EDGE_SYNC_DIALOG]),
@@ -220,7 +213,7 @@ export default {
         const req = await fetch(`${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscribe`, {
           method: 'POST',
           body: JSON.stringify({
-            email: this.email,
+            email: this.user.email,
             number: this.cardNumber,
             cvc: this.cvc,
             exp_year: this.expiryYear,
@@ -265,11 +258,6 @@ export default {
         console.log(error, 'error saving stripeid')
         this.$store.dispatch(HANDLE_SUBSCRIPTION_DIALOG, false)
       }
-    },
-    validateCardNumber (number) {
-      if (cardValidator.test(number)) {
-        this.cardNumberIsValid = true
-      }
     }
   },
   computed: {
@@ -280,7 +268,7 @@ export default {
   },
   watch: {
     cardNumber: function (numbers) {
-      this.validateCardNumber(numbers)
+      this.cardNumberIsValid = cardValidator.test(numbers)
     }
   }
 }

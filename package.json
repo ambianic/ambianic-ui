@@ -15,9 +15,8 @@
     "test": "npm run test:unit && npm run test:e2e"
   },
   "dependencies": {
-    "@auth0/auth0-spa-js": "^1.14.0",
+    "@auth0/auth0-spa-js": "^1.15.0",
     "@vue/babel-preset-app": "^4.5.10",
-    "codecov": "^3.7.0",
     "compression-webpack-plugin": "^6.0.4",
     "idb": "^6.0.0",
     "konva": "^7.1.4",
