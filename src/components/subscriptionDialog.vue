@@ -53,8 +53,9 @@
 
           <v-text-field
             v-model="cardNumber"
-            type="text"
+            type="number"
             label="Card Number"
+            :rules="[rules.required]"
             placeholder="Enter Number on Card"
             id="cardNumber"
             outlined
@@ -65,7 +66,7 @@
 
           <v-text-field
             v-model="emailAddress"
-            type="text"
+            type="email"
             label="Billing Email Address"
             :placeholder="this.user.email"
             id="emailAddress"
@@ -84,6 +85,7 @@
                 maxlength="3"
                 placeholder="CVC"
                 id="cvc"
+                :rules="[rules.required]"
                 outlined
                 dense
                 class="input"
@@ -97,6 +99,7 @@
                 type="number"
                 maxlength="2"
                 label="Expiry Month"
+                :rules="[rules.required]"
                 placeholder="MM"
                 id="expiryMonth"
                 outlined
@@ -110,6 +113,7 @@
               <v-text-field
                 v-model="expiryYear"
                 type="number"
+                :rules="[rules.required]"
                 label="Expiry Year"
                 placeholder="YY"
                 id="expiryYear"
@@ -199,18 +203,18 @@ export default {
 
     cardNumberIsValid: false,
     emailAddress: '',
-    loading: false
+    loading: false,
+    rules: {
+      required: value => !!value || 'Required.'
+    }
   }),
-  created () {
-    this.emailAddress = this.email
-  },
   methods: {
     ...mapActions([HANDLE_SUBSCRIPTION_DIALOG, FETCH_USER_SUBSCRIPTION, HANDLE_EDGE_SYNC_DIALOG]),
     async submitSubscription () {
       this.loading = true
 
       try {
-        const req = await fetch(`${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscribe`, {
+        const req = await fetch(`${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription`, {
           method: 'POST',
           body: JSON.stringify({
             email: this.user.email,

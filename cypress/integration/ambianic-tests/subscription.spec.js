@@ -22,18 +22,30 @@ context('SubscriptionModal', () => {
   it('It displays input fields and accept values', () => {
     cy.get('[data-cy=subscribe]').click()
     
-    const name = cy.get('[name=cardHolderName]')
-    const number = cy.get('[name=cardNumber]')
-    const email = cy.get('[name=emailAddress]')
+    cy.window().then(win => {
+      win.__store__.dispatch("SAVE_AUTHENTICATED_USER", {
+        user: {
+          email: 'test@mail.com',
+          sub: 'auth0|12121212',
+          name: 'test user'
+        },
+        loadingAuth: false,
+        isAuthenticated: true
+      })
 
-    name.should('be.visible')
-    name.type('john doe')
-
-    number.should('be.visible')
-    number.type('1212-4545-5454-1234')
-
-    email.should('be.visible')
-    email.type('johndoe@gmail.com')
+      const name = cy.get('[name=cardHolderName]')
+      const number = cy.get('[name=cardNumber]')
+      const email = cy.get('[name=emailAddress]')
+  
+      name.should('be.visible')
+      name.type('john doe')
+  
+      number.should('be.visible')
+      number.type('1212-4545-5454-1234')
+  
+      email.should('be.visible')
+      email.type('johndoe@gmail.com')
+    })
   })
 
   it('It validates card-number regex is functional', () => {
