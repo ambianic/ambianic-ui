@@ -18,5 +18,6 @@ module.exports = {
   collectCoverageFrom: [
     '<rootDir>/**/*.vue',
     '../src/'
-  ]
+  ],
+  setupFilesAfterEnv: ['jest-extended']
 }
