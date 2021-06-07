@@ -47,9 +47,16 @@
           <p id="loading-explanation">
             Your premium subscription is being extended to your connected Edge Device.
           </p>
+          <br>
 
-          <br>
-          <br>
+          <hr>
+          <div class="flex" style="margin: .5rem 0 0 0" >
+            <div class="align-center" >
+              <p style="margin: 0 .3rem; font-size: .9rem" >
+               Ensure your edge device is running latest Ambianic Edge Image release or restart Edge device to update image.
+              </p>
+            </div>
+          </div>
         </v-list>
 
         <v-list v-else>
