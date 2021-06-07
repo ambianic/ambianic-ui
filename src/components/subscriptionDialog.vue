@@ -29,7 +29,7 @@
         v-if="subscriptionError"
       >
         <p class="error-text">
-          An error occurred while adding your subscription. Please try again
+          An error occurred while adding your subscription. Sorry for the inconvenience. We are working hard to resolve the issue. Please try again a little later.
         </p>
       </div>
 
@@ -250,7 +250,6 @@ export default {
               }),
               headers: {
                 'content-type': 'application/json'
-
               }
             }
         )
