@@ -20,7 +20,7 @@
     "idb": "^6.0.0",
     "konva": "^7.1.4",
     "moment": "^2.26.0",
-    "node": "^15.4.0",
+    "node": "^16.1.0",
     "peerjs": "^1.1.0",
     "register-service-worker": "^1.7.1",
     "vue": "^2.5.16",
