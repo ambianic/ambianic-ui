@@ -92,4 +92,18 @@ export class EdgeAPI {
 
     }
   }
+
+  async getEdgeStatus () {
+    const apiRoot = this._getRootURL()
+
+    const request = {
+      url: `${apiRoot}/status`
+    }
+
+    try {
+      const reqBody = await this._getJSON(request)
+
+      return reqBody
+    } catch (error) { }
+  }
 }

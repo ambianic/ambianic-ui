@@ -7,7 +7,7 @@ import { SUBSCRIPTION, SUBSCRIPTION_DIALOG, EDGE_SYNC_DIALOG, USER_DATA } from '
 
 const state = {
   showSubscriptionDialog: false,
-  showEdgeSyncModal: true,
+  showEdgeSyncModal: false,
 
   subscriptionDetails: null,
   loadingSubscription: false,
