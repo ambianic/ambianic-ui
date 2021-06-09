@@ -19,5 +19,6 @@ module.exports = {
     '<rootDir>/**/*.vue',
     '../src/'
   ],
+  setupFiles: ['jest-localstorage-mock'],
   setupFilesAfterEnv: ['jest-extended']
 }

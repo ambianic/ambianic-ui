@@ -3,7 +3,10 @@ import { mount, createLocalVue } from '@vue/test-utils'
 import Vuetify from 'vuetify'
 import VueX from 'vuex'
 import VueRouter from 'vue-router'
-import { Auth0Plugin } from '@/auth'
+import { Auth0Plugin, useAuth0 } from '@/auth'
+import { cloneDeep } from 'lodash'
+import pnp from '@/store/pnp.js'
+import premiumService from '@/store/premium-service.js'
 
 const Component = {
   template: `
@@ -40,7 +43,7 @@ describe('Auth0Wrapper', () => {
     }
   })
 
-  let store, state, getters
+  let store
 
   // global
   localVue.use(VueRouter)
@@ -48,16 +51,23 @@ describe('Auth0Wrapper', () => {
   const vuetify = new Vuetify()
   const router = new VueRouter()
 
-  beforeEach(() => {
-    state = {
-      pnp: {
-        peerConnectionStatus: jest.fn()
+  beforeAll(
+    () => {
+      global.window.location.pathname = '/timeline'
+      global.document.title = 'Ambianic UI'
+
+      global.window.history = {
+        replaceState: jest.fn()
       }
     }
+  )
 
+  beforeEach(() => {
     store = new VueX.Store({
-      state,
-      getters
+      modules: {
+        pnp: cloneDeep(pnp),
+        premiumService: cloneDeep(premiumService)
+      }
     })
 
     // using shallowMount with subtree components
@@ -78,5 +88,28 @@ describe('Auth0Wrapper', () => {
     expect(wrapper.find('#login').exists()).toBe(true)
     expect(wrapper.find('#client').exists()).toBe(true)
     expect(wrapper.find('#logout').exists()).toBe(true)
+  })
+
+  test('Auth0 plugin', async () => {
+    const component = mount(useAuth0({
+      onRedirectCallback: CLIENTDOMAIN,
+      redirectUri: CLIENTSECRET
+    }), {
+      localVue,
+      vuetify,
+      router,
+      store,
+      data: {
+        auth0Client: {
+          handleRedirectCallback: jest.fn(),
+          getUser: jest.fn()
+        }
+      }
+    })
+
+    console.debug(window.history, 'AUTH0 VM')
+
+    // component.vm.handleRedirectCallback()
+    // console.debug(wrapper.vm.handleRedirectCallback);
   })
 })

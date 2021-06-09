@@ -238,29 +238,23 @@ export default {
       }
     },
     async saveStripeData (userStripeId, userSubscriptionId) {
-      try {
-        await fetch(
-            `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data`,
-            {
-              method: 'POST',
-              body: JSON.stringify({
-                userStripeId,
-                userSubscriptionId,
-                user_id: this.user.sub
-              }),
-              headers: {
-                'content-type': 'application/json'
-              }
-            }
-        )
-        this.loading = false
-        this.$store.dispatch(HANDLE_SUBSCRIPTION_DIALOG, false)
-        this.$store.dispatch(FETCH_USER_SUBSCRIPTION, this.user.sub)
-        this.$store.dispatch(HANDLE_EDGE_SYNC_DIALOG, true)
-      } catch (error) {
-        console.log(error, 'error saving stripeid')
-        this.$store.dispatch(HANDLE_SUBSCRIPTION_DIALOG, false)
-      }
+      await fetch(`${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data`,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            userStripeId,
+            userSubscriptionId,
+            user_id: this.user.sub
+          }),
+          headers: {
+            'content-type': 'application/json'
+          }
+        }
+      )
+      this.loading = false
+      this.$store.dispatch(HANDLE_SUBSCRIPTION_DIALOG, false)
+      this.$store.dispatch(FETCH_USER_SUBSCRIPTION, this.user.sub)
+      this.$store.dispatch(HANDLE_EDGE_SYNC_DIALOG, true)
     }
   },
   computed: {

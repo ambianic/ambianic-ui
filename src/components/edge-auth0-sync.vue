@@ -40,13 +40,13 @@
             <v-progress-circular
               indeterminate
               :width="3.5"
-              id="loading-sync"
+              id="compatibile-spinner"
               :size="40"
               color="primary"
             />
             <br>
             <br>
-            <p id="loading-explanation">
+            <p id="checker-text">
               Checking if your connected Edge Device is compatible with Ambianic Premium Services.
             </p>
             <br>
@@ -58,13 +58,14 @@
               <v-icon
                 style="margin: 0;"
                 center
-                size="50"
+                id="outdated-icon"
+                size="45"
               >
                 mdi-alert-outline
               </v-icon>
             </div>
             <br>
-            <p id="loading-explanation">
+            <p id="outdated-text">
               Your Edge Device is currently running on version {{ edgeVersion }} and is missing the new <a href="https://docs.ambianic.ai/users/premium-services/">Premium Services</a> feature.
             </p>
             <br>
@@ -76,7 +77,7 @@
             >
               <div class="align-center">
                 <p style="margin: 0 .3rem; font-size: .95rem">
-                  Please restart your Ambianic Edge device to update your Ambianic Edge Installation.
+                  Your Ambianic Edge device is running an outdated software version. It should automatically update to the latest version within 24 hours. Please try again later or contact support if the issue persists.
                 </p>
               </div>
             </div>
@@ -111,7 +112,7 @@
               </v-icon>
 
               <p id="explanation">
-                Your premium subscription has been successfully extended to your connected Edge Device. <br> <br> You would now get email notifications about detections events from your running edge device.
+                Your premium subscription has been successfully extended to your connected Edge Device. <br> <br> You will now receive email notifications about detections events from your running edge device.
               </p>
 
               <v-btn
@@ -131,10 +132,9 @@
 </template>
 
 <script>
+import { PEER_CONNECTED } from '@/store/mutation-types'
 import {
-  PEER_CONNECTED
-} from '@/store/mutation-types'
-import {
+  FETCH_EDGE_DEVICE_DETAILS,
   HANDLE_EDGE_SYNC_DIALOG
 } from '@/store/action-types'
 import { EdgeAPI } from '@/remote/edgeAPI'
@@ -144,46 +144,39 @@ export default {
   name: 'EdgeAuth0Sync',
   data: (_) => ({
     isEdgeSynced: false,
-    EDGE_SYNC_COMPATIBILITY_STATUS: 'CHECKING',
-    edgeVersion: null
+    EDGE_SYNC_COMPATIBILITY_STATUS: 'CHECKING'
   }),
   computed: {
     ...mapState({
       showEdgeSyncModal: state => state.premiumService.showEdgeSyncModal,
-      peerConnectionStatus: (state) => state.pnp.peerConnectionStatus,
       isEdgeConnected: (state) =>
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
-      edgePeerId: (state) => state.pnp.remotePeerId,
-      peerFetch: (state) => state.pnp.peerFetch,
       pnp: (state) => state.pnp,
-      user: state => state.premiumService.user
+      user: state => state.premiumService.user,
+      edgeVersion: state => state.edgeVersion
     })
   },
   created () {
     this.edgeAPI = new EdgeAPI(this.pnp)
 
     if (this.isEdgeConnected) {
-      this.checkEdgeSyncCompatibility()
+      this.fetchEdgeDetails()
     }
   },
   methods: {
-    ...mapActions([HANDLE_EDGE_SYNC_DIALOG]),
+    ...mapActions([HANDLE_EDGE_SYNC_DIALOG, FETCH_EDGE_DEVICE_DETAILS]),
     handleClose (state) {
       localStorage.setItem('edgeSyncStatus', JSON.stringify({ status: state }))
 
       this.$store.dispatch(HANDLE_EDGE_SYNC_DIALOG, false)
     },
-    checkEdgeSyncCompatibility () {
-      this.edgeAPI.getEdgeStatus().then(({ version }) => {
-        this.edgeVersion = version
+    fetchEdgeDetails () {
+      this.edgeAPI.getEdgeStatus().then((data) => {
+        this.$store.dispatch(FETCH_EDGE_DEVICE_DETAILS, data)
+      })
+        .catch(e => console.log(`Error getting edge details: ${e}`))
 
-        if (parseFloat(version) <= parseFloat('1.14.7')) {
-          this.EDGE_SYNC_COMPATIBILITY_STATUS = 'OUTDATED'
-        } else {
-          this.EDGE_SYNC_COMPATIBILITY_STATUS = 'COMPATIBLE'
-          this.submitUserId()
-        }
-      }).catch(e => console.log(`Error getting edge details: ${e}`))
+      this.checkEdgeSyncCompatibility()
     },
     submitUserId () {
       this.edgeAPI
@@ -191,16 +184,33 @@ export default {
         .then(() => {
           this.isEdgeSynced = true
         })
-        .catch((e) => {
-          console.log('ERROR RESPONSE FROM EDGE', e)
-        })
+        .catch((e) => {})
+    },
+    checkEdgeSyncCompatibility () {
+      if (parseFloat(this.edgeVersion) <= parseFloat('1.14.7')) {
+        this.EDGE_SYNC_COMPATIBILITY_STATUS = 'OUTDATED'
+      } else {
+        this.EDGE_SYNC_COMPATIBILITY_STATUS = 'COMPATIBLE'
+        this.submitUserId()
+      }
     }
   },
   watch: {
+    /*
+    Certain important functions are (re)executed here to handle scenarios
+    when an edge device (re)connects after the component is fully
+    mounted.
+     */
+
     isEdgeConnected: function (value) {
       if (value) {
         this.checkEdgeSyncCompatibility()
+        this.fetchEdgeDetails()
       }
+    },
+
+    edgeVersion: function () {
+      this.checkEdgeSyncCompatibility()
     }
   }
 }

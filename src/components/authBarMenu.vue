@@ -148,6 +148,7 @@
           <v-card>
             <v-list>
               <div
+                id="close-menu-icon"
                 style="text-align: right; padding: 0.3rem 0.5rem;"
                 @click="handleMenu(false)"
               >
@@ -267,6 +268,7 @@
                 style="width: 100%; padding: 0.5rem 2rem;"
                 color="primary"
                 data-cy="logout-button"
+                id="logout-btn"
                 @click="handleLogout()"
               >
                 Logout
@@ -285,9 +287,6 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import {
-  PEER_CONNECTED
-} from '@/store/mutation-types'
 import {
   HANDLE_SUBSCRIPTION_DIALOG, HANDLE_EDGE_SYNC_DIALOG, FETCH_USER_SUBSCRIPTION
 } from '@/store/action-types'
@@ -357,23 +356,19 @@ export default {
     async cancelSubscription () {
       this.loading = true
 
-      try {
-        await fetch(
-        `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription?userSubscriptionId=${this.userSubscriptionId}`,
-        {
-          method: 'DELETE',
-          body: JSON.stringify({
-            stripeId: this.userSubscriptionId
-          }),
-          headers: {
-            'content-type': 'application/json'
-          }
-        })
+      await fetch(
+          `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription?userSubscriptionId=${this.userSubscriptionId}`,
+          {
+            method: 'DELETE',
+            body: JSON.stringify({
+              stripeId: this.userSubscriptionId
+            }),
+            headers: {
+              'content-type': 'application/json'
+            }
+          })
 
-        this.$store.dispatch(FETCH_USER_SUBSCRIPTION, this.user.sub)
-      } catch (e) {
-        console.log('ERROR UNSUBSCRIBING', e)
-      }
+      this.$store.dispatch(FETCH_USER_SUBSCRIPTION, this.user.sub)
     },
     handleAuth () {
       this.$auth.loginWithRedirect()
@@ -392,8 +387,6 @@ export default {
   },
   computed: {
     ...mapState({
-      isEdgeConnected: state =>
-        state.pnp.peerConnectionStatus === PEER_CONNECTED,
       subscriptionDetails: state => state.premiumService.subscriptionDetails,
       loadingSubscription: state => state.premiumService.loadingSubscription,
       user: state => state.premiumService.user,
@@ -412,10 +405,9 @@ export default {
         this.isSubscribed = true
 
         this.setSubscriptionStatus(status, Moment(end).format('ddd, MMM Do YYYY'))
-
         try {
           const syncStatus = JSON.parse(localStorage.getItem('edgeSyncStatus'))
-
+          console.log(syncStatus, typeof syncStatus, 'loc data')
           if (!syncStatus.status) {
             this.$store.dispatch(HANDLE_EDGE_SYNC_DIALOG, true)
           }

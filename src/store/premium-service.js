@@ -86,7 +86,7 @@ const actions = {
 
       commit(SUBSCRIPTION, request)
     } catch (e) {
-      console.log(e)
+      console.log(e, 'FETCH SUB ERROR')
       commit(SUBSCRIPTION, null)
     }
   },

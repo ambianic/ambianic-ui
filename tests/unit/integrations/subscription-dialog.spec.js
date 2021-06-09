@@ -60,6 +60,27 @@ describe('SubscriptionDialog', () => {
     expect(wrapper.find('#expiryYear').exists()).toBe(true)
   })
 
+  test('Credit Card Regex validator is functional', async () => {
+    // correct Stripe test card
+    await wrapper.setData({
+      cardNumber: '4242424242424242'
+    })
+
+    expect(wrapper.vm.cardNumberIsValid).toBeTruthy()
+
+    await wrapper.setData({
+      cardNumber: '12345678901'
+    })
+
+    expect(wrapper.vm.cardNumberIsValid).toBe(false)
+
+    wrapper.setData({
+      rules: {
+        required: true
+      }
+    })
+  })
+
   test('It makes a request to submit subscription data', async () => {
     await wrapper.setData({ showInputs: true })
 

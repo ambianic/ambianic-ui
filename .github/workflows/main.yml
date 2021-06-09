@@ -43,6 +43,11 @@ jobs:
       env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload Jest coverage to Github Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: Ambianic-PWA-Test-Artifact
+        path: coverage/jest/*.txt
     - name: Upload Cypress test recorded videos for debugging
       uses: actions/upload-artifact@v2
       if: always()

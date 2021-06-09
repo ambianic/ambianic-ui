@@ -9,6 +9,7 @@ import { cloneDeep } from 'lodash'
 import VueTour from 'vue-tour'
 
 import premium, { handleSubscriptionStatus } from '@/store/premium-service'
+import pnp from '@/store/pnp.js'
 import Authbarmenu from '@/components/authBarMenu.vue'
 import { Auth0Plugin } from '@/auth'
 enableFetchMocks()
@@ -30,13 +31,18 @@ describe('AuthBarMenu', () => {
     CLIENTSECRET
   })
 
+  beforeAll(() => {
+    global.Storage.prototype.setItem = jest.fn()
+    global.Storage.prototype.getItem = jest.fn()
+    global.Storage.prototype.removeItem = jest.fn()
+  })
+
   beforeEach(async () => {
-    fetch.resetMocks()
+    // fetch.resetMocks()
+    localStorage.clear()
 
     state = {
-      pnp: {
-        peerConnectionStatus: jest.fn()
-      },
+      pnp: cloneDeep(pnp),
       premiumService: cloneDeep(premium)
     }
 
@@ -59,14 +65,46 @@ describe('AuthBarMenu', () => {
       loadingAuth: false,
       isAuthenticated: true
     })
+
+    fetch.mockResponseOnce({
+      user_metadata: {
+        userSubscriptionId: 'sub|1234567',
+        userStripeId: 'cus|1234567'
+      },
+      sub_details: {
+        current_period_end: moment(new Date()).add(1, 'M'),
+        status: 'complete'
+      }
+    })
+
+    await store.dispatch('FETCH_USER_SUBSCRIPTION')
   })
 
   afterAll(() => {
     wrapper.destroy()
   })
 
-  test('It fetches user subscription data', async () => {
-    await wrapper.setData({
+  test('It fetches user subscription data for new users', async () => {
+    store.state.premiumService.subscriptionDetails = {
+      user_metadata: {
+        userSubscriptionId: 'sub|123456789',
+        userStripeId: 'cus|123456789'
+      },
+      sub_details: {
+        current_period_end: new Date(),
+        status: 'active'
+      }
+    }
+
+    localStorage.setItem('edgeSyncStatus', JSON.stringify({ status: false }))
+
+    const component = mount(Authbarmenu, {
+      localVue,
+      store,
+      methods
+    })
+
+    await component.setData({
       isSubscribed: true,
       subscriptionStatus: {
         status: `Expires ${moment(new Date()).add(1, 'M')}`,
@@ -76,19 +114,52 @@ describe('AuthBarMenu', () => {
 
     await flushPromises()
 
-    expect(wrapper.find('#title').exists()).toBe(true)
+    expect(component.find('#title').exists()).toBe(true)
 
     fetch.mockResponseOnce()
 
-    expect(wrapper.find('#add-btn').exists()).toBe(false)
-    const subscriptionElement = wrapper.find('.premium-subscription')
+    expect(component.find('#add-btn').exists()).toBe(false)
+    const subscriptionElement = component.find('.premium-subscription')
     expect(subscriptionElement.exists()).toBe(true)
     expect(subscriptionElement.contains('#time ')).toBe(true)
 
-    const button = wrapper.find('.subscription-btn')
+    const button = component.find('.subscription-btn')
 
     expect(button.exists()).toBe(true)
     expect(button.text()).toBe('Cancel')
+  })
+
+  test('It fetches user subscription data for old users', async () => {
+    store.state.premiumService.subscriptionDetails = {
+      user_metadata: {
+        userSubscriptionId: 'sub|12345678',
+        userStripeId: 'cus|54231231'
+      },
+      sub_details: {
+        current_period_end: new Date(),
+        status: 'active'
+      }
+    }
+
+    localStorage.setItem('edgeSyncStatus', 'true')
+
+    const newComponent = mount(Authbarmenu, {
+      localVue,
+      store,
+      methods
+    })
+
+    await newComponent.setData({
+      isSubscribed: true,
+      subscriptionStatus: {
+        status: `Expires ${moment(new Date()).add(1, 'M')}`,
+        shouldRenew: false
+      }
+    })
+
+    await flushPromises()
+
+    fetch.mockResponseOnce()
   })
 
   test('It handles renewal of expired subscriptions', async () => {
@@ -106,11 +177,14 @@ describe('AuthBarMenu', () => {
 
     await renewBtn.trigger('click')
 
-    // expect(methods.renewSubscription).toHaveBeenCalled()
     await flushPromises()
     setTimeout(() => {
       expect(wrapper.find('#subscription').exists()).toBe(true)
     }, 1500)
+  })
+
+  test('Close icon toggles menu state', async () => {
+    await wrapper.find('#close-menu-icon').trigger('click')
   })
 
   test('It makes request to cancel subscription', async () => {
@@ -126,6 +200,7 @@ describe('AuthBarMenu', () => {
 
     expect(wrapper.find('.subscription-btn').text()).toBe('Cancel')
     await wrapper.find('.subscription-btn').trigger('click')
+    await wrapper.find('#logout-btn').trigger('click')
 
     fetch.mockResponseOnce()
   })

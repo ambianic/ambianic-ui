@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import createAuth0Client from '@auth0/auth0-spa-js'
-import store from '../store/'
+import { store } from '@/store'
 import { mapActions } from 'vuex'
 import {
   FETCH_USER_SUBSCRIPTION
@@ -19,8 +19,6 @@ const DEFAULT_REDIRECT_CALLBACK = () =>
   window.history.replaceState({}, document.title, window.location.pathname)
 
 let instance
-
-export const getInstance = () => instance
 
 export const useAuth0 = ({
   onRedirectCallback = DEFAULT_REDIRECT_CALLBACK,

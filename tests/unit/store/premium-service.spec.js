@@ -1,3 +1,5 @@
+import { enableFetchMocks } from 'jest-fetch-mock'
+
 import Vue from 'vue'
 import { mount, createLocalVue } from '@vue/test-utils'
 import VueX from 'vuex'
@@ -7,6 +9,7 @@ import { cloneDeep } from 'lodash'
 import premium, { handleSubscriptionStatus } from '@/store/premium-service'
 import Authbarmenu from '@/components/authBarMenu.vue'
 import { Auth0Plugin } from '@/auth'
+enableFetchMocks()
 
 describe('AuthBarMenu', () => {
   let wrapper
@@ -25,6 +28,8 @@ describe('AuthBarMenu', () => {
   })
 
   beforeEach(() => {
+    fetch.resetMocks()
+
     state = {
       premiumService: cloneDeep(premium)
     }
@@ -107,7 +112,19 @@ describe('AuthBarMenu', () => {
     })
   })
 
+  test('It fetches "user" subscription when "FETCH_USER_SUBSCRIPTION" is called', async () => {
+    fetch.mockResponseOnce(JSON.stringify({ data: { stripeId: 'cus|12345678' } }))
+
+    const data = {
+      id: 'cus|123456789'
+    }
+
+    await store.dispatch('FETCH_USER_SUBSCRIPTION', data)
+  })
+
   test('It sets "user" detail when "SAVE_AUTHENTICATED_USER" is called', async () => {
+    fetch.mockResponseOnce(JSON.stringify({ data: { stripeId: 'cus|12345678' } }))
+
     const data = {
       user: {
         email: 'test@mail.com',

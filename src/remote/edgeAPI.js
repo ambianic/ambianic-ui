@@ -97,7 +97,7 @@ export class EdgeAPI {
     const apiRoot = this._getRootURL()
 
     const request = {
-      url: `${apiRoot}/status`
+      url: `${apiRoot}status`
     }
 
     try {
