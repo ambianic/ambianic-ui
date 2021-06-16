@@ -69,3 +69,27 @@ test('PeerFetch get()', async () => {
   expect(dataConnection.send).toHaveBeenCalledTimes(1)
   expect(nextResponse).toBe(mockResponse)
 })
+
+test('PeerFetch _schedulePing()', async () => {
+  const dataConnection = jest.fn()
+  dataConnection.on = jest.fn()
+  const mockResponse = jest.fn()
+  const peerFetch = new PeerFetch(dataConnection)
+  var fetchRequest
+  var fetchResponse
+  dataConnection.send = jest.fn().mockImplementation((jsonRequest) => {
+    fetchRequest = jsonRequest
+    const pair = peerFetch._requestMap.get(peerFetch._nextTicketInLine)
+    pair.response = mockResponse
+    fetchResponse = mockResponse
+    pair.response.receivedAll = true
+  })
+  jest.useFakeTimers()
+  await peerFetch._schedulePing()
+  // check if the ping task was scheduled
+  expect(setInterval).toHaveBeenCalledTimes(1)
+  expect(setInterval).toHaveBeenCalledWith(expect.anything(), 1000)
+  await jest.runOnlyPendingTimers()
+  expect(fetchRequest).toEqual('{"url":"ping?","method":"GET"}')
+  expect(fetchResponse).toBe(mockResponse)
+})
