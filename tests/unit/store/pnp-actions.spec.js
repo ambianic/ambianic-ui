@@ -478,7 +478,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
     await store.dispatch(PNP_SERVICE_CONNECT)
     const peer = store.state.pnp.peer
     console.debug('peer.on.mock.calls', peer.on.mock.calls)
-    const onErrorCallback = peer.on.mock.calls.find(callbackDetails => callbackDetails[0] === 'error');
+    const onErrorCallback = peer.on.mock.calls.find(callbackDetails => callbackDetails[0] === 'error')
     console.debug('onErrorCallback', onErrorCallback)
     onErrorCallback[1]('a_network_error')
     expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_DISCONNECTED)
