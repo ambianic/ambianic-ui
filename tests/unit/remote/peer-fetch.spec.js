@@ -108,3 +108,70 @@ test('PeerFetch _stopPing()', async () => {
   expect(clearInterval).toHaveBeenCalledTimes(1)
   expect(clearInterval).toHaveBeenCalledWith(timer)
 })
+
+test('PeerFetch _dataConnection.on("data", ...)', async () => {
+  const dataConnection = jest.fn()
+  dataConnection.on = jest.fn()
+  const peerFetch = new PeerFetch(dataConnection)
+  // get the callback function registered for dataConnection.on('data')
+  const onDataCallback = peerFetch._dataConnection.on.mock.calls.find(callbackDetails => callbackDetails[0] === 'data')[1]
+  // first test the case when data arrives without a matching get request
+  const cerror = jest.spyOn(console, 'error').mockImplementation(() => {})
+  onDataCallback('some http response data')
+  expect(cerror).toHaveBeenCalledTimes(1)
+  cerror.mockReset()
+  // next test the case when data arrives in response to a get request
+  const request = {
+    url: '/',
+    method: 'GET'
+  }
+  const ticket = peerFetch._enqueueRequest(request)
+  // test sub-use case: initial response packet has no status attribute
+  const cwarn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+  onDataCallback('{}')
+  expect(cwarn).toHaveBeenCalledWith('Remote peer may not be using a compatible protocol.')
+  cwarn.mockReset()
+  // test sub-use case: initial response packet arrives with header info
+  const cdebug1 = jest.spyOn(console, 'debug').mockImplementation(() => {})
+  onDataCallback('{"status": 202}')
+  expect(cdebug1).toHaveBeenCalledWith('Received keepalive ping')
+  cdebug1.mockReset()
+  // test sub-use case: final status response packet arrives
+  const cdebug2 = jest.spyOn(console, 'debug').mockImplementation(() => {})
+  onDataCallback('{"status": 200}')
+  expect(cdebug2).toHaveBeenCalledWith('Received web server final response header', expect.anything())
+  cdebug2.mockReset()
+  let pair = peerFetch._requestMap.get(ticket)
+  expect(pair.response.receivedAll).toBeFalse()
+  // test sub-use case: response packet with content arrives
+  const cdebug3 = jest.spyOn(console, 'debug').mockImplementation(() => {})
+  onDataCallback('some content')
+  expect(cdebug3).toHaveBeenCalledWith('Processing response content')
+  cdebug3.mockReset()
+  pair = peerFetch._requestMap.get(ticket)
+  expect(pair.response.receivedAll).toBeTrue()
+  expect(pair.response.content).toEqual('some content')
+})
+
+test('PeerFetch _dataConnection.on("open", ...)', async () => {
+  const dataConnection = jest.fn()
+  dataConnection.on = jest.fn()
+  const peerFetch = new PeerFetch(dataConnection)
+  // get the callback function registered for dataConnection.on('open')
+  const onOpenCallback = peerFetch._dataConnection.on.mock.calls.find(callbackDetails => callbackDetails[0] === 'open')[1]
+  jest.spyOn(peerFetch, '_schedulePing')
+  onOpenCallback()
+  expect(peerFetch._schedulePing).toHaveBeenCalledTimes(1)
+})
+
+test('PeerFetch _dataConnection.on("close", ...)', async () => {
+  const dataConnection = jest.fn()
+  dataConnection.on = jest.fn()
+  const peerFetch = new PeerFetch(dataConnection)
+  // get the callback function registered for dataConnection.on('close')
+  const onCloseCallback = peerFetch._dataConnection.on.mock.calls.find(callbackDetails => callbackDetails[0] === 'close')[1]
+  // first test the case when data arrives without a matching get request
+  jest.spyOn(peerFetch, '_stopPing')
+  onCloseCallback()
+  expect(peerFetch._stopPing).toHaveBeenCalledTimes(1)
+})
