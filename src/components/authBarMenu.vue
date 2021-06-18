@@ -407,7 +407,6 @@ export default {
         this.setSubscriptionStatus(status, Moment(end).format('ddd, MMM Do YYYY'))
         try {
           const syncStatus = JSON.parse(localStorage.getItem('edgeSyncStatus'))
-          console.log(syncStatus, typeof syncStatus, 'loc data')
           if (!syncStatus.status) {
             this.$store.dispatch(HANDLE_EDGE_SYNC_DIALOG, true)
           }

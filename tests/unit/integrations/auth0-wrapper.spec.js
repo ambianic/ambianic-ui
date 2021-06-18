@@ -3,7 +3,7 @@ import { mount, createLocalVue } from '@vue/test-utils'
 import Vuetify from 'vuetify'
 import VueX from 'vuex'
 import VueRouter from 'vue-router'
-import { Auth0Plugin, useAuth0 } from '@/auth'
+import { Auth0Plugin } from '@/auth'
 import { cloneDeep } from 'lodash'
 import pnp from '@/store/pnp.js'
 import premiumService from '@/store/premium-service.js'
@@ -24,7 +24,7 @@ describe('Auth0Wrapper', () => {
   // global
   let wrapper
   const localVue = createLocalVue()
-  Vue.use(Vuetify) // for shallowshallowMount use
+  Vue.use(Vuetify)
   localVue.use(VueX)
 
   const CLIENTDOMAIN = process.env.VUE_APP_AUTH0_DOMAIN
@@ -75,8 +75,7 @@ describe('Auth0Wrapper', () => {
       localVue,
       vuetify,
       router,
-      store,
-      methods: {}
+      store
     })
   })
 
@@ -91,25 +90,16 @@ describe('Auth0Wrapper', () => {
   })
 
   test('Auth0 plugin', async () => {
-    const component = mount(useAuth0({
-      onRedirectCallback: CLIENTDOMAIN,
-      redirectUri: CLIENTSECRET
-    }), {
-      localVue,
-      vuetify,
-      router,
-      store,
-      data: {
-        auth0Client: {
-          handleRedirectCallback: jest.fn(),
-          getUser: jest.fn()
-        }
-      }
-    })
+    wrapper.vm.$auth.auth0Client = {
+      handleRedirectCallback: jest.fn(),
+      getUser: new Promise((resolve, reject) => resolve({ name: 'John Doe' })),
+      loginWithRedirect: jest.fn(),
+      logout: jest.fn(),
+      isAuthenticated: new Promise((resolve, reject) => resolve())
+    }
 
-    console.debug(window.history, 'AUTH0 VM')
-
-    // component.vm.handleRedirectCallback()
-    // console.debug(wrapper.vm.handleRedirectCallback);
+    wrapper.vm.$auth.handleRedirectCallback()
+    wrapper.vm.$auth.loginWithRedirect()
+    wrapper.vm.$auth.logout()
   })
 })

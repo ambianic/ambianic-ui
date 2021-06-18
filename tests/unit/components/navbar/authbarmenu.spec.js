@@ -113,10 +113,7 @@ describe('AuthBarMenu', () => {
     })
 
     await flushPromises()
-
     expect(component.find('#title').exists()).toBe(true)
-
-    fetch.mockResponseOnce()
 
     expect(component.find('#add-btn').exists()).toBe(false)
     const subscriptionElement = component.find('.premium-subscription')
@@ -129,6 +126,27 @@ describe('AuthBarMenu', () => {
     expect(button.text()).toBe('Cancel')
 
     wrapper.vm.setSubscriptionStatus('active', moment(new Date()).add('1', 'M'))
+  })
+
+  test('It fetches data for old returning uses', async () => {
+    store.state.premiumService.subscriptionDetails = {
+      user_metadata: {
+        userSubscriptionId: 'sub|55555555',
+        userStripeId: 'cus|55555555'
+      },
+      sub_details: {
+        current_period_end: new Date(),
+        status: 'active'
+      }
+    }
+
+    localStorage.setItem('edgeSyncStatus', null)
+
+    mount(Authbarmenu, {
+      localVue,
+      store,
+      methods
+    })
   })
 
   test('It displays ui guide to add subscription', async () => {
@@ -145,6 +163,33 @@ describe('AuthBarMenu', () => {
     const tourStatus = JSON.parse(localStorage.getItem('premiumTourStatus'))
 
     expect(tourStatus.hasTakenTour).toBeTrue()
+  })
+
+  test('It fetches user subscription data for old users', async () => {
+    store.state.premiumService.subscriptionDetails = {
+      user_metadata: {
+        userSubscriptionId: 'sub|555555555555',
+        userStripeId: 'cus|5555555555555'
+      }
+    }
+
+    localStorage.setItem('edgeSyncStatus', JSON.stringify({ status: true }))
+
+    const newComponent = mount(Authbarmenu, {
+      localVue,
+      store,
+      methods
+    })
+
+    await newComponent.setData({
+      isSubscribed: true,
+      subscriptionStatus: {
+        status: `Expires ${moment(new Date()).add(1, 'M')}`,
+        shouldRenew: false
+      }
+    })
+
+    await flushPromises()
   })
 
   test('It fetches user subscription data for old users', async () => {

@@ -34,11 +34,12 @@ export const useAuth0 = ({
       auth0Client: null
     }),
     methods: {
-      ...mapActions([FETCH_USER_SUBSCRIPTION, 'USER_DATA']),
+      ...mapActions([FETCH_USER_SUBSCRIPTION]),
       async handleRedirectCallback () {
         this.loading = true
         try {
           await this.auth0Client.handleRedirectCallback()
+
           const user = await this.auth0Client.getUser()
           this.$store.dispatch('SAVE_AUTHENTICATED_USER', {
             user,

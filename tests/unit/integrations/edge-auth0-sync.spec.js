@@ -16,7 +16,6 @@ localVue.use(Vuex)
 describe('EdgeSyncModal', () => {
   let wrapper
   let store
-  // const pnpModule = jest.fn()
 
   beforeEach(() => {
     pnp.peerFetch = jest.fn()
