@@ -326,7 +326,6 @@ export default {
     ]
   }),
   components: {
-    AmbButton: () => import('./shared/Button.vue'),
     SubscriptionDialog: () => import('./subscriptionDialog'),
     EdgeAuth0Sync: () => import('./edge-auth0-sync')
   },
@@ -337,7 +336,7 @@ export default {
         this.showTour = false
       }
     } catch (e) {
-
+      // catch parse error
     }
   },
   methods: {

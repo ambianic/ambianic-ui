@@ -127,6 +127,24 @@ describe('AuthBarMenu', () => {
 
     expect(button.exists()).toBe(true)
     expect(button.text()).toBe('Cancel')
+
+    wrapper.vm.setSubscriptionStatus('active', moment(new Date()).add('1', 'M'))
+  })
+
+  test('It displays ui guide to add subscription', async () => {
+    localStorage.setItem('premiumTourStatus', JSON.stringify({ hasTakenTour: true }))
+
+    const component = mount(Authbarmenu, {
+      localVue,
+      store,
+      methods
+    })
+
+    component.vm.setTourStatus()
+
+    const tourStatus = JSON.parse(localStorage.getItem('premiumTourStatus'))
+
+    expect(tourStatus.hasTakenTour).toBeTrue()
   })
 
   test('It fetches user subscription data for old users', async () => {
@@ -203,5 +221,15 @@ describe('AuthBarMenu', () => {
     await wrapper.find('#logout-btn').trigger('click')
 
     fetch.mockResponseOnce()
+  })
+
+  test('handleAuth method initiates user login when called', () => {
+    wrapper.vm.$auth = {
+      loginWithRedirect (o) {
+        return jest.fn()
+      }
+    }
+
+    wrapper.vm.handleAuth()
   })
 })
