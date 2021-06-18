@@ -39,6 +39,7 @@
                   >
                     <button
                       style="border: 1px solid #fff; padding: .3rem .6rem; border-radius: 3px;"
+                      id="vue-tour-button"
                       @click="setTourStatus()"
                     >
                       I Understand
