@@ -71,38 +71,52 @@ export const useAuth0 = ({
         })
 
         return this.auth0Client.logout(o)
+      },
+      async authenticateUser () {
+        try {
+          if (
+            window.location.search.includes('code=') &&
+              window.location.search.includes('state=')
+          ) {
+            console.log('HANDLE REDIRECT CALLBACK')
+            console.log(window.history)
+            const { appState } = await this.auth0Client.handleRedirectCallback()
+            this.error = null
+            onRedirectCallback(appState)
+          }
+        } catch (e) {
+          this.error = e
+        } finally {
+          if (this.auth0Client) {
+            this.isAuthenticated = await this.auth0Client.isAuthenticated()
+
+            const user = await this.auth0Client.getUser()
+
+            this.$store.dispatch('SAVE_AUTHENTICATED_USER', {
+              user,
+              loadingAuth: false,
+              isAuthenticated: user && true
+            })
+
+            this.$store.dispatch('FETCH_USER_SUBSCRIPTION', user.sub)
+          } else {
+            console.log(`Auth0 Client is: ${this.auth0Client}`)
+          }
+        }
       }
     },
     async created () {
-      this.auth0Client = await createAuth0Client({
-        ...options,
-        domain: process.env.VUE_APP_AUTH0_DOMAIN,
-        client_id: process.env.VUE_APP_AUTH0_CLIENTID,
-        redirect_uri: process.env.VUE_APP_REDIRECT_URL
-      })
-
       try {
-        if (
-          window.location.search.includes('code=') &&
-          window.location.search.includes('state=')
-        ) {
-          const { appState } = await this.auth0Client.handleRedirectCallback()
-          this.error = null
-          onRedirectCallback(appState)
-        }
-      } catch (e) {
-        this.error = e
-      } finally {
-        this.isAuthenticated = await this.auth0Client.isAuthenticated()
-        const user = await this.auth0Client.getUser()
-
-        this.$store.dispatch('SAVE_AUTHENTICATED_USER', {
-          user,
-          loadingAuth: false,
-          isAuthenticated: user && true
+        this.auth0Client = await createAuth0Client({
+          ...options,
+          domain: process.env.VUE_APP_AUTH0_DOMAIN,
+          client_id: process.env.VUE_APP_AUTH0_CLIENTID,
+          redirect_uri: process.env.VUE_APP_REDIRECT_URL
         })
-
-        this.$store.dispatch('FETCH_USER_SUBSCRIPTION', user.sub)
+      } catch (e) {
+        console.log('Unable to create auth0Client')
+      } finally {
+        this.authenticateUser()
       }
     }
   })

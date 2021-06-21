@@ -38,7 +38,6 @@ describe('AuthBarMenu', () => {
   })
 
   beforeEach(async () => {
-    // fetch.resetMocks()
     localStorage.clear()
 
     state = {

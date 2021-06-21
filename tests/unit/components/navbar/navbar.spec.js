@@ -73,17 +73,29 @@ describe('NavBar', () => {
   })
 
   test('should load app bar', () => {
+    wrapper.vm.$auth.auth0Client = {
+      isAuthenticated: jest.fn().mockReturnValue(true)
+    }
+
     const bar = wrapper.find('.v-app-bar')
     expect(bar.find('.v-toolbar__title').text()).toBe('Ambianic')
     expect(bar.exists()).toBe(true)
   })
 
   test('should load 6 buttons', () => {
+    wrapper.vm.$auth.auth0Client = {
+      isAuthenticated: jest.fn().mockReturnValue(true)
+    }
+
     const btn = wrapper.findAll('.v-btn')
     expect(btn.length).toBe(6)
   })
 
   test('should load navigation drawer', () => {
+    wrapper.vm.$auth.auth0Client = {
+      isAuthenticated: jest.fn().mockReturnValue(true)
+    }
+
     const nav = wrapper.find('.v-navigation-drawer')
     const item = wrapper.findAll('.v-list-item')
 

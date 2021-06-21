@@ -51,18 +51,14 @@ describe('Auth0Wrapper', () => {
   const vuetify = new Vuetify()
   const router = new VueRouter()
 
-  beforeAll(
-    () => {
-      global.window.location.pathname = '/timeline'
-      global.document.title = 'Ambianic UI'
-
-      global.window.history = {
-        replaceState: jest.fn()
+  beforeEach(() => {
+    global.window.history.replaceState = jest.fn()
+    global.window.history = {
+      replaceState () {
+        return jest.fn()
       }
     }
-  )
 
-  beforeEach(() => {
     store = new VueX.Store({
       modules: {
         pnp: cloneDeep(pnp),
@@ -89,17 +85,30 @@ describe('Auth0Wrapper', () => {
     expect(wrapper.find('#logout').exists()).toBe(true)
   })
 
-  test('Auth0 plugin', async () => {
+  test('It loads Auth0 Client plugin', async (done) => {
     wrapper.vm.$auth.auth0Client = {
-      handleRedirectCallback: jest.fn(),
-      getUser: new Promise((resolve, reject) => resolve({ name: 'John Doe' })),
+      handleRedirectCallback: jest.fn().mockReturnValue({ appState: { state: {} } }),
+      getUser: jest.fn().mockReturnValue({ name: 'John Doe' }),
       loginWithRedirect: jest.fn(),
       logout: jest.fn(),
-      isAuthenticated: new Promise((resolve, reject) => resolve())
+      isAuthenticated: jest.fn().mockReturnValue(true)
     }
 
     wrapper.vm.$auth.handleRedirectCallback()
     wrapper.vm.$auth.loginWithRedirect()
     wrapper.vm.$auth.logout()
+    wrapper.vm.$auth.authenticateUser()
+
+    done()
+  })
+
+  test('handleRedirectCallback clears user data after logout', (done) => {
+    wrapper.vm.$auth.auth0Client = {
+      handleRedirectCallback: null
+    }
+
+    wrapper.vm.$auth.handleRedirectCallback()
+
+    done()
   })
 })

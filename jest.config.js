@@ -19,6 +19,7 @@ module.exports = {
     '<rootDir>/**/*.vue',
     '../src/'
   ],
+  testURL: 'https://tester.auth0.com/login?state=hK1a11WA&code=123456789',
   setupFiles: ['jest-localstorage-mock'],
   setupFilesAfterEnv: ['jest-extended']
 }
