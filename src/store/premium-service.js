@@ -78,16 +78,18 @@ const actions = {
   },
 
   async [FETCH_USER_SUBSCRIPTION] ({ commit }, userId) {
-    try {
-      const req = await fetch(
+    if (userId) {
+      try {
+        const req = await fetch(
         `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data?userId=${userId}`
-      )
-      const request = await req.json()
+        )
+        const request = await req.json()
 
-      commit(SUBSCRIPTION, request)
-    } catch (e) {
-      console.log(e, 'FETCH SUB ERROR')
-      commit(SUBSCRIPTION, null)
+        commit(SUBSCRIPTION, request)
+      } catch (e) {
+        console.log(e, 'FETCH SUB ERROR')
+        commit(SUBSCRIPTION, null)
+      }
     }
   },
 

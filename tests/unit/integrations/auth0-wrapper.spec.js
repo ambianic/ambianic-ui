@@ -90,9 +90,6 @@ describe('Auth0Wrapper', () => {
   })
 
   test('It loads Auth0 Client plugin', async (done) => {
-    console.debug('TEST REDIRECT')
-    console.debug(window.history)
-
     wrapper.vm.$auth.auth0Client = {
       handleRedirectCallback: jest.fn().mockReturnValue({ appState: { state: {} } }),
       getUser: jest.fn().mockReturnValue({ name: 'John Doe' }),
@@ -110,11 +107,15 @@ describe('Auth0Wrapper', () => {
   })
 
   test('handleRedirectCallback clears user data after logout', (done) => {
+    jest.resetAllMocks()
+
     wrapper.vm.$auth.auth0Client = {
-      handleRedirectCallback: null
+      handleRedirectCallback: null,
+      getUser: jest.fn().mockReturnValue(null)
     }
 
     wrapper.vm.$auth.handleRedirectCallback()
+    wrapper.vm.$auth.authenticateUser()
 
     done()
   })

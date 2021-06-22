@@ -7,13 +7,11 @@ import {
 } from '@/store/action-types'
 
 // fix for window.crypto is required bug. See #522
-export const createAuthLink = async () =>
-  !navigator.userAgent.includes('jsdom') &&
-  (await createAuth0Client({
-    domain: process.env.VUE_APP_AUTH0_DOMAIN,
-    client_id: process.env.VUE_APP_AUTH0_CLIENTID,
-    redirect_uri: process.env.VUE_APP_REDIRECT_URL
-  }))
+export const createAuthLink = async () => await createAuth0Client({
+  domain: process.env.VUE_APP_AUTH0_DOMAIN,
+  client_id: process.env.VUE_APP_AUTH0_CLIENTID,
+  redirect_uri: process.env.VUE_APP_REDIRECT_URL
+})
 
 const DEFAULT_REDIRECT_CALLBACK = () =>
   window.history.replaceState({}, document.title, window.location.pathname)
@@ -33,9 +31,6 @@ export const useAuth0 = ({
     data: () => ({
       auth0Client: null
     }),
-    computed: {
-
-    },
     methods: {
       ...mapActions([FETCH_USER_SUBSCRIPTION]),
       async handleRedirectCallback () {
@@ -93,15 +88,13 @@ export const useAuth0 = ({
 
             const user = await this.auth0Client.getUser()
 
-            if (user) {
-              this.$store.dispatch('SAVE_AUTHENTICATED_USER', {
-                user,
-                loadingAuth: false,
-                isAuthenticated: user && true
-              })
+            this.$store.dispatch('SAVE_AUTHENTICATED_USER', {
+              user,
+              loadingAuth: false,
+              isAuthenticated: user && true
+            })
 
-              this.$store.dispatch('FETCH_USER_SUBSCRIPTION', user.sub)
-            }
+            this.$store.dispatch('FETCH_USER_SUBSCRIPTION', user && user.sub)
           } else {
             console.log(`Auth0 Client is: ${this.auth0Client}`)
           }
