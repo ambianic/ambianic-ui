@@ -158,7 +158,6 @@ export default {
   },
   created () {
     this.edgeAPI = new EdgeAPI(this.pnp)
-
     if (this.isEdgeConnected) {
       this.fetchEdgeDetails()
     }
@@ -170,21 +169,25 @@ export default {
 
       this.$store.dispatch(HANDLE_EDGE_SYNC_DIALOG, false)
     },
-    fetchEdgeDetails () {
-      this.edgeAPI.getEdgeStatus().then((data) => {
+    async fetchEdgeDetails () {
+      try {
+        const data = await this.edgeAPI.getEdgeStatus()
         this.$store.dispatch(FETCH_EDGE_DEVICE_DETAILS, data)
-      })
-        .catch(e => console.log(`Error getting edge details: ${e}`))
+      } catch (e) {
+        console.log(e)
+      }
 
       this.checkEdgeSyncCompatibility()
     },
-    submitUserId () {
-      this.edgeAPI
-        .initializePremiumNotification(this.user.sub)
-        .then(() => {
-          this.isEdgeSynced = true
-        })
-        .catch((e) => {})
+    async submitUserId () {
+      try {
+        await this.edgeAPI
+          .initializePremiumNotification(this.user.sub)
+
+        this.isEdgeSynced = true
+      } catch (e) {
+        console.log('error submitting user id')
+      }
     },
     checkEdgeSyncCompatibility () {
       if (parseFloat(this.edgeVersion) <= parseFloat('1.14.7')) {

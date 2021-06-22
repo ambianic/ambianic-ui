@@ -27,13 +27,13 @@ describe('Auth0Wrapper', () => {
   Vue.use(Vuetify)
   localVue.use(VueX)
 
-  const CLIENTDOMAIN = process.env.VUE_APP_AUTH0_DOMAIN
-  const CLIENTSECRET = process.env.VUE_APP_AUTH0_CLIENTID
+  const CLIENT_DOMAIN = process.env.VUE_APP_AUTH0_DOMAIN
+  const CLIENT_SECRET = process.env.VUE_APP_AUTH0_CLIENTID
 
   // AUTH0 PLUGIN
   Vue.use(Auth0Plugin, {
-    CLIENTDOMAIN,
-    CLIENTSECRET,
+    CLIENT_DOMAIN,
+    CLIENT_SECRET,
     onRedirectCallback: (appState) => {
       router.push(
         appState && appState.targetUrl
@@ -52,13 +52,6 @@ describe('Auth0Wrapper', () => {
   const router = new VueRouter()
 
   beforeEach(() => {
-    global.window.history.replaceState = jest.fn()
-    global.window.history = {
-      replaceState () {
-        return jest.fn()
-      }
-    }
-
     store = new VueX.Store({
       modules: {
         pnp: cloneDeep(pnp),
@@ -73,6 +66,17 @@ describe('Auth0Wrapper', () => {
       router,
       store
     })
+
+    // without making a copy you will have a circular dependency problem during mocking
+    const originalWindow = { ...window }
+    const windowSpy = jest.spyOn(global, 'window', 'get')
+    windowSpy.mockImplementation(() => ({
+      ...originalWindow,
+      history: {
+        ...originalWindow.history,
+        replaceState: jest.fn()
+      }
+    }))
   })
 
   afterEach(() => {
@@ -86,6 +90,9 @@ describe('Auth0Wrapper', () => {
   })
 
   test('It loads Auth0 Client plugin', async (done) => {
+    console.debug('TEST REDIRECT')
+    console.debug(window.history)
+
     wrapper.vm.$auth.auth0Client = {
       handleRedirectCallback: jest.fn().mockReturnValue({ appState: { state: {} } }),
       getUser: jest.fn().mockReturnValue({ name: 'John Doe' }),

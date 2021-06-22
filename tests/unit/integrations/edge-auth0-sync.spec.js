@@ -107,4 +107,11 @@ describe('EdgeSyncModal', () => {
 
     await wrapper.find('#dismiss-button').trigger('click')
   })
+
+  test('Component methods gracefully handle edge API errors in catch blocks', () => {
+    wrapper.vm.edgeAPI = null
+
+    wrapper.vm.fetchEdgeDetails()
+    wrapper.vm.submitUserId()
+  })
 })

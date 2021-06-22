@@ -33,6 +33,9 @@ export const useAuth0 = ({
     data: () => ({
       auth0Client: null
     }),
+    computed: {
+
+    },
     methods: {
       ...mapActions([FETCH_USER_SUBSCRIPTION]),
       async handleRedirectCallback () {
@@ -78,8 +81,6 @@ export const useAuth0 = ({
             window.location.search.includes('code=') &&
               window.location.search.includes('state=')
           ) {
-            console.log('HANDLE REDIRECT CALLBACK')
-            console.log(window.history)
             const { appState } = await this.auth0Client.handleRedirectCallback()
             this.error = null
             onRedirectCallback(appState)
@@ -92,13 +93,15 @@ export const useAuth0 = ({
 
             const user = await this.auth0Client.getUser()
 
-            this.$store.dispatch('SAVE_AUTHENTICATED_USER', {
-              user,
-              loadingAuth: false,
-              isAuthenticated: user && true
-            })
+            if (user) {
+              this.$store.dispatch('SAVE_AUTHENTICATED_USER', {
+                user,
+                loadingAuth: false,
+                isAuthenticated: user && true
+              })
 
-            this.$store.dispatch('FETCH_USER_SUBSCRIPTION', user.sub)
+              this.$store.dispatch('FETCH_USER_SUBSCRIPTION', user.sub)
+            }
           } else {
             console.log(`Auth0 Client is: ${this.auth0Client}`)
           }
