@@ -84,7 +84,6 @@ const actions = {
         `${process.env.VUE_APP_FUNCTIONS_ENDPOINT}/subscription-data?userId=${userId}`
         )
         const request = await req.json()
-
         commit(SUBSCRIPTION, request)
       } catch (e) {
         console.log(e, 'FETCH SUB ERROR')

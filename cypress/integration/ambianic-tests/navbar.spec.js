@@ -2,7 +2,7 @@
 
 export const checkViewPort = (cy, device) => {
   cy.viewport(device)
-  expect(cy.get("[data-cy=login]")).to.exist
+  expect(cy.get('[data-cy=login]')).to.exist
 }
 
 context('Check Navbar Items', () => {
@@ -20,27 +20,17 @@ context('Check Navbar Items', () => {
     expect(t).to.exist
   })
 
-  it('Should be a heart button', () => {
-    const t = cy.get('[data-cy=heart]')
-    expect(t).to.exist
-  })
-
-  it('Should be a bell button', () => {
-    const t = cy.get('[data-cy=bell]')
-    expect(t).to.exist
-  })
-
   it('Should display upgrade icon on different viewports', () => {
-    expect(cy.get("[data-cy=profile-component]")).to.exist
+    expect(cy.get('[data-cy=profile-component]')).to.exist
 
-    expect(cy.get("[data-cy=login]")).to.exist
-    expect(cy.get(".upgrade-text")).to.exist
+    expect(cy.get('[data-cy=login]')).to.exist
+    expect(cy.get('.upgrade-text')).to.exist
 
     checkViewPort(cy, 'ipad-mini')
     checkViewPort(cy, 'ipad-2')
     checkViewPort(cy, 'macbook-11')
     checkViewPort(cy, 'macbook-13')
-    expect(cy.get(".upgrade-text")).to.exist
+    expect(cy.get('.upgrade-text')).to.exist
 
     checkViewPort(cy, 'iphone-5')
     checkViewPort(cy, 'iphone-6')
@@ -57,9 +47,9 @@ context('Check Navbar Items', () => {
   })
 
   it('Should have a clickable timeline icon', () => {
-    const icon =  cy.get('[data-cy=timeline-icon]')
-    
-    icon.should("be.visible")
+    const icon = cy.get('[data-cy=timeline-icon]')
+
+    icon.should('be.visible')
 
     icon.click()
 

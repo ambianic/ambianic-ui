@@ -82,13 +82,13 @@ describe('NavBar', () => {
     expect(bar.exists()).toBe(true)
   })
 
-  test('should load 6 buttons', () => {
+  test('should load 4 buttons', () => {
     wrapper.vm.$auth.auth0Client = {
       isAuthenticated: jest.fn().mockReturnValue(true)
     }
 
     const btn = wrapper.findAll('.v-btn')
-    expect(btn.length).toBe(6)
+    expect(btn.length).toBe(4)
   })
 
   test('should load navigation drawer', () => {

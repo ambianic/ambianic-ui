@@ -112,14 +112,28 @@ describe('AuthBarMenu', () => {
     })
   })
 
-  test('It fetches "user" subscription when "FETCH_USER_SUBSCRIPTION" is called', async () => {
-    fetch.mockResponseOnce(JSON.stringify({ data: { stripeId: 'cus|12345678' } }))
+  test('It fetches user subscription when "FETCH_USER_SUBSCRIPTION" is called', async () => {
+    fetch.mockResponseOnce(JSON.stringify(
+      {
+        user_metadata: {
+          userSubscriptionId: 'sub|12345678',
+          userStripeId: 'cus|54231231'
+        },
+        sub_details: {
+          current_period_end: new Date(),
+          status: 'active'
+        }
+      }))
 
     const data = {
       id: 'cus|123456789'
     }
 
     await store.dispatch('FETCH_USER_SUBSCRIPTION', data)
+    const details = store.state.premiumService.subscriptionDetails
+
+    expect('user_metadata' in details).toBeTruthy()
+    expect('sub_details' in details).toBeTruthy()
   })
 
   test('It sets "user" detail when "SAVE_AUTHENTICATED_USER" is called', async () => {

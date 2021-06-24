@@ -229,7 +229,7 @@ export default {
         })
 
         const { userStripeId, userSubscriptionId } = await req.json()
-        this.saveStripeData(userStripeId, userSubscriptionId)
+        await this.saveStripeData(userStripeId, userSubscriptionId)
       } catch (e) {
         console.log(e, 'ERROR FROM STRIPE')
         this.subscriptionError = e
@@ -252,9 +252,9 @@ export default {
         }
       )
       this.loading = false
-      this.$store.dispatch(HANDLE_SUBSCRIPTION_DIALOG, false)
-      this.$store.dispatch(FETCH_USER_SUBSCRIPTION, this.user.sub)
-      this.$store.dispatch(HANDLE_EDGE_SYNC_DIALOG, true)
+      await this.$store.dispatch(HANDLE_SUBSCRIPTION_DIALOG, false)
+      await this.$store.dispatch(FETCH_USER_SUBSCRIPTION, this.user.sub)
+      await this.$store.dispatch(HANDLE_EDGE_SYNC_DIALOG, true)
     }
   },
   computed: {

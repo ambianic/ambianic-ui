@@ -368,7 +368,7 @@ export default {
             }
           })
 
-      this.$store.dispatch(FETCH_USER_SUBSCRIPTION, this.user.sub)
+      await this.$store.dispatch(FETCH_USER_SUBSCRIPTION, this.user.sub)
     },
     handleAuth () {
       this.$auth.loginWithRedirect()

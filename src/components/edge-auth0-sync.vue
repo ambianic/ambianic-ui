@@ -172,7 +172,7 @@ export default {
     async fetchEdgeDetails () {
       try {
         const data = await this.edgeAPI.getEdgeStatus()
-        this.$store.dispatch(FETCH_EDGE_DEVICE_DETAILS, data)
+        await this.$store.dispatch(FETCH_EDGE_DEVICE_DETAILS, data)
       } catch (e) {
         console.log(e)
       }
@@ -241,7 +241,4 @@ export default {
   cursor: pointer;
 }
 
-.code {
-  font-weight: bold;
-}
 </style>

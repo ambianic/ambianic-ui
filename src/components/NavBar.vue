@@ -48,25 +48,6 @@
         @click="$router.push('edge-connect')"
       />
 
-      <!-- test -->
-      <amb-button
-        with-badge
-        data-cy="heart"
-        is-icon
-        icon="heart"
-        :badge-content="newFavorites"
-        :badge-value="newFavorites"
-      />
-
-      <amb-button
-        with-badge
-        data-cy="bell"
-        is-icon
-        icon="bell"
-        :badge-content="newAlerts"
-        :badge-value="newAlerts"
-      />
-
       <AuthBarMenu />
     </v-app-bar>
 
@@ -172,12 +153,10 @@ export default {
     AuthBarMenu: () => import('./authBarMenu.vue')
   },
   data: () => ({
-    // TESTING POPOVER
     fav: true,
     menu: true,
     message: false,
     hints: true,
-    // CLOSE POPOVER
 
     drawer: null, // hide drawer on mobile and show on desktop
     on: true,
