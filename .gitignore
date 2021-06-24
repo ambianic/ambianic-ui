@@ -26,5 +26,8 @@ cypress/videos/
 cypress/screenshots/
 
 # Test coverage reports
+reports/
 .nyc_output/
 coverage/
+jest-coverage/
+cypress-coverage/

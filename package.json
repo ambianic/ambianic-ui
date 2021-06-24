@@ -7,12 +7,14 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "codecov:e2e": "codecov -f ./coverage/coverage-final.json",
-    "codecov:unit": "codecov -f ./coverage/jest/coverage-final.json",
-    "codecov": "codecov -f coverage/coverage-final.json && codecov -f coverage/jest/coverage-final.json",
+    "codecov:e2e": "codecov -f ./jest-coverage/coverage-final.json",
+    "codecov:unit": "codecov -f ./jest-coverage/coverage-final.json",
+    "codecov": "codecov -f jest-coverage/coverage-final.json && codecov -f cypress-coverage/coverage-final.json",
+    "copy:reports": "mkdir -p reports/ && cp cypress-coverage/coverage-final.json reports/from-cypress.json && cp jest-coverage/coverage-final.json reports/from-jest.json",
+    "combine:reports": "mkdir -p reports/ && npx nyc merge reports && mv coverage.json .nyc_output/out.json",
     "test:unit": "jest",
     "test:e2e": "npx cypress run",
-    "test": "mkdir -p coverage/jest && npm run test:unit > coverage/jest/coverage.txt && npm run test:e2e"
+    "test": "mkdir -p jest-coverage/ && npm run test:unit > jest-coverage/coverage.txt && npm run test:e2e"
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.15.0",
@@ -101,7 +103,7 @@
   ],
   "license": "Apache-2.0",
   "nyc": {
-    "report-dir": "coverage",
+    "report-dir": "cypress-coverage",
     "reporter": [
       "text",
       "json"

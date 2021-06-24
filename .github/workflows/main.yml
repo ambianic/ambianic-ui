@@ -65,12 +65,12 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
         file: |
-          ./coverage/coverage-final.json
-          ./coverage/jest/coverage-final.json
+          ./cypress-coverage/coverage-final.json
+          ./jest-coverage/coverage-final.json
         fail_ci_if_error: true # optional (default = false)
-        path_to_write_report: ./coverage/codecov_report.txt
+        path_to_write_report: ./jest-coverage/codecov_report.txt
 
-    - name: Build PWA distribution for production
+- name: Build PWA distribution for production
       run: |
           npm run build --if-present
       env:
