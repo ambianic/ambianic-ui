@@ -83,12 +83,6 @@ describe('Auth0Wrapper', () => {
     wrapper.destroy()
   })
 
-  test('It contains auth0 methods', async () => {
-    expect(wrapper.find('#login').exists()).toBe(true)
-    expect(wrapper.find('#client').exists()).toBe(true)
-    expect(wrapper.find('#logout').exists()).toBe(true)
-  })
-
   test('It loads Auth0 Client plugin', async (done) => {
     wrapper.vm.$auth.auth0Client = {
       handleRedirectCallback: jest.fn().mockReturnValue({ appState: { state: {} } }),
@@ -106,17 +100,12 @@ describe('Auth0Wrapper', () => {
     done()
   })
 
-  test('handleRedirectCallback clears user data after logout', (done) => {
-    jest.resetAllMocks()
-
+  test('handleRedirectCallback clears user data after logout', () => {
     wrapper.vm.$auth.auth0Client = {
       handleRedirectCallback: null,
       getUser: jest.fn().mockReturnValue(null)
     }
 
     wrapper.vm.$auth.handleRedirectCallback()
-    wrapper.vm.$auth.authenticateUser()
-
-    done()
   })
 })
