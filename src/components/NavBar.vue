@@ -21,6 +21,7 @@
       <v-text-field
         id="searchbar"
         flat
+        disabled={true}
         solo-inverted
         hide-details
         prepend-inner-icon="search"
