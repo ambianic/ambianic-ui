@@ -209,7 +209,7 @@
                   <div v-else>
                     <div
                       class="add-btn"
-                      @click="handleSubscriptionDialog(false)"
+                      @click="handleSubscriptionDialog(true)"
                       v-if="!isSubscribed"
                       data-cy="add-subscription"
                     >
