@@ -7,6 +7,7 @@ import { cloneDeep } from 'lodash'
 import { PEER_CONNECTED } from '@/store/mutation-types'
 
 import EdgeAuth0Sync from '@/components/edge-auth0-sync.vue'
+import flushPromises from 'flush-promises'
 
 jest.mock('peerjs')
 
@@ -52,23 +53,29 @@ describe('EdgeSyncModal', () => {
     expect(wrapper.find('#checker-text').exists())
   })
 
-  test('It sends edge device request to sync', async () => {
+  test('It sends edge device request to retrieve edge device details', async () => {
+    const mock = jest.fn().mockReturnValue({ status: 'OK' })
+
     store.state.premiumService.user.sub = 'auth0|123456789'
     store.state.pnp.peerConnectionStatus = PEER_CONNECTED
+    wrapper.vm.edgeAPI.getEdgeStatus = mock
 
     mount(EdgeAuth0Sync, {
       store,
       localVue
     })
-    console.log(store.state.pnp.peerConnectionStatus, 'TEST EDGE CONNECTED')
 
-    console.debug(`STATS FROM TEST: ${store.state.pnp.peerConnectionStatus}`)
+    await flushPromises()
+    expect(mock).toHaveBeenCalled()
   })
 
   test('It handles compatible edge device versions', async () => {
     store.state.edgeVersion = '1.50'
     store.state.pnp.peerConnectionStatus = PEER_CONNECTED
     store.state.premiumService.user.sub = 'auth0|123456789'
+
+    await flushPromises()
+    expect(wrapper.vm.EDGE_SYNC_COMPATIBILITY_STATUS).toBe('COMPATIBLE')
   })
 
   test('It handles outdated connected edge devices', async () => {
@@ -108,10 +115,13 @@ describe('EdgeSyncModal', () => {
     await wrapper.find('#dismiss-button').trigger('click')
   })
 
-  test('Component methods gracefully handle edge API errors in catch blocks', () => {
+  // point of test suite is to intentionally throw errors and ensure the catch blocks catch the error without closing modal
+  test('Methods gracefully handle edge API errors in catch blocks', () => {
     wrapper.vm.edgeAPI = null
 
     wrapper.vm.fetchEdgeDetails()
     wrapper.vm.submitUserId()
+
+    expect(wrapper.find('#notification-dialog').exists()).toBe(true)
   })
 })

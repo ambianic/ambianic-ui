@@ -105,7 +105,9 @@
         </v-tooltip>
       </div>
 
-      <div v-else>
+      <div
+        v-else
+      >
         <v-menu
           offset-y
           max-width="370px"
@@ -243,7 +245,7 @@
 
                       <v-btn
                         v-else
-                        class="subscription-btn"
+                        class="cancel-subscription-btn"
                         :disabled="!subscriptionStatus.canCancel"
                         style="background: #ff0033; color: #fff; margin-top: 10px;"
                         @click="cancelSubscription()"
@@ -367,6 +369,7 @@ export default {
       await this.$store.dispatch(FETCH_USER_SUBSCRIPTION, this.user.sub)
     },
     handleAuth () {
+      console.log('I AM CALLED \n \n \n')
       this.$auth.loginWithRedirect()
     },
     setSubscriptionStatus (status, endDate) {

@@ -170,7 +170,7 @@
                         </v-btn>
                       </template>
                       <span>
-                        Subscribe to Ambianic Premium services to recieve email notifications.
+                        Subscribe to Ambianic Premium services to receive email notifications.
                       </span>
                     </v-tooltip>
                   </v-col>

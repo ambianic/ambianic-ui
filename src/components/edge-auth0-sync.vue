@@ -6,7 +6,7 @@
     max-width="550"
   >
     <v-card>
-      <div class="container">
+      <div class="sync-container">
         <div
           class="flex"
           style="justify-content: space-between;"
@@ -172,6 +172,8 @@ export default {
     async fetchEdgeDetails () {
       try {
         const data = await this.edgeAPI.getEdgeStatus()
+        console.log('FETCH STATUS \n \n \n', await this.edgeAPI.getEdgeStatus())
+
         await this.$store.dispatch(FETCH_EDGE_DEVICE_DETAILS, data)
       } catch (e) {
         console.log(e)
@@ -220,7 +222,7 @@ export default {
 </script>
 
 <style scoped>
-.container {
+.sync-container {
   justify-content: center;
   align-items: center;
   text-align: center;

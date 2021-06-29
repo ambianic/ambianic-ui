@@ -13,8 +13,6 @@ describe('SubscriptionDialog', () => {
   const localVue = createLocalVue()
   localVue.use(Vuex)
 
-  const methods = {}
-
   beforeEach(() => {
     store = new Vuex.Store({
       modules: {
@@ -25,7 +23,6 @@ describe('SubscriptionDialog', () => {
     wrapper = mount(SubscriptionDialog, {
       localVue,
       store,
-      methods,
       props: {
         completeSubscription: jest.fn()
       }
@@ -36,11 +33,17 @@ describe('SubscriptionDialog', () => {
     wrapper.destroy()
   })
 
-  test('Subscription Dialog is shown', () => {
+  test('`handleSubscriptionDialog` toggles Subscription modal visibility', () => {
+    // close modal
+    wrapper.vm.handleSubscriptionDialog(false)
+    expect(wrapper.find('#subscription-dialog').exists())
+
+    // (re)open dialog
+    wrapper.vm.handleSubscriptionDialog(true)
     expect(wrapper.find('#subscription-dialog').exists()).toBe(true)
   })
 
-  test('Subscription description is shown first on initial load', () => {
+  test('Subscription description is shown first on initial load before text fields', () => {
     expect(wrapper.find('#subscription-details').exists()).toBe(true)
     expect(wrapper.find('#inputs-ctn').exists()).toBe(false)
   })
