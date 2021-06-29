@@ -39,17 +39,17 @@ export const useAuth0 = ({
           await this.auth0Client.handleRedirectCallback()
 
           const user = await this.auth0Client.getUser()
-          this.$store.dispatch('SAVE_AUTHENTICATED_USER', {
+          await this.$store.dispatch('SAVE_AUTHENTICATED_USER', {
             user,
             loadingAuth: false,
             isAuthenticated: true
           })
 
-          this.$store.dispatch(FETCH_USER_SUBSCRIPTION, user.sub)
+          await this.$store.dispatch(FETCH_USER_SUBSCRIPTION, user.sub)
         } catch (e) {
           this.error = e
 
-          this.$store.dispatch('SAVE_AUTHENTICATED_USER', {
+          await this.$store.dispatch('SAVE_AUTHENTICATED_USER', {
             user: null,
             loadingAuth: false,
             isAuthenticated: false
@@ -61,8 +61,8 @@ export const useAuth0 = ({
       loginWithRedirect (o) {
         return this.auth0Client.loginWithRedirect(o)
       },
-      logout (o) {
-        this.$store.dispatch('SAVE_AUTHENTICATED_USER', {
+      async logout (o) {
+        await this.$store.dispatch('SAVE_AUTHENTICATED_USER', {
           user: null,
           loadingAuth: false,
           isAuthenticated: false
@@ -88,13 +88,13 @@ export const useAuth0 = ({
 
             const user = await this.auth0Client.getUser()
 
-            this.$store.dispatch('SAVE_AUTHENTICATED_USER', {
+            await this.$store.dispatch('SAVE_AUTHENTICATED_USER', {
               user,
               loadingAuth: false,
               isAuthenticated: user && true
             })
 
-            this.$store.dispatch('FETCH_USER_SUBSCRIPTION', user && user.sub)
+            await this.$store.dispatch('FETCH_USER_SUBSCRIPTION', user && user.sub)
           } else {
             console.log(`Auth0 Client is: ${this.auth0Client}`)
           }
@@ -112,7 +112,7 @@ export const useAuth0 = ({
       } catch (e) {
         console.log('Unable to create auth0Client')
       } finally {
-        this.authenticateUser()
+        await this.authenticateUser()
       }
     }
   })

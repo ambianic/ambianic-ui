@@ -34,6 +34,7 @@
                   :labels="tour.labels"
                 >
                   <div
+                    id="tour-element-button"
                     slot="actions"
                     v-if="tour.currentStep === 0"
                   >
@@ -51,7 +52,6 @@
           </v-tour>
           <div
             class="spinner"
-            @click="handleMock()"
             v-if="loadingAuth"
           >
             <v-progress-circular
@@ -78,13 +78,6 @@
         v-if="!isAuthenticated"
         style="display: flex;"
       >
-        <button
-          data-cy="auth-btn"
-          style="opacity: 0; color: white;"
-          @click="$store.dispatch('HANDLE_SUBSCRIPTION_DIALOG', true)"
-        >
-          .
-        </button>
         <v-tooltip bottom>
           <template #activator="{ on, attrs }">
             <v-btn
@@ -214,7 +207,7 @@
                   <div v-else>
                     <div
                       class="add-btn"
-                      @click="$store.dispatch('HANDLE_SUBSCRIPTION_DIALOG', true)"
+                      @click="handleSubscriptionDialog(false)"
                       v-if="!isSubscribed"
                       data-cy="add-subscription"
                     >
@@ -342,6 +335,9 @@ export default {
   },
   methods: {
     ...mapActions([HANDLE_SUBSCRIPTION_DIALOG, HANDLE_EDGE_SYNC_DIALOG]),
+    async handleSubscriptionDialog (state) {
+      await this.$store.dispatch('HANDLE_SUBSCRIPTION_DIALOG', state)
+    },
     renewSubscription () {
       this.loading = true
 

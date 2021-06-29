@@ -132,7 +132,7 @@
         <v-btn
           color="grey"
           text
-          @click="$store.dispatch('HANDLE_SUBSCRIPTION_DIALOG', false)"
+          @click="handleSubscriptionDialog(false)"
           data-cy="dismiss-modal"
         >
           Subscribe Later
@@ -155,7 +155,7 @@
           color="grey"
           data-cy="dismiss-modal"
           text
-          @click="$store.dispatch('HANDLE_SUBSCRIPTION_DIALOG', false)"
+          @click="handleSubscriptionDialog(false)"
         >
           Cancel
         </v-btn>
@@ -191,7 +191,7 @@ import { mapActions, mapState } from 'vuex'
 const cardValidator = /^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/
 
 export default {
-  name: 'SubcriptionDialog',
+  name: 'SubscriptionDialog',
   data: () => ({
     showInputs: false,
     cardNumber: '',
@@ -210,6 +210,9 @@ export default {
   }),
   methods: {
     ...mapActions([HANDLE_SUBSCRIPTION_DIALOG, FETCH_USER_SUBSCRIPTION, HANDLE_EDGE_SYNC_DIALOG]),
+    async handleSubscriptionDialog (state) {
+      await this.$store.dispatch('HANDLE_SUBSCRIPTION_DIALOG', state)
+    },
     async submitSubscription () {
       this.loading = true
 

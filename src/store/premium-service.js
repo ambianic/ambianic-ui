@@ -6,7 +6,7 @@ import {
 import { SUBSCRIPTION, SUBSCRIPTION_DIALOG, EDGE_SYNC_DIALOG, USER_DATA } from './mutation-types'
 
 const state = {
-  showSubscriptionDialog: false,
+  showSubscriptionDialog: true,
   showEdgeSyncModal: false,
 
   subscriptionDetails: null,

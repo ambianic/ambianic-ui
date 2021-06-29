@@ -5,7 +5,7 @@ context('Profile menu', () => {
     cy.visit('http://localhost:8080/timeline')
   })
 
-  it('Should start authentication with Auth0', () => {
+  it('It shows tour element for new authenticated users', () => {
     cy.window().then(win => {
       win.__store__.dispatch('SAVE_AUTHENTICATED_USER', {
         user: {
@@ -18,11 +18,19 @@ context('Profile menu', () => {
       })
     })
 
+    cy.get('#tour-element-button').should('be.visible')
     cy.get('#vue-tour-button').click()
-    cy.get('[data-cy=profile-toggle]').click()
   })
 
-  it('Confirm Profile Card Elements', () => {
+  it('User image is shown for authenticated users', () => {
+    const profileBtn = cy.get('[data-cy=profile-toggle]')
+
+    profileBtn.should('be.visible')
+    profileBtn.children('.user-img').should('have.length', 1)
+    profileBtn.click()
+  })
+
+  it('Elements in Profile Card contain user details', () => {
     expect(cy.get('[data-cy=user_avatar]')).exist
 
     cy.get('[data-cy=fullname]')
@@ -34,8 +42,12 @@ context('Profile menu', () => {
     cy.get('[data-cy=logout-button]').should('be.visible')
   })
 
-  it('Should open subscription modal', () => {
+  it('It opens subscription modal at click of `Add Subscription` button', () => {
+    cy.get('#subscription').should('not.be.visible')
+
     cy.get('[data-cy=add-subscription]').click()
+    cy.get('#subscription-details').should('be.visible')
+
     cy.get('[data-cy=dismiss-modal]').click()
   })
 })
