@@ -14,7 +14,7 @@
     "combine:reports": "mkdir -p reports/ && npx nyc merge reports && mv coverage.json .nyc_output/out.json",
     "test:unit": "jest",
     "test:e2e": "npx cypress run",
-    "test": "mkdir -p jest-coverage/ && npm run test:unit > jest-coverage/coverage.txt && npm run test:e2e"
+    "test": "npm run test:unit && npm run test:e2e && npm run combine:reports"
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.15.0",

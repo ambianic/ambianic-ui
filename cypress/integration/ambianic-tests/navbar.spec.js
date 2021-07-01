@@ -54,7 +54,7 @@ context('Check Navbar Items', () => {
     checkViewPort(cy, 'iphone-xr')
   })
 
-  it('Should have a five links', () => {
+  it('Should have five links', () => {
     cy.get('[data-cy=drawer]').then(($result) => {
       assert.equal($result.children().children()[0].childElementCount, 5, 'Five links in the drawer')
     })

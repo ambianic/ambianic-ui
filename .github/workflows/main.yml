@@ -47,7 +47,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Ambianic-PWA-Test-Artifact
-        path: coverage/jest/*.txt
+        path: .nyc_output/out.json
     - name: Upload Cypress test recorded videos for debugging
       uses: actions/upload-artifact@v2
       if: always()
@@ -68,7 +68,7 @@ jobs:
           ./cypress-coverage/coverage-final.json
           ./jest-coverage/coverage-final.json
         fail_ci_if_error: true # optional (default = false)
-        path_to_write_report: ./jest-coverage/codecov_report.txt
+        path_to_write_report: ./coverage/codecov_report.txt
 
     - name: Build PWA distribution for production
       run: |
