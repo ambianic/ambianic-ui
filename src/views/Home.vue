@@ -1,21 +1,21 @@
 <template>
   <v-main class="body">
     <v-container
-      id="container"
-      fluid
+        id="container"
+        fluid
     >
       <v-row
-        align="center"
-        justify="center"
-        no-gutters
+          align="center"
+          justify="center"
+          no-gutters
       >
         <v-card
-          max-width="344"
-          class="mx-auto"
+            max-width="344"
+            class="mx-auto"
         >
           <v-list-item
-            align="center"
-            justify="center"
+              align="center"
+              justify="center"
           >
             <v-list-item-content>
               <v-list-item-title class="headline">
@@ -32,14 +32,14 @@
             </v-list-item-subtitle>
 
             <p
-              class="center"
-              v-if="!hasSetupSystem"
+                class="center"
+                v-if="!hasSetupSystem"
             >
               Let's setup your system
             </p>
             <p
-              class="center"
-              v-else
+                class="center"
+                v-else
             >
               Control your Ambianic Edge Appliances from your console.
             </p>
@@ -47,16 +47,16 @@
 
           <v-card-actions class="align-center">
             <div
-              class="skip-link"
+                class="skip-link"
             >
               <v-btn
-                rounded
-                color="pink darken-4"
-                dark
-                data-cy="timeline"
-                class="ma-2 white--text"
-                :to="'onboarding'"
-                id="btn-timeline"
+                  rounded
+                  color="pink darken-4"
+                  dark
+                  data-cy="timeline"
+                  class="ma-2 white--text"
+                  :to="'onboarding'"
+                  id="btn-timeline"
               >
                 Continue Setup
                 <v-icon right>
@@ -68,9 +68,9 @@
         </v-card>
       </v-row>
       <v-row
-        align="end"
-        justify="center"
-        no-gutters=""
+          align="end"
+          justify="center"
+          no-gutters=""
       >
         <v-col>
           <update-notification class="mx-auto" />
@@ -82,7 +82,9 @@
 
 <script>
 import { mapState } from 'vuex'
+
 import UpdateNotification from '@/components/UpdateNotification'
+
 export default {
   name: 'Home',
   components: {
@@ -99,6 +101,7 @@ export default {
   created () {
     const setupStatus = window.localStorage.getItem('hasCompletedOnboarding')
     const remotePeerId = this.edgePeerId
+
     if (setupStatus || remotePeerId) {
       this.$router.push('timeline')
     }
@@ -110,6 +113,7 @@ export default {
 .see-thru {
   opacity: 0.8
 }
+
 .center {
   text-align : center;
 }
@@ -123,11 +127,13 @@ export default {
 .invisible {
   opacity : 0;
 }
+
 .align-center {
   display : flex;
   justify-content : center;
   align-content  :center;
 }
+
 .body {
   display: flex;
   background: rgba(233, 241, 251, 0.81);

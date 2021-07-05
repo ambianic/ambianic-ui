@@ -22,7 +22,6 @@
             @click="handleClose('DENIED')"
           >
             <v-icon
-              style="margin: 0.5rem 0;"
               center
               id="close-icon"
               size="25"
@@ -237,6 +236,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.icon {
+  margin: 0.5rem 0;
 }
 
 .icon:hover {
