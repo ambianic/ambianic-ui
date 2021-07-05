@@ -111,8 +111,6 @@ describe('EdgeSyncModal', () => {
     const text = wrapper.find('#explanation')
 
     expect(text.exists()).toBe(true)
-
-    await wrapper.find('#dismiss-button').trigger('click')
   })
 
   // point of test suite is to intentionally throw errors and ensure the catch blocks catch the error without closing modal

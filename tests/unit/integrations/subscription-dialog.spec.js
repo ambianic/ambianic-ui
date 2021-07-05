@@ -84,7 +84,22 @@ describe('SubscriptionDialog', () => {
     })
   })
 
-  test('It makes a request to submit subscription data', async () => {
+  test('Error text response is shown for unsuccessful subscription requests', async () => {
+    fetch.mockResponseOnce(
+          JSON.stringify({error: 'Error creating subscription'} ), { status: 404}
+    )
+
+    await wrapper.setData({ showInputs: true })
+    await flushPromises()
+    await wrapper.find('#confirm-btn').trigger('click')
+
+    await flushPromises()
+
+    expect(wrapper.find('.error-text').exists()).toBe(true)
+    expect(wrapper.find('#subscription-spinner').exists()).toBe(false)
+  })
+
+  test('Request is made to submit subscription data at `Confirm` button click', async () => {
     await wrapper.setData({ showInputs: true })
 
     await flushPromises()
@@ -95,18 +110,23 @@ describe('SubscriptionDialog', () => {
     fetch.mockResponseOnce(JSON.stringify({
       userStripeId: 'cus|121212121212',
       userSubscriptionId: 'sub|121212121212'
-    }))
+    }), { status: 200})
 
     fetch.mockResponseOnce()
   })
 
-  test('It handles unsuccessful subscription requests', async () => {
-    await wrapper.setData({ showInputs: true })
+  test('`saveStripeData` executes request to save user data and closes subscription dialog', async () => {
+    fetch.mockResponseOnce(
+        JSON.stringify({
+          userStripeId: 'cus|121212121212',
+          userSubscriptionId: 'sub|121212121212'
+        } ), { statusCode: 200}
+    )
 
-    await flushPromises()
+    await wrapper.vm.saveStripeData()
+    expect(wrapper.vm.loading).toBe(false)
 
-    await wrapper.find('#confirm-btn').trigger('click')
-
-    fetch.mockReject(new Error('Error creating subscription'))
+    // saveSubscription method mutates values in premiumService
+    expect(store.state.premiumService.showSubscriptionDialog).toBe(false)
   })
 })

@@ -123,8 +123,6 @@ describe('AuthBarMenu', () => {
 
     expect(button.exists()).toBe(true)
     expect(button.text()).toBe('Cancel')
-
-    wrapper.vm.setSubscriptionStatus('active', moment(new Date()).add('1', 'M'))
   })
 
   test('Edge Sync modal is shown for user without `edgeSync` record', async () => {
@@ -160,7 +158,6 @@ describe('AuthBarMenu', () => {
     })
 
     component.vm.setTourStatus()
-
     const tourStatus = JSON.parse(localStorage.getItem('premiumTourStatus'))
 
     expect(tourStatus.hasTakenTour).toBeTrue()
@@ -197,39 +194,6 @@ describe('AuthBarMenu', () => {
     expect(wrapper.vm.subscriptionDetails.user_metadata.userStripeId).toBe(mockSubData.user_metadata.userStripeId)
   })
 
-  test('It fetches user subscription data for returning users', async () => {
-    store.state.premiumService.subscriptionDetails = {
-      user_metadata: {
-        userSubscriptionId: 'sub|12345678',
-        userStripeId: 'cus|54231231'
-      },
-      sub_details: {
-        current_period_end: new Date(),
-        status: 'active'
-      }
-    }
-
-    localStorage.setItem('edgeSyncStatus', 'true')
-
-    const newComponent = mount(Authbarmenu, {
-      localVue,
-      store,
-      methods
-    })
-
-    await newComponent.setData({
-      isSubscribed: true,
-      subscriptionStatus: {
-        status: `Expires ${moment(new Date()).add(1, 'M')}`,
-        shouldRenew: false
-      }
-    })
-
-    await flushPromises()
-
-    fetch.mockResponseOnce()
-  })
-
   test('Renewal button is shown for expired subscriptions', async () => {
     await wrapper.setData({
       isSubscribed: true,
@@ -245,10 +209,7 @@ describe('AuthBarMenu', () => {
 
     await renewBtn.trigger('click')
 
-    await flushPromises()
-    setTimeout(() => {
-      expect(wrapper.find('#subscription').exists()).toBe(true)
-    }, 1500)
+    setTimeout(() => expect(wrapper.find('#subscription').exists()).toBe(true), 1500)
   })
 
   test('`handleMenu` method toggles authBar visibility', async () => {

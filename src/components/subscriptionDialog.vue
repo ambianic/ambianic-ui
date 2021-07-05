@@ -47,8 +47,7 @@
             id="cardHolderName"
             outlined
             dense
-            class="input"
-            name="cardHolderName"
+            data-cy="cardHolderName"
           />
 
           <v-text-field
@@ -60,8 +59,7 @@
             id="cardNumber"
             outlined
             dense
-            class="input"
-            name="cardNumber"
+            data-cy="cardNumber"
           />
 
           <v-text-field
@@ -72,8 +70,7 @@
             id="emailAddress"
             outlined
             dense
-            class="input"
-            name="emailAddress"
+            data-cy="emailAddress"
           />
 
           <v-row>
@@ -88,7 +85,6 @@
                 :rules="[rules.required]"
                 outlined
                 dense
-                class="input"
                 name="cvc"
               />
             </v-col>
@@ -104,7 +100,6 @@
                 id="expiryMonth"
                 outlined
                 dense
-                class="input"
                 name="expiryMonth"
               />
             </v-col>
@@ -120,7 +115,6 @@
                 maxlength="2"
                 outlined
                 dense
-                class="input"
                 name="expiryYear"
               />
             </v-col>
@@ -171,6 +165,7 @@
           {{ loading ? 'Confirming Details' : 'Confirm Details' }}
           <v-progress-circular
             style="padding-left: 40px;"
+            id="subscription-spinner"
             indeterminate
             v-if="loading"
             :width="2.5"
@@ -231,11 +226,16 @@ export default {
           }
         })
 
-        const { userStripeId, userSubscriptionId } = await req.json()
-        await this.saveStripeData(userStripeId, userSubscriptionId)
+        if (req.status === 200) {
+          const { userStripeId, userSubscriptionId } = await req.json()
+          await this.saveStripeData(userStripeId, userSubscriptionId)
+        } else {
+          this.subscriptionError = req
+          console.log('ERROR CREATING SUBSCRIPTION', req)
+        }
       } catch (e) {
-        console.log(e, 'ERROR FROM STRIPE')
         this.subscriptionError = e
+        console.log(e, 'ERROR FROM STRIPE')
       } finally {
         this.loading = false
       }

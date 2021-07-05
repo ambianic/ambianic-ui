@@ -3,7 +3,7 @@ import createAuth0Client from '@auth0/auth0-spa-js'
 import { store } from '@/store'
 import { mapActions } from 'vuex'
 import {
-  FETCH_USER_SUBSCRIPTION
+  FETCH_USER_SUBSCRIPTION, SAVE_AUTHENTICATED_USER
 } from '@/store/action-types'
 
 // fix for window.crypto is required bug. See #522
@@ -39,7 +39,8 @@ export const useAuth0 = ({
           await this.auth0Client.handleRedirectCallback()
 
           const user = await this.auth0Client.getUser()
-          await this.$store.dispatch('SAVE_AUTHENTICATED_USER', {
+
+          await this.$store.dispatch(SAVE_AUTHENTICATED_USER, {
             user,
             loadingAuth: false,
             isAuthenticated: true
@@ -49,7 +50,7 @@ export const useAuth0 = ({
         } catch (e) {
           this.error = e
 
-          await this.$store.dispatch('SAVE_AUTHENTICATED_USER', {
+          await this.$store.dispatch(SAVE_AUTHENTICATED_USER, {
             user: null,
             loadingAuth: false,
             isAuthenticated: false
@@ -62,7 +63,7 @@ export const useAuth0 = ({
         return this.auth0Client.loginWithRedirect(o)
       },
       async logout (o) {
-        await this.$store.dispatch('SAVE_AUTHENTICATED_USER', {
+        await this.$store.dispatch(SAVE_AUTHENTICATED_USER, {
           user: null,
           loadingAuth: false,
           isAuthenticated: false
@@ -88,13 +89,13 @@ export const useAuth0 = ({
 
             const user = await this.auth0Client.getUser()
 
-            await this.$store.dispatch('SAVE_AUTHENTICATED_USER', {
+            await this.$store.dispatch(SAVE_AUTHENTICATED_USER, {
               user,
               loadingAuth: false,
               isAuthenticated: user && true
             })
 
-            await this.$store.dispatch('FETCH_USER_SUBSCRIPTION', user && user.sub)
+            await this.$store.dispatch(FETCH_USER_SUBSCRIPTION, user && user.sub)
           } else {
             console.log(`Auth0 Client is: ${this.auth0Client}`)
           }
