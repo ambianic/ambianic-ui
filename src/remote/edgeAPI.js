@@ -71,4 +71,39 @@ export class EdgeAPI {
     }
     return imageUrl
   }
+
+  // Premium Subscribtion operations
+  async initializePremiumNotification (userId) {
+    const apiRoot = this._getRootURL()
+
+    const request = {
+      url: `${apiRoot}auth/premium-notification`,
+      params: {
+        userId,
+        notification_endpoint: process.env.VUE_APP_FUNCTIONS_ENDPOINT
+      }
+    }
+
+    try {
+      const reqBody = await this._getJSON(request)
+
+      return reqBody
+    } catch (error) {
+
+    }
+  }
+
+  async getEdgeStatus () {
+    const apiRoot = this._getRootURL()
+
+    const request = {
+      url: `${apiRoot}status`
+    }
+
+    try {
+      const reqBody = await this._getJSON(request)
+
+      return reqBody
+    } catch (error) { }
+  }
 }

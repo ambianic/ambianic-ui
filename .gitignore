@@ -5,6 +5,7 @@ node_modules
 # local env files
 .env.local
 .env.*.local
+.env
 
 # Log files
 npm-debug.log*
@@ -25,5 +26,8 @@ cypress/videos/
 cypress/screenshots/
 
 # Test coverage reports
+reports/
 .nyc_output/
 coverage/
+jest-coverage/
+cypress-coverage/

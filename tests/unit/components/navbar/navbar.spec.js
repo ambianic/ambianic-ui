@@ -4,6 +4,8 @@ import Vuetify from 'vuetify'
 import VueX from 'vuex'
 import VueRouter from 'vue-router'
 import NavBar from '@/components/NavBar.vue'
+import { Auth0Plugin } from '@/auth'
+import VueTour from 'vue-tour'
 
 describe('NavBar', () => {
 // global
@@ -11,8 +13,25 @@ describe('NavBar', () => {
   const localVue = createLocalVue()
   Vue.use(Vuetify) // for shallowshallowMount use
   localVue.use(VueX)
+  Vue.use(VueTour)
 
-  let store, state, getters
+  const CLIENTDOMAIN = process.env.VUE_APP_AUTH0_DOMAIN
+  const CLIENTSECRET = process.env.VUE_APP_AUTH0_CLIENTID
+
+  // AUTH0 PLUGIN
+  Vue.use(Auth0Plugin, {
+    CLIENTDOMAIN,
+    CLIENTSECRET,
+    onRedirectCallback: appState => {
+      router.push(
+        appState && appState.targetUrl
+          ? appState.targetUrl
+          : window.location.pathname
+      )
+    }
+  })
+
+  let store, state
 
   // global
   localVue.use(VueRouter)
@@ -27,13 +46,17 @@ describe('NavBar', () => {
       }
     }
 
-    getters = {
-    //   ...
-    }
-
     store = new VueX.Store({
       state,
-      getters
+      modules: {
+        premiumService: {
+          showSubscriptionDialog: true,
+          showEdgeSyncModal: false,
+
+          subscriptionDetails: null,
+          loadingSubscription: false
+        }
+      }
     })
 
     // using shallowMount with subtree components
@@ -50,18 +73,29 @@ describe('NavBar', () => {
   })
 
   test('should load app bar', () => {
+    wrapper.vm.$auth.auth0Client = {
+      isAuthenticated: jest.fn().mockReturnValue(true)
+    }
+
     const bar = wrapper.find('.v-app-bar')
     expect(bar.find('.v-toolbar__title').text()).toBe('Ambianic')
     expect(bar.exists()).toBe(true)
   })
 
-  test('should load 4 buttons in nav bar: menu, timeline, connection and about', () => {
-    const btns = wrapper.findAll('.v-btn')
-    // we expect timeline, about, menu and connection buttons in nav bar
-    expect(btns.length).toBe(4)
+  test('should load 4 buttons', () => {
+    wrapper.vm.$auth.auth0Client = {
+      isAuthenticated: jest.fn().mockReturnValue(true)
+    }
+
+    const btn = wrapper.findAll('.v-btn')
+    expect(btn.length).toBe(4)
   })
 
   test('should load navigation drawer', () => {
+    wrapper.vm.$auth.auth0Client = {
+      isAuthenticated: jest.fn().mockReturnValue(true)
+    }
+
     const nav = wrapper.find('.v-navigation-drawer')
     const item = wrapper.findAll('.v-list-item')
 

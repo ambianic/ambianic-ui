@@ -43,6 +43,11 @@ jobs:
       env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload Jest coverage to Github Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: Ambianic-PWA-Test-Artifact
+        path: .nyc_output/out.json
     - name: Upload Cypress test recorded videos for debugging
       uses: actions/upload-artifact@v2
       if: always()
@@ -60,8 +65,8 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
         file: |
-          ./coverage/coverage-final.json
-          ./coverage/jest/coverage-final.json
+          ./cypress-coverage/coverage-final.json
+          ./jest-coverage/coverage-final.json
         fail_ci_if_error: true # optional (default = false)
         path_to_write_report: ./coverage/codecov_report.txt
 

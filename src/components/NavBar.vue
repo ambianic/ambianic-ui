@@ -18,23 +18,38 @@
         />
         <span class="hidden-sm-and-down">Ambianic</span>
       </v-toolbar-title>
+      <v-text-field
+        id="searchbar"
+        flat
+        :disabled="true"
+        solo-inverted
+        hide-details
+        prepend-inner-icon="search"
+        label="Search"
+        class="hidden-sm-and-down"
+      />
+      <v-spacer />
 
-      <nav-button
+      <amb-button
+        with-badge
         data-cy="timeline-icon"
+        is-icon
         icon="history"
+        btn-color="secondary"
         to="timeline"
       />
 
-      <nav-button
+      <amb-button
+        with-badge
         data-cy="download-off"
+        is-icon
         icon="download-off"
-        color="warning"
+        btn-color="secondary"
         v-if="!isEdgeConnected"
-        to="edge-connect"
+        @click="$router.push('edge-connect')"
       />
 
       <!-- Future navbar icons
-
       <v-text-field
         id="searchbar"
         flat
@@ -45,7 +60,6 @@
         class="hidden-sm-and-down"
       />
       <v-spacer />
-
       <nav-button
         with-badge
         data-cy="heart"
@@ -53,7 +67,6 @@
         :badge-content="newFavorites"
         :badge-value="newFavorites"
       />
-
       <nav-button
         with-badge
         data-cy="bell"
@@ -63,20 +76,7 @@
       />
       -->
 
-      <nav-button
-        data-cy="about"
-        to="about"
-      >
-        <v-avatar
-          size="32px"
-          item
-        >
-          <v-img
-            src="@/assets/logo5.svg"
-            alt="Ambianic.ai logo"
-          />
-        </v-avatar>
-      </nav-button>
+      <AuthBarMenu />
     </v-app-bar>
 
     <!-- drawer -->
@@ -177,10 +177,15 @@ import {
 export default {
   name: 'NavBar',
   components: {
-    NavButton: () => import('./shared/Button.vue')
+    AmbButton: () => import('./shared/Button.vue'),
+    AuthBarMenu: () => import('./authBarMenu.vue')
   },
   data: () => ({
-    dialog: false,
+    fav: true,
+    menu: true,
+    message: false,
+    hints: true,
+
     drawer: null, // hide drawer on mobile and show on desktop
     on: true,
     newFavorites: 0,
@@ -231,7 +236,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>
