@@ -21,6 +21,7 @@ const applicationStore = {
   },
   actions: {
     [FETCH_EDGE_DEVICE_DETAILS] ({ commit }, details) {
+      console.log('I AM CALLED')
       commit(EDGE_DEVICE_DETAILS, details)
     }
   },
@@ -36,4 +37,4 @@ const store = new Vuex.Store(applicationStore)
 */
 store.dispatch(INITIALIZE_PNP)
 
-export default store
+export { store, applicationStore }

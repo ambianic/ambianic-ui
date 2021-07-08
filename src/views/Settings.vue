@@ -61,6 +61,7 @@
                   />
                   <amb-list-item
                     :title="version"
+                    id="version-element"
                     subtitle="Release Version"
                     icon-name="alpha-v-circle-outline"
                   />

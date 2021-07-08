@@ -50,6 +50,7 @@
     <v-list-item-content v-else>
       <v-list-item-title
         data-cy="title-text"
+        id="title"
         class="headline"
       >
         {{ title }}
