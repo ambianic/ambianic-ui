@@ -28,7 +28,7 @@
 
           <v-card-text id="welcome-text">
             <v-list-item-subtitle class="center">
-              Cozy at Home - via Ambient Intelligence
+              Safe Home - via Ambient Intelligence
             </v-list-item-subtitle>
 
             <p

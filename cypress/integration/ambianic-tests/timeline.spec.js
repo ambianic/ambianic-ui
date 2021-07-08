@@ -11,10 +11,6 @@ context('Timeline', () => {
         cy.url().should('include', '/timeline')
     })
 
-    it('Should render connection card', () => {
-        cy.get('[data-cy=connectioncard]').contains('Connecting to Ambianic Edge device...')
-    })
-
     // Try to get this to work once we have mock data
 
     // it('Get timeline data', () => {

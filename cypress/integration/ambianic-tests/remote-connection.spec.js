@@ -23,6 +23,11 @@ context('RemoteConnections',    () => {
     //     cy.get('#peerID').contains('5568ec87-42d8-47b0-aeea-01a125db0623')
     // })
 
+    /**
+    
+    This test also relies on an actual remote peer connection being established before it can verify that the input display value is hidden.
+    Needs to be fixed. See https://github.com/ambianic/ambianic-ui/issues/595
+    
     it('Should retrieve and display user PeerID', () => {
         // cy.get('#btn-settings').click()
         cy.get('#remotePeerID').type('917d5f0a-6469-4d33-b5c2-efd858118b74')
@@ -34,6 +39,7 @@ context('RemoteConnections',    () => {
         cy.get('#toggle-visibility').click()
         cy.get('#peerId-container').should('have.value', '917d5f0a-6469-4d33-b5c2-efd858118b74')
     })
+    */
 
     it('Displays elements in smaller viewports', () => {
         cy.get('#remotePeerID').type('917d5f0a-6469-4d33-b5c2-efd858118b74')

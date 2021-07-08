@@ -8,7 +8,7 @@ context('HomePage', () => {
 
     it('Loads title and subtitle', () => {
         cy.get('.v-list-item__subtitle')
-            .should('contain.text', 'Cozy at Home - via Ambient Intelligence')
+            .should('contain.text', 'Safe Home - via Ambient Intelligence')
     })
 
     it('Loads firsttime installation button', () => {

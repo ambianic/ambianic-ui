@@ -55,9 +55,10 @@ describe('NavBar', () => {
     expect(bar.exists()).toBe(true)
   })
 
-  test('should load 5 buttons', () => {
-    const btn = wrapper.findAll('.v-btn')
-    expect(btn.length).toBe(5)
+  test('should load 4 buttons in nav bar: menu, timeline, connection and about', () => {
+    const btns = wrapper.findAll('.v-btn')
+    // we expect timeline, about, menu and connection buttons in nav bar
+    expect(btns.length).toBe(4)
   })
 
   test('should load navigation drawer', () => {

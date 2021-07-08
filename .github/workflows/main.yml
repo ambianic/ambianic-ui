@@ -13,6 +13,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Skip CI if the commit message includes the string '[skip ci]'
+    if: "! contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       matrix:
         node-version: [12.x]
@@ -40,7 +42,19 @@ jobs:
         command: npm test
       env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload Cypress test recorded videos for debugging
+      uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: cypress-videos
+        path: cypress/videos
+    - name: Upload Cypress test recorded screenshots for debugging
+      uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: cypress-screenshots
+        path: cypress/screenshots
     - name: Code Coverage Report
       uses: codecov/codecov-action@v1
       with:
@@ -49,7 +63,8 @@ jobs:
           ./coverage/coverage-final.json
           ./coverage/jest/coverage-final.json
         fail_ci_if_error: true # optional (default = false)
-    
+        path_to_write_report: ./coverage/codecov_report.txt
+
     - name: Build PWA distribution for production
       run: |
           npm run build --if-present
@@ -72,4 +87,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
