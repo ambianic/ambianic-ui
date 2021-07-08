@@ -26,7 +26,7 @@
 
         <v-card-text id="about-info">
           Review your home timeline for notable moments. Configure input sensors
-          and camers for Ambianic to observe. Share, purge or backup your data -
+          and cameras for Ambianic to observe. Share, purge or backup your data -
           it never slips out of your control.
         </v-card-text>
 
@@ -71,6 +71,8 @@
 import AmbListItem from '@/components/shared/ListItem.vue'
 import { PEER_CONNECTED } from '@/store/mutation-types'
 import { mapState } from 'vuex'
+import { FETCH_EDGE_DEVICE_DETAILS } from '../store/action-types'
+import { EdgeAPI } from '../remote/edgeAPI'
 
 export default {
   components: {
@@ -81,26 +83,32 @@ export default {
       version: (state) => state.version,
       isEdgeConnected: (state) =>
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
-      peerFetch: (state) => state.pnp.peerFetch
+      peerFetch: (state) => state.pnp.peerFetch,
+      pnp: state => state.pnp
     })
+  },
+  created () {
+    this.edgeAPI = new EdgeAPI(this.pnp)
+
+    if (this.isEdgeConnected) {
+      this.fetchEdgeDetails()
+    }
+  },
+  methods: {
+    async fetchEdgeDetails () {
+      try {
+        const details = await this.edgeAPI.getEdgeStatus()
+
+        await this.$store.dispatch(FETCH_EDGE_DEVICE_DETAILS, details)
+      } catch (e) {
+        console.log(e)
+      }
+    }
   },
   watch: {
     isEdgeConnected: function (isConnected) {
       if (isConnected) {
-        this.peerFetch
-          .get({
-            url: 'http://localhost:8778/api/status'
-          })
-          .then((response) => {
-            if (response.header.status === 200) {
-              const data = this.peerFetch.textDecode(response.content)
-
-              if (data.version) {
-                this.version = data.version
-              }
-            }
-          })
-          .catch((e) => {})
+        this.fetchEdgeDetails()
       }
     }
   }
