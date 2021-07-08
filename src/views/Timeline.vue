@@ -45,16 +45,16 @@
               lazy-src="/img/lazy-load-bg.gif"
             >
               <template #placeholder>
-                    <v-row
-                    class="fill-height ma-0"
-                    align="center"
-                    justify="center"
-                    >
-                    <v-progress-circular
-                        indeterminate
-                        color="info lighten-2"
-                    />
-                    </v-row>
+                <v-row
+                  class="fill-height ma-0"
+                  align="center"
+                  justify="center"
+                >
+                  <v-progress-circular
+                    indeterminate
+                    color="info lighten-2"
+                  />
+                </v-row>
               </template>
               <v-row
                 class="fill-height ma-0"

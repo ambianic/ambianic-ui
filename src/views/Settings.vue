@@ -278,9 +278,10 @@ import {
   PEER_CONNECTION_ERROR
 } from '@/store/mutation-types'
 import {
-  CHANGE_REMOTE_PEER_ID,
+  CHANGE_REMOTE_PEER_ID, FETCH_EDGE_DEVICE_DETAILS,
   REMOVE_REMOTE_PEER_ID
 } from '../store/action-types.js'
+import { EdgeAPI } from '../remote/edgeAPI'
 
 export default {
   components: {
@@ -293,7 +294,12 @@ export default {
       correctEdgeAddress: false
     }
   },
-  mounted () {
+  created () {
+    this.edgeAPI = new EdgeAPI(this.pnp)
+
+    if (this.isEdgeConnected) {
+      this.fetchEdgeDetails()
+    }
   },
   methods: {
     // Validate the user input so the ID has the correct format before showing the connect button
@@ -316,6 +322,15 @@ export default {
     localEdgeAddress () {
       this.edgeAddress = undefined
       this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
+    },
+    async fetchEdgeDetails () {
+      try {
+        const details = await this.edgeAPI.getEdgeStatus()
+
+        await this.$store.dispatch(FETCH_EDGE_DEVICE_DETAILS, details)
+      } catch (e) {
+        console.log(e)
+      }
     }
   },
   computed: {
@@ -329,7 +344,8 @@ export default {
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
       edgePeerId: state => state.pnp.remotePeerId,
       peerFetch: state => state.pnp.peerFetch,
-      version: state => state.version
+      version: state => state.version,
+      pnp: state => state.pnp
     }),
     connectStep: function () {
       let step = 1
@@ -360,20 +376,7 @@ export default {
     },
     isEdgeConnected: function (isConnected) {
       if (isConnected) {
-        this.peerFetch
-          .get({
-            url: 'http://localhost:8778/api/status'
-          })
-          .then((response) => {
-            if (response.header.status === 200) {
-              const data = this.peerFetch.textDecode(response.content)
-
-              if (data.version) {
-                this.version = data.version
-              }
-            }
-          })
-          .catch((e) => {})
+        this.fetchEdgeDetails()
       }
     }
   }
