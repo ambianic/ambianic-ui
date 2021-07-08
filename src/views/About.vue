@@ -37,7 +37,7 @@
         >
           <v-flex>
             <amb-list-item
-              id="version-info"
+              id="version-element"
               :title="version"
               icon-name="alpha-v-circle-outline"
               subtitle="Release Version"
@@ -83,7 +83,6 @@ export default {
       version: (state) => state.version,
       isEdgeConnected: (state) =>
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
-      peerFetch: (state) => state.pnp.peerFetch,
       pnp: state => state.pnp
     })
   },
