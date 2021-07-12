@@ -1,8 +1,5 @@
-import Vue from 'vue'
-import { mount, createLocalVue } from '@vue/test-utils'
-import Vuetify from 'vuetify'
+import { createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
-import VueRouter from 'vue-router'
 import { cloneDeep } from 'lodash'
 import pnp from '@/store/pnp.js'
 import {
@@ -15,7 +12,6 @@ import {
   PEER_CONNECTED,
   PEER_CONNECTION_ERROR,
   PNP_SERVICE_DISCONNECTED,
-  PNP_SERVICE_CONNECTING,
   PNP_SERVICE_CONNECTED,
   USER_MESSAGE,
   NEW_PEER_ID,
@@ -26,8 +22,8 @@ import {
 const STORAGE_KEY = 'ambianic-pnp-settings'
 
 describe('PnP state machine mutations - p2p communication layer', () => {
-// global
-  
+  // global
+
   // localVue is used for tests instead of the production Vue instance
   let localVue
 
@@ -114,12 +110,16 @@ describe('PnP state machine mutations - p2p communication layer', () => {
 
   test('PNP_SERVICE_DISCONNECTED', () => {
     store.commit(PNP_SERVICE_DISCONNECTED)
-    expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_DISCONNECTED)
+    expect(store.state.pnp.pnpServiceConnectionStatus).toBe(
+      PNP_SERVICE_DISCONNECTED
+    )
   })
 
   test('PNP_SERVICE_CONNECTED', () => {
     store.commit(PNP_SERVICE_CONNECTED)
-    expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_CONNECTED)
+    expect(store.state.pnp.pnpServiceConnectionStatus).toBe(
+      PNP_SERVICE_CONNECTED
+    )
   })
 
   test('USER_MESSAGE', () => {
@@ -135,14 +135,19 @@ describe('PnP state machine mutations - p2p communication layer', () => {
   test('NEW_REMOTE_PEER_ID', () => {
     store.commit(NEW_REMOTE_PEER_ID, 'a_new_remote_peer_id')
     expect(window.localStorage.setItem).toHaveBeenCalledTimes(1)
-    expect(window.localStorage.setItem).toHaveBeenCalledWith(`${STORAGE_KEY}.remotePeerId`, 'a_new_remote_peer_id')
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(
+      `${STORAGE_KEY}.remotePeerId`,
+      'a_new_remote_peer_id'
+    )
   })
 
   test('REMOTE_PEER_ID_REMOVED', () => {
     store.commit(REMOTE_PEER_ID_REMOVED)
     expect(store.state.pnp.remotePeerId).toBe(undefined)
     expect(window.localStorage.removeItem).toHaveBeenCalledTimes(1)
-    expect(window.localStorage.removeItem).toHaveBeenCalledWith(`${STORAGE_KEY}.remotePeerId`)
+    expect(window.localStorage.removeItem).toHaveBeenCalledWith(
+      `${STORAGE_KEY}.remotePeerId`
+    )
   })
 
   test('PEER_FETCH', () => {

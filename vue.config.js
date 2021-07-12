@@ -1,6 +1,7 @@
 // Compress static text assets at build time
 const CompressionPlugin = require('compression-webpack-plugin')
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
+var MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = {
   devServer: {
@@ -42,7 +43,9 @@ module.exports = {
       exclude: ['/.map$/', '/_redirects/', 'netlify.toml'],
       runtimeCaching: [
         {
-          urlPattern: new RegExp('https://fonts.(?:googleapis|gstatic).com/(.*)'),
+          urlPattern: new RegExp(
+            'https://fonts.(?:googleapis|gstatic).com/(.*)'
+          ),
           handler: 'CacheFirst',
           options: {
             cacheName: 'google-fonts',
@@ -50,21 +53,15 @@ module.exports = {
               maxEntries: 30
             },
             cacheableResponse: {
-              statuses: [
-                0,
-                200
-              ]
+              statuses: [0, 200]
             }
           }
         }
       ]
     }
-
   },
 
-  transpileDependencies: [
-    'vuetify'
-  ],
+  transpileDependencies: ['vuetify'],
 
   chainWebpack (config) {
     // Improve first page loading time
@@ -73,6 +70,10 @@ module.exports = {
 
     // enable build time compression
     config.plugin('CompressionPlugin').use(CompressionPlugin)
+
+    // css extraction
+    config.plugin('ExtractionPlugin').use(MiniCssExtractPlugin)
+
     // VuetifyLoaderPlugin
     config.plugin('VuetifyLoaderPlugin').use(VuetifyLoaderPlugin)
   },
