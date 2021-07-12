@@ -82,9 +82,7 @@
 
 <script>
 import { mapState } from 'vuex'
-
 import UpdateNotification from '@/components/UpdateNotification'
-
 export default {
   name: 'Home',
   components: {
@@ -101,7 +99,6 @@ export default {
   created () {
     const setupStatus = window.localStorage.getItem('hasCompletedOnboarding')
     const remotePeerId = this.edgePeerId
-
     if (setupStatus || remotePeerId) {
       this.$router.push('timeline')
     }
@@ -109,49 +106,21 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
-.see-thru {
-  opacity: 0.8
-}
-
+<style lang="css" scoped>
 .center {
   text-align : center;
 }
-.container {
-    width : 100%;
-}
-  .flex-between {
-    display : flex;
-    justify-content : space-between;
-  }
-.invisible {
-  opacity : 0;
-}
-
 .align-center {
   display : flex;
   justify-content : center;
   align-content  :center;
 }
-
 .body {
   display: flex;
   background: rgba(233, 241, 251, 0.81);
-  justify-content center;
+  justify-content: center;
   align-items : center;
   width : 100%;
   height: 100vh;
-}
-.text {
-  font-display : swap
-}
-.skip-link {
-  left: 0;
-  color: white;
-  padding: 0px;
-  z-index: 50;
-}
-.skip-link:focus {
-  top: 0;
 }
 </style>

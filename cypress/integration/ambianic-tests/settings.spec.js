@@ -30,4 +30,11 @@ context('Settings', () => {
     it('Should have a row', () => {
       cy.get('[data-cy=template-row]').should('exist')
     })
+
+    it("It display connected edge version after connection", () => {
+      cy.get('[data-cy=sendRemotePeerID]').click()
+
+      const versionNumber = require('../../../package.json').version
+      cy.get('[data-cy=title-text]').should('contain.text', versionNumber )
+    })
 })
