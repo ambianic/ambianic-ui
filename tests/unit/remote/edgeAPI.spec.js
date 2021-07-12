@@ -81,6 +81,23 @@ describe('PeerRoom class coverage - p2p communication layer', () => {
     expect(response).toEqual('{event: "object_detection"}')
   })
 
+  test('EdgeAPI.getEdgeStatus()', async () => {
+    pnp.peerFetch.get = jest.fn().mockReturnValue({
+      content: '{ status: "OK",  version: "1.14.7"}'
+    })
+    pnp.peerFetch.jsonify = jest.fn().mockImplementation((data) => data)
+
+    const edgeAPI = new EdgeAPI(pnp)
+    const response = await edgeAPI.getEdgeStatus()
+
+    expect(pnp.peerFetch.get).toHaveBeenCalledTimes(1)
+    expect(pnp.peerFetch.get).toHaveBeenCalledWith({
+      url: `http://${API_HOST}:${API_PORT}/${API_ROOT}/status`
+    })
+
+    expect(response).toEqual('{ status: "OK",  version: "1.14.7"}')
+  })
+
   test('EdgeAPI.getImageURL()', async () => {
     window.URL.createObjectURL = jest.fn().mockReturnValue('http://localstore')
     pnp.peerFetch.get = jest.fn().mockReturnValue({ content: 'binary_image_data' })

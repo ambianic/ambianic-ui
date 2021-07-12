@@ -48,7 +48,11 @@
     </v-list-item-content>
 
     <v-list-item-content v-else>
-      <v-list-item-title class="headline">
+      <v-list-item-title
+        data-cy="title-text"
+        id="title"
+        class="headline"
+      >
         {{ title }}
       </v-list-item-title>
 

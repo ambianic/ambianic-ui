@@ -1,8 +1,5 @@
-import Vue from 'vue'
-import { mount, createLocalVue } from '@vue/test-utils'
-import Vuetify from 'vuetify'
+import { createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
-import VueRouter from 'vue-router'
 import { cloneDeep } from 'lodash'
 import pnp from '@/store/pnp.js'
 import {
@@ -15,7 +12,6 @@ import {
   PEER_CONNECTED,
   PEER_CONNECTION_ERROR,
   PNP_SERVICE_DISCONNECTED,
-  PNP_SERVICE_CONNECTING,
   PNP_SERVICE_CONNECTED,
   USER_MESSAGE,
   NEW_PEER_ID,
@@ -27,7 +23,7 @@ const STORAGE_KEY = 'ambianic-pnp-settings'
 
 describe('PnP state machine mutations - p2p communication layer', () => {
 // global
-  
+
   // localVue is used for tests instead of the production Vue instance
   let localVue
 

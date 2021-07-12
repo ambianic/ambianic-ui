@@ -5,9 +5,7 @@
     align-content="space-around"
   >
     <template>
-      <v-card
-        max-width="344"
-      >
+      <v-card max-width="344">
         <v-layout
           column
           wrap
@@ -27,10 +25,9 @@
         />
 
         <v-card-text id="about-info">
-          Review your home timeline for notable moments.
-          Configure input sensors and camers for Ambianic to observe.
-          Share, purge or backup your data
-          - it never slips out of your control.
+          Review your home timeline for notable moments. Configure input sensors
+          and cameras for Ambianic to observe. Share, purge or backup your data -
+          it never slips out of your control.
         </v-card-text>
 
         <v-layout
@@ -40,7 +37,7 @@
         >
           <v-flex>
             <amb-list-item
-              id="version-info"
+              id="version-element"
               :title="version"
               icon-name="alpha-v-circle-outline"
               subtitle="Release Version"
@@ -72,7 +69,10 @@
 </template>
 <script>
 import AmbListItem from '@/components/shared/ListItem.vue'
+import { PEER_CONNECTED } from '@/store/mutation-types'
 import { mapState } from 'vuex'
+import { FETCH_EDGE_DEVICE_DETAILS } from '../store/action-types'
+import { EdgeAPI } from '../remote/edgeAPI'
 
 export default {
   components: {
@@ -80,8 +80,36 @@ export default {
   },
   computed: {
     ...mapState({
-      version: state => state.version
+      version: (state) => state.version,
+      isEdgeConnected: (state) =>
+        state.pnp.peerConnectionStatus === PEER_CONNECTED,
+      pnp: state => state.pnp
     })
+  },
+  created () {
+    this.edgeAPI = new EdgeAPI(this.pnp)
+
+    if (this.isEdgeConnected) {
+      this.fetchEdgeDetails()
+    }
+  },
+  methods: {
+    async fetchEdgeDetails () {
+      try {
+        const details = await this.edgeAPI.getEdgeStatus()
+
+        await this.$store.dispatch(FETCH_EDGE_DEVICE_DETAILS, details)
+      } catch (e) {
+        console.log(e)
+      }
+    }
+  },
+  watch: {
+    isEdgeConnected: function (isConnected) {
+      if (isConnected) {
+        this.fetchEdgeDetails()
+      }
+    }
   }
 }
 </script>
