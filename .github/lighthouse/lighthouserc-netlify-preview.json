@@ -8,7 +8,6 @@
       "assertions": {
         "first-contentful-paint": ["warn", { "minScore": 0.6 }],
         "font-display": "off",
-        "unused-css-rules": "on",
         "uses-rel-preconnect": "off",
         "is-crawlable": "off"
       }
