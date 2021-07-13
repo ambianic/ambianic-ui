@@ -1,26 +1,12 @@
-<!-- App.vue -->
 <template>
-  <v-lazy>
-    <amb-app-frame v-if="$route.name !== 'home'">
-      <vue-page-transition name="fade-in-right">
-        <router-view />
-      </vue-page-transition>
-    </amb-app-frame>
-
-    <v-app v-else>
-      <vue-page-transition name="fade-in-right">
-        <router-view />
-      </vue-page-transition>
-    </v-app>
-  </v-lazy>
+  <div>
+    <h1>  AMBIANIC APP HERE</h1>
+  </div>
 </template>
 
 <script>
-import AmbAppFrame from '@/components/AppFrame.vue'
+
 export default {
-  name: 'App',
-  components: {
-    AmbAppFrame
-  }
+  name: 'App'
 }
 </script>
