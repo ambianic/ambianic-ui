@@ -2,7 +2,6 @@ import Vue from 'vue'
 import App from './App.vue'
 import store from './store/index.js'
 import './registerServiceWorker'
-import vuetify from './plugins/vuetify'
 import VueRouter from 'vue-router'
 import VuePageTransition from 'vue-page-transition'
 
@@ -19,7 +18,6 @@ Vue.use(VuePageTransition)
 new Vue({
   router,
   store,
-  vuetify,
   render: h => h(App)
 }).$mount('#app')
 
