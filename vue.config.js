@@ -1,6 +1,6 @@
 // Compress static text assets at build time
 const CompressionPlugin = require('compression-webpack-plugin')
-const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
+// const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 
 module.exports = {
   devServer: {
@@ -71,7 +71,7 @@ module.exports = {
     config.plugin('CompressionPlugin').use(CompressionPlugin)
 
     // VuetifyLoaderPlugin
-    config.plugin('VuetifyLoaderPlugin').use(VuetifyLoaderPlugin)
+    // config.plugin('VuetifyLoaderPlugin').use(VuetifyLoaderPlugin)
   },
 
   productionSourceMap: false

@@ -1,11 +1,8 @@
 <template>
-  <div>
-    <h1>  AMBIANIC APP HERE</h1>
-  </div>
+  <h1>AMBIANIC APP HERE</h1>
 </template>
 
 <script>
-
 export default {
   name: 'App'
 }
