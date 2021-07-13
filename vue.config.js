@@ -1,7 +1,6 @@
 // Compress static text assets at build time
 const CompressionPlugin = require('compression-webpack-plugin')
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
-var MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = {
   devServer: {
@@ -70,9 +69,6 @@ module.exports = {
 
     // enable build time compression
     config.plugin('CompressionPlugin').use(CompressionPlugin)
-
-    // css extraction
-    config.plugin('ExtractionPlugin').use(MiniCssExtractPlugin)
 
     // VuetifyLoaderPlugin
     config.plugin('VuetifyLoaderPlugin').use(VuetifyLoaderPlugin)
