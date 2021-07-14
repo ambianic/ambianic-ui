@@ -71,4 +71,17 @@ export class EdgeAPI {
     }
     return imageUrl
   }
+
+  async getEdgeStatus () {
+    const apiRoot = this._getRootURL()
+    const request = {
+      url: `${apiRoot}status`
+    }
+
+    try {
+      return await this._getJSON(request)
+    } catch (e) {
+      console.log('Error fetching Edge Status', e)
+    }
+  }
 }

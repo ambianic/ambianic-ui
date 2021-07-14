@@ -14,15 +14,18 @@
         dense
         class="pa-0 ma-0"
       >
-        <infinite-loading
-          direction="top"
-          @infinite="infiniteHandlerTop"
-          v-observe-visibility="topSpinnerVisibilityChanged"
-        >
-          <span slot="no-more">
-            There are no new timeline events.
-          </span>
-        </infinite-loading>
+        <div infinite-wrapper>
+          <infinite-loading
+            direction="top"
+            force-use-infinite-wrapper="true"
+            @infinite="infiniteHandlerTop"
+            v-observe-visibility="topSpinnerVisibilityChanged"
+          >
+            <span slot="no-more">
+              There are no new timeline events.
+            </span>
+          </infinite-loading>
+        </div>
         <v-list-item
           data-cy="timelinedata"
           v-for="(sample, index) in timeline"
@@ -42,16 +45,16 @@
               lazy-src="/img/lazy-load-bg.gif"
             >
               <template #placeholder>
-                    <v-row
-                    class="fill-height ma-0"
-                    align="center"
-                    justify="center"
-                    >
-                    <v-progress-circular
-                        indeterminate
-                        color="info lighten-2"
-                    />
-                    </v-row>
+                <v-row
+                  class="fill-height ma-0"
+                  align="center"
+                  justify="center"
+                >
+                  <v-progress-circular
+                    indeterminate
+                    color="info lighten-2"
+                  />
+                </v-row>
               </template>
               <v-row
                 class="fill-height ma-0"
@@ -205,14 +208,17 @@
             </v-timeline>
           </v-list-item-content>
         </v-list-item>
-        <infinite-loading
-          @infinite="infiniteHandlerBottom"
-          v-if="!isTopSpinnerVisible"
-        >
-          <span slot="no-more">
-            There are no more timeline events.
-          </span>
-        </infinite-loading>
+        <div infinite-wrapper>
+          <infinite-loading
+            force-use-infinite-wrapper="true"
+            @infinite="infiniteHandlerBottom"
+            v-if="!isTopSpinnerVisible"
+          >
+            <span slot="no-more">
+              There are no more timeline events.
+            </span>
+          </infinite-loading>
+        </div>
       </v-list>
     </v-col>
   </v-row>
