@@ -43,6 +43,13 @@ Example screenshots on mobile and desktop:
 
 <img src="public/img/ambianic-ui-dekstop-screenshot.png" width="600">
 
+## Cloud deploymeny
+
+This project is deployed on Netlify by default and is available at https://ui.ambianic.ai . 
+If you prefer to launch your own deployment from this repo, click the button below:
+
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/ambianic/ambianic-ui)
+
 ## Local Installation & Setup
 
 ### Clone repository

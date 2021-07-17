@@ -132,17 +132,17 @@ const mutations = {
     // window.localStorage.setItem(`${STORAGE_KEY}.myPeerId`, newPeerId)
   },
   [NEW_REMOTE_PEER_ID] (state, newRemotePeerId) {
-    console.log('Setting state.remotePeerId to : ', newRemotePeerId)
+    console.debug('NEW_REMOTE_PEER_ID: Setting state.remotePeerId to : ', newRemotePeerId)
     state.remotePeerId = newRemotePeerId
     window.localStorage.setItem(`${STORAGE_KEY}.remotePeerId`, newRemotePeerId)
   },
   [REMOTE_PEER_ID_REMOVED] (state) {
-    console.log('Removing remote Peer Id from local storage')
+    console.debug('REMOTE_PEER_ID_REMOVED: Removing remote Peer Id from local storage')
     state.remotePeerId = undefined
     window.localStorage.removeItem(`${STORAGE_KEY}.remotePeerId`)
   },
   [PEER_FETCH] (state, peerFetch) {
-    console.debug('Setting PeerFetch instance.')
+    console.debug('PEER_FETCH: Setting PeerFetch instance.')
     state.peerFetch = peerFetch
   }
 }
@@ -161,16 +161,18 @@ async function discoverRemotePeerId ({ state, commit }) {
     return state.remotePeerId
   } else {
   // first try to find the remote peer ID in the same room
-    console.log(peer)
+    console.debug(peer)
     const myRoom = new PeerRoom(peer)
-    console.log('Fetching room members', myRoom)
-    const { clientsIds } = await myRoom.getRoomMembers()
-    const peerIds = clientsIds
-    console.log('myRoom members', clientsIds)
+    console.debug('Fetching room members', myRoom)
+    const roomMembers = await myRoom.getRoomMembers()
+    console.debug('Fetched roomMembers', roomMembers)
+    const peerIds = roomMembers.clientsIds
+    console.debug('myRoom members', peerIds)
     // find a peerId that is different than this PWA peer ID and
     //   is not in the problematic list of remote peers
     var remotePeerId = peerIds.find(
       pid => pid !== state.myPeerId && !state.problematicRemotePeers.has(pid))
+    console.debug(`remotePeerId: ${remotePeerId} found among myRoom members: ${peerIds}`)
     if (remotePeerId === undefined && state.problematicRemotePeers.size > 0) {
       // if no fresh remote peer is found, recycle the problematic peers list
       // and try to connect to them again
@@ -198,7 +200,7 @@ function setPnPServiceConnectionHandlers (
   peer.on('open', function (id) {
     commit(PNP_SERVICE_CONNECTED)
     // Workaround for peer.reconnect deleting previous id
-    if (peer.id === null) {
+    if (!peer.id) {
       console.log('pnp client: Received null id from peer open')
       peer.id = state.myPeerId
     } else {
@@ -294,6 +296,8 @@ function setPeerConnectionHandlers ({
     console.info(`Error in connection to remote peer ID ${peerConnection.peer}`, err)
     dispatch(HANDLE_PEER_CONNECTION_ERROR, { peerConnection, err })
   })
+
+  console.debug('peerConnection.on(event) handlers all set.')
 }
 
 const actions = {
@@ -445,7 +449,7 @@ const actions = {
         console.debug('Problematic remote peer ID:', remotePeerId)
         peer.destroy()
       } catch (err) {
-        console.warning('Error destroying peer.')
+        console.warn('Error destroying peer.')
       } finally {
         console.info('It took too long to setup a connection. Resetting peer.')
         dispatch(INITIALIZE_PNP)
@@ -491,7 +495,7 @@ const actions = {
       // remote Peer ID authenticated,
       // lets store it for future (re)connections
       // if its not already stored
-      if (!state.remotePeerId === peerConnection.peer) {
+      if (state.remotePeerId !== peerConnection.peer) {
         commit(NEW_REMOTE_PEER_ID, peerConnection.peer)
       }
     } else {
