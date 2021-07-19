@@ -16,11 +16,11 @@
     </div>
 
     <v-icon
-      v-else
       dark
+      v-else
       large
     >
-      {{ eventIcon() }}
+      {{ eventIcon(data.args.inference_result) }}
     </v-icon>
   </v-avatar>
 </template>
@@ -38,11 +38,11 @@ export default {
     }
   },
   methods: {
-    eventIcon () {
-      setTimelineEventIcon(this.data.args.inference_result)
+    eventIcon (inferenceResult) {
+      return setTimelineEventIcon(inferenceResult)
     },
-    eventColor () {
-      setTimelineEventColor(this.data.priority)
+    eventColor (priority) {
+      return setTimelineEventColor(priority)
     }
   }
 }

@@ -1,18 +1,26 @@
-import { createLocalVue } from '@vue/test-utils'
+import Vue from 'vue'
+import { mount, createLocalVue } from '@vue/test-utils'
+import Vuetify from 'vuetify'
 import Vuex from 'vuex'
+import VueRouter from 'vue-router'
 import { cloneDeep } from 'lodash'
 import pnp from '@/store/pnp.js'
 import {
   PEER_DISCONNECTED,
   PEER_CONNECTING,
   PEER_DISCOVERING,
+  PEER_DISCOVERED,
+  PEER_AUTHENTICATING,
   PEER_CONNECTED,
+  PEER_CONNECTION_ERROR,
   PNP_SERVICE_DISCONNECTED,
   PNP_SERVICE_CONNECTING,
   PNP_SERVICE_CONNECTED,
   USER_MESSAGE,
   NEW_PEER_ID,
-  NEW_REMOTE_PEER_ID
+  NEW_REMOTE_PEER_ID,
+  REMOTE_PEER_ID_REMOVED,
+  PEER_FETCH
 } from '@/store/mutation-types.js'
 import {
   INITIALIZE_PNP,
@@ -22,7 +30,8 @@ import {
   PEER_CONNECT,
   PEER_AUTHENTICATE,
   REMOVE_REMOTE_PEER_ID,
-  CHANGE_REMOTE_PEER_ID
+  CHANGE_REMOTE_PEER_ID,
+  HANDLE_PEER_CONNECTION_ERROR
 } from '@/store/action-types.js'
 import { ambianicConf } from '@/config'
 
@@ -88,7 +97,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
     expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
     expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_CONNECTING)
     expect(store.state.pnp.peerFetch).toBe(undefined)
-    expect(Peer).toHaveBeenCalledTimes(1)
+    expect(Peer).toHaveBeenCalledTimes(1);
     expect(Peer).toHaveBeenCalledWith(store.state.myPeerId,
       {
         host: ambianicConf.AMBIANIC_PNP_HOST,
@@ -180,7 +189,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
     // At this point in time, there should have been a single call to
     // setTimeout to schedule another peer discovery loop.
     expect(setTimeout).toHaveBeenCalledTimes(1)
-    expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), store.state.pnp.discoveryLoopPause)
+    expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), store.state.pnp.discoveryLoopPause);
     // emulate the use case when remotePeerId is already known
     // and connection is established
     store.state.pnp.remotePeerId = 'a_known_remote_peer_id'
@@ -215,7 +224,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
     expect(PeerRoom.prototype.getRoomMembers).toHaveBeenCalledTimes(1)
     expect(Peer.prototype.connect).toHaveBeenCalledTimes(1)
     expect(Peer.prototype.connect).toHaveBeenLastCalledWith(
-      'a_remote_peer_id',
+      'a_remote_peer_id', 
       { label: 'http-proxy', reliable: true, serialization: 'raw' }
     )
   })
@@ -232,7 +241,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
     const aProblematicRemotePeerId = 'a_problematic_remote_peer_id'
     store.state.pnp.problematicRemotePeers.clear()
     store.state.pnp.problematicRemotePeers.add(aProblematicRemotePeerId)
-    const roomMembers = { clientsIds: [peer.id, aProblematicRemotePeerId] }
+    const roomMembers = { clientsIds: [peer.id, aProblematicRemotePeerId ] }
     jest.spyOn(PeerRoom.prototype, 'getRoomMembers').mockImplementationOnce(
       () => {
         console.debug('mock roomMembers', roomMembers)
@@ -246,7 +255,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
     expect(PeerRoom.prototype.getRoomMembers).toHaveBeenCalledTimes(1)
     expect(Peer.prototype.connect).toHaveBeenCalledTimes(1)
     expect(Peer.prototype.connect).toHaveBeenLastCalledWith(
-      aProblematicRemotePeerId,
+      aProblematicRemotePeerId, 
       { label: 'http-proxy', reliable: true, serialization: 'raw' }
     )
   })
@@ -532,7 +541,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
     const peer = store.state.pnp.peer
     // emulate peer is in connected state to the signaling/pnp service before the disconnect takes place
     store.state.pnp.pnpServiceConnectionStatus = PNP_SERVICE_CONNECT
-    const onDisconnectedCallback = peer.on.mock.calls.find(callbackDetails => callbackDetails[0] === 'disconnected')
+    const onDisconnectedCallback = peer.on.mock.calls.find(callbackDetails => callbackDetails[0] === 'disconnected');
     onDisconnectedCallback[1]()
     expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_DISCONNECTED)
   })
