@@ -5,7 +5,7 @@
     fluid
   >
     <v-app-bar
-      app
+      app1
       color="blue darken-3"
     >
       <v-toolbar-title
@@ -18,6 +18,7 @@
         />
         <span class="hidden-sm-and-down">Ambianic</span>
       </v-toolbar-title>
+      <v-spacer />
 
       <nav-button
         data-cy="timeline-icon"

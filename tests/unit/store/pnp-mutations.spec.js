@@ -27,7 +27,7 @@ const STORAGE_KEY = 'ambianic-pnp-settings'
 
 describe('PnP state machine mutations - p2p communication layer', () => {
 // global
-  
+
   // localVue is used for tests instead of the production Vue instance
   let localVue
 
