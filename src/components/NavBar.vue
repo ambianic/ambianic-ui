@@ -5,7 +5,7 @@
     fluid
   >
     <v-app-bar
-      app1
+      app
       color="blue darken-3"
     >
       <v-toolbar-title
