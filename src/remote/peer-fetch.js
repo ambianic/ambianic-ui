@@ -162,8 +162,14 @@ export class PeerFetch {
     // and use it to claim the corresponding
     // response when available
     const ticket = this._enqueueRequest(request)
-    const response = await this._receiveResponse(ticket)
-    return response
+
+    try {
+      const response = await this._receiveResponse(ticket)
+
+      return response
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   _enqueueRequest (request) {
