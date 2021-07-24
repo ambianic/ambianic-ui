@@ -29,5 +29,4 @@ VueApp.$mount('#app')
 
 if (window.Cypress) {
   window.__store__ = store
-  window.vue = VueApp
 }

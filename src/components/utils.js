@@ -4,7 +4,7 @@ export const setTimelineEventIcon = (inf) => {
   if (inf.length > 0) {
     topLabel = inf[0].label
   }
-  let icon = 'mdi-corshairs-question'
+  let icon = 'mdi-crosshairs-question'
   switch (topLabel) {
     case 'person':
       icon = 'mdi-human'

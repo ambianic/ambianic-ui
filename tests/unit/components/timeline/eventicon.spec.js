@@ -94,5 +94,8 @@ describe('EventIcon', () => {
 
     icon = setTimelineEventIcon(MockData[5].args.inference_result)
     expect(icon).toBe('mdi-dog')
+
+    icon = setTimelineEventIcon('')
+    expect(icon).toBe('mdi-crosshairs-question')
   })
 })

@@ -65,9 +65,6 @@
                 <template v-if="isImageLoaded[index]">
                   <detection-boxes
                     :detections="sample.args.inference_result"
-                    :tensor_image_size="
-                      sample.args.inference_meta.tensor_image_size
-                    "
                   />
                   <event-icon :data="sample" />
                 </template>
