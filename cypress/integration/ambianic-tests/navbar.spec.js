@@ -11,10 +11,6 @@ context('Check Navbar Items', () => {
     cy.get('[data-cy=timeline]').click()
   })
 
-  it('Should have a disabled search bar', () => {
-    cy.get('[data-cy=container').find('#searchbar').should('be.disabled')
-  })
-
   it('Should be a download off button', () => {
     const t = cy.get('[data-cy=download-off]')
     expect(t).to.exist
@@ -35,6 +31,11 @@ context('Check Navbar Items', () => {
    */
 
   it('Should display upgrade icon on different viewports', () => {
+    cy.window().then(win => win.__store__.dispatch('SAVE_AUTHENTICATED_USER', {
+      loadingAuth: false
+    }))
+    
+
     expect(cy.get('[data-cy=profile-component]')).to.exist
 
     expect(cy.get('[data-cy=login]')).to.exist

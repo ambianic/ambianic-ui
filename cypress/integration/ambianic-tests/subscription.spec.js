@@ -68,7 +68,7 @@ context('SubscriptionModal', () => {
   })
 
   it('It contains 7 input forms', () => {
-    cy.get('input').its('length').should('be.eq', 7)
+    cy.get('input').its('length').should('be.eq', 6)
   })
 
   it('Should close modal at click of `Cancel` button', () => {

@@ -86,7 +86,7 @@ describe('SubscriptionDialog', () => {
 
   test('Error text response is shown for unsuccessful subscription requests', async () => {
     fetch.mockResponseOnce(
-          JSON.stringify({error: 'Error creating subscription'} ), { status: 404}
+      JSON.stringify({ error: 'Error creating subscription' }), { status: 404 }
     )
 
     await wrapper.setData({ showInputs: true })
@@ -100,27 +100,26 @@ describe('SubscriptionDialog', () => {
   })
 
   test('Request is made to submit subscription data at `Confirm` button click', async () => {
+    fetch.mockResponseOnce(JSON.stringify({
+      userStripeId: 'cus|121212121212',
+      userSubscriptionId: 'sub|121212121212'
+    }), { status: 200 })
+    fetch.mockResponseOnce()
+
     await wrapper.setData({ showInputs: true })
 
     await flushPromises()
 
     await wrapper.find('#confirm-btn').trigger('click')
     expect(wrapper.find('#confirm-btn').text()).toBe('Confirming Details')
-
-    fetch.mockResponseOnce(JSON.stringify({
-      userStripeId: 'cus|121212121212',
-      userSubscriptionId: 'sub|121212121212'
-    }), { status: 200})
-
-    fetch.mockResponseOnce()
   })
 
   test('`saveStripeData` executes request to save user data and closes subscription dialog', async () => {
     fetch.mockResponseOnce(
-        JSON.stringify({
-          userStripeId: 'cus|121212121212',
-          userSubscriptionId: 'sub|121212121212'
-        } ), { statusCode: 200}
+      JSON.stringify({
+        userStripeId: 'cus|121212121212',
+        userSubscriptionId: 'sub|121212121212'
+      }), { statusCode: 200 }
     )
 
     await wrapper.vm.saveStripeData()

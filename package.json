@@ -7,7 +7,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "codecov:e2e": "codecov -f ./jest-coverage/coverage-final.json",
+    "codecov:e2e": "codecov -f ./coverage/coverage-final.json",
     "codecov:unit": "codecov -f ./jest-coverage/coverage-final.json",
     "codecov": "codecov -f jest-coverage/coverage-final.json && codecov -f coverage/coverage-final.json",
     "copy:reports": "mkdir -p reports/ && cp coverage/coverage-final.json reports/from-cypress.json && cp jest-coverage/coverage-final.json reports/from-jest.json",
