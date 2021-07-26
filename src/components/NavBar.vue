@@ -18,16 +18,6 @@
         />
         <span class="hidden-sm-and-down">Ambianic</span>
       </v-toolbar-title>
-      <v-text-field
-        id="searchbar"
-        flat
-        :disabled="true"
-        solo-inverted
-        hide-details
-        prepend-inner-icon="search"
-        label="Search"
-        class="hidden-sm-and-down"
-      />
       <v-spacer />
 
       <amb-button

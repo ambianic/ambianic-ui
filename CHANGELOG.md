@@ -1,5 +1,14 @@
 # Semantic Versioning Changelog
 
+## [2.14.2](https://github.com/ambianic/ambianic-ui/compare/v2.14.1...v2.14.2) (2021-07-24)
+
+
+### Bug Fixes
+
+* added try/catch to peer_fetch method ([35c3d93](https://github.com/ambianic/ambianic-ui/commit/35c3d931d8310f8660307f4ff386af24dee6c73b))
+* fixed misaligned navbar icons ([ca5d6e7](https://github.com/ambianic/ambianic-ui/commit/ca5d6e77badf0440e2eeda72412af2803a0db7e3)), closes [#677](https://github.com/ambianic/ambianic-ui/issues/677)
+* fixed misaligned navbar icons ([cc6d1b4](https://github.com/ambianic/ambianic-ui/commit/cc6d1b452d36ea2505afbccafb160c96284ea24b))
+
 ## [2.14.1](https://github.com/ambianic/ambianic-ui/compare/v2.14.0...v2.14.1) (2021-04-18)
 
 
