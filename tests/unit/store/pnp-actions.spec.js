@@ -1,26 +1,18 @@
-import Vue from 'vue'
-import { mount, createLocalVue } from '@vue/test-utils'
-import Vuetify from 'vuetify'
+import { createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
-import VueRouter from 'vue-router'
 import { cloneDeep } from 'lodash'
 import pnp from '@/store/pnp.js'
 import {
   PEER_DISCONNECTED,
   PEER_CONNECTING,
   PEER_DISCOVERING,
-  PEER_DISCOVERED,
-  PEER_AUTHENTICATING,
   PEER_CONNECTED,
-  PEER_CONNECTION_ERROR,
   PNP_SERVICE_DISCONNECTED,
   PNP_SERVICE_CONNECTING,
   PNP_SERVICE_CONNECTED,
   USER_MESSAGE,
   NEW_PEER_ID,
-  NEW_REMOTE_PEER_ID,
-  REMOTE_PEER_ID_REMOVED,
-  PEER_FETCH
+  NEW_REMOTE_PEER_ID
 } from '@/store/mutation-types.js'
 import {
   INITIALIZE_PNP,
@@ -30,8 +22,7 @@ import {
   PEER_CONNECT,
   PEER_AUTHENTICATE,
   REMOVE_REMOTE_PEER_ID,
-  CHANGE_REMOTE_PEER_ID,
-  HANDLE_PEER_CONNECTION_ERROR
+  CHANGE_REMOTE_PEER_ID
 } from '@/store/action-types.js'
 import { ambianicConf } from '@/config'
 

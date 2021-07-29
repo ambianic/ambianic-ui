@@ -43,7 +43,7 @@
             >
               <template #placeholder>
                 <div>
-                  <br />
+                  <br>
                   <v-row
                     class="fill-height ma-0"
                     align="center"
