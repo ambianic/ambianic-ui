@@ -24,6 +24,7 @@
           </span>
         </infinite-loading>
         <v-list-item
+            id="timeline-data"
           data-cy="timelinedata"
           v-for="(sample, index) in timeline"
           :key="index"
@@ -61,26 +62,11 @@
                 align="start"
                 justify="start"
               >
-                <template
-                  v-if="isImageLoaded[index]"
-                >
+                <template v-if="isImageLoaded[index]">
                   <detection-boxes
                     :detections="sample.args.inference_result"
                   />
-                  <v-avatar
-                    :color="eventColor(sample)"
-                    size="62"
-                    left
-                    align="top"
-                    class="font-weight-regular pa-4 ma-6 see-thru"
-                  >
-                    <v-icon
-                      dark
-                      large
-                    >
-                      {{ eventIcon(sample) }}
-                    </v-icon>
-                  </v-avatar>
+                  <event-icon :data="sample" />
                 </template>
               </v-row>
             </v-img>
@@ -233,6 +219,7 @@ import Vue from 'vue'
 import VueObserveVisibility from 'vue-observe-visibility'
 import { EdgeAPI } from '@/remote/edgeAPI'
 import { mapState } from 'vuex'
+import EventIcon from '@/components/EventIcon.vue'
 import moment from 'moment'
 import {
   PEER_CONNECTED,
@@ -269,7 +256,8 @@ export default {
   },
   components: {
     DetectionBoxes,
-    InfiniteLoading
+    InfiniteLoading,
+    EventIcon
   },
   computed: {
     ...mapState({
@@ -422,36 +410,6 @@ export default {
       // eslint-disable-next-line
       // console.log('color: ' + color)
       return color
-    },
-    eventIcon (event) {
-      let topLabel = 'none'
-      const inf = event.args.inference_result
-      if (inf.length > 0) {
-        topLabel = inf[0].label
-      }
-      let icon = 'mdi-crosshairs-question'
-      // eslint-disable-next-line
-      // console.log('label: ' + JSON.stringify(topLabel))
-      switch (topLabel) {
-        case 'person':
-          icon = 'mdi-human'
-          break
-        case 'face':
-          icon = 'mdi-face'
-          break
-        case 'car':
-          icon = 'mdi-car'
-          break
-        case 'cat':
-          icon = 'mdi-cat'
-          break
-        case 'dog':
-          icon = 'mdi-dog'
-          break
-      }
-      // eslint-disable-next-line
-      // console.log('icon: ' + icon)
-      return icon
     },
     friendlyTime (datetime) {
       const dt = new Date()

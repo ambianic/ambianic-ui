@@ -8,7 +8,7 @@
         "image_file_name": "20191028-000051.322407.jpg",
         "thumbnail_file_name": "20191028-000051.322407-thumbnail.jpg",
         "inference_meta": {
-          "display": "Object Detection"
+          "display": "Fall Detection"
         },
         "inference_result": [
           {
@@ -20,6 +20,40 @@
             },
             "confidence": 0.98828125,
             "label": "person"
+          }
+        ],
+        "json_file_name": "20191028-000051.322407.json",
+        "rel_dir": "detections/20191028-000048.435604"
+      },
+      "created": 1572220851.3650944,
+      "id": "af76b3d2e2ea4b37a1ab191f37ccb068",
+      "message": "Detection Event",
+      "priority": "WARNING",
+      "source_code": {
+        "funcName": "_save_sample",
+        "lineno": 110,
+        "pathname": "/workspace/src/ambianic/pipeline/store.py"
+      }
+    },
+    {
+      "args": {
+        "datetime": "2019-10-28T00:00:51.322407",
+        "id": "dd6705eb9730450098a5ade4c0af38fd",
+        "image_file_name": "20191028-000051.322407.jpg",
+        "thumbnail_file_name": "20191028-000051.322407-thumbnail.jpg",
+        "inference_meta": {
+          "display": "Fall Detection"
+        },
+        "inference_result": [
+          {
+            "box": {
+              "xmin": 0.6749029159545898,
+              "ymin": 0.024479886516928673,
+              "xmax": 0.9028397798538208,
+              "ymax": 0.4697817265987396
+            },
+            "confidence": 0.98828125,
+            "label": "fall"
           }
         ],
         "json_file_name": "20191028-000051.322407.json",
