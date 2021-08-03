@@ -18,6 +18,7 @@
         />
         <span class="hidden-sm-and-down">Ambianic</span>
       </v-toolbar-title>
+      <v-spacer />
 
       <nav-button
         data-cy="timeline-icon"
@@ -34,7 +35,6 @@
       />
 
       <!-- Future navbar icons
-
       <v-text-field
         id="searchbar"
         flat
@@ -45,7 +45,6 @@
         class="hidden-sm-and-down"
       />
       <v-spacer />
-
       <nav-button
         with-badge
         data-cy="heart"
@@ -53,7 +52,6 @@
         :badge-content="newFavorites"
         :badge-value="newFavorites"
       />
-
       <nav-button
         with-badge
         data-cy="bell"
@@ -88,9 +86,7 @@
       expand-on-hover
     >
       <v-list dense>
-        <template
-          v-for="item in items"
-        >
+        <template v-for="item in items">
           <v-row
             v-if="item.heading"
             :key="item.heading"
@@ -170,10 +166,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import {
-  PEER_CONNECTED
-} from '@/store/mutation-types'
-
+import { PEER_CONNECTED } from '@/store/mutation-types'
 export default {
   name: 'NavBar',
   components: {
@@ -224,7 +217,9 @@ export default {
   computed: {
     ...mapState({
       isEdgeConnected: function (state) {
-        console.debug(`app frame: state.pnp.peerConnectionStatus: ${state.pnp.peerConnectionStatus}`)
+        console.debug(
+          `app frame: state.pnp.peerConnectionStatus: ${state.pnp.peerConnectionStatus}`
+        )
         return state.pnp.peerConnectionStatus === PEER_CONNECTED
       }
     })
@@ -233,5 +228,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 </style>

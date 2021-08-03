@@ -1,5 +1,28 @@
 # Semantic Versioning Changelog
 
+# [2.15.0](https://github.com/ambianic/ambianic-ui/compare/v2.14.2...v2.15.0) (2021-08-03)
+
+
+### Bug Fixes
+
+* added try/catch to peer_fetch method ([99924e7](https://github.com/ambianic/ambianic-ui/commit/99924e780edbf52fee6709b101da6e89d4884665))
+* fixed misaligned navbar icons ([75ec625](https://github.com/ambianic/ambianic-ui/commit/75ec6258cbedf989ddf42c3a74184c678abdf6eb))
+
+
+### Features
+
+* add fall detection icon in UI ([934231c](https://github.com/ambianic/ambianic-ui/commit/934231c711f6b4e4f2927e4ed59c3548f489509d))
+* fall detection in UI ([42fc776](https://github.com/ambianic/ambianic-ui/commit/42fc77688b31a9717083e2ca338c6203693d8947))
+
+## [2.14.2](https://github.com/ambianic/ambianic-ui/compare/v2.14.1...v2.14.2) (2021-07-24)
+
+
+### Bug Fixes
+
+* added try/catch to peer_fetch method ([35c3d93](https://github.com/ambianic/ambianic-ui/commit/35c3d931d8310f8660307f4ff386af24dee6c73b))
+* fixed misaligned navbar icons ([ca5d6e7](https://github.com/ambianic/ambianic-ui/commit/ca5d6e77badf0440e2eeda72412af2803a0db7e3)), closes [#677](https://github.com/ambianic/ambianic-ui/issues/677)
+* fixed misaligned navbar icons ([cc6d1b4](https://github.com/ambianic/ambianic-ui/commit/cc6d1b452d36ea2505afbccafb160c96284ea24b))
+
 ## [2.14.1](https://github.com/ambianic/ambianic-ui/compare/v2.14.0...v2.14.1) (2021-04-18)
 
 

@@ -29,4 +29,4 @@ cypress/screenshots/
 # Test coverage reports
 .nyc_output/
 coverage/
-jest-coverage
+.env
