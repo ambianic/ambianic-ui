@@ -1,4 +1,4 @@
-import { createLocalVue , shallowMount } from '@vue/test-utils'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 import pnp from '@/store/pnp.js'
 import Vuex from 'vuex'
 import { cloneDeep } from 'lodash'
