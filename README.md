@@ -64,6 +64,9 @@ npm install
 ```
 
 ### Prepare dev environment
+
+Set up a git pre-commit hook for linting.
+
 ```
 npm run prepare
 ```
