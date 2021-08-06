@@ -4,6 +4,7 @@
   "description": "Ambianic UI is the main user interface to Ambianic Edge deployments.",
   "author": "Ivelin Ivanov",
   "scripts": {
+    "prepare": "husky install",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",

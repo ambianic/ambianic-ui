@@ -4,6 +4,7 @@ image:
 tasks:
   - init: |
       npm install
+      npm run prepare
     command: |
       echo "Starting Ambianic UI in dev mode:"
       npm run serve
