@@ -15,9 +15,9 @@ tasks:
       npm install cypress
       npm run test
 
-vscode:
-  extensions:
-    - octref.vetur@0.31.3:QHyAEoimIBiRDoL6WtEoRg==
+#vscode:
+#  extensions:
+#    - octref.vetur@0.31.3:QHyAEoimIBiRDoL6WtEoRg==
 
 ports:
   - port: 8080
