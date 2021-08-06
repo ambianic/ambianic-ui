@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@vue/babel-preset-app": "^4.5.10",
-    "compression-webpack-plugin": "^6.0.4",
+    "compression-webpack-plugin": "^8.0.1",
     "idb": "^6.0.0",
     "konva": "^7.1.4",
     "moment": "^2.26.0",
