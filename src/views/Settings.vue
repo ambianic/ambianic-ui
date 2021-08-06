@@ -345,7 +345,7 @@ export default {
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
       edgePeerId: state => state.pnp.remotePeerId,
       peerFetch: state => state.pnp.peerFetch,
-      version: state => state.version,
+      version: state => state.edgeDeviceStore.version,
       pnp: state => state.pnp
     }),
     connectStep: function () {

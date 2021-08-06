@@ -80,7 +80,7 @@ export default {
   },
   computed: {
     ...mapState({
-      version: (state) => state.version,
+      version: (state) => state.edgeDeviceStore.version,
       isEdgeConnected: (state) =>
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
       pnp: state => state.pnp

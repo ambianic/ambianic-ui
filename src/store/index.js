@@ -1,40 +1,32 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import PNPStore from './pnp.js'
-import { INITIALIZE_PNP, FETCH_EDGE_DEVICE_DETAILS } from './action-types.js'
-import { UPDATE_AVAILABLE, EDGE_DEVICE_DETAILS } from './mutation-types'
+import EdgeDeviceStore from './edge-device'
+import { INITIALIZE_PNP } from './action-types.js'
+import { UPDATE_AVAILABLE } from './mutation-types'
 
 Vue.use(Vuex)
 
-const applicationStore = {
+const store = new Vuex.Store({
   state: {
-    updateToBeInstalled: undefined,
-    version: require('@/../package.json').version
+    updateToBeInstalled: undefined
   },
   mutations: {
     [UPDATE_AVAILABLE] (state, updateToBeInstalled) {
       state.updateToBeInstalled = updateToBeInstalled
-    },
-    [EDGE_DEVICE_DETAILS] (state, edgeDetails) {
-      state.version = edgeDetails.version
     }
   },
   actions: {
-    [FETCH_EDGE_DEVICE_DETAILS] ({ commit }, details) {
-      console.log('I AM CALLED')
-      commit(EDGE_DEVICE_DETAILS, details)
-    }
   },
   modules: {
-    pnp: PNPStore
+    pnp: PNPStore,
+    edgeDeviceStore: EdgeDeviceStore
   }
-}
-
-const store = new Vuex.Store(applicationStore)
+})
 
 /**
   Begin connection attempt to Ambianic Edge as soon as the app is created
 */
 store.dispatch(INITIALIZE_PNP)
 
-export { store, applicationStore }
+export default store
