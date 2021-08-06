@@ -63,6 +63,11 @@ cd ambianic-ui
 npm install
 ```
 
+### Prepare dev environment
+```
+npm run prepare
+```
+
 ### Compiles and hot-reloads for development
 ```
 npm run serve
