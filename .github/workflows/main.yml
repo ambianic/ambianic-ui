@@ -72,7 +72,7 @@ jobs:
           CI: true
 
     - name: Run Lighthouse PWA check against local production build
-      uses: treosh/lighthouse-ci-action@v2
+      uses: treosh/lighthouse-ci-action@v8
       with:
           # no urls needed, since it uses local folder to scan .html files
           # budgetPath: '.github/lighthouse/budget.json' # performance budgets
