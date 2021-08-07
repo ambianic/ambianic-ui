@@ -37,11 +37,11 @@ See the [Quick Start](https://docs.ambianic.ai/users/quickstart/) guide for inst
 
 Example screenshots on mobile and desktop:
  
-<img src="docs/img/ambianic-ui-mobile-screenshot.png" width="300">
+<img src="docs/img/ambianic-ui-mobile-screenshot.png" width="300" alt="ambianic UI mobile page example">
 
 &nbsp;
 
-<img src="docs/img/ambianic-ui-dekstop-screenshot.png" width="600">
+<img src="docs/img/ambianic-ui-dekstop-screenshot.png" width="600" alt="ambianic UI mobile page example">
 
 ## Cloud deploymeny
 
