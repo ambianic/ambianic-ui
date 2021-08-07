@@ -17,10 +17,10 @@ const actions = {
   }
 }
 
-const edgeDeviceModule = {
+const edgeDeviceStore = {
   state,
   actions,
   mutations
 }
 
-export default edgeDeviceModule
+export default edgeDeviceStore

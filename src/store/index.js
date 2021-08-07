@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import PNPStore from './pnp.js'
-import EdgeDeviceStore from './edge-device'
+import edgeDeviceStore from './edge-device'
 import { INITIALIZE_PNP } from './action-types.js'
 import { UPDATE_AVAILABLE } from './mutation-types'
 
@@ -20,7 +20,7 @@ const store = new Vuex.Store({
   },
   modules: {
     pnp: PNPStore,
-    edgeDeviceStore: EdgeDeviceStore
+    edgeDevice: edgeDeviceStore
   }
 })
 
