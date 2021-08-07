@@ -15,7 +15,7 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Wait for Netlify preview deployment of this git branch
       uses: jakepartusch/wait-for-netlify-action@v1
       id: get-netlify-url
@@ -23,7 +23,7 @@ jobs:
         site_name: "ambianic-pwa-dist"
         max_timeout: 180
     - name: Run Lighthouse PWA check against Netlify PR Preview
-      uses: treosh/lighthouse-ci-action@v2
+      uses: treosh/lighthouse-ci-action@v8
       with:
         urls: |
           ${{ steps.get-netlify-url.outputs.url }}
@@ -32,7 +32,7 @@ jobs:
         # budgetPath: '.github/lighthouse/budget.json' # performance budgets
         configPath: '.github/lighthouse/lighthouserc-netlify-preview.json' # PWA checks
     - name: Run Lighthouse PWA sanity check against Netlify production deployment
-      uses: treosh/lighthouse-ci-action@v2
+      uses: treosh/lighthouse-ci-action@v8
       with:
         urls: |
           https://ui.ambianic.ai
