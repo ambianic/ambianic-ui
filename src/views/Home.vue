@@ -42,7 +42,7 @@
                 dark
                 data-cy="timeline"
                 class="ma-2 white--text"
-                :to="'onboarding'"
+                to="onboarding"
                 id="btn-setup"
                 v-if="!hasSetupSystem"
               >
@@ -57,7 +57,7 @@
                 dark
                 data-cy="timeline"
                 class="ma-2 white--text"
-                :to="'timeline'"
+                to="timeline"
                 id="btn-dashboard"
                 v-else
               >

@@ -59,8 +59,13 @@ describe('NavBar', () => {
     expect(card.exists()).toBe(true)
   })
 
-  test('should load 2 buttons', () => {
-    const btn = wrapper.findAll('.v-btn')
-    expect(btn.length).toBe(2)
+  test('should have Discover Local button', () => {
+    const btn = wrapper.find('#btn-discoverLocal')
+    expect(btn.exists()).toBe(true)
+  })
+
+  test('should have Pair Remotely button', () => {
+    const btn = wrapper.find('#btn-sendRemotePeerID')
+    expect(btn.exists()).toBe(true)
   })
 })
