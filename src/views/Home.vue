@@ -28,21 +28,8 @@
 
           <v-card-text id="welcome-text">
             <v-list-item-subtitle class="center">
-              Safe Home - via Ambient Intelligence
+              Safer Home via Ambient Intelligence
             </v-list-item-subtitle>
-
-            <p
-              class="center"
-              v-if="!hasSetupSystem"
-            >
-              Let's setup your system
-            </p>
-            <p
-              class="center"
-              v-else
-            >
-              Control your Ambianic Edge Appliances from your console.
-            </p>
           </v-card-text>
 
           <v-card-actions class="align-center">
@@ -56,9 +43,25 @@
                 data-cy="timeline"
                 class="ma-2 white--text"
                 :to="'onboarding'"
-                id="btn-timeline"
+                id="btn-setup"
+                v-if="!hasSetupSystem"
               >
-                Continue Setup
+                Begin Setup
+                <v-icon right>
+                  mdi-arrow-right
+                </v-icon>
+              </v-btn>
+              <v-btn
+                rounded
+                color="pink darken-4"
+                dark
+                data-cy="timeline"
+                class="ma-2 white--text"
+                :to="'timeline'"
+                id="btn-dashboard"
+                v-else
+              >
+                View Timeline
                 <v-icon right>
                   mdi-arrow-right
                 </v-icon>
@@ -96,14 +99,20 @@ export default {
     })
   },
   data () {
-    return { hasSetupSystem: false }
+    return {
+      hasSetupSystem: false
+    }
   },
   created () {
     const setupStatus = window.localStorage.getItem('hasCompletedOnboarding')
     const remotePeerId = this.edgePeerId
 
+    // If the user has already setup an edge device connection
+    // via recent version of the app or
+    // an edge device was setup via an earlier app version
+    // then this app is not a new install.
     if (setupStatus || remotePeerId) {
-      this.$router.push('timeline')
+      this.hasSetupSystem = true
     }
   }
 }

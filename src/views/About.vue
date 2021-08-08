@@ -15,7 +15,7 @@
         >
           <amb-list-item
             id="about-title"
-            title="Safe Home"
+            title="Safer Home"
             subtitle="via Ambient Intelligence"
           />
         </v-layout>

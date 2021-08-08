@@ -16,12 +16,12 @@ context('Actions', () => {
 
   it('looks inside welcome message', () => {
     cy.get('#welcome-text')
-      .should('contain', "Let's setup your system" )
+      .should('contain', 'Safer Home via Ambient Intelligence' )
   })
  
   it('looks at welcome button', () => {
-    let btn = cy.get('#btn-timeline')
+    const btn = cy.get('#btn-setup')
     btn.get('.v-btn__content')
-      .contains('Continue Setup', { matchCase: false })
+      .contains('Begin Setup', { matchCase: false })
   })
 })

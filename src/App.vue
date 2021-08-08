@@ -8,9 +8,7 @@
     </amb-app-frame>
 
     <v-app v-else>
-      <vue-page-transition name="fade-in-right">
-        <router-view />
-      </vue-page-transition>
+      <router-view />
     </v-app>
   </v-lazy>
 </template>

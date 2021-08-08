@@ -24,7 +24,7 @@
           </span>
         </infinite-loading>
         <v-list-item
-            id="timeline-data"
+          id="timeline-data"
           data-cy="timelinedata"
           v-for="(sample, index) in timeline"
           :key="index"
@@ -44,7 +44,7 @@
             >
               <template #placeholder>
                 <div>
-                  <br />
+                  <br>
                   <v-row
                     class="fill-height ma-0"
                     align="center"
