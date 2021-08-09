@@ -1,7 +1,7 @@
 import { createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 import { cloneDeep } from 'lodash'
-import pnp from '@/store/pnp.js'
+import { pnpStoreModule } from '@/store/pnp.js'
 import {
   PEER_NEW_INSTANCE,
   PEER_DISCONNECTED,
@@ -39,7 +39,7 @@ describe('PnP state machine mutations - p2p communication layer', () => {
   beforeEach(() => {
     localVue = createLocalVue()
     localVue.use(Vuex)
-    store = new Vuex.Store({ modules: { pnp: cloneDeep(pnp) } })
+    store = new Vuex.Store({ modules: { pnp: cloneDeep(pnpStoreModule) } })
     window.localStorage.clear()
   })
 

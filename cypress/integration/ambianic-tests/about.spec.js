@@ -6,7 +6,7 @@ context('AboutPage', () => {
 
   it('Loads title and subtitle', () => {
     cy.get('#about-title > .v-list-item__content > .v-list-item__title')
-      .should('contain.text', 'Safe Home')
+      .should('contain.text', 'Safer Home')
 
     cy.get('#about-title > .v-list-item__content > .v-list-item__subtitle')
       .should('contain.text', 'via Ambient Intelligence')

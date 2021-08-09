@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.15.1](https://github.com/ambianic/ambianic-ui/compare/v2.15.0...v2.15.1) (2021-08-09)
+
+
+### Bug Fixes
+
+* code updates required by new dependency versions ([a0314d7](https://github.com/ambianic/ambianic-ui/commit/a0314d703126430a06a8a3ebc60bd62ffc79f861))
+
 # [2.15.0](https://github.com/ambianic/ambianic-ui/compare/v2.14.2...v2.15.0) (2021-08-03)
 
 

@@ -2,8 +2,7 @@
 
 context('Check Navbar Items', () => {
   before(() => {
-    cy.visit('http://localhost:8080')
-    cy.get('[data-cy=timeline]').click()
+    cy.visit('http://localhost:8080/about')
   })
 
   it('Should be a download off button', () => {

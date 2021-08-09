@@ -1,12 +1,16 @@
 import Vue from 'vue'
-import App from './App.vue'
 import routes from './routes/routes.js'
 import store from './store'
 import './registerServiceWorker'
 import vuetify from './plugins/vuetify'
 import VueRouter from 'vue-router'
-import VuePageTransition from 'vue-page-transition'
 
+// dynamic import of views as needed
+// to minimize page response time
+// ref: https://vuedose.tips/dynamic-imports-in-vue-js-for-better-performance
+const App = () => import('./App.vue')
+
+// disable dev time warning from server
 Vue.config.productionTip = false
 
 const router = new VueRouter({
@@ -16,7 +20,6 @@ const router = new VueRouter({
 })
 
 Vue.use(VueRouter)
-Vue.use(VuePageTransition)
 
 const VueApp = new Vue({
   router,

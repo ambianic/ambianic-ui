@@ -28,21 +28,8 @@
 
           <v-card-text id="welcome-text">
             <v-list-item-subtitle class="center">
-              Safe Home - via Ambient Intelligence
+              Safer Home via Ambient Intelligence
             </v-list-item-subtitle>
-
-            <p
-              class="center"
-              v-if="!hasSetupSystem"
-            >
-              Let's setup your system
-            </p>
-            <p
-              class="center"
-              v-else
-            >
-              Control your Ambianic Edge Appliances from your console.
-            </p>
           </v-card-text>
 
           <v-card-actions class="align-center">
@@ -55,10 +42,26 @@
                 dark
                 data-cy="timeline"
                 class="ma-2 white--text"
-                :to="'onboarding'"
-                id="btn-timeline"
+                to="onboarding"
+                id="btn-setup"
+                v-if="!hasSetupSystem"
               >
-                Continue Setup
+                Begin Setup
+                <v-icon right>
+                  mdi-arrow-right
+                </v-icon>
+              </v-btn>
+              <v-btn
+                rounded
+                color="pink darken-4"
+                dark
+                data-cy="timeline"
+                class="ma-2 white--text"
+                to="timeline"
+                id="btn-dashboard"
+                v-else
+              >
+                View Timeline
                 <v-icon right>
                   mdi-arrow-right
                 </v-icon>
@@ -67,40 +70,31 @@
           </v-card-actions>
         </v-card>
       </v-row>
-      <v-row
-        align="end"
-        justify="center"
-        no-gutters=""
-      >
-        <v-col>
-          <update-notification class="mx-auto" />
-        </v-col>
-      </v-row>
     </v-container>
   </v-main>
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import UpdateNotification from '@/components/UpdateNotification'
+import { STORAGE_KEY } from '@/store/pnp'
 export default {
   name: 'Home',
-  components: {
-    UpdateNotification
-  },
-  computed: {
-    ...mapState({
-      edgePeerId: state => state.pnp.remotePeerId
-    })
-  },
   data () {
-    return { hasSetupSystem: false }
+    return {
+      hasSetupSystem: false
+    }
   },
   created () {
     const setupStatus = window.localStorage.getItem('hasCompletedOnboarding')
-    const remotePeerId = this.edgePeerId
+    // Accessing directly to minimize load time to meet Lighthouse performance benchmark.
+    // When using vuex store, the dependencies push above the lighthouse PWA response time budget.
+    const remotePeerId = window.localStorage.getItem(`${STORAGE_KEY}.remotePeerId`)
+
+    // If the user has already setup an edge device connection
+    // via recent version of the app or
+    // an edge device was setup via an earlier app version
+    // then this app is not a new install.
     if (setupStatus || remotePeerId) {
-      this.$router.push('timeline')
+      this.hasSetupSystem = true
     }
   }
 }

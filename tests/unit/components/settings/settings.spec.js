@@ -4,19 +4,23 @@ import Vuetify from 'vuetify'
 import VueX from 'vuex'
 import VueRouter from 'vue-router'
 import Settings from '@/views/Settings.vue'
-import { PEER_CONNECTED } from '@/store/mutation-types.js'
-import { cloneDeep } from 'lodash'
+import { PEER_DISCOVER } from '@/store/action-types'
 import edgeDevice from '@/store/edge-device.js'
-import pnpStoreModule from '@/store/pnp'
+import { cloneDeep } from 'lodash'
+import { PEER_CONNECTED } from '@/store/mutation-types.js'
+import { pnpStoreModule } from '../../../../src/store/pnp'
 
-describe('NavBar', () => {
+describe('Settings', () => {
 // global
   let wrapper
   const localVue = createLocalVue()
   Vue.use(Vuetify) // for shallowMount use
   localVue.use(VueX)
 
-  let store
+  let store, state, getters, actions
+  const mutations = {
+    testMutation: jest.fn()
+  }
 
   // global
   localVue.use(VueRouter)
@@ -25,14 +29,32 @@ describe('NavBar', () => {
   const router = new VueRouter()
 
   beforeEach(() => {
-    store = new VueX.Store({
-      modules: {
-        edgeDevice: cloneDeep(edgeDevice),
-        pnp: cloneDeep(pnpStoreModule)
+    state = {
+      pnp: cloneDeep(pnpStoreModule),
+      // pnp: {
+      //   peerConnectionStatus: jest.fn(),
+      //   edgePeerId: jest.fn()
+      // },
+      edgeDevice: cloneDeep(edgeDevice)
+    }
+
+    getters = {
+    //   ...
+    }
+
+    actions = {
+      [PEER_DISCOVER] (context) {
       }
+    }
+
+    store = new VueX.Store({
+      state,
+      getters,
+      mutations,
+      actions
     })
 
-    // using shallowMount with subtree components
+    // using mount with subtree components
     wrapper = mount(Settings, {
       localVue,
       vuetify,
@@ -50,25 +72,38 @@ describe('NavBar', () => {
     expect(card.exists()).toBe(true)
   })
 
-  test('should load 2 buttons', () => {
-    const btn = wrapper.findAll('.v-btn')
-    expect(btn.length).toBe(2)
+  test('should have Discover Local button', () => {
+    const btn = wrapper.find('#btn-discoverLocal')
+    expect(btn.exists()).toBe(true)
+  })
+
+  test('should have Pair Remotely button', () => {
+    const btn = wrapper.find('#btn-sendRemotePeerID')
+    expect(btn.exists()).toBe(true)
   })
 
   test('Connected Edge device version is shown', () => {
-    const localEdgeVersion = require('@/../package.json').version
+    const localEdgeVersion = '2.15.1'
 
-    store.state.edgeDevice.version = localEdgeVersion
-    store.state.pnp.peerConnectionStatus = PEER_CONNECTED
-    store.state.pnp.remotePeerId = '1234-1234-1234-1234-1234'
+    const newStore = new VueX.Store({
+      modules: {
+        pnp: cloneDeep(pnpStoreModule),
+        edgeDevice: cloneDeep(edgeDevice)
+      }
+    })
+
+    newStore.state.edgeDevice.version = localEdgeVersion
+    newStore.state.pnp.peerConnectionStatus = PEER_CONNECTED
+    newStore.state.pnp.remotePeerId = '1234-1234-1234-1234-1234'
 
     const component = mount(Settings, {
       localVue,
       vuetify,
-      store
+      router,
+      store: newStore
     })
 
     const versionElement = component.get('#version-element')
-    expect(versionElement.find('#title').text()).toBe(localEdgeVersion)
+    // expect(versionElement.find('#title').text()).toBe(localEdgeVersion)
   })
 })

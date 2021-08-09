@@ -1,4 +1,3 @@
-
 <template>
   <v-list-item :two-line="twoLine">
     <v-list-item-icon>

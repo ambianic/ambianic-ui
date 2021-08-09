@@ -17,10 +17,13 @@ const actions = {
   }
 }
 
+const getters = {}
+
 const edgeDevice = {
   state,
   actions,
-  mutations
+  mutations,
+  getters
 }
 
 export default edgeDevice

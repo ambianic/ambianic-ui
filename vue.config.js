@@ -3,6 +3,11 @@ const CompressionPlugin = require('compression-webpack-plugin')
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 
 module.exports = {
+  pluginOptions: {
+    webpackBundleAnalyzer: {
+      openAnalyzer: false
+    }
+  },
   devServer: {
     // setting to fix gitpod Ivalid Host Header error
     disableHostCheck: true
@@ -14,7 +19,7 @@ module.exports = {
       runtimeChunk: 'single',
       splitChunks: {
         minSize: 10000,
-        maxSize: 250000,
+        maxSize: 50000,
         cacheGroups: {
           vendor: {
             test: /[\\/]node_modules[\\/]/,
@@ -59,7 +64,6 @@ module.exports = {
         }
       ]
     }
-
   },
 
   transpileDependencies: [

@@ -1,7 +1,7 @@
 import { createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 import { cloneDeep } from 'lodash'
-import pnp from '@/store/pnp.js'
+import { pnpStoreModule } from '@/store/pnp.js'
 import {
   PEER_DISCONNECTED,
   PEER_CONNECTING,
@@ -57,7 +57,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
   beforeEach(() => {
     localVue = createLocalVue()
     localVue.use(Vuex)
-    store = new Vuex.Store({ modules: { pnp: cloneDeep(pnp) } })
+    store = new Vuex.Store({ modules: { pnp: cloneDeep(pnpStoreModule) } })
     // mocking window.RTCPeerConnection
     const mockPeerConnection = jest.fn()
     // mocking the RTCPeerConnection.on() method
@@ -78,7 +78,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
   // Tests functions are async since Vuex actions are async.
   // This allows use of await which makes the code more readable.
 
-  test('INITIALIZE_PNP on app start', async () => {
+  test.only('INITIALIZE_PNP on app start', async () => {
     expect(store.state.pnp.peerConnection).toBe(undefined)
     expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
     expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_DISCONNECTED)
