@@ -11,8 +11,9 @@
         "unused-css-rules": "off",
         "uses-rel-preconnect": "off",
         "is-crawlable": "off",
-        "csp-xss": "off",
-        "unused-javascript": ["warn", { "minScore": 2 }]
+        "csp-xss": ["warn", { "minScore": 0 }],
+        "unused-javascript": ["warn", { "maxLength": 3 }],
+        "maskable-icon": ["warn", { "minScore": 0 }]
       }
     }
   }
