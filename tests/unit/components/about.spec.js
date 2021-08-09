@@ -5,7 +5,7 @@ import VueX from 'vuex'
 import { cloneDeep } from 'lodash'
 import About from '@/views/About.vue'
 import { PEER_CONNECTED } from '@/store/mutation-types'
-import EdgeDeviceStore from '@/store/edge-device.js'
+import edgeDevice from '@/store/edge-device.js'
 import pnpStoreModule from '@/store/pnp'
 
 describe('About Page', () => {
@@ -20,7 +20,7 @@ describe('About Page', () => {
   beforeEach(() => {
     store = new VueX.Store({
       modules: {
-        edgeDeviceStore: cloneDeep(EdgeDeviceStore),
+        edgeDevice: cloneDeep(edgeDevice),
         pnp: cloneDeep(pnpStoreModule)
       }
     })

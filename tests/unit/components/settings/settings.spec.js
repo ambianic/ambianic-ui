@@ -6,7 +6,7 @@ import VueRouter from 'vue-router'
 import Settings from '@/views/Settings.vue'
 import { PEER_CONNECTED } from '@/store/mutation-types.js'
 import { cloneDeep } from 'lodash'
-import EdgeDeviceStore from '@/store/edge-device.js'
+import edgeDevice from '@/store/edge-device.js'
 import pnpStoreModule from '@/store/pnp'
 
 describe('NavBar', () => {
@@ -27,7 +27,7 @@ describe('NavBar', () => {
   beforeEach(() => {
     store = new VueX.Store({
       modules: {
-        edgeDeviceStore: cloneDeep(EdgeDeviceStore),
+        edgeDevice: cloneDeep(edgeDevice),
         pnp: cloneDeep(pnpStoreModule)
       }
     })
@@ -58,7 +58,7 @@ describe('NavBar', () => {
   test('Connected Edge device version is shown', () => {
     const localEdgeVersion = require('@/../package.json').version
 
-    store.state.version = localEdgeVersion
+    store.state.edgeDevice.version = localEdgeVersion
     store.state.pnp.peerConnectionStatus = PEER_CONNECTED
     store.state.pnp.remotePeerId = '1234-1234-1234-1234-1234'
 
