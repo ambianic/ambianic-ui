@@ -11,7 +11,7 @@
           "unused-css-rules": "off",
           "uses-rel-preconnect": "off",
           "csp-xss": ["warn", { "minScore": 0 }],
-          "unused-javascript": ["warn", { "maxLength": 3 }],
+          "unused-javascript": ["warn", { "maxLength": 3 }]
         }
       }
     }
