@@ -70,34 +70,14 @@
           </v-card-actions>
         </v-card>
       </v-row>
-      <v-row
-        align="end"
-        justify="center"
-        no-gutters=""
-      >
-        <v-col>
-          <update-notification class="mx-auto" />
-        </v-col>
-      </v-row>
     </v-container>
   </v-main>
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
-import UpdateNotification from '@/components/UpdateNotification'
-
+import { STORAGE_KEY } from '@/store/pnp'
 export default {
   name: 'Home',
-  components: {
-    UpdateNotification
-  },
-  computed: {
-    ...mapState({
-      edgePeerId: state => state.pnp.remotePeerId
-    })
-  },
   data () {
     return {
       hasSetupSystem: false
@@ -105,7 +85,9 @@ export default {
   },
   created () {
     const setupStatus = window.localStorage.getItem('hasCompletedOnboarding')
-    const remotePeerId = this.edgePeerId
+    // Accessing directly to minimize load time to meet Lighthouse performance benchmark.
+    // When using vuex store, the dependencies push above the lighthouse PWA response time budget.
+    const remotePeerId = window.localStorage.getItem(`${STORAGE_KEY}.remotePeerId`)
 
     // If the user has already setup an edge device connection
     // via recent version of the app or

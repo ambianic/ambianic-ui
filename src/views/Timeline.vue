@@ -215,18 +215,16 @@
 </style>
 <script>
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
-import InfiniteLoading from 'vue-infinite-loading'
-import DetectionBoxes from '@/components/DetectionBoxes.vue'
 import Vue from 'vue'
 import VueObserveVisibility from 'vue-observe-visibility'
 import { EdgeAPI } from '@/remote/edgeAPI'
 import { mapState } from 'vuex'
-import EventIcon from '@/components/EventIcon.vue'
-import moment from 'moment'
 import {
   PEER_CONNECTED,
   NEW_REMOTE_PEER_ID
 } from '@/store/mutation-types'
+import moment from 'moment'
+
 Vue.use(VueObserveVisibility)
 const PAGE_SIZE = 5
 export default {
@@ -257,9 +255,9 @@ export default {
     this.pnpUnsubscribe()
   },
   components: {
-    DetectionBoxes,
-    InfiniteLoading,
-    EventIcon,
+    DetectionBoxes: () => import('@/components/DetectionBoxes.vue'),
+    InfiniteLoading: () => import('vue-infinite-loading'),
+    EventIcon: () => import('@/components/EventIcon.vue'),
     AmbAppFrame: () => import('@/components/AppFrame.vue')
   },
   computed: {

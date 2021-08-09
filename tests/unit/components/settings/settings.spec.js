@@ -4,6 +4,7 @@ import Vuetify from 'vuetify'
 import VueX from 'vuex'
 import VueRouter from 'vue-router'
 import Settings from '@/views/Settings.vue'
+import { PEER_DISCOVER } from '@/store/action-types'
 
 describe('NavBar', () => {
 // global
@@ -12,7 +13,7 @@ describe('NavBar', () => {
   Vue.use(Vuetify) // for shallowMount use
   localVue.use(VueX)
 
-  let store, state, getters
+  let store, state, getters, actions
   const mutations = {
     testMutation: jest.fn()
   }
@@ -35,13 +36,19 @@ describe('NavBar', () => {
     //   ...
     }
 
+    actions = {
+      [PEER_DISCOVER] (context) {
+      }
+    }
+  
     store = new VueX.Store({
       state,
       getters,
-      mutations
+      mutations,
+      actions
     })
 
-    // using shallowMount with subtree components
+    // using mount with subtree components
     wrapper = mount(Settings, {
       localVue,
       vuetify,
