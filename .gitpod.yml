@@ -4,6 +4,9 @@ image:
 tasks:
   - init: |
       npm install
+      npm update
+      npm audit fix
+      npm install -g @vue/cli
     command: |
       echo "Starting Ambianic UI in dev mode:"
       npm run serve
@@ -13,10 +16,13 @@ tasks:
       echo "Starting Ambianic PWA testsuite"
       npm install cypress
       npm run test
+  - command: |
+      echo "Starting http server for local HTML file preview"
+      npx browser-sync start -s -w
 
-vscode:
-  extensions:
-    - octref.vetur@0.31.3:QHyAEoimIBiRDoL6WtEoRg==
+# vscode:
+#  extensions:
+#    - octref.vetur@0.31.3:QHyAEoimIBiRDoL6WtEoRg==
 
 ports:
   - port: 8080

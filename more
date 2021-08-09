@@ -1,0 +1,283 @@
+
+> ambianic-ui@2.15.0 test:unit /workspace/ambianic-ui
+> jest "tests/unit/components/timeline/timeline.spec.js"
+
+  console.debug
+    topSpinnerVisibilityChanged: false
+
+      at VueComponent.topSpinnerVisibilityChanged (src/views/Timeline.vue:312:1)
+
+  console.debug
+    event time before local timezone adjustment { datetime: '2020-05-10T19:05:45.577145' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:421:1)
+
+  console.debug
+    timezone offset { tz: 0 }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:423:1)
+
+  console.debug
+    local timezone adjusted time of event { adjustedLocalTime: '05/10/2020' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:426:1)
+
+  console.debug
+    event time before local timezone adjustment { datetime: '2020-05-10T19:05:45.577145' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:421:1)
+
+  console.debug
+    timezone offset { tz: 0 }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:423:1)
+
+  console.debug
+    local timezone adjusted time of event { adjustedLocalTime: '05/10/2020' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:426:1)
+
+  console.debug
+    event time before local timezone adjustment { datetime: '2020-05-10T19:05:45.577145' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:421:1)
+
+  console.debug
+    timezone offset { tz: 0 }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:423:1)
+
+  console.debug
+    local timezone adjusted time of event { adjustedLocalTime: '05/10/2020' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:426:1)
+
+  console.debug
+    event time before local timezone adjustment { datetime: '2020-05-10T19:05:45.577145' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:421:1)
+
+  console.debug
+    timezone offset { tz: 0 }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:423:1)
+
+  console.debug
+    local timezone adjusted time of event { adjustedLocalTime: '05/10/2020' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:426:1)
+
+  console.debug
+    event time before local timezone adjustment { datetime: '2020-05-10T19:05:45.577145' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:421:1)
+
+  console.debug
+    timezone offset { tz: 0 }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:423:1)
+
+  console.debug
+    local timezone adjusted time of event { adjustedLocalTime: '05/10/2020' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:426:1)
+
+  console.debug
+    event time before local timezone adjustment { datetime: '2020-05-10T19:05:45.577145' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:421:1)
+
+  console.debug
+    timezone offset { tz: 0 }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:423:1)
+
+  console.debug
+    local timezone adjusted time of event { adjustedLocalTime: '05/10/2020' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:426:1)
+
+  console.debug
+    event time before local timezone adjustment { datetime: '2020-05-10T19:05:45.577145' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:421:1)
+
+  console.debug
+    timezone offset { tz: 0 }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:423:1)
+
+  console.debug
+    local timezone adjusted time of event { adjustedLocalTime: '05/10/2020' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:426:1)
+
+  console.debug
+    event time before local timezone adjustment { datetime: '2020-05-10T19:05:45.577145' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:421:1)
+
+  console.debug
+    timezone offset { tz: 0 }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:423:1)
+
+  console.debug
+    local timezone adjusted time of event { adjustedLocalTime: '05/10/2020' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:426:1)
+
+  console.debug
+    event time before local timezone adjustment { datetime: '2020-05-10T19:05:45.577145' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:421:1)
+
+  console.debug
+    timezone offset { tz: 0 }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:423:1)
+
+  console.debug
+    local timezone adjusted time of event { adjustedLocalTime: '05/10/2020' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:426:1)
+
+  console.debug
+    event time before local timezone adjustment { datetime: '2020-05-10T19:05:45.577145' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:421:1)
+
+  console.debug
+    timezone offset { tz: 0 }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:423:1)
+
+  console.debug
+    local timezone adjusted time of event { adjustedLocalTime: '05/10/2020' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:426:1)
+
+  console.debug
+    event time before local timezone adjustment { datetime: '2020-05-10T19:05:45.577145' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:421:1)
+
+  console.debug
+    timezone offset { tz: 0 }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:423:1)
+
+  console.debug
+    local timezone adjusted time of event { adjustedLocalTime: '05/10/2020' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:426:1)
+
+  console.debug
+    event time before local timezone adjustment { datetime: '2020-05-10T19:05:45.577145' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:421:1)
+
+  console.debug
+    timezone offset { tz: 0 }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:423:1)
+
+  console.debug
+    local timezone adjusted time of event { adjustedLocalTime: '05/10/2020' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:426:1)
+
+  console.debug
+    event time before local timezone adjustment { datetime: '2020-05-10T19:05:45.577145' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:421:1)
+
+  console.debug
+    timezone offset { tz: 0 }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:423:1)
+
+  console.debug
+    local timezone adjusted time of event { adjustedLocalTime: '05/10/2020' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:426:1)
+
+  console.debug
+    event time before local timezone adjustment { datetime: '2020-05-10T19:05:45.577145' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:421:1)
+
+  console.debug
+    timezone offset { tz: 0 }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:423:1)
+
+  console.debug
+    local timezone adjusted time of event { adjustedLocalTime: '05/10/2020' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:426:1)
+
+  console.debug
+    event time before local timezone adjustment { datetime: '2020-05-10T19:05:45.577145' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:421:1)
+
+  console.debug
+    timezone offset { tz: 0 }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:423:1)
+
+  console.debug
+    local timezone adjusted time of event { adjustedLocalTime: '05/10/2020' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:426:1)
+
+  console.debug
+    event time before local timezone adjustment { datetime: '2020-05-10T19:05:45.577145' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:421:1)
+
+  console.debug
+    timezone offset { tz: 0 }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:423:1)
+
+  console.debug
+    local timezone adjusted time of event { adjustedLocalTime: '05/10/2020' }
+
+      at VueComponent.friendlyTime (src/views/Timeline.vue:426:1)
+
+-------------------------|---------|----------|---------|---------|-----------------------------------------
+File                     | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s                       
+-------------------------|---------|----------|---------|---------|-----------------------------------------
+All files                |   12.52 |     0.61 |    7.39 |   12.65 |                                         
+ src                     |     100 |      100 |     100 |     100 |                                         
+  config.js              |     100 |      100 |     100 |     100 |                                         
+ src/components          |   24.14 |        0 |   17.65 |   24.14 |                                         
+  AppFrame.vue           |     100 |      100 |     100 |     100 |                                         
+  DetectionBoxes.vue     |   28.57 |        0 |       0 |   28.57 | 52-96                                   
+  EventIcon.vue          |   33.33 |      100 |       0 |   33.33 | 42-45                                   
+  NavBar.vue             |   33.33 |      100 |       0 |   33.33 | 173-223                                 
+  UpdateNotification.vue |      50 |      100 |      50 |      50 | 32-35                                   
+  utils.js               |    7.14 |        0 |       0 |    7.14 | 2-25,29-43                              
+ src/components/shared   |       0 |      100 |       0 |       0 |                                         
+  ListItem.vue           |       0 |      100 |       0 |       0 | 96                                      
+ src/remote              |    2.02 |        0 |    2.78 |    2.04 |                                         
+  edgeAPI.js             |    12.9 |        0 |   16.67 |    12.9 | 15-72                                   
+  peer-fetch.js          |       0 |        0 |       0 |       0 | 8-307                                   
+  peer-room.js           |       0 |        0 |       0 |       0 | 10-86                                   
+ src/routes              |   11.11 |      100 |       0 |   11.11 |                                         
+  routes.js              |   11.11 |      100 |       0 |   11.11 | 6-69                                    
+ src/store               |   13.17 |        0 |       0 |   13.45 |                                         
+  action-types.js        |     100 |      100 |     100 |     100 |                                         
+  mutation-types.js      |     100 |      100 |     100 |     100 |                                         
+  pnp.js                 |    2.76 |        0 |       0 |    2.83 | 92-300,308-559,567                      
+ src/views               |   19.21 |     2.04 |   13.04 |   19.21 |                                         
+  About.vue              |       0 |      100 |       0 |       0 | 76-85                                   
+  Feedback.vue           |       0 |      100 |       0 |       0 | 46-47                                   
+  Help.vue               |       0 |      100 |       0 |       0 | 66                                      
+  Home.vue               |       0 |        0 |       0 |       0 | 87-115                                  
+  Onboarding.vue         |       0 |        0 |       0 |       0 | 586-724                                 
+  Settings.vue           |       0 |        0 |       0 |       0 | 271-361                                 
+  Timeline.vue           |   37.78 |        4 |   34.62 |   37.78 | 246-252,267-272,278-308,315-396,406-410 
+-------------------------|---------|----------|---------|---------|-----------------------------------------

@@ -564,7 +564,7 @@
                     <v-btn
                       style="padding: 0.5rem 2rem;"
                       color="primary"
-                      :to="'timeline'"
+                      to="timeline"
                       @click="finishOnboarding()"
                     >
                       Complete Installation

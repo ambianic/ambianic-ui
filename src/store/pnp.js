@@ -34,7 +34,7 @@ import { ambianicConf } from '@/config'
 import Peer from 'peerjs'
 import { PeerRoom } from '@/remote/peer-room'
 import { PeerFetch } from '@/remote/peer-fetch'
-const STORAGE_KEY = 'ambianic-pnp-settings'
+export const STORAGE_KEY = 'ambianic-pnp-settings'
 
 const state = {
   /**
@@ -320,7 +320,12 @@ const actions = {
     if (peer && peer.open) { return }
     // if in the middle of pnp server connection cycle, skip
     if (state.pnpServiceConnectionStatus === PNP_SERVICE_CONNECTING) { return }
-    // Create own peer object with connection to shared PeerJS server
+    // if peer exists but not connected then try to reuse it and just reconnect
+    if (peer) {
+      await dispatch(PNP_SERVICE_RECONNECT)
+      return
+    }
+    // Otherwise create a new peer object with connection to shared PeerJS server
     console.log('pnp client: creating peer')
     // If we already have an assigned peerId, we will reuse it forever.
     // We expect that peerId is crypto secure. No need to replace.
@@ -381,7 +386,7 @@ const actions = {
       // while looping in peer discovery mode
       if (state.pnpServiceConnectionStatus !== PNP_SERVICE_CONNECTED) {
         console.log('PNP Service disconnected. Reconnecting...')
-        await dispatch(PNP_SERVICE_RECONNECT)
+        await dispatch(PNP_SERVICE_CONNECT)
       }
       let remotePeerId
       try {
@@ -418,7 +423,7 @@ const actions = {
     // We need the signaling server to negotiate p2p connection terms.
     if (state.pnpServiceConnectionStatus !== PNP_SERVICE_CONNECTED) {
       console.log('PNP Service disconnected. Reconnecting...')
-      await dispatch(PNP_SERVICE_RECONNECT)
+      await dispatch(PNP_SERVICE_CONNECT)
     }
     // if already connected to peer, then nothing to do
     if (state.peerConnectionStatus === PEER_CONNECTING ||
@@ -568,11 +573,9 @@ const getters = {
   }
 }
 
-const pnpStoreModule = {
+export const pnpStoreModule = {
   state,
   getters,
   mutations,
   actions
 }
-
-export default pnpStoreModule
