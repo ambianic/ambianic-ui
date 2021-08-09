@@ -10,7 +10,9 @@
         "font-display": "off",
         "unused-css-rules": "off",
         "uses-rel-preconnect": "off",
-        "is-crawlable": "off"
+        "is-crawlable": "off",
+        "csp-xss": "off",
+        "unused-javascript": ["warn", { "minScore": 2 }]
       }
     }
   }
