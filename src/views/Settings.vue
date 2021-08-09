@@ -64,7 +64,7 @@
                       <amb-list-item
                         :title="version"
                         id="version-element"
-                        subtitle="Release Version"
+                        subtitle="Edge Software Version"
                         icon-name="alpha-v-circle-outline"
                       />
                     </div>
