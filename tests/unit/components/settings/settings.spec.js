@@ -31,10 +31,6 @@ describe('Settings', () => {
   beforeEach(() => {
     state = {
       pnp: cloneDeep(pnpStoreModule),
-      // pnp: {
-      //   peerConnectionStatus: jest.fn(),
-      //   edgePeerId: jest.fn()
-      // },
       edgeDevice: cloneDeep(edgeDevice)
     }
 
