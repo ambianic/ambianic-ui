@@ -4,6 +4,7 @@ image:
 tasks:
   - init: |
       npm install
+      npm run prepare
       npm update
       npm audit fix
       npm install -g @vue/cli
