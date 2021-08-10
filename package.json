@@ -37,7 +37,7 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@cypress/code-coverage": "^3.7.4",
+    "@cypress/code-coverage": "^3.9.10",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/commit-analyzer": "^8.0.1",
     "@semantic-release/exec": "^5.0.0",
@@ -60,7 +60,7 @@
     "codecov": "^3.8.1",
     "cypress": "^8.2.0",
     "eslint": "^7.32.0",
-    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-import": "^2.24.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^5.0.0",
@@ -78,7 +78,7 @@
     "semantic-release": "^17.4.4",
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2",
-    "vue-cli-plugin-vuetify": "^2.0.5",
+    "vue-cli-plugin-vuetify": "^2.4.2",
     "vue-cli-plugin-webpack-bundle-analyzer": "~4.0.0",
     "vue-jest": "^3.0.5",
     "vue-template-compiler": "^2.6.14",

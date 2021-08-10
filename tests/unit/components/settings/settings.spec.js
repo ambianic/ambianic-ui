@@ -40,7 +40,7 @@ describe('NavBar', () => {
       [PEER_DISCOVER] (context) {
       }
     }
-  
+
     store = new VueX.Store({
       state,
       getters,
