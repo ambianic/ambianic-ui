@@ -14,7 +14,7 @@
     "codecov": "codecov -f coverage/coverage-final.json && codecov -f coverage/jest/coverage-final.json",
     "test:unit": "jest",
     "test:e2e": "npx cypress run",
-    "test": "npx browserslist@latest --update-db && npm run test:unit && npm run test:e2e"
+    "test": "npm_config_yes=true npx browserslist@latest --update-db && npm run test:unit && npm run test:e2e"
   },
   "dependencies": {
     "@vue/babel-preset-app": "^4.5.10",
