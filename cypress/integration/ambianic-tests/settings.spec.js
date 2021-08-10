@@ -32,13 +32,17 @@ context('Settings', () => {
     })
 
     it("It display connected edge version after connection", () => {
+      const version = '1.0.0'
+
       cy.get('[data-cy=sendRemotePeerID]').click()
 
       cy.window().then(win => {
         win.__store__.commit('PEER_CONNECTED', null)
+        win.__store__.commit('EDGE_DEVICE_DETAILS', { 
+          version
+         })
 
-        const versionNumber = require('../../../package.json').version
-        cy.get('[data-cy=title-text]').should('contain.text', versionNumber )
+        cy.get('[data-cy=title-text]').should('contain.text', version )
     })
     })
 })

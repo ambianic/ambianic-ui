@@ -60,14 +60,12 @@
                       id="edgePeerID"
                       :sensitive-field="true"
                     />
-                    <div id="version-element">
-                      <amb-list-item
-                        :title="version"
-                        id="version-element"
-                        subtitle="Edge Software Version"
-                        icon-name="alpha-v-circle-outline"
-                      />
-                    </div>
+                    <amb-list-item
+                      :title="version"
+                      id="version-element"
+                      subtitle="Edge Software Version"
+                      icon-name="alpha-v-circle-outline"
+                    />
                   </v-list>
                 </v-card>
               </v-col>
@@ -279,17 +277,19 @@ import {
   PEER_CONNECTING,
   PEER_AUTHENTICATING,
   PEER_CONNECTED,
-  PEER_CONNECTION_ERROR
+  PEER_CONNECTION_ERROR,
+  EDGE_DEVICE_DETAILS
 } from '@/store/mutation-types'
 import {
   CHANGE_REMOTE_PEER_ID,
-  REMOVE_REMOTE_PEER_ID,
-  FETCH_EDGE_DEVICE_DETAILS
+  REMOVE_REMOTE_PEER_ID
 } from '../store/action-types.js'
+import AmbListItem from '@/components/shared/ListItem.vue'
+
 export default {
   components: {
     AmbBanner: () => import('@/components/shared/Banner.vue'),
-    AmbListItem: () => import('@/components/shared/ListItem.vue'),
+    AmbListItem,
     AmbAppFrame: () => import('@/components/AppFrame.vue')
   },
   data () {
@@ -326,7 +326,7 @@ export default {
       try {
         const details = await this.edgeAPI.getEdgeStatus()
 
-        await this.$store.dispatch(FETCH_EDGE_DEVICE_DETAILS, details)
+        await this.$store.commit(EDGE_DEVICE_DETAILS, details)
       } catch (e) {
         console.log(e)
       }
@@ -343,7 +343,7 @@ export default {
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
       edgePeerId: state => state.pnp.remotePeerId,
       peerFetch: state => state.pnp.peerFetch,
-      version: state => state.edgeDevice.version
+      version: state => state.edgeDevice.edgeSoftwareVersion
     }),
     connectStep: function () {
       let step = 1

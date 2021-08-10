@@ -2,12 +2,12 @@ import { FETCH_EDGE_DEVICE_DETAILS } from './action-types.js'
 import { EDGE_DEVICE_DETAILS } from './mutation-types'
 
 const state = {
-  version: require('@/../package.json').version
+  edgeSoftwareVersion: null
 }
 
 const mutations = {
   [EDGE_DEVICE_DETAILS] (state, edgeDetails) {
-    state.version = edgeDetails.version
+    state.edgeSoftwareVersion = edgeDetails.version
   }
 }
 
@@ -17,13 +17,10 @@ const actions = {
   }
 }
 
-const getters = {}
-
 const edgeDevice = {
   state,
   actions,
-  mutations,
-  getters
+  mutations
 }
 
 export default edgeDevice

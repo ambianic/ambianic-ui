@@ -47,14 +47,19 @@
     </v-list-item-content>
 
     <v-list-item-content v-else>
+      <v-skeleton-loader
+        v-if="!title"
+        v-bind="attrs"
+        type="list-item-two-line"
+      />
       <v-list-item-title
+        v-else
         data-cy="title-text"
         id="title"
         class="headline"
       >
         {{ title }}
       </v-list-item-title>
-
       <v-list-item-subtitle>
         {{ subtitle }}
       </v-list-item-subtitle>
@@ -97,7 +102,12 @@ export default {
   },
   data () {
     return {
-      sensitive: true
+      sensitive: true,
+      attrs: {
+        class: 'mb-6',
+        boilerplate: true,
+        elevation: 2
+      }
     }
   }
 }

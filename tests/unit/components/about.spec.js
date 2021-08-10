@@ -5,7 +5,7 @@ import VueX from 'vuex'
 import About from '@/views/About.vue'
 import { pnpStoreModule } from '../../../src/store/pnp'
 
-const localEdgeVersion = require('@/../package.json').version
+const appVersion = require('@/../package.json').version
 
 describe('About Page', () => {
   let wrapper
@@ -19,7 +19,7 @@ describe('About Page', () => {
   beforeEach(() => {
     store = new VueX.Store({
       state: {
-        version: localEdgeVersion
+        uiAppVersion: appVersion
       },
       modules: {
         pnp: pnpStoreModule
@@ -38,8 +38,6 @@ describe('About Page', () => {
   })
 
   test('version is retrieved from store', () => {
-    store.state.version = localEdgeVersion
-
     const component = mount(About, {
       localVue,
       vuetify,
@@ -47,6 +45,6 @@ describe('About Page', () => {
     })
 
     const versionElement = component.get('#version-info')
-    expect(versionElement.find('#title').text()).toBe(localEdgeVersion)
+    expect(versionElement.find('#title').text()).toBe(appVersion)
   })
 })

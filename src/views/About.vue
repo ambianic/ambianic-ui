@@ -82,7 +82,7 @@ export default {
   },
   computed: {
     ...mapState({
-      version: (state) => state.version
+      version: (state) => state.uiAppVersion
     })
   }
 }

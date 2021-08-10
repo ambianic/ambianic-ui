@@ -83,7 +83,7 @@ describe('Settings', () => {
   })
 
   test('Connected Edge device version is shown', () => {
-    const localEdgeVersion = '2.15.1'
+    const localEdgeVersion = '2.50.5'
 
     const newStore = new VueX.Store({
       modules: {
@@ -92,7 +92,7 @@ describe('Settings', () => {
       }
     })
 
-    newStore.state.edgeDevice.version = localEdgeVersion
+    newStore.state.edgeDevice.edgeSoftwareVersion = localEdgeVersion
     newStore.state.pnp.peerConnectionStatus = PEER_CONNECTED
     newStore.state.pnp.remotePeerId = '1234-1234-1234-1234-1234'
 
@@ -104,6 +104,6 @@ describe('Settings', () => {
     })
 
     const versionElement = component.get('#version-element')
-    // expect(versionElement.find('#title').text()).toBe(localEdgeVersion)
+    expect(versionElement.find('#title').text()).toBe(localEdgeVersion)
   })
 })
