@@ -305,6 +305,9 @@ const actions = {
   * Initialize PnP Service and Peer Connection
   */
   async [INITIALIZE_PNP] ({ state, commit, dispatch }) {
+    // clear reference to any pre-existing and potentially corrupt peer instance
+    // in order to force a new peer instance creation
+    state.peer = undefined
     await dispatch(PNP_SERVICE_CONNECT)
   },
   /**
@@ -448,7 +451,7 @@ const actions = {
     // If we don't connect within a few seconds, there is a good chance
     // the remote peer is not available or the networking stack got corrupted.
     // Let's mark the remote peer as problematic temporarily and reset the webrtc stack.
-    const hungupConnectionResetTimer = setTimeout(() => {
+    const hungupConnectionResetTimer = setTimeout(async () => {
       try {
         state.problematicRemotePeers.add(remotePeerId)
         console.debug('Problematic remote peer ID:', remotePeerId)
@@ -457,7 +460,7 @@ const actions = {
         console.warn('Error destroying peer.')
       } finally {
         console.info('It took too long to setup a connection. Resetting peer.')
-        dispatch(INITIALIZE_PNP)
+        await dispatch(INITIALIZE_PNP)
       }
     }, 30 * 1000) // 30 seconds timeout
     setPeerConnectionHandlers({
@@ -530,7 +533,7 @@ const actions = {
   async [CHANGE_REMOTE_PEER_ID] ({ state, commit, dispatch }, remotePeerId) {
     commit(NEW_REMOTE_PEER_ID, remotePeerId)
     commit(PEER_DISCONNECTED)
-    dispatch(PEER_CONNECT, remotePeerId)
+    await dispatch(PEER_CONNECT, remotePeerId)
   },
   /**
   * Remove remote peer id from local store.
@@ -551,7 +554,7 @@ const actions = {
       commit(PEER_DISCONNECTED)
     }
     commit(REMOTE_PEER_ID_REMOVED)
-    dispatch(PEER_DISCOVER)
+    await dispatch(PEER_DISCOVER)
   },
   async [HANDLE_PEER_CONNECTION_ERROR] ({ state, commit, dispatch }, { peerConnection, err }) {
     console.info('######>>>>>>> p2p connection error', err)

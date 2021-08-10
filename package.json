@@ -4,15 +4,17 @@
   "description": "Ambianic UI is the main user interface to Ambianic Edge deployments.",
   "author": "Ivelin Ivanov",
   "scripts": {
+    "prepare": "husky install",
     "serve": "vue-cli-service serve",
     "build": "npx browserslist@latest --update-db && vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "pre-commit": "npm run lint",
     "codecov:e2e": "codecov -f ./coverage/coverage-final.json",
     "codecov:unit": "codecov -f ./coverage/jest/coverage-final.json",
     "codecov": "codecov -f coverage/coverage-final.json && codecov -f coverage/jest/coverage-final.json",
     "test:unit": "jest",
     "test:e2e": "npx cypress run",
-    "test": "npx browserslist@latest --update-db && npm run test:unit && npm run test:e2e"
+    "test": "npm_config_yes=true npx browserslist@latest --update-db && npm run test:unit && npm run test:e2e"
   },
   "dependencies": {
     "@vue/babel-preset-app": "^4.5.10",
@@ -35,7 +37,7 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@cypress/code-coverage": "^3.7.4",
+    "@cypress/code-coverage": "^3.9.10",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/commit-analyzer": "^8.0.1",
     "@semantic-release/exec": "^5.0.0",
@@ -58,12 +60,13 @@
     "codecov": "^3.8.1",
     "cypress": "^8.2.0",
     "eslint": "^7.32.0",
-    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-import": "^2.24.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^5.0.0",
     "eslint-plugin-vue": "^7.15.1",
     "fs-vacuum": "^1.2.10",
+    "husky": "^7.0.1",
     "istanbul-lib-coverage": "^3.0.0",
     "jest": "^26.0.1",
     "jest-extended": "^0.11.5",
@@ -75,7 +78,7 @@
     "semantic-release": "^17.4.4",
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2",
-    "vue-cli-plugin-vuetify": "^2.0.5",
+    "vue-cli-plugin-vuetify": "^2.4.2",
     "vue-cli-plugin-webpack-bundle-analyzer": "~4.0.0",
     "vue-jest": "^3.0.5",
     "vue-template-compiler": "^2.6.14",

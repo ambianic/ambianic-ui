@@ -42,7 +42,7 @@
 <script>
 import Vue from 'vue'
 import resize from 'vue-resize-directive'
-const VueKonva = () => import('vue-konva')
+import VueKonva from 'vue-konva'
 
 Vue.use(VueKonva)
 
