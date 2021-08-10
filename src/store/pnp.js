@@ -34,7 +34,7 @@ import { ambianicConf } from '@/config'
 import Peer from 'peerjs'
 import { PeerRoom } from '@/remote/peer-room'
 import { PeerFetch } from '@/remote/peer-fetch'
-const STORAGE_KEY = 'ambianic-pnp-settings'
+export const STORAGE_KEY = 'ambianic-pnp-settings'
 
 const state = {
   /**
@@ -305,6 +305,9 @@ const actions = {
   * Initialize PnP Service and Peer Connection
   */
   async [INITIALIZE_PNP] ({ state, commit, dispatch }) {
+    // clear reference to any pre-existing and potentially corrupt peer instance
+    // in order to force a new peer instance creation
+    state.peer = undefined
     await dispatch(PNP_SERVICE_CONNECT)
   },
   /**
@@ -320,7 +323,12 @@ const actions = {
     if (peer && peer.open) { return }
     // if in the middle of pnp server connection cycle, skip
     if (state.pnpServiceConnectionStatus === PNP_SERVICE_CONNECTING) { return }
-    // Create own peer object with connection to shared PeerJS server
+    // if peer exists but not connected then try to reuse it and just reconnect
+    if (peer) {
+      await dispatch(PNP_SERVICE_RECONNECT)
+      return
+    }
+    // Otherwise create a new peer object with connection to shared PeerJS server
     console.log('pnp client: creating peer')
     // If we already have an assigned peerId, we will reuse it forever.
     // We expect that peerId is crypto secure. No need to replace.
@@ -381,7 +389,7 @@ const actions = {
       // while looping in peer discovery mode
       if (state.pnpServiceConnectionStatus !== PNP_SERVICE_CONNECTED) {
         console.log('PNP Service disconnected. Reconnecting...')
-        await dispatch(PNP_SERVICE_RECONNECT)
+        await dispatch(PNP_SERVICE_CONNECT)
       }
       let remotePeerId
       try {
@@ -418,7 +426,7 @@ const actions = {
     // We need the signaling server to negotiate p2p connection terms.
     if (state.pnpServiceConnectionStatus !== PNP_SERVICE_CONNECTED) {
       console.log('PNP Service disconnected. Reconnecting...')
-      await dispatch(PNP_SERVICE_RECONNECT)
+      await dispatch(PNP_SERVICE_CONNECT)
     }
     // if already connected to peer, then nothing to do
     if (state.peerConnectionStatus === PEER_CONNECTING ||
@@ -443,7 +451,7 @@ const actions = {
     // If we don't connect within a few seconds, there is a good chance
     // the remote peer is not available or the networking stack got corrupted.
     // Let's mark the remote peer as problematic temporarily and reset the webrtc stack.
-    const hungupConnectionResetTimer = setTimeout(() => {
+    const hungupConnectionResetTimer = setTimeout(async () => {
       try {
         state.problematicRemotePeers.add(remotePeerId)
         console.debug('Problematic remote peer ID:', remotePeerId)
@@ -452,7 +460,7 @@ const actions = {
         console.warn('Error destroying peer.')
       } finally {
         console.info('It took too long to setup a connection. Resetting peer.')
-        dispatch(INITIALIZE_PNP)
+        await dispatch(INITIALIZE_PNP)
       }
     }, 30 * 1000) // 30 seconds timeout
     setPeerConnectionHandlers({
@@ -525,7 +533,7 @@ const actions = {
   async [CHANGE_REMOTE_PEER_ID] ({ state, commit, dispatch }, remotePeerId) {
     commit(NEW_REMOTE_PEER_ID, remotePeerId)
     commit(PEER_DISCONNECTED)
-    dispatch(PEER_CONNECT, remotePeerId)
+    await dispatch(PEER_CONNECT, remotePeerId)
   },
   /**
   * Remove remote peer id from local store.
@@ -546,7 +554,7 @@ const actions = {
       commit(PEER_DISCONNECTED)
     }
     commit(REMOTE_PEER_ID_REMOVED)
-    dispatch(PEER_DISCOVER)
+    await dispatch(PEER_DISCOVER)
   },
   async [HANDLE_PEER_CONNECTION_ERROR] ({ state, commit, dispatch }, { peerConnection, err }) {
     console.info('######>>>>>>> p2p connection error', err)
@@ -568,11 +576,9 @@ const getters = {
   }
 }
 
-const pnpStoreModule = {
+export const pnpStoreModule = {
   state,
   getters,
   mutations,
   actions
 }
-
-export default pnpStoreModule

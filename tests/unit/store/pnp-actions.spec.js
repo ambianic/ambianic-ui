@@ -1,7 +1,7 @@
 import { createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 import { cloneDeep } from 'lodash'
-import pnp from '@/store/pnp.js'
+import { pnpStoreModule } from '@/store/pnp.js'
 import {
   PEER_DISCONNECTED,
   PEER_CONNECTING,
@@ -57,7 +57,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
   beforeEach(() => {
     localVue = createLocalVue()
     localVue.use(Vuex)
-    store = new Vuex.Store({ modules: { pnp: cloneDeep(pnp) } })
+    store = new Vuex.Store({ modules: { pnp: cloneDeep(pnpStoreModule) } })
     // mocking window.RTCPeerConnection
     const mockPeerConnection = jest.fn()
     // mocking the RTCPeerConnection.on() method

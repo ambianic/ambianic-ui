@@ -8,13 +8,14 @@ context('HomePage', () => {
 
     it('Loads title and subtitle', () => {
         cy.get('.v-list-item__subtitle')
-            .should('contain.text', 'Safe Home - via Ambient Intelligence')
+            .should('contain.text', 'Safer Home via Ambient Intelligence')
     })
 
     it('Loads firsttime installation button', () => {
-        cy.get('#btn-timeline > .v-btn__content')
-            .should('contain.text', 'Continue Setup')
+        cy.get('#btn-setup > .v-btn__content')
+            .should('contain.text', 'Begin Setup')
             .click()
+            .url().should('include', '/onboarding')
     })
 
     it('Ensures returning users are taken directly to timeline', () => {
@@ -25,8 +26,10 @@ context('HomePage', () => {
 
             // reload to use new values for testing
             cy.reload()
-
-            cy.url().should('include', '/timeline')
+            cy.get('#btn-dashboard > .v-btn__content')
+            .should('contain.text', 'View Timeline')
+            .click()
+            .url().should('include', '/timeline')
         })
     })
 })

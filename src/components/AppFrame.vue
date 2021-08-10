@@ -1,6 +1,6 @@
-<!-- App.vue -->
+<!-- AppFrame.vue -->
 <template>
-  <v-app>
+  <div>
     <!-- nav goes here -->
     <NavBar />
 
@@ -22,7 +22,7 @@
     >
       <update-notification class="mx-auto" />
     </v-footer>
-  </v-app>
+  </div>
 </template>
 
 <script>

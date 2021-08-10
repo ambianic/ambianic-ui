@@ -167,6 +167,7 @@
 <script>
 import { mapState } from 'vuex'
 import { PEER_CONNECTED } from '@/store/mutation-types'
+import { PEER_DISCOVER } from '../store/action-types'
 export default {
   name: 'NavBar',
   components: {
@@ -220,9 +221,15 @@ export default {
         console.debug(
           `app frame: state.pnp.peerConnectionStatus: ${state.pnp.peerConnectionStatus}`
         )
-        return state.pnp.peerConnectionStatus === PEER_CONNECTED
+        const isConnected = state.pnp.peerConnectionStatus === PEER_CONNECTED
+        return isConnected
       }
     })
+  },
+  created () {
+    if (!this.isEdgeConnected) {
+      this.$store.dispatch(PEER_DISCOVER)
+    }
   }
 }
 </script>

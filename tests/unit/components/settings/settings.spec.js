@@ -4,6 +4,7 @@ import Vuetify from 'vuetify'
 import VueX from 'vuex'
 import VueRouter from 'vue-router'
 import Settings from '@/views/Settings.vue'
+import { PEER_DISCOVER } from '@/store/action-types'
 
 describe('NavBar', () => {
 // global
@@ -12,7 +13,7 @@ describe('NavBar', () => {
   Vue.use(Vuetify) // for shallowMount use
   localVue.use(VueX)
 
-  let store, state, getters
+  let store, state, getters, actions
   const mutations = {
     testMutation: jest.fn()
   }
@@ -35,13 +36,19 @@ describe('NavBar', () => {
     //   ...
     }
 
+    actions = {
+      [PEER_DISCOVER] (context) {
+      }
+    }
+  
     store = new VueX.Store({
       state,
       getters,
-      mutations
+      mutations,
+      actions
     })
 
-    // using shallowMount with subtree components
+    // using mount with subtree components
     wrapper = mount(Settings, {
       localVue,
       vuetify,
@@ -59,8 +66,13 @@ describe('NavBar', () => {
     expect(card.exists()).toBe(true)
   })
 
-  test('should load 2 buttons', () => {
-    const btn = wrapper.findAll('.v-btn')
-    expect(btn.length).toBe(2)
+  test('should have Discover Local button', () => {
+    const btn = wrapper.find('#btn-discoverLocal')
+    expect(btn.exists()).toBe(true)
+  })
+
+  test('should have Pair Remotely button', () => {
+    const btn = wrapper.find('#btn-sendRemotePeerID')
+    expect(btn.exists()).toBe(true)
   })
 })
