@@ -31,20 +31,17 @@ context('Settings', () => {
       cy.get('[data-cy=template-row]').should('exist')
     })
 
-    it("It display connected edge version after connection", async () => {
+    it("It display connected edge version after connection", () => {
       const version = '1.0.0'
 
       cy.get('[data-cy=sendRemotePeerID]').click()
 
-      const win = await cy.window()
-    //   cy.window().then(win => {
-        
-    // })
-
+      cy.window().then(win => {
         win.__store__.commit('PEER_CONNECTED', null)
         win.__store__.commit('EDGE_DEVICE_DETAILS', { 
           version
-         })
+          })
+    })
 
         cy.get('[data-cy=title-text]').should('contain.text', version )
     })
