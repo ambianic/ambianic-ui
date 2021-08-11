@@ -30,3 +30,5 @@ cypress/screenshots/
 .nyc_output/
 coverage/
 .env
+jest-coverage
+cypress-coverage
