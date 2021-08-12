@@ -4,11 +4,11 @@ on:
   # Trigger the workflow on push or pull request,
   # but only for the master branch
   push:
-    branches:
-      - master
+#    branches:
+#      - master
   pull_request:
-    branches:
-      - master
+#    branches:
+#      - master
 
 jobs:
   build:
@@ -81,7 +81,7 @@ jobs:
           temporaryPublicStorage: true # upload lighthouse report to the temporary storage
 
     - name: Semantic Release
-      if: github.event_name == 'push'
+      if: github.event_name == 'push' && ${{ github.ref == 'refs/heads/master' }}
       run: npx semantic-release
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
