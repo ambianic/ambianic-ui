@@ -4315,9 +4315,9 @@
     "lodash.uniq" "^4.5.0"
 
 "caniuse-lite@^1.0.0", "caniuse-lite@^1.0.30001109", "caniuse-lite@^1.0.30001219":
-  "integrity" "sha512-vcX4U8lwVXPdqzPWi6cAJ3FnQaqXbBqy/GZseKNQzRj37J7qZdGcBtxq/QLFNLLlfsoXLUdHw8Iwenri86Tagw=="
-  "resolved" "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001249.tgz"
-  "version" "1.0.30001249"
+  "integrity" "sha512-HOe1r+9VkU4TFmnU70z+r7OLmtR+/chB1rdcJUeQlAinjEeb0cKL20tlAtOagNZhbrtLnCvV19B4FmF1rgzl6A=="
+  "resolved" "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001251.tgz"
+  "version" "1.0.30001251"
 
 "capture-exit@^2.0.0":
   "integrity" "sha512-PiT/hQmTonHhl/HFGN+Lx3JJUznrVYJ3+AQsnthneZbvW7x+f08Tk7yLJTLEOUvBTbduLeeBkxEaYXUOUrRq6g=="
@@ -10156,8 +10156,8 @@
     "binary-extensions" "^2.2.0"
     "diff" "^5.0.0"
     "minimatch" "^3.0.4"
-    "npm-package-arg" "^8.1.1"
-    "pacote" "^11.3.0"
+    "npm-package-arg" "^8.1.4"
+    "pacote" "^11.3.4"
     "tar" "^6.1.0"
 
 "libnpmexec@^2.0.0":
@@ -11363,7 +11363,7 @@
   "resolved" "https://registry.npmjs.org/npm-normalize-package-bin/-/npm-normalize-package-bin-1.0.1.tgz"
   "version" "1.0.1"
 
-"npm-package-arg@^8.0.0", "npm-package-arg@^8.0.1", "npm-package-arg@^8.1.0", "npm-package-arg@^8.1.1", "npm-package-arg@^8.1.2", "npm-package-arg@^8.1.5":
+"npm-package-arg@^8.0.0", "npm-package-arg@^8.0.1", "npm-package-arg@^8.1.0", "npm-package-arg@^8.1.2", "npm-package-arg@^8.1.4", "npm-package-arg@^8.1.5":
   "integrity" "sha512-LhgZrg0n0VgvzVdSm1oiZworPbTxYHUJCgtsJW8mGvlDpxTM1vSJc3m5QZeUkhAHIzbz3VCHd/R4osi1L1Tg/Q=="
   "resolved" "https://registry.npmjs.org/npm-package-arg/-/npm-package-arg-8.1.5.tgz"
   "version" "8.1.5"
@@ -11933,7 +11933,7 @@
     "lodash.flattendeep" "^4.4.0"
     "release-zalgo" "^1.0.0"
 
-"pacote@^11.1.11", "pacote@^11.2.6", "pacote@^11.3.0", "pacote@^11.3.1", "pacote@^11.3.5":
+"pacote@^11.1.11", "pacote@^11.2.6", "pacote@^11.3.1", "pacote@^11.3.4", "pacote@^11.3.5":
   "integrity" "sha512-fT375Yczn4zi+6Hkk2TBe1x1sP8FgFsEIZ2/iWaXY2r/NkhDJfxbcn5paz1+RTFCyNf+dPnaoBDJoAxXSU8Bkg=="
   "resolved" "https://registry.npmjs.org/pacote/-/pacote-11.3.5.tgz"
   "version" "11.3.5"
