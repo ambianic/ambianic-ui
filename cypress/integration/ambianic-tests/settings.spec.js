@@ -22,6 +22,7 @@ context('Settings', () => {
       cy.get('[data-cy=sendRemotePeerID]').should('be.disabled')  
     })
 
+
     it('Should have remote connection button enabled', () => {  
       cy.get('[data-cy=remotePeerID]').type('917d5f0a-6469-4d33-b5c2-efd858118b74')
       cy.get('[data-cy=sendRemotePeerID]').should('be.enabled')
@@ -31,18 +32,23 @@ context('Settings', () => {
       cy.get('[data-cy=template-row]').should('exist')
     })
 
-    it("It display connected edge version after connection", () => {
-      const version = '1.0.0'
-
+    it("It displays loading state for edge version", () => {
       cy.get('[data-cy=sendRemotePeerID]').click()
-
+      
       cy.window().then(win => {
         win.__store__.commit('PEER_CONNECTED', null)
-        win.__store__.commit('EDGE_DEVICE_DETAILS', { 
-          version
-          })
     })
 
-        cy.get('[data-cy=title-text]').should('contain.text', version )
+      expect(cy.get('[data-cy=title-loader]')).to.exist
+    })
+
+    it("It displays error response for missing version", () => {
+      cy.window().then(win => {
+        win.__store__.commit('EDGE_DEVICE_DETAILS', {
+          status : "OK"
+        })
+    })
+
+      expect(cy.get('[data-cy=item-error]')).to.exist
     })
 })

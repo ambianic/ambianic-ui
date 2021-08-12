@@ -62,6 +62,7 @@
                     />
                     <amb-list-item
                       :title="version"
+                      :error="edgeDeviceError"
                       id="version-element"
                       subtitle="Edge Software Version"
                       icon-name="alpha-v-circle-outline"
@@ -285,6 +286,7 @@ import {
   REMOVE_REMOTE_PEER_ID
 } from '../store/action-types.js'
 import AmbListItem from '@/components/shared/ListItem.vue'
+import { EdgeAPI } from '@/remote/edgeAPI'
 
 export default {
   components: {
@@ -295,8 +297,12 @@ export default {
   data () {
     return {
       edgeAddress: undefined,
-      correctEdgeAddress: false
+      correctEdgeAddress: false,
+      edgeDeviceError: null
     }
+  },
+  created () {
+    this.edgeAPI = new EdgeAPI(this.pnp)
   },
   mounted () {
   },
@@ -326,9 +332,13 @@ export default {
       try {
         const details = await this.edgeAPI.getEdgeStatus()
 
+        if (!details.version) {
+          this.edgeDeviceError = 'Edge version information is currently unavailable. Please make sure your edge device is online and up to date.'
+        }
+
         await this.$store.commit(EDGE_DEVICE_DETAILS, details)
       } catch (e) {
-        console.log(e)
+        this.edgeDeviceError = 'Edge version information is currently unavailable. Please make sure your edge device is online and up to date.'
       }
     }
   },
@@ -341,6 +351,7 @@ export default {
       peerConnectionStatus: state => state.pnp.peerConnectionStatus,
       isEdgeConnected: state =>
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
+      pnp: state => state.pnp,
       edgePeerId: state => state.pnp.remotePeerId,
       peerFetch: state => state.pnp.peerFetch,
       version: state => state.edgeDevice.edgeSoftwareVersion
