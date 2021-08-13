@@ -63,12 +63,15 @@ jobs:
         fail_ci_if_error: true # optional (default = false)
         path_to_write_report: ./coverage/codecov_report.txt
         verbose: true
+    - name: List coverage report files
+      run: |
+        ls -al ./coverage
+        ls -al ./codecov
     - name: Upload test coverage report
       uses: actions/upload-artifact@v2
       with:
         name: test-coverage
         path: ./coverage
-
     - name: Build PWA distribution for production
       run: |
           npm run build --if-present
