@@ -1,5 +1,13 @@
 # Semantic Versioning Changelog
 
+## [2.15.2](https://github.com/ambianic/ambianic-ui/compare/v2.15.1...v2.15.2) (2021-08-13)
+
+
+### Bug Fixes
+
+* correct link to quickstart guide ([0fc9678](https://github.com/ambianic/ambianic-ui/commit/0fc9678b4f63c67b601d77494646c61f33d005e4))
+* fixed merge conflicts with upstream ([4298b2d](https://github.com/ambianic/ambianic-ui/commit/4298b2df478c43d8f5d81fb6bdc705b75b9ae98f))
+
 ## [2.15.1](https://github.com/ambianic/ambianic-ui/compare/v2.15.0...v2.15.1) (2021-08-09)
 
 
