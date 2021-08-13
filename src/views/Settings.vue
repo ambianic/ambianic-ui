@@ -55,12 +55,13 @@
                     />
                     <v-divider inset />
                     <amb-list-item
-                      ref="list-item-edgePeerID"
                       :title="edgePeerId"
                       subtitle="Peer ID"
                       icon-name="identifier"
                       :sensitive-field="true"
                       :copy-option="true"
+                      ref="list-item-edgePeerID"
+                      data-cy="list-item-edgePeerID"
                     />
                     <amb-list-item
                       ref="list-item-releaseVersion"

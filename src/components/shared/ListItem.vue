@@ -17,6 +17,7 @@
               style="color: #000;"
               id="peerId-container"
               :type="sensitive ? 'password' : 'text'"
+              data-cy="input-title"
             >
           </v-list-item-title>
 
@@ -33,6 +34,7 @@
             v-if="sensitive"
             id="toggle-visibility"
             @click="sensitive = false"
+            data-cy="icon-sensitive-on"
           >
             mdi-eye
           </v-icon>
@@ -50,6 +52,7 @@
             v-if="copyOption"
             id="toggle-copy-option"
             @click="doCopy"
+            data-cy="icon-copy-on"
           >
             content_copy
           </v-icon>
