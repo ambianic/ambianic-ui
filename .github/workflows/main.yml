@@ -65,8 +65,8 @@ jobs:
         verbose: true
     - name: List coverage report files
       run: |
-        ls -al ./coverage
-        ls -al ./codecov
+        ls -alR ./coverage
+        ls -al ./
     - name: Upload test coverage report
       uses: actions/upload-artifact@v2
       with:
