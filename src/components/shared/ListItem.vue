@@ -44,6 +44,16 @@
             mdi-eye-off-outline
           </v-icon>
         </v-col>
+        <v-col>
+          <v-icon
+            style="padding-bottom: 14px"
+            v-if="copyOption"
+            id="toggle-copy-option"
+            @click="doCopy"
+          >
+            content_copy
+          </v-icon>
+        </v-col>
       </v-row>
     </v-list-item-content>
 
@@ -60,6 +70,11 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import VueClipboard from 'vue-clipboard2'
+
+Vue.use(VueClipboard)
+
 export default {
   name: 'ListItem',
   props: {
@@ -90,11 +105,24 @@ export default {
     twoLine: {
       type: Boolean,
       default: false
+    },
+    copyOption: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
       sensitive: true
+    }
+  },
+  methods: {
+    doCopy: async function () {
+      try {
+        await this.$copyText(this.title)
+      } catch (e) {
+        console.warn('Can not copy `title` element value to clipboard', e)
+      }
     }
   }
 }

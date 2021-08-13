@@ -48,19 +48,22 @@
                     two-line
                   >
                     <amb-list-item
+                      ref="list-item-edgeDeviceName"
                       title="My Ambianic Edge Device"
                       subtitle="Display Name"
                       icon-name="tag"
                     />
                     <v-divider inset />
                     <amb-list-item
+                      ref="list-item-edgePeerID"
                       :title="edgePeerId"
                       subtitle="Peer ID"
                       icon-name="identifier"
-                      id="edgePeerID"
                       :sensitive-field="true"
+                      :copy-option="true"
                     />
                     <amb-list-item
+                      ref="list-item-releaseVersion"
                       :title="version"
                       subtitle="Release Version"
                       icon-name="alpha-v-circle-outline"
