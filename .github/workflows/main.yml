@@ -59,11 +59,10 @@ jobs:
       uses: codecov/codecov-action@v2
       with:
         token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-        files:
-          ./coverage/coverage-final.json,
-          ./coverage/jest/coverage-final.json
+        files: ./coverage/coverage-final.json, ./coverage/jest/coverage-final.json
         fail_ci_if_error: true # optional (default = false)
         path_to_write_report: ./coverage/codecov_report.txt
+        verbose: true
     - name: Upload test coverage report
       uses: actions/upload-artifact@v2
       with:
