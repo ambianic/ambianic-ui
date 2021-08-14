@@ -18,10 +18,10 @@ context('Actions', () => {
     cy.get('#welcome-text')
       .should('contain', 'Safer Home via Ambient Intelligence' )
   })
- 
+
   it('looks at welcome button', () => {
-    const btn = cy.get('#btn-setup')
-    btn.get('.v-btn__content')
+    cy.get('#btn-setup')
+      .get('.v-btn__content')
       .contains('Begin Setup', { matchCase: false })
   })
 })
