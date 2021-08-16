@@ -59,12 +59,19 @@ jobs:
       uses: codecov/codecov-action@v2
       with:
         token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-        files:
-          ./coverage/coverage-final.json,
-          ./coverage/jest/coverage-final.json
+        root_dir: ./coverage/
         fail_ci_if_error: true # optional (default = false)
-        # path_to_write_report: ./coverage/codecov_report.txt
-
+        path_to_write_report: ./coverage/codecov_report.txt
+        verbose: true
+    - name: List coverage report files
+      run: |
+        ls -alR ./coverage
+        ls -al ./
+    - name: Upload test coverage report
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-coverage
+        path: ./coverage
     - name: Build PWA distribution for production
       run: |
           npm run build --if-present

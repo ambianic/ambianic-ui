@@ -5,11 +5,9 @@ context('Check Navbar Items', () => {
     cy.visit('http://localhost:8080/about')
   })
 
-  it('Should be a download off button', () => {
-    const t = cy.get('[data-cy=download-off]')
-    expect(t).to.exist
+  it('Should be a download off button before edge connection', () => {
+    cy.get('[data-cy=download-off]').should('exist')
   })
-
 
   /** future buttons
   it('Should not have a search bar', () => {
@@ -28,8 +26,7 @@ context('Check Navbar Items', () => {
    */
 
   it('Should be an about button', () => {
-    const t = cy.get('[data-cy=about]')
-    expect(t).to.exist
+    cy.get('[data-cy=about]').should('exist')
   })
 
   it('Should have a five links', () => {
@@ -39,12 +36,7 @@ context('Check Navbar Items', () => {
   })
 
   it('Should have a clickable timeline icon', () => {
-    const icon =  cy.get('[data-cy=timeline-icon]')
-    
-    icon.should("be.visible")
-
-    icon.click()
-
+    cy.get('[data-cy=timeline-icon]').should('be.visible').click()
     cy.url().should('include', '/timeline')
   })
 })
