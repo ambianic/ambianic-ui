@@ -416,7 +416,7 @@
                     <v-card-text class="step-text">
                       Please follow the
                       <a
-                        href="https://docs.ambianic.ai/users/quickstart/"
+                        href="https://docs.ambianic.ai/users/quickstart"
                         target="_blank"
                         rel="no-oopener"
                       >
