@@ -56,25 +56,23 @@
         {{ error }}null
       </v-text>
 
-      <div v-else>
-        <v-skeleton-loader
-          v-if="!title"
-          v-bind="attrs"
-          data-cy="title-loader"
-          type="list-item-two-line"
-        />
-        <v-list-item-title
-          v-else
-          data-cy="title-text"
-          id="title"
-          class="headline"
-        >
-          {{ title }}
-        </v-list-item-title>
-        <v-list-item-subtitle>
-          {{ subtitle }}
-        </v-list-item-subtitle>
-      </div>
+      <v-skeleton-loader
+        v-if="!title"
+        v-bind="attrs"
+        data-cy="title-loader"
+        type="list-item-two-line"
+      />
+      <v-list-item-title
+        v-else
+        data-cy="title-text"
+        id="title"
+        class="headline"
+      >
+        {{ title }}
+      </v-list-item-title>
+      <v-list-item-subtitle>
+        {{ subtitle }}
+      </v-list-item-subtitle>
     </v-list-item-content>
   </v-list-item>
 </template>

@@ -6,8 +6,6 @@ const state = {
 
 const mutations = {
   [EDGE_DEVICE_DETAILS] (state, edgeDetails) {
-    console.log(edgeDetails, 'EDGE STORE \n \n \n \n \n')
-
     if (edgeDetails.version) {
       state.edgeSoftwareVersion = edgeDetails.version
     }

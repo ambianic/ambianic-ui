@@ -102,4 +102,14 @@ describe('Settings', () => {
     const versionElement = component.get('#version-element')
     expect(versionElement.find('#title').text()).toBe(localEdgeVersion)
   })
+
+  test('`fetchEdgeDetails` method handles missing edge version response', async () => {
+    wrapper.vm.edgeAPI.getEdgeStatus = jest.fn().mockResolvedValue({
+      status: 'OK'
+    })
+
+    await wrapper.vm.fetchEdgeDetails()
+
+    expect(wrapper.vm.edgeDeviceError).toBe('Edge version information is currently unavailable. Please make sure your edge device is online and up to date.')
+  })
 })
