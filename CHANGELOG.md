@@ -1,5 +1,18 @@
 # Semantic Versioning Changelog
 
+# [2.16.0](https://github.com/ambianic/ambianic-ui/compare/v2.15.2...v2.16.0) (2021-08-16)
+
+
+### Bug Fixes
+
+* spacing and tooltips ([68730a7](https://github.com/ambianic/ambianic-ui/commit/68730a7f8f11da54e9d63eb54255d50798819117))
+
+
+### Features
+
+* convenient copy paste button for edge device ID ([61f5681](https://github.com/ambianic/ambianic-ui/commit/61f5681d6fbc2dd422b966b14d56004d3d3c875d))
+* convenient copy paste button for edge device ID ([2129431](https://github.com/ambianic/ambianic-ui/commit/2129431297ade5f8edebcdd1e9ad67c6e1d68254))
+
 ## [2.15.2](https://github.com/ambianic/ambianic-ui/compare/v2.15.1...v2.15.2) (2021-08-13)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "ambianic-ui",
-  "version": "2.15.2",
+  "version": "2.16.0",
   "description": "Ambianic UI is the main user interface to Ambianic Edge deployments.",
   "author": "Ivelin Ivanov",
   "scripts": {
