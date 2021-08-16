@@ -54,9 +54,16 @@ context('Settings', () => {
     cy.window().then(win => {
       cy.get('[data-cy=icon-sensitive-on]').should('not.exist')
       win.__store__.commit(NEW_REMOTE_PEER_ID, '917d5f0a-6469-4d33-b5c2-efd858118b74')
+      // tooltip should not be shown without focus on the icon
+      cy.contains('Show/Hide cleartext').should('not.exist')
       cy.get('[data-cy=list-item-edgePeerID]').should('exist').within(($listItem) => {
-        cy.get('[data-cy=icon-sensitive-on]').should('exist')
+        cy.get('[data-cy=icon-sensitive-on]')
+          .should('exist')
+          // focus on the icon to check if a tooltip is shown
+          .focus()
       })
+      // check if tooltip is shown for the eye icon
+      cy.contains('Show/Hide cleartext')
     })
   })
 
@@ -64,9 +71,16 @@ context('Settings', () => {
     cy.window().then(win => {
       cy.get('[data-cy=icon-copy-on]').should('not.exist')
       win.__store__.commit(NEW_REMOTE_PEER_ID, '917d5f0a-6469-4d33-b5c2-efd858118b74')
+      // tooltip should not be shown without focus on the icon
+      cy.contains('Copy to clipboard').should('not.exist')
       cy.get('[data-cy=list-item-edgePeerID]').should('exist').within(($listItem) => {
-        cy.get('[data-cy=icon-copy-on]').should('exist')
+        cy.get('[data-cy=icon-copy-on]')
+          .should('exist')
+          // focus on the icon to check if a tooltip is shown
+          .focus()
       })
+      // check if tooltip is shown for the eye icon
+      cy.contains('Copy to clipboard')
     })
   })
 })
