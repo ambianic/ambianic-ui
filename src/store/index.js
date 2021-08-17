@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { pnpStoreModule } from './pnp.js'
+import edgeDevice from './edge-device'
 // import { INITIALIZE_PNP } from './action-types.js'
 import { UPDATE_AVAILABLE } from './mutation-types'
 
@@ -9,7 +10,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     updateToBeInstalled: undefined,
-    version: require('@/../package.json').version
+    uiAppVersion: require('@/../package.json').version
   },
   mutations: {
     [UPDATE_AVAILABLE] (state, updateToBeInstalled) {
@@ -19,7 +20,8 @@ const store = new Vuex.Store({
   actions: {
   },
   modules: {
-    pnp: pnpStoreModule
+    pnp: pnpStoreModule,
+    edgeDevice: edgeDevice
   }
 })
 

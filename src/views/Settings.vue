@@ -65,9 +65,12 @@
                     />
                     <amb-list-item
                       ref="list-item-releaseVersion"
-                      :title="version"
-                      subtitle="Release Version"
+                      :title="edgeVersion"
+                      :error="edgeDeviceError"
+                      id="version-element"
+                      subtitle="Edge Software Version"
                       icon-name="alpha-v-circle-outline"
+                      data-cy="list-item-edgeVersion"
                     />
                   </v-list>
                 </v-card>
@@ -280,23 +283,35 @@ import {
   PEER_CONNECTING,
   PEER_AUTHENTICATING,
   PEER_CONNECTED,
-  PEER_CONNECTION_ERROR
+  PEER_CONNECTION_ERROR,
+  EDGE_DEVICE_DETAILS
 } from '@/store/mutation-types'
 import {
   CHANGE_REMOTE_PEER_ID,
   REMOVE_REMOTE_PEER_ID
 } from '../store/action-types.js'
+import AmbListItem from '@/components/shared/ListItem.vue'
+import { EdgeAPI } from '@/remote/edgeAPI'
 
 export default {
   components: {
     AmbBanner: () => import('@/components/shared/Banner.vue'),
-    AmbListItem: () => import('@/components/shared/ListItem.vue'),
+    AmbListItem,
     AmbAppFrame: () => import('@/components/AppFrame.vue')
   },
   data () {
     return {
       edgeAddress: undefined,
-      correctEdgeAddress: false
+      correctEdgeAddress: false,
+      edgeDeviceError: null
+    }
+  },
+  created () {
+    this.edgeAPI = new EdgeAPI(this.pnp)
+    // if a connection to the edge device is already established
+    // but version info has not been fetched yet, let's do it now
+    if (this.isEdgeConnected && !this.edgeVersion) {
+      this.fetchEdgeDetails()
     }
   },
   mounted () {
@@ -322,6 +337,18 @@ export default {
     localEdgeAddress () {
       this.edgeAddress = undefined
       this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
+    },
+    async fetchEdgeDetails () {
+      try {
+        const details = await this.edgeAPI.getEdgeStatus()
+
+        if (!details.version) {
+          this.edgeDeviceError = 'Unavailable. Outdated device?'
+        }
+        await this.$store.commit(EDGE_DEVICE_DETAILS, details)
+      } catch (e) {
+        this.edgeDeviceError = 'Unavailable. Outdated device?'
+      }
     }
   },
   computed: {
@@ -333,9 +360,10 @@ export default {
       peerConnectionStatus: state => state.pnp.peerConnectionStatus,
       isEdgeConnected: state =>
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
+      pnp: state => state.pnp,
       edgePeerId: state => state.pnp.remotePeerId,
       peerFetch: state => state.pnp.peerFetch,
-      version: state => state.version
+      edgeVersion: state => state.edgeDevice.edgeSoftwareVersion
     }),
     connectStep: function () {
       let step = 1
@@ -363,8 +391,12 @@ export default {
     edgeAddress (value) {
       this.edgeAddress = value
       this.validateIP(value)
+    },
+    isEdgeConnected: async function (isConnected) {
+      if (isConnected && !this.edgeVersion) {
+        await this.fetchEdgeDetails()
+      }
     }
   }
 }
-
 </script>

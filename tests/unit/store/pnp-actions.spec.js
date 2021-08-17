@@ -598,7 +598,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
     expect(peerConnection.on).toHaveBeenCalledTimes(3)
     // emulate peerConnection open
     const onPeerConnectionOpenCallback =
-      peerConnection.on.mock.calls.find(callbackDetails => callbackDetails[0] === 'open')
+        peerConnection.on.mock.calls.find(callbackDetails => callbackDetails[0] === 'open')
     // emulate peerConnection.on('open')
     onPeerConnectionOpenCallback[1]()
     // check if PeerFetch instance has been created
@@ -623,7 +623,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
     expect(peerConnection.on).toHaveBeenCalledTimes(3)
     // emulate peerConnection open
     const onPeerConnectionOpenCallback =
-      peerConnection.on.mock.calls.find(callbackDetails => callbackDetails[0] === 'close')
+        peerConnection.on.mock.calls.find(callbackDetails => callbackDetails[0] === 'close')
     // emulate peerConnection.on('close')
     onPeerConnectionOpenCallback[1]()
     expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
@@ -650,7 +650,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
     expect(peerConnection.on).toHaveBeenCalledTimes(3)
     // emulate peerConnection open
     const onPeerConnectionOpenCallback =
-      peerConnection.on.mock.calls.find(callbackDetails => callbackDetails[0] === 'error')
+        peerConnection.on.mock.calls.find(callbackDetails => callbackDetails[0] === 'error')
     // emulate peerConnection.on('error')
     onPeerConnectionOpenCallback[1]()
     expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)

@@ -8,8 +8,10 @@ import { PEER_DISCOVER } from '@/store/action-types'
 import { PEER_CONNECTED } from '@/store/mutation-types'
 import AmbListItem from '@/components/shared/ListItem.vue'
 import { cloneDeep } from 'lodash'
+import edgeDevice from '@/store/edge-device.js'
+import { pnpStoreModule } from '../../../src/store/pnp'
 
-describe('NavBar', () => {
+describe('Settings View', () => {
   // global
   let wrapper
 
@@ -31,8 +33,6 @@ describe('NavBar', () => {
 
   beforeEach(async () => {
     state = {
-      peerConnectionStatus: jest.fn(),
-      edgePeerId: jest.fn()
     }
 
     getters = {
@@ -46,15 +46,14 @@ describe('NavBar', () => {
 
     store = new VueX.Store(
       {
+        state,
+        getters,
+        mutations,
+        actions,
         modules:
         {
-          pnp:
-          cloneDeep({
-            state,
-            getters,
-            mutations,
-            actions
-          })
+          pnp: cloneDeep(pnpStoreModule),
+          edgeDevice: cloneDeep(edgeDevice)
         }
       }
     )
@@ -117,7 +116,8 @@ describe('NavBar', () => {
       subtitle: 'Peer ID',
       iconName: 'identifier',
       twoLine: false,
-      copyOption: true
+      copyOption: true,
+      error: undefined
     })
   })
 
@@ -139,7 +139,43 @@ describe('NavBar', () => {
       subtitle: 'Display Name',
       iconName: 'tag',
       twoLine: false,
-      copyOption: false
+      copyOption: false,
+      error: undefined
     })
+  })
+
+  test('Connected Edge device version is shown', () => {
+    const localEdgeVersion = '2.50.5'
+
+    const newStore = new VueX.Store({
+      modules: {
+        pnp: cloneDeep(pnpStoreModule),
+        edgeDevice: cloneDeep(edgeDevice)
+      }
+    })
+
+    newStore.state.edgeDevice.edgeSoftwareVersion = localEdgeVersion
+    newStore.state.pnp.peerConnectionStatus = PEER_CONNECTED
+    newStore.state.pnp.remotePeerId = '1234-1234-1234-1234-1234'
+
+    const component = mount(Settings, {
+      localVue,
+      vuetify,
+      router,
+      store: newStore
+    })
+
+    const versionElement = component.get('#version-element')
+    expect(versionElement.find('#title').text()).toBe(localEdgeVersion)
+  })
+
+  test('`fetchEdgeDetails` method handles missing edge version response', async () => {
+    wrapper.vm.edgeAPI.getEdgeStatus = jest.fn().mockResolvedValue({
+      status: 'OK'
+    })
+
+    await wrapper.vm.fetchEdgeDetails()
+
+    expect(wrapper.vm.edgeDeviceError).toBe('Unavailable. Outdated device?')
   })
 })

@@ -1,8 +1,29 @@
 /// <reference types="cypress" />
-import { NEW_REMOTE_PEER_ID, REMOTE_PEER_ID_REMOVED } from '../../../src/store/mutation-types'
+import {
+  NEW_REMOTE_PEER_ID,
+  REMOTE_PEER_ID_REMOVED,
+  PEER_CONNECTED,
+  PEER_DISCONNECTED,
+  EDGE_DEVICE_DETAILS,
+  PNP_SERVICE_CONNECTED,
+  PNP_SERVICE_DISCONNECTED
+} from '../../../src/store/mutation-types'
+
+// fake PeerJS class
+const fakePeer = {
+  open: true,
+  on (event) {},
+  connect () {
+    const peerConnection = {
+      on (event) {}
+    }
+    return peerConnection
+  },
+  reconnect () {}
+}
 
 context('Settings', () => {
-  before(() => {
+  beforeEach(() => {
     cy.visit('http://localhost:8080/settings')
     // cy.get('[data-cy=settings]').click()
   })
@@ -11,6 +32,9 @@ context('Settings', () => {
     cy.window().then(win => {
       // restore Vuex store state
       win.__store__.commit(REMOTE_PEER_ID_REMOVED)
+      win.__store__.commit(PNP_SERVICE_DISCONNECTED)
+      win.__store__.commit(PEER_DISCONNECTED)
+      win.__store__.commit(EDGE_DEVICE_DETAILS, undefined)
     })
   })
 
@@ -30,7 +54,7 @@ context('Settings', () => {
     cy.get('[data-cy=sendRemotePeerID]').should('be.disabled')
   })
 
-  it('Should have remote connection button enabled', () => {  
+  it('Should have remote connection button enabled', () => {
     cy.get('[data-cy=remotePeerID]').type('917d5f0a-6469-4d33-b5c2-efd858118b74')
     cy.get('[data-cy=sendRemotePeerID]').should('be.enabled')
   })
@@ -81,6 +105,56 @@ context('Settings', () => {
       })
       // check if tooltip is shown for the eye icon
       cy.contains('Copy to clipboard')
+    })
+  })
+
+  it('Should display skeleton loader for unavailable edge version info', () => {
+    cy.window().then(win => {
+      win.__store__.commit(NEW_REMOTE_PEER_ID, '917d5f0a-6469-4d33-b5c2-efd85811NA')
+      cy.get('[data-cy=list-item-edgeVersion]').should('exist').within(($listItem) => {
+        // version number should not be available for a non-existant edge device ID
+        cy.get('[data-cy=title-loader]').should('exist')
+      })
+    })
+  })
+
+  it('Should display error message for unavailable edge version info', () => {
+    cy.window().then(win => {
+      // inject a PeerJS mock object
+      win.__store__.state.pnp.peer = fakePeer
+      win.__store__.commit(NEW_REMOTE_PEER_ID, '917d5f0a-6469-4d33-b5c2-efd85811NA')
+      cy.get('[data-cy=list-item-edgeVersion]').should('exist').within(($listItem) => {
+        // version number should not be available for a non-existant edge device ID
+        cy.get('[data-cy=title-loader]').should('exist')
+        // fake edge connected
+        win.__store__.commit(PEER_CONNECTED)
+        cy.get('[data-cy=item-error]')
+          .should('exist')
+          .contains('Unavailable. Outdated device?')
+      })
+    })
+  })
+
+  it('Should display edge version when available', () => {
+    cy.window().then(win => {
+      // inject a PeerJS mock object
+      win.__store__.state.pnp.peer = fakePeer
+      win.__store__.commit(NEW_REMOTE_PEER_ID, '917d5f0a-6469-4d33-b5c2-efd85811NA')
+      // fake edge version
+      const details = {
+        version: '1.2.3'
+      }
+      win.__store__.commit(EDGE_DEVICE_DETAILS, details)
+      // fake edge connected
+      win.__store__.commit(PNP_SERVICE_CONNECTED)
+      win.__store__.commit(PEER_CONNECTED)
+      cy.get('[data-cy=list-item-edgeVersion]').should('exist').within(($listItem) => {
+        cy.get('[data-cy=item-error]')
+          .should('not.exist')
+        cy.get('[data-cy=title-text]')
+          .should('exist')
+          .contains('1.2.3')
+      })
     })
   })
 })

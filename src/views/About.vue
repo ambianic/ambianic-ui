@@ -44,7 +44,7 @@
                 id="version-info"
                 :title="version"
                 icon-name="alpha-v-circle-outline"
-                subtitle="Release Version"
+                subtitle="UI App Version"
               />
             </v-flex>
           </v-layout>
@@ -82,7 +82,7 @@ export default {
   },
   computed: {
     ...mapState({
-      version: state => state.version
+      version: (state) => state.uiAppVersion
     })
   }
 }

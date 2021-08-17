@@ -224,7 +224,6 @@ import {
   NEW_REMOTE_PEER_ID
 } from '@/store/mutation-types'
 import moment from 'moment'
-
 Vue.use(VueObserveVisibility)
 const PAGE_SIZE = 5
 export default {
