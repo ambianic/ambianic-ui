@@ -65,11 +65,12 @@
                     />
                     <amb-list-item
                       ref="list-item-releaseVersion"
-                      :title="version"
+                      :title="edgeVersion"
                       :error="edgeDeviceError"
                       id="version-element"
                       subtitle="Edge Software Version"
                       icon-name="alpha-v-circle-outline"
+                      data-cy="list-item-edgeVersion"
                     />
                   </v-list>
                 </v-card>
@@ -307,6 +308,11 @@ export default {
   },
   created () {
     this.edgeAPI = new EdgeAPI(this.pnp)
+    // if a connection to the edge device is already established
+    // but version info has not been fetched yet, let's do it now
+    if (this.isEdgeConnected && !this.edgeVersion) {
+      this.fetchEdgeDetails()
+    }
   },
   mounted () {
   },
@@ -337,12 +343,11 @@ export default {
         const details = await this.edgeAPI.getEdgeStatus()
 
         if (!details.version) {
-          this.edgeDeviceError = 'Edge version information is currently unavailable. Please make sure your edge device is online and up to date.'
+          this.edgeDeviceError = 'Unavailable. Outdated device?'
         }
-
         await this.$store.commit(EDGE_DEVICE_DETAILS, details)
       } catch (e) {
-        this.edgeDeviceError = 'Edge version information is currently unavailable. Please make sure your edge device is online and up to date.'
+        this.edgeDeviceError = 'Unavailable. Outdated device?'
       }
     }
   },
@@ -358,7 +363,7 @@ export default {
       pnp: state => state.pnp,
       edgePeerId: state => state.pnp.remotePeerId,
       peerFetch: state => state.pnp.peerFetch,
-      version: state => state.edgeDevice.edgeSoftwareVersion
+      edgeVersion: state => state.edgeDevice.edgeSoftwareVersion
     }),
     connectStep: function () {
       let step = 1
@@ -388,7 +393,7 @@ export default {
       this.validateIP(value)
     },
     isEdgeConnected: async function (isConnected) {
-      if (isConnected) {
+      if (isConnected && !this.edgeVersion) {
         await this.fetchEdgeDetails()
       }
     }

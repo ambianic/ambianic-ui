@@ -6,7 +6,7 @@ const state = {
 
 const mutations = {
   [EDGE_DEVICE_DETAILS] (state, edgeDetails) {
-    if (edgeDetails.version) {
+    if (edgeDetails && edgeDetails.version) {
       state.edgeSoftwareVersion = edgeDetails.version
     }
   }
