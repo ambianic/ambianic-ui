@@ -6,7 +6,6 @@ import { pnpStoreModule } from '@/store/pnp.js'
 import { EDGE_DEVICE_DETAILS } from '@/store/mutation-types'
 
 describe('Edge Device module', () => {
-  let wrapper
   const localVue = createLocalVue()
 
   let store
