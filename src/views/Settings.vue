@@ -48,6 +48,7 @@
                     two-line
                   >
                     <amb-list-item
+                      ref="list-item-edgeDeviceName"
                       title="My Ambianic Edge Device"
                       subtitle="Display Name"
                       icon-name="tag"
@@ -57,10 +58,13 @@
                       :title="edgePeerId"
                       subtitle="Peer ID"
                       icon-name="identifier"
-                      id="edgePeerID"
                       :sensitive-field="true"
+                      :copy-option="true"
+                      ref="list-item-edgePeerID"
+                      data-cy="list-item-edgePeerID"
                     />
                     <amb-list-item
+                      ref="list-item-releaseVersion"
                       :title="version"
                       :error="edgeDeviceError"
                       id="version-element"

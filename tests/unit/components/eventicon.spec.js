@@ -6,7 +6,7 @@ import VueRouter from 'vue-router'
 import EventIcon from '@/components/EventIcon.vue'
 import MockData from '@/assets/mock-data/timeline.json'
 
-import { setTimelineEventColor, setTimelineEventIcon } from '../../../../src/components/utils'
+import { setTimelineEventColor, setTimelineEventIcon } from '../../../src/components/utils'
 
 describe('EventIcon', () => {
   // global

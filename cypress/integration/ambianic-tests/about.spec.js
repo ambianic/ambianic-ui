@@ -13,16 +13,16 @@ context('AboutPage', () => {
   })
 
   it('Loads timeline button', () => {
-    let btn = cy.get('#btn-timeline')
-    btn.should('have.attr', 'href', '/timeline')
-    btn.get('.v-btn__content')
+    cy.get('#btn-timeline')
+      .should('have.attr', 'href', '/timeline')
+      .get('.v-btn__content')
       .contains('View Timeline', { matchCase: false })
   })
 
   it('Loads settings button', () => {
-    let btn = cy.get('#btn-settings')
-    btn.should('have.attr', 'href', '/settings')
-    btn.get('.v-btn__content')
+    cy.get('#btn-settings')
+      .should('have.attr', 'href', '/settings')
+      .get('.v-btn__content')
       .contains('Settings', { matchCase: false })
   })
 

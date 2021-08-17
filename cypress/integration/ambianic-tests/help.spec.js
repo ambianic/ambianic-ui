@@ -4,8 +4,6 @@ context('HelpPage', () => {
     cy.visit('/help')
   })
 
-
-
   it('Look at page title and subtitle', () => {
     cy.get('#help-title > .v-list-item__content > .v-list-item__title')
       .contains('Need Help with Ambianic?', { matchCase: false })
@@ -15,17 +13,16 @@ context('HelpPage', () => {
   })
 
   it('Check docs button', () => {
-    let btn = cy.get('#btn-docs')
-    btn.should('have.attr', 'href', 'https://docs.ambianic.ai')
-    btn.get('.v-btn__content')
+    cy.get('#btn-docs')
+      .should('have.attr', 'href', 'https://docs.ambianic.ai')
+      .get('.v-btn__content')
       .contains('Documentation', { matchCase: false })
   })
 
   it('Check community button', () => {
-    let btn = cy.get('#btn-community')
-    btn.should('have.attr', 'href', 'https://twitter.com/ambianicai')
-    btn.get('.v-btn__content')
+    cy.get('#btn-community')
+      .should('have.attr', 'href', 'https://twitter.com/ambianicai')
+      .get('.v-btn__content')
       .contains('Twitter', { matchCase: false })
   })
-
 })
