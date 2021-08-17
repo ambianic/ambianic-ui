@@ -1,5 +1,24 @@
 # Semantic Versioning Changelog
 
+# [2.17.0](https://github.com/ambianic/ambianic-ui/compare/v2.16.0...v2.17.0) (2021-08-17)
+
+
+### Bug Fixes
+
+* added coverage dump to gitignore ([ee1728d](https://github.com/ambianic/ambianic-ui/commit/ee1728d063f8602e4941e2bc6516fa093c854942))
+* edge cases and error handling ([388684b](https://github.com/ambianic/ambianic-ui/commit/388684bbff5c60edafad2113f36c44bc6f1a5820))
+* fixed merge conflicts with upstream master branc ([b9feaf3](https://github.com/ambianic/ambianic-ui/commit/b9feaf3f13426dcad35b14c653f153d9e36f493d))
+* fixed merge conflicts with upstream master branc ([8aacb8f](https://github.com/ambianic/ambianic-ui/commit/8aacb8f467f6173b6f202ed6e3da18c90bc3c87c))
+* fixed merge conflicts with upstream master branch ([4f57267](https://github.com/ambianic/ambianic-ui/commit/4f572675448a2be9221006bbf17bcb4d70e97c65))
+* switch from HTML5 fetch to peer-fetch ([1efed5a](https://github.com/ambianic/ambianic-ui/commit/1efed5a4ee9b5a5ebaa2ee4b68621ab7da30727a))
+* switch from HTML5 fetch to peer-fetch ([cb352d3](https://github.com/ambianic/ambianic-ui/commit/cb352d39006018349a12a2dbde9cf91a6551fe34))
+
+
+### Features
+
+* fetch of edge version with a fallback option ([2c9b4b2](https://github.com/ambianic/ambianic-ui/commit/2c9b4b2cb29fd216dc427f523943b976f421e144))
+* implemented fetch of edge version with a fallback option ([d31f82d](https://github.com/ambianic/ambianic-ui/commit/d31f82dd42425faf164f6f2e886911da62159dfa))
+
 # [2.16.0](https://github.com/ambianic/ambianic-ui/compare/v2.15.2...v2.16.0) (2021-08-16)
 
 
