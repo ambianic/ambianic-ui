@@ -146,8 +146,16 @@
                 <div v-else>
                   <div class="flex-between">
                     <v-card-text class="step-text">
-                      Now you can access Ambianic as a native app on your mobile
-                      or desktop device.
+                      If your browser
+                      <a
+                        href="https://docs.ambianic.ai/users/quickstart"
+                        target="_blank"
+                        rel="no-oopener"
+                      >
+                        supports PWA Install
+                      </a>
+                      , you can now
+                      access Ambianic as a native app on your mobile or desktop device.
                     </v-card-text>
 
                     <v-btn
@@ -420,7 +428,7 @@
                         target="_blank"
                         rel="no-oopener"
                       >
-                        Ambianic Edge DYI Install document guide
+                        Ambianic Edge Install Guide
                       </a>
                       . When finished click, continue.
                     </v-card-text>
@@ -452,7 +460,7 @@
                       color="primary"
                       @click="
                         moveStep(3)
-                        setStepContent('discovering')
+                        setDiscoveringStep()
                       "
                     >
                       Continue
@@ -585,7 +593,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import { PEER_CONNECTED } from '@/store/mutation-types'
-import { CHANGE_REMOTE_PEER_ID } from '@/store/action-types'
+import { CHANGE_REMOTE_PEER_ID, PEER_DISCOVER } from '@/store/action-types'
 
 const MESSAGE_CLIENTS = [
   {
@@ -641,8 +649,15 @@ export default {
   created () {
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault()
-
+      console.info('Registered event listener for PWA install prompt.', e)
       this.installPrompt = e
+    })
+    window.addEventListener('appinstalled', () => {
+      // Hide the app-provided install promotion
+      this.appInstallationComplete = true
+      // Clear the deferredPrompt so it can be garbage collected
+      this.installPrompt = null
+      console.log('PWA was installed')
     })
   },
   methods: {
@@ -662,14 +677,22 @@ export default {
       }
     },
 
-    installApp () {
+    async installApp () {
       this.isInstallingApp = true
 
       // catch error incase installPrompt is undefined as previous app installtion has been done
       try {
-        this.installPrompt.prompt()
+        if (this.installPrompt) {
+          this.installPrompt.prompt()
+          // Wait for the user to respond to the prompt
+          const { outcome } = await this.installPrompt.userChoice
+          console.log(`User response to the install prompt: ${outcome}`)
+        } else {
+          console.info('App already installed or browser does not support PWA install.')
+          this.appInstallationComplete = true
+        }
       } catch (e) {
-        console.log(e, 'error installing app')
+        console.warn('Error installing app', e)
       }
 
       setTimeout(() => {
@@ -687,6 +710,11 @@ export default {
       this.stepContentName = name
 
       localStorage.setItem('lastOnboardingStep', name)
+    },
+
+    async setDiscoveringStep () {
+      this.setStepContent('discovering')
+      await this.$store.dispatch(PEER_DISCOVER)
     },
 
     handleRequestDialog (state) {
