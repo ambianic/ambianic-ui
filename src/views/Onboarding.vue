@@ -95,8 +95,7 @@
             >
               <v-stepper-step
                 @click="
-                  moveStep(2)
-                  setStepContent('installation')
+                  afterPwaInstall()
                 "
                 editable
                 data-cy="stepper"
@@ -145,19 +144,11 @@
                 </div>
                 <div v-else>
                   <div class="flex-between">
-                    <v-card-text class="step-text">
-                      If your browser
-                      <a
-                        href="https://docs.ambianic.ai/users/quickstart"
-                        target="_blank"
-                        rel="no-oopener"
-                      >
-                        supports PWA Install
-                      </a>
-                      , you can now
-                      access Ambianic as a native app on your mobile or desktop device.
+                    <v-card-text
+                      class="step-text"
+                    >
+                      {{ installOutcomeMessage }}
                     </v-card-text>
-
                     <v-btn
                       style="padding: 0.5rem 2rem;"
                       color="primary"
@@ -168,7 +159,6 @@
                       "
                     >
                       Continue
-
                       <v-icon right>
                         mdi-arrow-right
                       </v-icon>
@@ -623,7 +613,8 @@ export default {
   name: 'Onboarding',
   data () {
     return {
-      installPrompt: null,
+      installPrompt: undefined,
+      installOutcomeMessage: undefined,
       stepLevel: localStorage.getItem('lastOnboardingStage') || 1,
       stepContentName: localStorage.getItem('lastOnboardingStep') || '',
       isInstallingApp: false,
@@ -651,13 +642,6 @@ export default {
       e.preventDefault()
       console.info('Registered event listener for PWA install prompt.', e)
       this.installPrompt = e
-    })
-    window.addEventListener('appinstalled', () => {
-      // Hide the app-provided install promotion
-      this.appInstallationComplete = true
-      // Clear the deferredPrompt so it can be garbage collected
-      this.installPrompt = null
-      console.log('PWA was installed')
     })
   },
   methods: {
@@ -687,17 +671,18 @@ export default {
           // Wait for the user to respond to the prompt
           const { outcome } = await this.installPrompt.userChoice
           console.log(`User response to the install prompt: ${outcome}`)
+          if (outcome === 'accepted') {
+            this.pwaInstallDone('Ambianic can be now accesssed as a native home screen app on this device.')
+          } else {
+            // userChoice.outcome === "dismissed":
+            this.afterPwaInstall()
+          }
         } else {
-          console.info('App already installed or browser does not support PWA install.')
-          this.appInstallationComplete = true
+          this.pwaInstallDone('App already installed or browser does not support PWA install.')
         }
       } catch (e) {
         console.warn('Error installing app', e)
       }
-
-      setTimeout(() => {
-        this.appInstallationComplete = true
-      }, 1000)
     },
 
     moveStep (stage) {
@@ -715,6 +700,16 @@ export default {
     async setDiscoveringStep () {
       this.setStepContent('discovering')
       await this.$store.dispatch(PEER_DISCOVER)
+    },
+
+    async pwaInstallDone (message) {
+      this.installOutcomeMessage = message
+      this.appInstallationComplete = true
+    },
+
+    async afterPwaInstall () {
+      this.moveStep(2)
+      this.setStepContent('installation')
     },
 
     handleRequestDialog (state) {
