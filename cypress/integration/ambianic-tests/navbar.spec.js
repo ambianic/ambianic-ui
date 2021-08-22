@@ -5,8 +5,8 @@ context('Check Navbar Items', () => {
     cy.visit('http://localhost:8080/about')
   })
 
-  it('Should be a download off button before edge connection', () => {
-    cy.get('[data-cy=download-off]').should('exist')
+  it('Should display a connection-offline icon before edge connection', () => {
+    cy.get('[data-cy=connection-status]').should('exist')
   })
 
   /** future buttons
