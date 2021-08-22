@@ -75,4 +75,5 @@ describe('NavBar', () => {
     expect(nav.exists()).toBe(true)
     expect(item.length).toBe(5)
   })
+
 })

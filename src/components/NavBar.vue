@@ -26,13 +26,28 @@
         to="timeline"
       />
 
-      <nav-button
-        data-cy="download-off"
-        icon="download-off"
-        color="warning"
-        v-if="!isEdgeConnected"
-        to="edge-connect"
-      />
+      <div>
+        <v-tooltip bottom>
+          <template
+              v-if="!isEdgeConnected"
+              #activator="{ on, attrs }"
+          >
+            <div
+                v-bind="attrs"
+                v-on="on">
+              <nav-button
+                  data-cy="connection-status"
+                  icon="cloud-off-outline"
+                  :color="connectionIconColor"
+                  to="edge-connect"
+                  v-bind="attrs"
+                  v-on="on"
+              />
+            </div>
+          </template>
+          <span> Device Offline </span>
+        </v-tooltip>
+        </div>
 
       <!-- Future navbar icons
       <v-text-field
@@ -179,6 +194,7 @@ export default {
     on: true,
     newFavorites: 0,
     newAlerts: 2,
+    connectionIconColor: 'warning',
     logo: '../assets/logo5.svg',
     items: [
       { icon: 'history', text: 'Timeline', link: '/timeline' },
