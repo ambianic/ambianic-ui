@@ -146,6 +146,7 @@
                   <div class="flex-between">
                     <v-card-text
                       class="step-text"
+                      data-cy="label-installOutcomeMessage"
                     >
                       {{ installOutcomeMessage }}
                     </v-card-text>
@@ -179,8 +180,7 @@
               <v-stepper-content step="2">
                 <div v-if="stepContentName === 'installation'">
                   <v-card-text class="step-text">
-                    Next, let's setup your Ambianic Edge Device which will
-                    observe and report important events around the house.
+                    Next, let's setup your Ambianic Edge device.
                   </v-card-text>
                   <v-btn
                     style="padding: 0.5rem 2rem;"
@@ -199,8 +199,8 @@
                 <div v-if="stepContentName == 'installation-question'">
                   <div class="flex-between">
                     <v-card-text class="step-text">
-                      Are you installing Ambianic Edge Device on your local
-                      network, or you will be conneciting to a device on a
+                      Are you installing Ambianic Edge Device on your
+                      local WiFi network, or you will be conneciting to a device on a
                       remote network?
                     </v-card-text>
                   </div>
@@ -240,7 +240,7 @@
                   <div class="flex-between">
                     <v-card-text class="step-text">
                       OK, you will need an invitation from the user who
-                      installed the Ambianic Edge device on their local network.
+                      installed the Ambianic Edge device on their local WiFi network.
 
                       <br>
                       <br>
@@ -378,7 +378,7 @@
                   <div class="flex-between">
                     <v-card-text class="step-text">
                       Are you using a pre-installed Certified Ambianic Edge
-                      hardware device or you will use your own hardware?
+                      device or a device that you built yourself (DIY)?
                     </v-card-text>
                   </div>
 
@@ -401,7 +401,7 @@
                             style="width: 100%"
                             @click="setStepContent('my-own')"
                           >
-                            My Own
+                            My Own (DIY)
                           </v-btn>
                         </div>
                       </v-col>
@@ -618,7 +618,7 @@ export default {
       stepLevel: localStorage.getItem('lastOnboardingStage') || 1,
       stepContentName: localStorage.getItem('lastOnboardingStep') || '',
       isInstallingApp: false,
-      invitationMessage: 'Hi ____, please send me an access invitation to your Ambianic Edge Device.',
+      invitationMessage: 'Hi ____, can you please share access to your Ambianic Edge device.',
       appInstallationComplete: false,
       completedSteps: [],
       sendRequestDialog: false,
@@ -675,7 +675,8 @@ export default {
             this.pwaInstallDone('Ambianic can be now accesssed as a native home screen app on this device.')
           } else {
             // userChoice.outcome === "dismissed":
-            this.afterPwaInstall()
+            // .... this.afterPwaInstall()
+            this.pwaInstallDone('User cancelled install.')
           }
         } else {
           this.pwaInstallDone('App already installed or browser does not support PWA install.')

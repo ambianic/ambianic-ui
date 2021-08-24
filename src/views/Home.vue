@@ -40,7 +40,7 @@
                 rounded
                 color="pink darken-4"
                 dark
-                data-cy="timeline"
+                data-cy="button-beginSetup"
                 class="ma-2 white--text"
                 to="onboarding"
                 id="btn-setup"
