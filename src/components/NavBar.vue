@@ -195,7 +195,7 @@ export default {
     dialog: false,
     drawer: null, // hide drawer on mobile and show on desktop
     on: true,
-    connectionStatusTooltipText: 'UI App Disconnected',
+    connectionStatusTooltipText: 'Disconnected',
     newFavorites: 0,
     newAlerts: 2,
     connectionIconColor: 'warning',
@@ -238,13 +238,13 @@ export default {
   methods: {
     setConnectionTooltipText () {
       if (this.peerConnectionStatus === 'PEER_DISCONNECTED') {
-        this.connectionStatusTooltipText = 'UI App Disconnected'
+        this.connectionStatusTooltipText = 'Disconnected'
         this.connectionStatusIcon = 'cloud-off-outline'
         this.connectionIconColor = 'warning'
       } else if (this.peerConnectionStatus === 'PEER_CONNECTING') {
         this.connectionStatusIcon = 'cloud-sync-outline'
         this.connectionIconColor = 'black'
-        this.connectionStatusTooltipText = 'UI App Connecting ...'
+        this.connectionStatusTooltipText = 'Connecting ...'
       }
     }
   },
