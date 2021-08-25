@@ -1,9 +1,9 @@
 <template>
   <div id="ConnectionStatusSnack-ctn">
     <v-snackbar v-model="visibility">
-      <p id="snack-message">
+      <span id="snack-message">
         {{ message }}
-      </p>
+      </span>
 
       <template #action="{ attrs }">
         <div
