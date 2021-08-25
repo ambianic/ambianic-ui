@@ -146,17 +146,17 @@
                   <div class="flex-between">
                     <v-card-text
                       class="step-text"
-                      data-cy="label-installOutcomeMessage"
+                      data-cy="label-pwaInstallOutcomeMessage"
                     >
-                      {{ installOutcomeMessage }}
+                      {{ pwaInstallOutcomeMessage }}
                     </v-card-text>
                     <v-btn
                       style="padding: 0.5rem 2rem;"
                       color="primary"
-                      data-cy="continue-installation"
+                      data-cy="continue-to-edge-installation"
                       @click="
                         moveStep(2)
-                        setStepContent('installation')
+                        setStepContent('edge-installation')
                       "
                     >
                       Continue
@@ -178,15 +178,18 @@
               </v-stepper-step>
 
               <v-stepper-content step="2">
-                <div v-if="stepContentName === 'installation'">
+                <div
+                  v-if="stepContentName === 'edge-installation'"
+                  data-cy="continue-to-step-edge-installation-question"
+                >
                   <v-card-text class="step-text">
                     Next, let's setup your Ambianic Edge device.
                   </v-card-text>
                   <v-btn
                     style="padding: 0.5rem 2rem;"
                     color="primary"
-                    data-cy="continue-step-2"
-                    @click="setStepContent('installation-question')"
+                    data-cy="button-continue-to-step-edge-installation-question"
+                    @click="setStepContent('edge-installation-question')"
                   >
                     Continue
 
@@ -196,7 +199,7 @@
                   </v-btn>
                 </div>
 
-                <div v-if="stepContentName == 'installation-question'">
+                <div v-if="stepContentName == 'edge-installation-question'">
                   <div class="flex-between">
                     <v-card-text class="step-text">
                       Are you installing Ambianic Edge Device on your
@@ -613,8 +616,8 @@ export default {
   name: 'Onboarding',
   data () {
     return {
-      installPrompt: undefined,
-      installOutcomeMessage: undefined,
+      pwaInstallPrompt: undefined,
+      pwaInstallOutcomeMessage: '',
       stepLevel: localStorage.getItem('lastOnboardingStage') || 1,
       stepContentName: localStorage.getItem('lastOnboardingStep') || '',
       isInstallingApp: false,
@@ -625,7 +628,8 @@ export default {
       hasSentAccessRequest: false,
       MESSAGE_CLIENTS,
       recievedPeerID: undefined,
-      isCorrectPeerId: false
+      isCorrectPeerId: false,
+      onBeforeinstallprompt: undefined
     }
   },
   computed: {
@@ -637,12 +641,21 @@ export default {
       version: (state) => state.version
     })
   },
-  created () {
-    window.addEventListener('beforeinstallprompt', (e) => {
+  mounted () {
+    // handle window beforeinstallprompt event
+    // for PWA install
+    this.onBeforeinstallprompt = (e) => {
+      this.pwaInstallOutcomeMessage += 'Browser supports PWA install. '
       e.preventDefault()
       console.info('Registered event listener for PWA install prompt.', e)
-      this.installPrompt = e
-    })
+      this.pwaInstallPrompt = e
+    }
+    window.addEventListener('beforeinstallprompt', this.onBeforeinstallprompt)
+    // this.pwaInstallDone('Called window.addEventListener(beforeinstallprompt) !!!!!')
+  },
+  beforeDestroy () {
+    // cleanup window event handlers
+    window.removeEventListener('beforeinstallprompt', this.onBeforeinstallprompt)
   },
   methods: {
     ...mapActions(['CHANGE_REMOTE_PEER_ID']),
@@ -664,25 +677,30 @@ export default {
     async installApp () {
       this.isInstallingApp = true
 
-      // catch error incase installPrompt is undefined as previous app installtion has been done
-      try {
-        if (this.installPrompt) {
-          this.installPrompt.prompt()
+      // catch error in case pwaInstallPrompt is undefined as previous app installtion has been done
+      if (this.pwaInstallPrompt) {
+        try {
+          this.pwaInstallPrompt.prompt()
           // Wait for the user to respond to the prompt
-          const { outcome } = await this.installPrompt.userChoice
+          const { outcome } = await this.pwaInstallPrompt.userChoice
           console.log(`User response to the install prompt: ${outcome}`)
           if (outcome === 'accepted') {
             this.pwaInstallDone('Ambianic can be now accesssed as a native home screen app on this device.')
           } else {
             // userChoice.outcome === "dismissed":
-            // .... this.afterPwaInstall()
-            this.pwaInstallDone('User cancelled install.')
+            this.afterPwaInstall()
+            // this.pwaInstallDone('User cancelled install.')
           }
-        } else {
-          this.pwaInstallDone('App already installed or browser does not support PWA install.')
+        } catch (e) {
+          let message = 'Error during app install.'
+          console.warn(message, e)
+          message +=
+            ' <a href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Installing">Check here</a> to see if your browser supports PWA install.' /
+            'Otherwise, you can still bookmark and open the app as a regular web page.'
+          this.pwaInstallDone(message)
         }
-      } catch (e) {
-        console.warn('Error installing app', e)
+      } else {
+        this.pwaInstallDone('App already installed or browser does not support PWA install.')
       }
     },
 
@@ -703,14 +721,14 @@ export default {
       await this.$store.dispatch(PEER_DISCOVER)
     },
 
-    async pwaInstallDone (message) {
-      this.installOutcomeMessage = message
+    pwaInstallDone (message) {
+      this.pwaInstallOutcomeMessage += message
       this.appInstallationComplete = true
     },
 
-    async afterPwaInstall () {
+    afterPwaInstall () {
       this.moveStep(2)
-      this.setStepContent('installation')
+      this.setStepContent('edge-installation')
     },
 
     handleRequestDialog (state) {
