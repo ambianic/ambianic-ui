@@ -17,3 +17,5 @@ coverage:
         if_ci_failed: error
         informational: False
         only_pulls: false
+  codecov:
+    token: 80246700-a679-42af-aff7-289e7d77b435
