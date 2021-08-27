@@ -7,7 +7,7 @@ import { pnpStoreModule } from '@/store/pnp'
 import { PEER_CONNECTED, PEER_CONNECTING, PEER_DISCONNECTED } from '@/store/mutation-types'
 import { PEER_CONNECTED_NOTIFICATION, PEER_DISCONNECTED_NOTIFICATION, PEER_CONNECTING_NOTIFICATION } from '@/components/utils'
 
-describe('SnackNotification Component', () => {
+describe('Snack Notification Component', () => {
   let wrapper, store
   const localVue = createLocalVue()
 
