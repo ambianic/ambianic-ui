@@ -24,6 +24,7 @@
 <script>
 import { mapState } from 'vuex'
 import AmbButton from '@/components/shared/Button'
+import { PEER_CONNECTED_NOTIFICATION, PEER_DISCONNECTED_NOTIFICATION, PEER_CONNECTING_NOTIFICATION } from '@/components/utils'
 
 export default {
   name: 'ConnectionStatusSnack',
@@ -36,7 +37,6 @@ export default {
   },
   created () {
     this.setConnectionStatusNotification()
-    // this.handleClose()
   },
   computed: {
     ...mapState({
@@ -50,16 +50,16 @@ export default {
     setConnectionStatusNotification () {
       switch (this.peerConnectionStatus) {
         case 'PEER_CONNECTING':
-          this.message = 'Connecting to Ambianic Edge device'
-          this.visibility = true
+          this.visibility = this.message !== PEER_CONNECTING_NOTIFICATION
+          this.message = PEER_CONNECTING_NOTIFICATION
           break
         case 'PEER_CONNECTED':
-          this.message = 'Connected to Ambianic Edge device'
-          this.visibility = true
+          this.visibility = this.message !== PEER_CONNECTED_NOTIFICATION
+          this.message = PEER_CONNECTED_NOTIFICATION
           break
         case 'PEER_DISCONNECTED':
-          this.message = 'Disconnected from Ambianic Edge device'
-          this.visibility = true
+          this.visibility = this.message !== PEER_DISCONNECTED_NOTIFICATION
+          this.message = PEER_DISCONNECTED_NOTIFICATION
           break
         default:
           break

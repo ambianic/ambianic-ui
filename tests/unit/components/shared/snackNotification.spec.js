@@ -5,6 +5,7 @@ import SnackNotification from '@/components/shared/snackNotification'
 import Vuex from 'vuex'
 import { pnpStoreModule } from '@/store/pnp'
 import { PEER_CONNECTED, PEER_CONNECTING, PEER_DISCONNECTED } from '@/store/mutation-types'
+import { PEER_CONNECTED_NOTIFICATION, PEER_DISCONNECTED_NOTIFICATION, PEER_CONNECTING_NOTIFICATION } from '@/components/utils'
 
 describe('SnackNotification Component', () => {
   let wrapper, store
@@ -39,17 +40,13 @@ describe('SnackNotification Component', () => {
   })
 
   it('Displayed text changes with `peerConnectionStatus` state', () => {
-    const connectingText = 'Connecting to Ambianic Edge device'
-    const connectedText = 'Connected to Ambianic Edge device'
-    const disconnectedText = 'Disconnected from Ambianic Edge device'
-
     store.state.pnp.peerConnectionStatus = PEER_CONNECTING
     const connectingComp = mount(SnackNotification, {
       localVue,
       vuetify,
       store
     })
-    expect(connectingComp.find('#snack-message').text()).toBe(connectingText)
+    expect(connectingComp.find('#snack-message').text()).toBe(PEER_CONNECTING_NOTIFICATION)
 
     store.state.pnp.peerConnectionStatus = PEER_CONNECTED
     const connectedComp = mount(SnackNotification, {
@@ -57,7 +54,7 @@ describe('SnackNotification Component', () => {
       vuetify,
       store
     })
-    expect(connectedComp.find('#snack-message').text()).toBe(connectedText)
+    expect(connectedComp.find('#snack-message').text()).toBe(PEER_CONNECTED_NOTIFICATION)
 
     store.state.pnp.peerConnectionStatus = PEER_DISCONNECTED
     const disconnectedComp = mount(SnackNotification, {
@@ -65,7 +62,7 @@ describe('SnackNotification Component', () => {
       vuetify,
       store
     })
-    expect(disconnectedComp.find('#snack-message').text()).toBe(disconnectedText)
+    expect(disconnectedComp.find('#snack-message').text()).toBe(PEER_DISCONNECTED_NOTIFICATION)
   })
 
   it('`peerConnectionStatus` status controls SnackNotification visibility', () => {
