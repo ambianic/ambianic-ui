@@ -31,5 +31,9 @@ const VueApp = new Vue({
 VueApp.$mount('#app')
 
 if (window.Cypress) {
+  // allows Cypress tests to wait until the vue app mounts and access vue state
+  // See https://docs.cypress.io/api/commands/window#Start-tests-when-app-is-ready
+  window.__VueApp__ = VueApp
+  // Allows Cypress tests to see Vuex data. Shorthand for accessing via __VueApp__.
   window.__store__ = store
 }

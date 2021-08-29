@@ -29,7 +29,8 @@ import { PEER_CONNECTED_NOTIFICATION, PEER_DISCONNECTED_NOTIFICATION, PEER_CONNE
 export default {
   name: 'ConnectionStatusSnack',
   data: () => ({
-    visibility: true,
+    isMessageNew: true,
+    // visibility: true,
     message: 'Connecting to Ambianic Edge device'
   }),
   components: {
@@ -41,25 +42,40 @@ export default {
   computed: {
     ...mapState({
       peerConnectionStatus: state => state.pnp.peerConnectionStatus
-    })
+    }),
+    visibility: function () {
+      if (this.isMessageNew) {
+        // eslint-disable-next-line
+        this.isMessageNew = false
+        return true
+      } else {
+        return false
+      }
+    }
   },
   methods: {
     handleClose () {
       this.visibility = false
     },
     setConnectionStatusNotification () {
+      this.isMessageNew = true
       switch (this.peerConnectionStatus) {
         case 'PEER_CONNECTING':
-          this.visibility = this.message !== PEER_CONNECTING_NOTIFICATION
+          // this.visibility = this.message !== PEER_CONNECTING_NOTIFICATION
           this.message = PEER_CONNECTING_NOTIFICATION
+          this.isMessageNew = true
           break
         case 'PEER_CONNECTED':
-          this.visibility = this.message !== PEER_CONNECTED_NOTIFICATION
+          // this.visibility = this.message !== PEER_CONNECTED_NOTIFICATION
           this.message = PEER_CONNECTED_NOTIFICATION
+          this.isMessageNew = true
+
           break
         case 'PEER_DISCONNECTED':
-          this.visibility = this.message !== PEER_DISCONNECTED_NOTIFICATION
+          // this.visibility = this.message !== PEER_DISCONNECTED_NOTIFICATION
           this.message = PEER_DISCONNECTED_NOTIFICATION
+          this.isMessageNew = true
+
           break
         default:
           break

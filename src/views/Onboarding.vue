@@ -95,8 +95,7 @@
             >
               <v-stepper-step
                 @click="
-                  moveStep(2)
-                  setStepContent('installation')
+                  afterPwaInstall()
                 "
                 editable
                 data-cy="stepper"
@@ -145,22 +144,22 @@
                 </div>
                 <div v-else>
                   <div class="flex-between">
-                    <v-card-text class="step-text">
-                      Now you can access Ambianic as a native app on your mobile
-                      or desktop device.
+                    <v-card-text
+                      class="step-text"
+                      data-cy="label-pwaInstallOutcomeMessage"
+                    >
+                      {{ pwaInstallOutcomeMessage }}
                     </v-card-text>
-
                     <v-btn
                       style="padding: 0.5rem 2rem;"
                       color="primary"
-                      data-cy="continue-installation"
+                      data-cy="continue-to-edge-installation"
                       @click="
                         moveStep(2)
-                        setStepContent('installation')
+                        setStepContent('edge-installation')
                       "
                     >
                       Continue
-
                       <v-icon right>
                         mdi-arrow-right
                       </v-icon>
@@ -179,16 +178,18 @@
               </v-stepper-step>
 
               <v-stepper-content step="2">
-                <div v-if="stepContentName === 'installation'">
+                <div
+                  v-if="stepContentName === 'edge-installation'"
+                  data-cy="continue-to-step-edge-installation-question"
+                >
                   <v-card-text class="step-text">
-                    Next, let's setup your Ambianic Edge Device which will
-                    observe and report important events around the house.
+                    Next, let's setup your Ambianic Edge device.
                   </v-card-text>
                   <v-btn
                     style="padding: 0.5rem 2rem;"
                     color="primary"
-                    data-cy="continue-step-2"
-                    @click="setStepContent('installation-question')"
+                    data-cy="button-continue-to-step-edge-installation-question"
+                    @click="setStepContent('edge-installation-question')"
                   >
                     Continue
 
@@ -198,11 +199,11 @@
                   </v-btn>
                 </div>
 
-                <div v-if="stepContentName == 'installation-question'">
+                <div v-if="stepContentName == 'edge-installation-question'">
                   <div class="flex-between">
                     <v-card-text class="step-text">
-                      Are you installing Ambianic Edge Device on your local
-                      network, or you will be conneciting to a device on a
+                      Are you installing Ambianic Edge Device on your
+                      local WiFi network, or you will be conneciting to a device on a
                       remote network?
                     </v-card-text>
                   </div>
@@ -242,7 +243,7 @@
                   <div class="flex-between">
                     <v-card-text class="step-text">
                       OK, you will need an invitation from the user who
-                      installed the Ambianic Edge device on their local network.
+                      installed the Ambianic Edge device on their local WiFi network.
 
                       <br>
                       <br>
@@ -380,7 +381,7 @@
                   <div class="flex-between">
                     <v-card-text class="step-text">
                       Are you using a pre-installed Certified Ambianic Edge
-                      hardware device or you will use your own hardware?
+                      device or a device that you built yourself (DIY)?
                     </v-card-text>
                   </div>
 
@@ -403,7 +404,7 @@
                             style="width: 100%"
                             @click="setStepContent('my-own')"
                           >
-                            My Own
+                            My Own (DIY)
                           </v-btn>
                         </div>
                       </v-col>
@@ -420,7 +421,7 @@
                         target="_blank"
                         rel="no-oopener"
                       >
-                        Ambianic Edge DYI Install document guide
+                        Ambianic Edge Install Guide
                       </a>
                       . When finished click, continue.
                     </v-card-text>
@@ -452,7 +453,7 @@
                       color="primary"
                       @click="
                         moveStep(3)
-                        setStepContent('discovering')
+                        setDiscoveringStep()
                       "
                     >
                       Continue
@@ -585,7 +586,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import { PEER_CONNECTED } from '@/store/mutation-types'
-import { CHANGE_REMOTE_PEER_ID } from '@/store/action-types'
+import { CHANGE_REMOTE_PEER_ID, PEER_DISCOVER } from '@/store/action-types'
 
 const MESSAGE_CLIENTS = [
   {
@@ -615,18 +616,20 @@ export default {
   name: 'Onboarding',
   data () {
     return {
-      installPrompt: null,
+      pwaInstallPrompt: undefined,
+      pwaInstallOutcomeMessage: '',
       stepLevel: localStorage.getItem('lastOnboardingStage') || 1,
       stepContentName: localStorage.getItem('lastOnboardingStep') || '',
       isInstallingApp: false,
-      invitationMessage: 'Hi ____, please send me an access invitation to your Ambianic Edge Device.',
+      invitationMessage: 'Hi ____, can you please share access to your Ambianic Edge device.',
       appInstallationComplete: false,
       completedSteps: [],
       sendRequestDialog: false,
       hasSentAccessRequest: false,
       MESSAGE_CLIENTS,
       recievedPeerID: undefined,
-      isCorrectPeerId: false
+      isCorrectPeerId: false,
+      onBeforeinstallprompt: undefined
     }
   },
   computed: {
@@ -638,12 +641,21 @@ export default {
       version: (state) => state.version
     })
   },
-  created () {
-    window.addEventListener('beforeinstallprompt', (e) => {
+  mounted () {
+    // handle window beforeinstallprompt event
+    // for PWA install
+    this.onBeforeinstallprompt = (e) => {
+      this.pwaInstallOutcomeMessage += 'Browser supports PWA install. '
       e.preventDefault()
-
-      this.installPrompt = e
-    })
+      console.info('Registered event listener for PWA install prompt.', e)
+      this.pwaInstallPrompt = e
+    }
+    window.addEventListener('beforeinstallprompt', this.onBeforeinstallprompt)
+    // this.pwaInstallDone('Called window.addEventListener(beforeinstallprompt) !!!!!')
+  },
+  beforeDestroy () {
+    // cleanup window event handlers
+    window.removeEventListener('beforeinstallprompt', this.onBeforeinstallprompt)
   },
   methods: {
     ...mapActions(['CHANGE_REMOTE_PEER_ID']),
@@ -662,19 +674,34 @@ export default {
       }
     },
 
-    installApp () {
+    async installApp () {
       this.isInstallingApp = true
 
-      // catch error incase installPrompt is undefined as previous app installtion has been done
-      try {
-        this.installPrompt.prompt()
-      } catch (e) {
-        console.log(e, 'error installing app')
+      // catch error in case pwaInstallPrompt is undefined as previous app installtion has been done
+      if (this.pwaInstallPrompt) {
+        try {
+          this.pwaInstallPrompt.prompt()
+          // Wait for the user to respond to the prompt
+          const { outcome } = await this.pwaInstallPrompt.userChoice
+          console.log(`User response to the install prompt: ${outcome}`)
+          if (outcome === 'accepted') {
+            this.pwaInstallDone('Ambianic can be now accesssed as a native home screen app on this device.')
+          } else {
+            // userChoice.outcome === "dismissed":
+            this.afterPwaInstall()
+            // this.pwaInstallDone('User cancelled install.')
+          }
+        } catch (e) {
+          let message = 'Error during app install.'
+          console.warn(message, e)
+          message +=
+            ' <a href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Installing">Check here</a> to see if your browser supports PWA install.' /
+            'Otherwise, you can still bookmark and open the app as a regular web page.'
+          this.pwaInstallDone(message)
+        }
+      } else {
+        this.pwaInstallDone('App already installed or browser does not support PWA install.')
       }
-
-      setTimeout(() => {
-        this.appInstallationComplete = true
-      }, 1000)
     },
 
     moveStep (stage) {
@@ -687,6 +714,21 @@ export default {
       this.stepContentName = name
 
       localStorage.setItem('lastOnboardingStep', name)
+    },
+
+    async setDiscoveringStep () {
+      this.setStepContent('discovering')
+      await this.$store.dispatch(PEER_DISCOVER)
+    },
+
+    pwaInstallDone (message) {
+      this.pwaInstallOutcomeMessage += message
+      this.appInstallationComplete = true
+    },
+
+    afterPwaInstall () {
+      this.moveStep(2)
+      this.setStepContent('edge-installation')
     },
 
     handleRequestDialog (state) {
