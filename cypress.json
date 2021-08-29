@@ -1,5 +1,9 @@
 {
   "projectId": "w3wgo1",
   "baseUrl": "http://localhost:8080",
-  "testFiles": "ambianic-tests/**/*"
+  "testFiles": "ambianic-tests/**/*",
+  "component": {
+    "componentFolder": "src",
+    "testFiles": "**/*.spec.*s"
+  }  
 }
