@@ -10,6 +10,7 @@ import AmbListItem from '@/components/shared/ListItem.vue'
 import { cloneDeep } from 'lodash'
 import edgeDevice from '@/store/edge-device.js'
 import { pnpStoreModule } from '../../../src/store/pnp'
+import snackBarModule from '@/store/status-snackbar'
 
 describe('Settings View', () => {
   // global
@@ -53,7 +54,8 @@ describe('Settings View', () => {
         modules:
         {
           pnp: cloneDeep(pnpStoreModule),
-          edgeDevice: cloneDeep(edgeDevice)
+          edgeDevice: cloneDeep(edgeDevice),
+          snackBar: cloneDeep(snackBarModule)
         }
       }
     )
@@ -150,7 +152,8 @@ describe('Settings View', () => {
     const newStore = new VueX.Store({
       modules: {
         pnp: cloneDeep(pnpStoreModule),
-        edgeDevice: cloneDeep(edgeDevice)
+        edgeDevice: cloneDeep(edgeDevice),
+        snackBar: cloneDeep(snackBarModule)
       }
     })
 

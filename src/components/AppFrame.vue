@@ -3,7 +3,7 @@
   <div>
     <!-- nav goes here -->
     <NavBar />
-    <ComponentStatusSnack />
+    <StatusSnackbar />
 
     <v-main>
       <v-container
@@ -28,12 +28,12 @@
 
 <script>
 import NavBar from './NavBar.vue'
-import ComponentStatusSnack from '@/components/shared/snackNotification'
+import StatusSnackbar from '@/components/shared/snackNotification'
 
 export default {
   name: 'AppFrame',
   components: {
-    UpdateNotification: () => import('./UpdateNotification'), NavBar, ComponentStatusSnack
+    UpdateNotification: () => import('./UpdateNotification'), NavBar, StatusSnackbar
   },
   data: () => ({
     dialog: false,

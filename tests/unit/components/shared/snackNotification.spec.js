@@ -6,6 +6,7 @@ import Vuex from 'vuex'
 import { pnpStoreModule } from '@/store/pnp'
 import { PEER_CONNECTED, PEER_CONNECTING, PEER_DISCONNECTED } from '@/store/mutation-types'
 import { PEER_CONNECTED_NOTIFICATION, PEER_DISCONNECTED_NOTIFICATION, PEER_CONNECTING_NOTIFICATION } from '@/components/utils'
+import snackBarModule from '@/store/status-snackbar'
 
 describe('Snack Notification Component', () => {
   let wrapper, store
@@ -19,7 +20,8 @@ describe('Snack Notification Component', () => {
   beforeEach(() => {
     store = new Vuex.Store({
       modules: {
-        pnp: pnpStoreModule
+        pnp: pnpStoreModule,
+        snackBar: snackBarModule
       }
     })
 

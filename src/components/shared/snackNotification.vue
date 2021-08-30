@@ -1,6 +1,9 @@
 <template>
   <div id="ConnectionStatusSnack-ctn">
-    <v-snackbar v-model="visibility">
+    <v-snackbar
+      v-model="visibility"
+      data-cy="snackbar"
+    >
       <span id="snack-message">
         {{ message }}
       </span>
@@ -25,12 +28,12 @@
 import { mapState } from 'vuex'
 import AmbButton from '@/components/shared/Button'
 import { PEER_CONNECTED_NOTIFICATION, PEER_DISCONNECTED_NOTIFICATION, PEER_CONNECTING_NOTIFICATION } from '@/components/utils'
+import { LAST_PEER_CONNECTION_STATUS } from '@/store/mutation-types'
 
 export default {
   name: 'ConnectionStatusSnack',
   data: () => ({
-    isMessageNew: true,
-    // visibility: true,
+    visibility: false,
     message: 'Connecting to Ambianic Edge device'
   }),
   components: {
@@ -41,45 +44,35 @@ export default {
   },
   computed: {
     ...mapState({
-      peerConnectionStatus: state => state.pnp.peerConnectionStatus
-    }),
-    visibility: function () {
-      if (this.isMessageNew) {
-        // eslint-disable-next-line
-        this.isMessageNew = false
-        return true
-      } else {
-        return false
-      }
-    }
+      peerConnectionStatus: state => state.pnp.peerConnectionStatus,
+      lastConnectionStatus: state => state.snackBar.lastPeerNotificationStatus
+    })
   },
   methods: {
     handleClose () {
       this.visibility = false
     },
     setConnectionStatusNotification () {
-      this.isMessageNew = true
-      switch (this.peerConnectionStatus) {
-        case 'PEER_CONNECTING':
-          // this.visibility = this.message !== PEER_CONNECTING_NOTIFICATION
-          this.message = PEER_CONNECTING_NOTIFICATION
-          this.isMessageNew = true
-          break
-        case 'PEER_CONNECTED':
-          // this.visibility = this.message !== PEER_CONNECTED_NOTIFICATION
-          this.message = PEER_CONNECTED_NOTIFICATION
-          this.isMessageNew = true
+      if (this.lastConnectionStatus !== this.peerConnectionStatus) {
+        switch (this.peerConnectionStatus) {
+          case 'PEER_CONNECTING':
+            return this.setNotification(PEER_CONNECTING_NOTIFICATION)
 
-          break
-        case 'PEER_DISCONNECTED':
-          // this.visibility = this.message !== PEER_DISCONNECTED_NOTIFICATION
-          this.message = PEER_DISCONNECTED_NOTIFICATION
-          this.isMessageNew = true
+          case 'PEER_CONNECTED':
+            return this.setNotification(PEER_CONNECTED_NOTIFICATION)
 
-          break
-        default:
-          break
+          case 'PEER_DISCONNECTED':
+            return this.setNotification(PEER_DISCONNECTED_NOTIFICATION)
+
+          default:
+            break
+        }
       }
+    },
+    setNotification (message) {
+      this.message = message
+      this.visibility = true
+      this.$store.commit(LAST_PEER_CONNECTION_STATUS, this.peerConnectionStatus)
     }
   },
   watch: {
