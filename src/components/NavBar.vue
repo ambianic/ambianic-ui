@@ -243,7 +243,7 @@ export default {
         this.connectionIconColor = 'warning'
       } else if (this.peerConnectionStatus === 'PEER_CONNECTING') {
         this.connectionStatusIcon = 'cloud-sync-outline'
-        this.connectionIconColor = 'black'
+        this.connectionIconColor = 'info'
         this.connectionStatusTooltipText = 'Connecting ...'
       }
     }
