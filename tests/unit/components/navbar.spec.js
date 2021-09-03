@@ -4,7 +4,8 @@ import Vuetify from 'vuetify'
 import VueX from 'vuex'
 import VueRouter from 'vue-router'
 import NavBar from '@/components/NavBar.vue'
-import { PEER_DISCOVER } from '@/store/action-types'
+import { pnpStoreModule } from '@/store/pnp'
+import { PEER_CONNECTING, PEER_DISCONNECTED } from '@/store/mutation-types'
 
 describe('NavBar', () => {
 // global
@@ -13,7 +14,7 @@ describe('NavBar', () => {
   Vue.use(Vuetify) // for shallowshallowMount use
   localVue.use(VueX)
 
-  let store, state, getters, actions
+  let store
 
   // global
   localVue.use(VueRouter)
@@ -22,25 +23,10 @@ describe('NavBar', () => {
   const router = new VueRouter()
 
   beforeEach(() => {
-    state = {
-      pnp: {
-        peerConnectionStatus: jest.fn()
-      }
-    }
-
-    getters = {
-    //   ...
-    }
-
-    actions = {
-      [PEER_DISCOVER] (context) {
-      }
-    }
-
     store = new VueX.Store({
-      state,
-      getters,
-      actions
+      modules: {
+        pnp: pnpStoreModule
+      }
     })
 
     // using shallowMount with subtree components
@@ -74,5 +60,20 @@ describe('NavBar', () => {
 
     expect(nav.exists()).toBe(true)
     expect(item.length).toBe(5)
+  })
+
+  test('`peerConnectionStatus` changes ConnectionStatusIcon icon', () => {
+    store.state.pnp.peerConnectionStatus = PEER_DISCONNECTED
+    expect(wrapper.find('#cloud-off-outline').exists()).toBeTruthy()
+
+    store.state.pnp.peerConnectionStatus = PEER_CONNECTING
+    const newComponent = wrapper = mount(NavBar, {
+      localVue,
+      vuetify,
+      router,
+      store
+    })
+
+    expect(newComponent.find('#cloud-sync-outline').exists()).toBeTruthy()
   })
 })

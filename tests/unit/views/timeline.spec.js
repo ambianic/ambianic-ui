@@ -41,7 +41,7 @@ describe('Timeline', () => {
   })
 
   afterEach(() => {
-    wrapper.destroy()
+    // wrapper.destroy()
   })
 
   test('Timeline page loads detections when PEER is connected', async () => {
