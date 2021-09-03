@@ -1,3 +1,7 @@
+export const PEER_CONNECTING_NOTIFICATION = 'Connecting to Ambianic Edge device'
+export const PEER_CONNECTED_NOTIFICATION = 'Connected to Ambianic Edge device'
+export const PEER_DISCONNECTED_NOTIFICATION = 'Disconnected from Ambianic Edge device'
+
 export const setTimelineEventIcon = (inf) => {
   let topLabel = 'none'
 
