@@ -1,5 +1,17 @@
 # Semantic Versioning Changelog
 
+# [2.18.0](https://github.com/ambianic/ambianic-ui/compare/v2.17.0...v2.18.0) (2021-09-03)
+
+
+### Bug Fixes
+
+* install wizard bugs ([#707](https://github.com/ambianic/ambianic-ui/issues/707)) ([3697b41](https://github.com/ambianic/ambianic-ui/commit/3697b41491ed9881cbcfcb1824a6dd0cfc595448))
+
+
+### Features
+
+* replace download icon with cloud icon, add status snackbar (PR [#708](https://github.com/ambianic/ambianic-ui/issues/708)), closes [#697](https://github.com/ambianic/ambianic-ui/issues/697) ([501bc6c](https://github.com/ambianic/ambianic-ui/commit/501bc6c3c786c9d09dcfa4457e9cd7827132ba7a))
+
 # [2.17.0](https://github.com/ambianic/ambianic-ui/compare/v2.16.0...v2.17.0) (2021-08-17)
 
 

@@ -11,6 +11,7 @@ context('Timeline', () => {
     cy.url().should('include', '/timeline')
   })
 
+
   // Try to get this to work once we have mock data
 
   // it('Get timeline data', () => {

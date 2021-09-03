@@ -91,6 +91,6 @@ jobs:
       if: github.event_name == 'push' && ${{ github.ref == 'refs/heads/master' }}
       run: npx semantic-release
       env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

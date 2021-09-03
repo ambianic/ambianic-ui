@@ -224,11 +224,14 @@ import {
   NEW_REMOTE_PEER_ID
 } from '@/store/mutation-types'
 import moment from 'moment'
+
 Vue.use(VueObserveVisibility)
 const PAGE_SIZE = 5
 export default {
   data () {
     return {
+      connectionBarText: '',
+      connectionBarVisibility: false,
       timeline: [],
       clearTimeline: true, // flag to clear timeline when Edge Peer ID changes
       imageURL: {}, // map[id, fullURL] - maps unique event id to their full thumbnail URLs
@@ -251,6 +254,7 @@ export default {
     })
   },
   beforeDestroy () {
+    this.pnpUnsubscribe()
     this.pnpUnsubscribe()
   },
   components: {

@@ -26,13 +26,30 @@
         to="timeline"
       />
 
-      <nav-button
-        data-cy="download-off"
-        icon="download-off"
-        color="warning"
-        v-if="!isEdgeConnected"
-        to="edge-connect"
-      />
+      <div>
+        <v-tooltip bottom>
+          <template
+            v-if="!isEdgeConnected"
+            #activator="{ on, attrs }"
+          >
+            <div
+              v-bind="attrs"
+              v-on="on"
+            >
+              <nav-button
+                :id="connectionStatusIcon"
+                data-cy="connection-status"
+                :icon="connectionStatusIcon"
+                :color="connectionIconColor"
+                to="edge-connect"
+                v-bind="attrs"
+                v-on="on"
+              />
+            </div>
+          </template>
+          <span>{{ connectionStatusTooltipText }}</span>
+        </v-tooltip>
+      </div>
 
       <!-- Future navbar icons
       <v-text-field
@@ -174,11 +191,14 @@ export default {
     NavButton: () => import('./shared/Button.vue')
   },
   data: () => ({
+    connectionStatusIcon: 'cloud-off-outline',
     dialog: false,
     drawer: null, // hide drawer on mobile and show on desktop
     on: true,
+    connectionStatusTooltipText: 'Disconnected',
     newFavorites: 0,
     newAlerts: 2,
+    connectionIconColor: 'warning',
     logo: '../assets/logo5.svg',
     items: [
       { icon: 'history', text: 'Timeline', link: '/timeline' },
@@ -215,6 +235,19 @@ export default {
       { icon: 'info', text: 'About Ambianic', link: '/about' }
     ]
   }),
+  methods: {
+    setConnectionTooltipText () {
+      if (this.peerConnectionStatus === 'PEER_DISCONNECTED') {
+        this.connectionStatusTooltipText = 'Disconnected'
+        this.connectionStatusIcon = 'cloud-off-outline'
+        this.connectionIconColor = 'warning'
+      } else if (this.peerConnectionStatus === 'PEER_CONNECTING') {
+        this.connectionStatusIcon = 'cloud-sync-outline'
+        this.connectionIconColor = 'info'
+        this.connectionStatusTooltipText = 'Connecting ...'
+      }
+    }
+  },
   computed: {
     ...mapState({
       isEdgeConnected: function (state) {
@@ -223,16 +256,21 @@ export default {
         )
         const isConnected = state.pnp.peerConnectionStatus === PEER_CONNECTED
         return isConnected
-      }
+      },
+      peerConnectionStatus: state => state.pnp.peerConnectionStatus
     })
   },
   created () {
     if (!this.isEdgeConnected) {
       this.$store.dispatch(PEER_DISCOVER)
     }
+
+    this.setConnectionTooltipText()
+  },
+  watch: {
+    peerConnectionStatus: function () {
+      this.setConnectionTooltipText()
+    }
   }
 }
 </script>
-
-<style lang="scss" scoped>
-</style>

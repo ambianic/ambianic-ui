@@ -4,6 +4,7 @@ import Vuetify from 'vuetify'
 import VueX from 'vuex'
 import About from '@/views/About.vue'
 import { pnpStoreModule } from '../../../src/store/pnp'
+import snackBarModule from '@/store/status-snackbar'
 
 const appVersion = require('@/../package.json').version
 
@@ -22,7 +23,8 @@ describe('About Page', () => {
         uiAppVersion: appVersion
       },
       modules: {
-        pnp: pnpStoreModule
+        pnp: pnpStoreModule,
+        snackBar: snackBarModule
       }
     })
 
