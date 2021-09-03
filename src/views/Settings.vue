@@ -49,9 +49,10 @@
                   >
                     <amb-list-item
                       ref="list-item-edgeDeviceName"
-                      title="My Ambianic Edge Device"
+                      :title="edgeDisplayName"
                       subtitle="Display Name"
                       icon-name="tag"
+                      :edit-option="true"
                     />
                     <v-divider inset />
                     <amb-list-item
@@ -342,10 +343,11 @@ export default {
       try {
         const details = await this.edgeAPI.getEdgeStatus()
 
-        if (!details.version) {
+        if (!details || !details.version) {
           this.edgeDeviceError = 'Unavailable. Outdated device?'
+        } else {
+          await this.$store.commit(EDGE_DEVICE_DETAILS, details)
         }
-        await this.$store.commit(EDGE_DEVICE_DETAILS, details)
       } catch (e) {
         this.edgeDeviceError = 'Unavailable. Outdated device?'
       }
@@ -363,7 +365,12 @@ export default {
       pnp: state => state.pnp,
       edgePeerId: state => state.pnp.remotePeerId,
       peerFetch: state => state.pnp.peerFetch,
-      edgeVersion: state => state.edgeDevice.edgeSoftwareVersion
+      edgeVersion: state => state.edgeDevice.edgeSoftwareVersion,
+      edgeDisplayName: state => {
+        const deviceLabel = (state.edgeDevice.edgeDisplayName)
+          ? state.edgeDevice.edgeDisplayName : 'My Ambianic Edge Device'
+        return deviceLabel
+      }
     }),
     connectStep: function () {
       let step = 1

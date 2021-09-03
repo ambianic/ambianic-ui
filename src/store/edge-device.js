@@ -6,8 +6,13 @@ const state = {
 
 const mutations = {
   [EDGE_DEVICE_DETAILS] (state, edgeDetails) {
-    if (edgeDetails && edgeDetails.version) {
-      state.edgeSoftwareVersion = edgeDetails.version
+    if (edgeDetails) {
+      if (edgeDetails.version) {
+        state.edgeSoftwareVersion = edgeDetails.version
+      }
+      if (edgeDetails.displayName) {
+        state.edgeDisplayName = edgeDetails.displayName
+      }
     }
   }
 }
