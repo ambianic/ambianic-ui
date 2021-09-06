@@ -245,7 +245,7 @@
                 (Enter the Peer ID of the remote Ambianic Edge device.)
               </v-subheader>
               <v-text-field
-                v-model="edgeAddress"
+                v-model="manualEdgeAddress"
                 type="text"
                 label="Peer ID of remote Ambianic Edge device*"
                 placeholder="Enter Peer ID"
@@ -301,7 +301,7 @@ export default {
   },
   data () {
     return {
-      edgeAddress: undefined,
+      manualEdgeAddress: undefined,
       correctEdgeAddress: false,
       edgeDeviceError: null
     }
@@ -332,10 +332,10 @@ export default {
       'CHANGE_REMOTE_PEER_ID'
     ]),
     sendEdgeAddress () {
-      this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.edgeAddress)
+      this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.manualEdgeAddress)
     },
     localEdgeAddress () {
-      this.edgeAddress = undefined
+      this.manualEdgeAddress = undefined
       this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
     },
     async fetchEdgeDetails () {
@@ -388,8 +388,8 @@ export default {
     }
   },
   watch: {
-    edgeAddress (value) {
-      this.edgeAddress = value
+    manualEdgeAddress (value) {
+      this.manualEdgeAddress = value
       this.validateIP(value)
     },
     isEdgeConnected: async function (isConnected) {
