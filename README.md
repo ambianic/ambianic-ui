@@ -11,7 +11,7 @@
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fambianic%2Fambianic-ui.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fambianic%2Fambianic-ui?ref=badge_shield) 
 [![CodeFactor](https://www.codefactor.io/repository/github/ambianic/ambianic-ui/badge)](https://www.codefactor.io/repository/github/ambianic/ambianic-ui)
 ![Lighthouse PWA CI](https://github.com/ambianic/ambianic-ui/workflows/Lighthouse%20CI/badge.svg)
-[![codecov](https://codecov.io/gh/ambianic/ambianic-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/ambianic/ambianic-ui)
+[![codecov](https://codecov.io/gh/ambianic/ambianic-ui/branch/master/graph/badge.svg?token=nVlrMWiZ4q)](https://codecov.io/gh/ambianic/ambianic-ui)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 Ambianic Client UI is an Offline-first Progressive Web App (PWA) to manage Ambianic Edge deployments.
