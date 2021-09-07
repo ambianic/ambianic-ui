@@ -50,7 +50,7 @@
         bottom
       >
         <template
-          #activator="{ on, attrs }"
+          #activator="{ on, attrs : toggleTooltip }"
         >
           <v-icon
             style="padding-bottom: 14px"
@@ -58,7 +58,7 @@
             id="toggle-visibility"
             @click="sensitive = false"
             data-cy="icon-sensitive-on"
-            v-bind="attrs"
+            v-bind="toggleTooltip"
             v-on="on"
           >
             mdi-eye
@@ -67,7 +67,7 @@
             style="padding-bottom: 15px"
             v-else
             @click="sensitive = true"
-            v-bind="attrs"
+            v-bind="toggleTooltip"
             v-on="on"
           >
             mdi-eye-off-outline
@@ -77,7 +77,7 @@
       </v-tooltip>
       <v-tooltip bottom>
         <template
-          #activator="{ on, attrs }"
+          #activator="{ on, attrs : copyIcon }"
         >
           <v-icon
             style="padding-bottom: 14px"
@@ -85,7 +85,7 @@
             id="toggle-copy-option"
             @click="doCopy"
             data-cy="icon-copy-on"
-            v-bind="attrs"
+            v-bind="copyIcon"
             v-on="on"
           >
             content_copy

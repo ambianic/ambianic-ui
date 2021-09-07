@@ -208,6 +208,15 @@
                   >
                     <v-icon v-if="$vuetify.breakpoint.xsOnly">
                       mdi-wifi
+                      <p class="text">
+                        Use this more advanced option, if you want to pair with an Ambianic Edge device
+                        that you don't have physical access to
+                        and you are not able to join its local network for an initial
+                        pairing sequence. You need to request the device Peer ID
+                        from someone who is already connected to it. Once you obtain
+                        the Peer ID of the remote Ambiannic Edge device, enter it
+                        below and click Pair Remotely.
+                      </p>
                     </v-icon>
                     <span v-if="$vuetify.breakpoint.smAndUp">
                       Discover on Local Network
@@ -393,7 +402,7 @@ export default {
       this.validateIP(value)
     },
     isEdgeConnected: async function (isConnected) {
-      if (isConnected && !this.edgeVersion) {
+      if (isConnected) {
         await this.fetchEdgeDetails()
       }
     }

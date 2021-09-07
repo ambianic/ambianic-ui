@@ -30,11 +30,11 @@
         <v-tooltip bottom>
           <template
             v-if="!isEdgeConnected"
-            #activator="{ on, attrs }"
+            #activator="{ on : tooltip, attrs }"
           >
             <div
               v-bind="attrs"
-              v-on="on"
+              v-on="tooltip"
             >
               <nav-button
                 :id="connectionStatusIcon"
@@ -43,7 +43,7 @@
                 :color="connectionIconColor"
                 to="edge-connect"
                 v-bind="attrs"
-                v-on="on"
+                v-on="tooltip"
               />
             </div>
           </template>
