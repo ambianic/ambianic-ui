@@ -514,7 +514,7 @@ const actions = {
       peerConnection.dataChannel)
     //
     // const request2 = {
-    //   url: 'http://192.168.86.22:8778/api/timeline.json'
+    //   url: 'http://192.168.86.22:8778/api/timeline'
     // }
     // console.debug('peerFetch.get', { request2 })
     // const response2 = await state.peerFetch.get(request2)

@@ -72,7 +72,7 @@ describe('PeerRoom class coverage - p2p communication layer', () => {
     const response = await edgeAPI.getTimelinePage(4)
     expect(pnp.peerFetch.get).toHaveBeenCalledTimes(1)
     expect(pnp.peerFetch.get).toHaveBeenCalledWith({
-      url: `http://${API_HOST}:${API_PORT}/${API_ROOT}/timeline.json`,
+      url: `http://${API_HOST}:${API_PORT}/${API_ROOT}/timeline`,
       params: {
         page: 4
       }

@@ -36,7 +36,7 @@ export class EdgeAPI {
   */
   async getTimelinePage (pageNum = 1) {
     const apiRoot = this._getRootURL()
-    const timelineURL = apiRoot + 'timeline.json'
+    const timelineURL = apiRoot + 'timeline'
     let timelinePage = []
     const request = {
       url: timelineURL,

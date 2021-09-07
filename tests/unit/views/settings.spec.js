@@ -119,6 +119,7 @@ describe('Settings View', () => {
       iconName: 'identifier',
       twoLine: false,
       copyOption: true,
+      editOption: false,
       error: undefined
     })
   })
@@ -142,6 +143,7 @@ describe('Settings View', () => {
       iconName: 'tag',
       twoLine: false,
       copyOption: false,
+      editOption: true,
       error: undefined
     })
   })
