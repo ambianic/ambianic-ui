@@ -34,11 +34,12 @@
                 />
                 <amb-banner
                   v-else
-                  progress
+                  :progress="peerConnectionStatus !== 'PEER_DISCONNECTED'"
                   banner-class="text-left"
-                  icon="wifi-off"
+                  :icon="connectionStatusIcon"
                   icon-color="info"
-                  text="Connecting to Ambianic Edge device..."
+                  id="connection-status-element"
+                  :text="connectionStatusText"
                 />
                 <v-card
                   class="mx-auto text-left"
@@ -65,6 +66,7 @@
                     />
                     <amb-list-item
                       ref="list-item-releaseVersion"
+                      v-if="peerConnectionStatus === 'PEER_CONNECTED'"
                       :title="edgeVersion"
                       :error="edgeDeviceError"
                       id="version-element"
@@ -90,11 +92,11 @@
                   text="Let's find your Ambianic Edge device and connect to it..."
                 />
                 <v-stepper
-                  v-model="connectStep"
+                  v-model="connectionStep"
                   vertical
                 >
                   <v-stepper-step
-                    :complete="connectStep > 1"
+                    :complete="connectionStep > 1"
                     step="1"
                     :rules="[() => true]"
                   >
@@ -119,7 +121,7 @@
                     </v-alert>
                   </v-stepper-content>
                   <v-stepper-step
-                    :complete="connectStep > 2"
+                    :complete="connectionStep > 2"
                     step="2"
                   >
                     Authenticating
@@ -177,25 +179,37 @@
         justify="center"
         class="pb-5"
       >
-        <v-card>
+        <v-card style="padding: 1rem">
           <v-card-title
             data-cy="localtitlecard"
           >
             Pair with local Ambianic Edge device
           </v-card-title>
           <v-container grid-list-sm>
+            <v-expansion-panels
+              accordion
+              v-if="!$vuetify.breakpoint.smAndUp"
+            >
+              <v-expansion-panel>
+                <v-expansion-panel-header>Discover Device Info</v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <p class="text">
+                    {{ discoverText }}
+                  </p>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
             <!-- top column -->
             <v-card
               min-width="100"
               flat
             >
               <v-card-text class="text-center">
-                <p class="text">
-                  [On by default] Discover and pair with an Ambianic Edge device on
-                  your local network. This is the default pairing mode
-                  that triggers automatically when you open this app for the first time.
-                  Once paired and connected, you can access the Edge device remotely
-                  from any Internet access point.
+                <p
+                  v-if="$vuetify.breakpoint.smAndUp"
+                  class="text"
+                >
+                  {{ discoverText }}
                 </p>
               </v-card-text>
               <v-card-actions>
@@ -268,13 +282,22 @@
 
             <v-card-actions>
               <v-btn
-                :disabled="!correctEdgeAddress"
+                :disabled="!correctEdgeAddress || isReParing"
                 @click="sendEdgeAddress"
                 color="primary"
                 id="btn-sendRemotePeerID"
                 data-cy="sendRemotePeerID"
               >
-                Pair Remotely
+                {{ !isReParing ? "Pair" : "Pairing" }} Remotely
+
+                <v-progress-circular
+                  v-if="isReParing"
+                  style="margin-left: 7px"
+                  width="2"
+                  size="23"
+                  color="info"
+                  indeterminate
+                />
               </v-btn>
             </v-card-actions>
           </v-container>
@@ -301,6 +324,7 @@ import {
 } from '../store/action-types.js'
 import AmbListItem from '@/components/shared/ListItem.vue'
 import { EdgeAPI } from '@/remote/edgeAPI'
+import { PEER_CONNECTING_NOTIFICATION, PEER_DISCONNECTED_NOTIFICATION } from '../components/utils'
 
 export default {
   components: {
@@ -310,9 +334,19 @@ export default {
   },
   data () {
     return {
+      isReParing: false,
+      discoverText: '[On by default] Discover and pair with an Ambianic Edge device on\n' +
+          '                  your local network. This is the default pairing mode\n' +
+          '                  that triggers automatically when you open this app for the first time.\n' +
+          '                  Once paired and connected, you can access the Edge device remotely\n' +
+          '                  from any Internet access point.',
+      isTrue: false,
       manualEdgeAddress: undefined,
       correctEdgeAddress: false,
-      edgeDeviceError: null
+      edgeDeviceError: null,
+      connectionStep: 1,
+      connectionStatusText: PEER_CONNECTING_NOTIFICATION,
+      connectionStatusIcon: 'cloud-sync-outline'
     }
   },
   created () {
@@ -322,6 +356,8 @@ export default {
     if (this.isEdgeConnected && !this.edgeVersion) {
       this.fetchEdgeDetails()
     }
+
+    this.handleConnectionStep(this.peerConnectionStatus)
   },
   mounted () {
   },
@@ -341,6 +377,8 @@ export default {
       'CHANGE_REMOTE_PEER_ID'
     ]),
     sendEdgeAddress () {
+      // begins (re)paring remotely
+      this.isReParing = false
       this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.manualEdgeAddress)
     },
     localEdgeAddress () {
@@ -358,10 +396,36 @@ export default {
       } catch (e) {
         this.edgeDeviceError = 'Unavailable. Outdated device?'
       }
+    },
+    handleConnectionStep (status) {
+      switch (status) {
+        case PEER_DISCONNECTED:
+          this.connectionStatusIcon = 'cloud-off-outline'
+          this.connectionStatusText = PEER_DISCONNECTED_NOTIFICATION
+          break
+        case PEER_CONNECTION_ERROR:
+          this.connectionStep = 1
+          break
+        case PEER_DISCOVERING:
+        case PEER_DISCOVERED:
+        case PEER_CONNECTING:
+          this.isReParing = false
+          this.connectionStatusIcon = 'cloud-sync-outline'
+          this.connectionStatusText = PEER_CONNECTING_NOTIFICATION
+          break
+        case PEER_AUTHENTICATING:
+          this.connectionStep = 2
+          break
+        case PEER_CONNECTED:
+          this.connectionStep = 3
+          break
+        default:
+          break
+      }
     }
   },
   computed: {
-    peerConnectionError: function () {
+    isPeerConnectionError: function () {
       console.log('this.$store.state.pnp.peerConnectionStatus', this.$store.state.pnp.peerConnectionStatus)
       return this.$store.state.pnp.peerConnectionStatus === PEER_CONNECTION_ERROR
     },
@@ -373,28 +437,7 @@ export default {
       edgePeerId: state => state.pnp.remotePeerId,
       peerFetch: state => state.pnp.peerFetch,
       edgeVersion: state => state.edgeDevice.edgeSoftwareVersion
-    }),
-    connectStep: function () {
-      let step = 1
-      switch (this.peerConnectionStatus) {
-        case PEER_DISCONNECTED:
-        case PEER_CONNECTION_ERROR:
-          step = 1
-          break
-        case PEER_DISCOVERING:
-        case PEER_DISCOVERED:
-        case PEER_CONNECTING:
-        case PEER_AUTHENTICATING:
-          step = 2
-          break
-        case PEER_CONNECTED:
-          step = 3
-          break
-        default:
-          break
-      }
-      return step
-    }
+    })
   },
   watch: {
     manualEdgeAddress (value) {
@@ -405,6 +448,9 @@ export default {
       if (isConnected) {
         await this.fetchEdgeDetails()
       }
+    },
+    peerConnectionStatus: function () {
+      this.handleConnectionStep(this.peerConnectionStatus)
     }
   }
 }

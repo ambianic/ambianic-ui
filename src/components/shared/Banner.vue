@@ -12,6 +12,7 @@
     {{ text }}
     <v-progress-linear
       v-if="progress"
+      id="progress-loader"
       color="info"
       indeterminate
       :size="50"

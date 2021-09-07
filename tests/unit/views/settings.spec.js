@@ -5,12 +5,13 @@ import VueX from 'vuex'
 import VueRouter from 'vue-router'
 import Settings from '@/views/Settings.vue'
 import { PEER_DISCOVER } from '@/store/action-types'
-import { PEER_CONNECTED } from '@/store/mutation-types'
+import { PEER_CONNECTED, PEER_DISCONNECTED, PEER_CONNECTING } from '@/store/mutation-types'
 import AmbListItem from '@/components/shared/ListItem.vue'
 import { cloneDeep } from 'lodash'
 import edgeDevice from '@/store/edge-device.js'
 import { pnpStoreModule } from '../../../src/store/pnp'
 import snackBarModule from '@/store/status-snackbar'
+import { PEER_CONNECTING_NOTIFICATION, PEER_DISCONNECTED_NOTIFICATION } from '../../../src/components/utils'
 
 describe('Settings View', () => {
   // global
@@ -180,5 +181,41 @@ describe('Settings View', () => {
     await wrapper.vm.fetchEdgeDetails()
 
     expect(wrapper.vm.edgeDeviceError).toBe('Unavailable. Outdated device?')
+  })
+
+  test('Hides Progressbar and Version-element when peerConnectionStatus is PEER_DISCONNECTED', () => {
+    const newStore = new VueX.Store({
+      modules: {
+        pnp: cloneDeep(pnpStoreModule),
+        edgeDevice: cloneDeep(edgeDevice),
+        snackBar: cloneDeep(snackBarModule)
+      }
+    })
+
+    newStore.state.pnp.peerConnectionStatus = PEER_DISCONNECTED
+    newStore.state.pnp.remotePeerId = '1234-1234-1234-1234-1234'
+
+    const component = mount(Settings, {
+      localVue,
+      vuetify,
+      router,
+      store: newStore
+    })
+
+    expect(component.find('#version-element').exists()).toBe(false)
+    const progressComponent = component.get('#connection-status-element')
+    expect(progressComponent.find('#progress-loader').exists()).toBe(false)
+  })
+
+  test('`handleConnectionStep` set connectionStatusText and Icon', () => {
+    wrapper.vm.handleConnectionStep(PEER_DISCONNECTED)
+
+    wrapper.vm.connectionStatusText = PEER_DISCONNECTED_NOTIFICATION
+    wrapper.vm.connectionStatusICON = 'cloud-off-outline'
+
+    wrapper.vm.handleConnectionStep(PEER_CONNECTING)
+
+    wrapper.vm.connectionStatusText = PEER_CONNECTING_NOTIFICATION
+    wrapper.vm.connectionStatusICON = 'cloud-sync-outline'
   })
 })

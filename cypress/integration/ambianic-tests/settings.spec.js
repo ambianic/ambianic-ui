@@ -108,9 +108,11 @@ context('Settings', () => {
     })
   })
 
-  it('Should display skeleton loader for unavailable edge version info', () => {
+  it('Should display skeleton loader when loading edgeVersion', () => {
     cy.window().then(win => {
       win.__store__.commit(NEW_REMOTE_PEER_ID, '917d5f0a-6469-4d33-b5c2-efd85811NA')
+      win.__store__.commit(PEER_CONNECTED)
+
       cy.get('[data-cy=list-item-edgeVersion]').should('exist').within(($listItem) => {
         // version number should not be available for a non-existant edge device ID
         cy.get('[data-cy=title-loader]').should('exist')
@@ -123,11 +125,12 @@ context('Settings', () => {
       // inject a PeerJS mock object
       win.__store__.state.pnp.peer = fakePeer
       win.__store__.commit(NEW_REMOTE_PEER_ID, '917d5f0a-6469-4d33-b5c2-efd85811NA')
+      win.__store__.commit(PEER_CONNECTED)
+
       cy.get('[data-cy=list-item-edgeVersion]').should('exist').within(($listItem) => {
         // version number should not be available for a non-existant edge device ID
         cy.get('[data-cy=title-loader]').should('exist')
         // fake edge connected
-        win.__store__.commit(PEER_CONNECTED)
         cy.get('[data-cy=item-error]')
           .should('exist')
           .contains('Unavailable. Outdated device?')
