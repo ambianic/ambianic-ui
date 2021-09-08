@@ -8,12 +8,12 @@ tasks:
       npm update
       npm audit fix
       npm install -g @vue/cli
-      npm install cypress
     command: |
       echo "Starting Ambianic UI in dev mode:"
       npm run serve
   - command: |
       echo "Waiting for npm install to finish"
+      npm install cypress
       gp await-port 8080 && gp preview $(gp url 8080)/index.html
       echo "Starting Ambianic PWA testsuite"
       npm run test
