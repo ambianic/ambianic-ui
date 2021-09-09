@@ -43,48 +43,16 @@ Example screenshots on mobile and desktop:
 
 <img src="docs/img/ambianic-ui-dekstop-screenshot.png" width="600" alt="ambianic UI mobile page example">
 
-## Cloud deploymeny
+# Cloud deployment
 
 This project is deployed on Netlify by default and is available at https://ui.ambianic.ai . 
 If you prefer to launch your own deployment from this repo, click the button below:
 
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/ambianic/ambianic-ui)
 
-## Local Installation & Setup
+# Development Environment
 
-### Clone repository
-```
-git clone https://github.com/ambianic/ambianic-ui.git
-cd ambianic-ui
-```
-
-### Install dependencies
-```
-npm install
-```
-
-### Prepare dev environment
-
-Set up a git pre-commit hook for linting.
-
-```
-npm run prepare
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Runs all tests
-```
-npm run test
-```
+For instructions how to build, test and debug Ambianic UI via a virtual Continuous Dev Environment or a local dev environment, see [this guide](https://docs.ambianic.ai/developers/development-environment/).
 
 # Community Support 
 
