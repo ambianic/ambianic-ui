@@ -1,5 +1,6 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 import { pnpStoreModule } from '@/store/pnp.js'
+import snackBarModule from '@/store/status-snackbar'
 import { cloneDeep } from 'lodash'
 import { PEER_CONNECTED } from '@/store/mutation-types'
 import Timeline from '@/views/Timeline.vue'
@@ -35,7 +36,8 @@ describe('Timeline', () => {
 
     store = new Vuex.Store({
       modules: {
-        pnp: cloneDeep(pnpStoreModule)
+        pnp: cloneDeep(pnpStoreModule),
+        snackBar: cloneDeep(snackBarModule)
       }
     })
   })
