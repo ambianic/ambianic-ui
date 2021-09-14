@@ -27,22 +27,31 @@
                 class="pa-0 ma-0 fill-height"
               >
                 <amb-banner
-                  v-if="isEdgeConnected"
+                  v-if="isEdgeConnected && !syncing"
                   banner-class="text-left"
-                  icon="wifi"
+                  icon="cloud_done"
                   text="Ambianic Edge device connected!"
+                />
+                <amb-banner
+                  v-else-if="isEdgeConnected && syncing"
+                  progress
+                  banner-class="text-left"
+                  icon="cloud-sync-outline"
+                  icon-color="info"
+                  text="Syncing with Ambianic Edge device..."
                 />
                 <amb-banner
                   v-else
                   progress
                   banner-class="text-left"
-                  icon="wifi-off"
+                  icon="cloud-off-outline"
                   icon-color="info"
                   text="Connecting to Ambianic Edge device..."
                 />
                 <v-card
                   class="mx-auto text-left"
                   flat
+                  v-if="isEdgeConnected && !syncing"
                 >
                   <v-list
                     two-line
@@ -53,6 +62,8 @@
                       subtitle="Display Name"
                       icon-name="tag"
                       :edit-option="true"
+                      :on-submit="onDisplayNameChanged"
+                      :rules="[rules.required, rules.counter]"
                     />
                     <v-divider inset />
                     <amb-list-item
@@ -285,7 +296,8 @@ import {
   PEER_AUTHENTICATING,
   PEER_CONNECTED,
   PEER_CONNECTION_ERROR,
-  EDGE_DEVICE_DETAILS
+  EDGE_DEVICE_DETAILS,
+  EDGE_DEVICE_DISPLAY_NAME
 } from '@/store/mutation-types'
 import {
   CHANGE_REMOTE_PEER_ID,
@@ -304,7 +316,12 @@ export default {
     return {
       edgeAddress: undefined,
       correctEdgeAddress: false,
-      edgeDeviceError: null
+      edgeDeviceError: null,
+      syncing: false, // is the UI in the process of syncing with remote device data
+      rules: {
+        required: value => !!value || 'Required.',
+        counter: value => (value.length >= 5 && value.length <= 20) || 'Min 5 and Max 20 characters'
+      }
     }
   },
   created () {
@@ -341,16 +358,31 @@ export default {
     },
     async fetchEdgeDetails () {
       try {
+        this.syncing = true
         const details = await this.edgeAPI.getEdgeStatus()
 
         if (!details || !details.version) {
           this.edgeDeviceError = 'Unavailable. Outdated device?'
         } else {
-          await this.$store.commit(EDGE_DEVICE_DETAILS, details)
+          this.$store.commit(EDGE_DEVICE_DETAILS, details)
         }
       } catch (e) {
         this.edgeDeviceError = 'Unavailable. Outdated device?'
+      } finally {
+        this.syncing = false
       }
+    },
+    onDisplayNameChanged (newDisplayName) {
+      console.warn('onDisplayNameChanged called ' + EDGE_DEVICE_DISPLAY_NAME)
+      console.warn(`newDisplayName: ${newDisplayName}`)
+      if (newDisplayName) {
+        console.warn(`New device display name: ${newDisplayName}`)
+        // trigger edit change callback
+        //    show blocking dialog with spinner https://vuetifyjs.com/en/components/dialogs/#loader
+        //    await dispatch to push new device display name: 1. to device, 2. to local device store
+        this.$store.commit(EDGE_DEVICE_DISPLAY_NAME, newDisplayName)
+      }
+      console.warn('onDisplayNameChanged ended')
     }
   },
   computed: {
@@ -400,7 +432,7 @@ export default {
       this.validateIP(value)
     },
     isEdgeConnected: async function (isConnected) {
-      if (isConnected && !this.edgeVersion) {
+      if (isConnected) {
         await this.fetchEdgeDetails()
       }
     }

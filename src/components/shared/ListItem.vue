@@ -10,14 +10,16 @@
         v-if="isEditing"
       >
         <v-text-field
-          :value="title"
+          v-model="inputTitleEditValue"
           :type="sensitive ? 'password' : 'text'"
+          @keyup.enter="saveEdit"
+          :rules="rules"
           data-cy="input-title-edit"
           ref="inputTitleEdit"
         />
       </v-list-item-title>
       <v-skeleton-loader
-        v-else-if="!title"
+        v-else-if="!inputTitleEditValue"
         v-bind="attrs"
         data-cy="title-loader"
         type="list-item-two-line"
@@ -25,21 +27,19 @@
       <v-list-item-title
         v-else-if="sensitiveField"
       >
-        <input
-          :value="title"
-          :placeholder="title"
+        <v-text-field
+          v-model="inputTitleEditValue"
           disabled
           id="peerId-container"
           :type="sensitive ? 'password' : 'text'"
           data-cy="input-title"
-        >
+        />
       </v-list-item-title>
       <v-list-item-title
         v-else
         data-cy="title-text"
-        id="title"
       >
-        {{ title }}
+        {{ inputTitleEditValue }}
       </v-list-item-title>
 
       <v-list-item-subtitle>
@@ -203,6 +203,18 @@ export default {
     error: {
       type: String,
       default: undefined
+    },
+    onSubmit: {
+      type: Function,
+      default: function () {}
+    },
+    loading: {
+      type: Boolean,
+      default: false
+    },
+    rules: {
+      type: Array,
+      default: () => []
     }
   },
   data () {
@@ -212,7 +224,8 @@ export default {
         boilerplate: true,
         elevation: 2
       },
-      isEditing: false
+      isEditing: false,
+      inputTitleEditValue: this.title
     }
   },
   methods: {
@@ -226,20 +239,24 @@ export default {
     startEdit: async function () {
       this.isEditing = true
       this.$nextTick(() => this.$refs.inputTitleEdit.focus())
-      // await ....enable text field edit...
-      // ... replace edit icon with commit change icon next to cancel edit icon...
     },
-    saveEdit: async function () {
+    saveEdit: async function (e) {
+      const newValue = this.inputTitleEditValue
+      console.warn(`saveEdit called with value: ${newValue}`)
+      console.warn(`rules : ${this.rules}`)
+      for (let index = 0; index < this.rules.length; index++) {
+        const rule = this.rules[index]
+        console.warn(`next rule: ${rule}`)
+        const valid = typeof rule === 'function' ? rule(newValue) : rule
+        if (valid !== true) return
+      }
+      this.onSubmit(newValue)
       this.isEditing = false
-      // trigger edit change callback
-      //    show blocking dialog with spinner https://vuetifyjs.com/en/components/dialogs/#loader
-      //    await dispatch to push new device display name: 1. to device, 2. to local device store
+      console.warn('saveEdit ended')
     },
     cancelEdit: async function () {
       this.isEditing = false
-      // trigger edit change callback
-      //    show blocking dialog with spinner https://vuetifyjs.com/en/components/dialogs/#loader
-      //    await dispatch to push new device display name: 1. to device, 2. to local device store
+      this.inputTitleEditValue = this.title
     }
   }
 }
