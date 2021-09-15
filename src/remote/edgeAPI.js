@@ -16,17 +16,32 @@ export class EdgeAPI {
     return apiRoot
   }
 
-  async _get (request) {
+  async _request (config) {
     if (this.pnp.peerConnectionStatus !== PEER_CONNECTED) {
       throw Error('Edge device peer not connected.')
     } else {
-      const response = await this.pnp.peerFetch.get(request)
-      return response
+      return await this.pnp.peerFetch.request(config)
     }
+  }
+
+  async _get (request) {
+    request.method = 'GET'
+    return await this._request(request)
+  }
+
+  async _put (request) {
+    request.method = 'PUT'
+    return await this._request(request)
   }
 
   async _getJSON (request) {
     const response = await this._get(request)
+    const jsn = this.pnp.peerFetch.jsonify(response.content)
+    return jsn
+  }
+
+  async _putJSON (request) {
+    const response = await this._put(request)
     const jsn = this.pnp.peerFetch.jsonify(response.content)
     return jsn
   }
@@ -77,11 +92,16 @@ export class EdgeAPI {
     const request = {
       url: `${apiRoot}status`
     }
+    return await this._getJSON(request)
+  }
 
-    try {
-      return await this._getJSON(request)
-    } catch (e) {
-      console.log('Error fetching Edge Status', e)
+  async setDeviceDisplayName (newName) {
+    const apiRoot = this._getRootURL()
+    const esc = encodeURIComponent
+    const urlEncodedName = esc(newName)
+    const request = {
+      url: `${apiRoot}/api/device/display_name/${urlEncodedName}`
     }
+    return await this._putJSON(request)
   }
 }

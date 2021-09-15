@@ -233,7 +233,7 @@ export default {
       try {
         await this.$copyText(this.title)
       } catch (e) {
-        console.warn('Can not copy `title` element value to clipboard', e)
+        console.debug('Can not copy `title` element value to clipboard', e)
       }
     },
     startEdit: async function () {
@@ -242,17 +242,19 @@ export default {
     },
     saveEdit: async function (e) {
       const newValue = this.inputTitleEditValue
-      console.warn(`saveEdit called with value: ${newValue}`)
-      console.warn(`rules : ${this.rules}`)
+      console.debug(`saveEdit called with value: ${newValue}`)
       for (let index = 0; index < this.rules.length; index++) {
         const rule = this.rules[index]
-        console.warn(`next rule: ${rule}`)
+        console.debug(`next rule: ${rule}`)
         const valid = typeof rule === 'function' ? rule(newValue) : rule
         if (valid !== true) return
       }
-      this.onSubmit(newValue)
+      if (!this.onSubmit(newValue)) {
+        // if onSubmit did not succeed, revert the edit
+        this.cancelEdit()
+      }
       this.isEditing = false
-      console.warn('saveEdit ended')
+      console.debug('saveEdit ended')
     },
     cancelEdit: async function () {
       this.isEditing = false

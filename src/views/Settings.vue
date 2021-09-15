@@ -7,6 +7,31 @@
         class="pb-5"
         data-cy="template-row"
       >
+        <v-dialog
+          v-model="syncing"
+          persistent
+          max-width="300"
+        >
+          <v-card>
+            <v-card-text
+              color="accent"
+            >
+              Syncing with Ambianic Edge device
+              <v-progress-linear
+                indeterminate
+              />
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+        <v-alert
+          v-if="this.edgeDeviceError"
+          outlined
+          type="warning"
+          class="mt-5 text-left"
+          dense
+        >
+          {{ this.edgeDeviceError }}
+        </v-alert>
         <v-card flat>
           <v-card-title
             data-cy="titlecard"
@@ -27,18 +52,10 @@
                 class="pa-0 ma-0 fill-height"
               >
                 <amb-banner
-                  v-if="isEdgeConnected && !syncing"
+                  v-if="isEdgeConnected"
                   banner-class="text-left"
-                  icon="cloud_done"
+                  icon="cloud-check-outline"
                   text="Ambianic Edge device connected!"
-                />
-                <amb-banner
-                  v-else-if="isEdgeConnected && syncing"
-                  progress
-                  banner-class="text-left"
-                  icon="cloud-sync-outline"
-                  icon-color="info"
-                  text="Syncing with Ambianic Edge device..."
                 />
                 <amb-banner
                   v-else
@@ -46,12 +63,12 @@
                   banner-class="text-left"
                   icon="cloud-off-outline"
                   icon-color="info"
-                  text="Connecting to Ambianic Edge device..."
+                  text="Ambianic Edge device disconnected."
                 />
                 <v-card
                   class="mx-auto text-left"
                   flat
-                  v-if="isEdgeConnected && !syncing"
+                  v-if="isEdgeConnected"
                 >
                   <v-list
                     two-line
@@ -78,7 +95,6 @@
                     <amb-list-item
                       ref="list-item-releaseVersion"
                       :title="edgeVersion"
-                      :error="edgeDeviceError"
                       id="version-element"
                       subtitle="Edge Software Version"
                       icon-name="alpha-v-circle-outline"
@@ -120,15 +136,6 @@
                       :size="50"
                       :width="7"
                     />
-                    <v-alert
-                      v-if="this.$store.state.pnp.userMessage"
-                      outlined
-                      type="warning"
-                      class="mt-5 text-left"
-                      dense
-                    >
-                      {{ this.$store.state.pnp.userMessage }}
-                    </v-alert>
                   </v-stepper-content>
                   <v-stepper-step
                     :complete="connectStep > 2"
@@ -362,27 +369,36 @@ export default {
         const details = await this.edgeAPI.getEdgeStatus()
 
         if (!details || !details.version) {
-          this.edgeDeviceError = 'Unavailable. Outdated device?'
+          this.edgeDeviceError = 'Unable to fetch Edge Device details. Is it disconnected or outdated?'
         } else {
           this.$store.commit(EDGE_DEVICE_DETAILS, details)
         }
       } catch (e) {
-        this.edgeDeviceError = 'Unavailable. Outdated device?'
+        this.edgeDeviceError = 'Unable to fetch Edge Device details. Is it disconnected or outdated?'
       } finally {
         this.syncing = false
       }
     },
-    onDisplayNameChanged (newDisplayName) {
-      console.warn('onDisplayNameChanged called ' + EDGE_DEVICE_DISPLAY_NAME)
-      console.warn(`newDisplayName: ${newDisplayName}`)
+    async onDisplayNameChanged (newDisplayName) {
+      console.debug(`newDisplayName: ${newDisplayName}`)
+      let updated = false
       if (newDisplayName) {
-        console.warn(`New device display name: ${newDisplayName}`)
-        // trigger edit change callback
-        //    show blocking dialog with spinner https://vuetifyjs.com/en/components/dialogs/#loader
-        //    await dispatch to push new device display name: 1. to device, 2. to local device store
-        this.$store.commit(EDGE_DEVICE_DISPLAY_NAME, newDisplayName)
+        try {
+          console.debug(`New device display name: ${newDisplayName}`)
+          // trigger edit change callback
+          //    show blocking dialog with spinner https://vuetifyjs.com/en/components/dialogs/#loader
+          //    await dispatch to push new device display name: 1. to device, 2. to local device store
+          this.syncing = true
+          await this.edgeAPI.setDeviceDisplayName(newDisplayName)
+          this.$store.commit(EDGE_DEVICE_DISPLAY_NAME, newDisplayName)
+          updated = true
+        } catch (e) {
+          this.edgeDeviceError = 'Error sending new display name to edge device. Is it disconnected or outdated?'
+        } finally {
+          this.syncing = false
+        }
       }
-      console.warn('onDisplayNameChanged ended')
+      return updated
     }
   },
   computed: {
@@ -434,6 +450,11 @@ export default {
     isEdgeConnected: async function (isConnected) {
       if (isConnected) {
         await this.fetchEdgeDetails()
+      }
+    },
+    peerConnectionError: async function (isError) {
+      if (isError) {
+        this.edgeDeviceError = this.$store.state.pnp.userMessage
       }
     }
   }

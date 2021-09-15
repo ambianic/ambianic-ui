@@ -479,13 +479,11 @@ const actions = {
     commit(PEER_AUTHENTICATING)
     commit(USER_MESSAGE, `Authenticating remote peer: ${peerConnection.peer}`)
     console.log('Authenticating remote Peer ID: ', peerConnection.peer)
-    const request = {
-      url: 'http://localhost:8778'
-    }
+    const url = 'http://localhost:8778'
     let authPassed = false
     try {
-      const response = await state.peerFetch.get(request)
-      console.log('PEER_AUTHENTICATE', { request, response })
+      const response = await state.peerFetch.get(url)
+      console.log('PEER_AUTHENTICATE', { url, response })
       if (response.header.status === 200) {
         console.log('PEER_AUTHENTICATE status OK')
         const text = state.peerFetch.textDecode(response.content)
@@ -495,7 +493,7 @@ const actions = {
         console.log(`PEER_AUTHENTICATE response body OK = ${authPassed}`)
       }
     } catch (err) {
-      console.log(`peerFetch.get() Error while connecting to remote peer ID: ${peerConnection.peer}`, err)
+      console.warn(`PEER_AUTHENTICATE action. Error while connecting to remote peer ID: ${peerConnection.peer}`, err)
     }
     if (authPassed) {
       // console.debug('Remote peer authenticated as:', authMessage.name)
