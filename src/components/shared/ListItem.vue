@@ -249,8 +249,9 @@ export default {
         const valid = typeof rule === 'function' ? rule(newValue) : rule
         if (valid !== true) return
       }
-      if (!this.onSubmit(newValue)) {
+      if (!await this.onSubmit(newValue)) {
         // if onSubmit did not succeed, revert the edit
+        console.debug('onSubmit failed')
         this.cancelEdit()
       }
       this.isEditing = false
@@ -259,6 +260,11 @@ export default {
     cancelEdit: async function () {
       this.isEditing = false
       this.inputTitleEditValue = this.title
+    }
+  },
+  watch: {
+    title (value) {
+      this.inputTitleEditValue = value
     }
   }
 }

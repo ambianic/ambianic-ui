@@ -367,7 +367,7 @@ export default {
       try {
         this.syncing = true
         const details = await this.edgeAPI.getEdgeStatus()
-
+        console.debug(`Edge device details fetched. Version: ${details.version}`)
         if (!details || !details.version) {
           this.edgeDeviceError = 'Unable to fetch Edge Device details. Is it disconnected or outdated?'
         } else {
