@@ -11,7 +11,7 @@
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fambianic%2Fambianic-ui.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fambianic%2Fambianic-ui?ref=badge_shield) 
 [![CodeFactor](https://www.codefactor.io/repository/github/ambianic/ambianic-ui/badge)](https://www.codefactor.io/repository/github/ambianic/ambianic-ui)
 ![Lighthouse PWA CI](https://github.com/ambianic/ambianic-ui/workflows/Lighthouse%20CI/badge.svg)
-[![codecov](https://codecov.io/gh/ambianic/ambianic-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/ambianic/ambianic-ui)
+[![codecov](https://codecov.io/gh/ambianic/ambianic-ui/branch/master/graph/badge.svg?token=nVlrMWiZ4q)](https://codecov.io/gh/ambianic/ambianic-ui)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 Ambianic Client UI is an Offline-first Progressive Web App (PWA) to manage Ambianic Edge deployments.
@@ -43,48 +43,16 @@ Example screenshots on mobile and desktop:
 
 <img src="docs/img/ambianic-ui-dekstop-screenshot.png" width="600" alt="ambianic UI mobile page example">
 
-## Cloud deploymeny
+# Cloud deployment
 
 This project is deployed on Netlify by default and is available at https://ui.ambianic.ai . 
 If you prefer to launch your own deployment from this repo, click the button below:
 
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/ambianic/ambianic-ui)
 
-## Local Installation & Setup
+# Development Environment
 
-### Clone repository
-```
-git clone https://github.com/ambianic/ambianic-ui.git
-cd ambianic-ui
-```
-
-### Install dependencies
-```
-npm install
-```
-
-### Prepare dev environment
-
-Set up a git pre-commit hook for linting.
-
-```
-npm run prepare
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Runs all tests
-```
-npm run test
-```
+For instructions how to build, test and debug Ambianic UI via a virtual Continuous Dev Environment or a local dev environment, see [this guide](https://docs.ambianic.ai/developers/development-environment/).
 
 # Community Support 
 

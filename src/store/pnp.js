@@ -92,9 +92,15 @@ const mutations = {
     state.peer = peer
   },
   [PEER_DISCONNECTED] (state) {
-    state.peerConnection = undefined
-    state.peerConnectionStatus = PEER_DISCONNECTED
+    try {
+      state.peer.disconnect()
+    } catch (e) {
+      console.log(`Error disconnecting peer: ${e}`)
+    }
     state.peerFetch = undefined
+
+    state.peerConnectionStatus = PEER_DISCONNECTED
+    state.peerConnection = undefined
   },
   [PEER_DISCOVERED] (state) {
     state.peerConnectionStatus = PEER_DISCOVERED
@@ -531,8 +537,8 @@ const actions = {
    * them or let them connect to you.
    */
   async [CHANGE_REMOTE_PEER_ID] ({ state, commit, dispatch }, remotePeerId) {
-    commit(NEW_REMOTE_PEER_ID, remotePeerId)
     commit(PEER_DISCONNECTED)
+    commit(NEW_REMOTE_PEER_ID, remotePeerId)
     await dispatch(PEER_CONNECT, remotePeerId)
   },
   /**

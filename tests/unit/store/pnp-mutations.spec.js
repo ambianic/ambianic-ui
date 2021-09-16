@@ -56,10 +56,19 @@ describe('PnP state machine mutations - p2p communication layer', () => {
   })
 
   test('PEER_DISCONNECTED', () => {
+    // initial pnp  states
     expect(store.state.pnp.peerConnection).toBe(undefined)
     expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
     expect(store.state.pnp.peerFetch).toBe(undefined)
+
+    // mock a peer connection
+    store.commit(PEER_CONNECTED, 'a peerConnection')
+    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_CONNECTED)
+
+    // fire PEER_DISCONNECTED to initiate pnp state resets
     store.commit(PEER_DISCONNECTED)
+
+    // assert pnp states were reset
     expect(store.state.pnp.peerConnection).toBe(undefined)
     expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
     expect(store.state.pnp.peerFetch).toBe(undefined)
