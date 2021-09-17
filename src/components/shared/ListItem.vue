@@ -38,11 +38,14 @@
       <v-list-item-title
         v-else
         data-cy="title-text"
+        ref="title-read-only"
       >
         {{ inputTitleEditValue }}
       </v-list-item-title>
 
-      <v-list-item-subtitle>
+      <v-list-item-subtitle
+        ref="subtitle-label"
+      >
         {{ subtitle }}
       </v-list-item-subtitle>
 
@@ -109,6 +112,7 @@
             id="toggle-edit-option"
             @click="startEdit"
             data-cy="icon-start-edit"
+            ref="icon-start-edit"
             v-bind="attrs"
             v-on="on"
           >
@@ -126,6 +130,7 @@
             id="toggle-edit-option"
             @click="saveEdit"
             data-cy="icon-save-edit"
+            ref="icon-save-edit"
             v-bind="attrs"
             v-on="on"
           >
@@ -143,6 +148,7 @@
             id="toggle-edit-option"
             @click="cancelEdit"
             data-cy="icon-cancel-edit"
+            ref="icon-cancel-edit"
             v-bind="attrs"
             v-on="on"
           >
