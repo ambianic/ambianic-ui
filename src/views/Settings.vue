@@ -1,6 +1,13 @@
 <template>
   <amb-app-frame>
     <v-container fluid>
+      <Dialog
+        modal-title="Confirm Edge Device Repairing"
+        :modal-text="`Ambianic UI will need to close connection with ${edgePeerId} before establishing a new connection with ${manualEdgeAddress}`"
+        :visibility="showRepairDialog"
+        :right-btn-func="() => closeDialog()"
+        :left-btn-func="() => sendEdgeAddress()"
+      />
       <v-row
         align="start"
         justify="center"
@@ -283,7 +290,7 @@
             <v-card-actions>
               <v-btn
                 :disabled="!correctEdgeAddress || isReParing"
-                @click="sendEdgeAddress"
+                @click="confirmNewEdgePair"
                 color="primary"
                 id="btn-sendRemotePeerID"
                 data-cy="sendRemotePeerID"
@@ -330,6 +337,7 @@ export default {
   components: {
     AmbBanner: () => import('@/components/shared/Banner.vue'),
     AmbListItem,
+    Dialog: () => import('@/components/shared/Dialog.spec.js'),
     AmbAppFrame: () => import('@/components/AppFrame.vue')
   },
   data () {
@@ -340,11 +348,11 @@ export default {
           '                  that triggers automatically when you open this app for the first time.\n' +
           '                  Once paired and connected, you can access the Edge device remotely\n' +
           '                  from any Internet access point.',
-      isTrue: false,
       manualEdgeAddress: undefined,
       correctEdgeAddress: false,
       edgeDeviceError: null,
       connectionStep: 1,
+      showRepairDialog: false,
       connectionStatusText: PEER_CONNECTING_NOTIFICATION,
       connectionStatusIcon: 'cloud-sync-outline'
     }
@@ -362,6 +370,13 @@ export default {
   mounted () {
   },
   methods: {
+    confirmNewEdgePair () {
+      if (this.isEdgeConnected) {
+        this.showRepairDialog = true
+      } else {
+        return this.sendEdgeAddress()
+      }
+    },
     // Validate the user input so the ID has the correct format before showing the connect button
     validateIP (value) {
       if (/^([a-zA-Z0-9]{8})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{12})$/.test(value)) {
@@ -374,10 +389,15 @@ export default {
       }
     },
     ...mapActions([
-      'CHANGE_REMOTE_PEER_ID'
+      CHANGE_REMOTE_PEER_ID
     ]),
+    closeDialog () {
+      this.showRepairDialog = false
+    },
     sendEdgeAddress () {
-      // begins (re)paring remotely
+      // // begins (re)paring remotely
+      this.closeDialog()
+
       this.isReParing = false
       this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.manualEdgeAddress)
     },
