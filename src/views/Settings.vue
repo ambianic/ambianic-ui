@@ -93,7 +93,7 @@
                       data-cy="list-item-edgePeerID"
                     />
                     <amb-list-item
-                      ref="list-item-releaseVersion"
+                      ref="list-item-edgeVersion"
                       :title="edgeVersion"
                       id="version-element"
                       subtitle="Edge Software Version"
@@ -369,12 +369,12 @@ export default {
         const details = await this.edgeAPI.getEdgeStatus()
         console.debug(`Edge device details fetched. Version: ${details.version}`)
         if (!details || !details.version) {
-          this.edgeDeviceError = 'Unable to fetch Edge Device details. Is it disconnected or outdated?'
+          this.edgeDeviceError = 'Edge device offline or requires update.'
         } else {
           this.$store.commit(EDGE_DEVICE_DETAILS, details)
         }
       } catch (e) {
-        this.edgeDeviceError = 'Unable to fetch Edge Device details. Is it disconnected or outdated?'
+        this.edgeDeviceError = 'Edge device offline or requires update.'
       } finally {
         this.syncing = false
       }

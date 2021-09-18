@@ -214,10 +214,6 @@ export default {
       type: Function,
       default: function () {}
     },
-    loading: {
-      type: Boolean,
-      default: false
-    },
     rules: {
       type: Array,
       default: () => []

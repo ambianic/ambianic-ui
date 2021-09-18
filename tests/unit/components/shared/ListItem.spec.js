@@ -22,13 +22,8 @@ describe('ListItem Component', () => {
     wrapper.destroy()
   })
 
-  const rules = {
-    required: value => !!value || 'Required.',
-    counter: value => (value.length >= 5 && value.length <= 20) || 'Min 5 and Max 20 characters'
-  }
-
   it('It should render editable text field in read only mode', async () => {
-    wrapper = mount(ListItem, {
+    wrapper = await mount(ListItem, {
       localVue,
       vuetify,
       store,
@@ -37,8 +32,7 @@ describe('ListItem Component', () => {
         title: 'Kitchen Monitor',
         subtitle: 'Display Name',
         iconName: 'tag',
-        editOption: true,
-        rules: [rules.required, rules.counter]
+        editOption: true
       }
     })
     const listItemDiv = wrapper.findComponent(ListItem)
@@ -52,7 +46,7 @@ describe('ListItem Component', () => {
   })
 
   it('It should render editable text field in edit mode', async () => {
-    wrapper = mount(ListItem, {
+    wrapper = await mount(ListItem, {
       localVue,
       vuetify,
       store,
@@ -61,8 +55,7 @@ describe('ListItem Component', () => {
         title: 'Kitchen Monitor',
         subtitle: 'Display Name',
         iconName: 'tag',
-        editOption: true,
-        rules: [rules.required, rules.counter]
+        editOption: true
       }
     })
     const editButton = wrapper.findComponent({ ref: 'icon-start-edit' })
@@ -81,7 +74,7 @@ describe('ListItem Component', () => {
   })
 
   it('It should cancel editing of text field', async () => {
-    wrapper = mount(ListItem, {
+    wrapper = await mount(ListItem, {
       localVue,
       vuetify,
       store,
@@ -91,7 +84,6 @@ describe('ListItem Component', () => {
         subtitle: 'Display Name',
         iconName: 'tag',
         editOption: true,
-        rules: [rules.required, rules.counter]
       }
     })
     const editButton = wrapper.findComponent({ ref: 'icon-start-edit' })
@@ -113,7 +105,7 @@ describe('ListItem Component', () => {
   it('It should save new text field value when onSubmit button click succeeds', async () => {
     // mock onSubmit callback succeeds
     const onDisplayNameChanged = jest.fn().mockReturnValue(true)
-    wrapper = mount(ListItem, {
+    wrapper = await mount(ListItem, {
       localVue,
       vuetify,
       store,
@@ -124,7 +116,6 @@ describe('ListItem Component', () => {
         iconName: 'tag',
         editOption: true,
         onSubmit: onDisplayNameChanged,
-        rules: [rules.required, rules.counter]
       }
     })
     const editButton = wrapper.findComponent({ ref: 'icon-start-edit' })
@@ -149,7 +140,7 @@ describe('ListItem Component', () => {
   it('It should save new text field value when onSubmit via key.Enter succeeds', async () => {
     // mock onSubmit callback succeeds
     const onDisplayNameChanged = jest.fn().mockReturnValue(true)
-    wrapper = mount(ListItem, {
+    wrapper = await mount(ListItem, {
       localVue,
       vuetify,
       store,
@@ -160,7 +151,6 @@ describe('ListItem Component', () => {
         iconName: 'tag',
         editOption: true,
         onSubmit: onDisplayNameChanged,
-        rules: [rules.required, rules.counter]
       }
     })
     const editButton = wrapper.findComponent({ ref: 'icon-start-edit' })
@@ -183,7 +173,7 @@ describe('ListItem Component', () => {
   it('It should not save new text when onSubmit fails', async () => {
     // mock onSubmit callback fails
     const onDisplayNameChanged = jest.fn().mockReturnValue(false)
-    wrapper = mount(ListItem, {
+    wrapper = await mount(ListItem, {
       localVue,
       vuetify,
       store,
@@ -194,7 +184,6 @@ describe('ListItem Component', () => {
         iconName: 'tag',
         editOption: true,
         onSubmit: onDisplayNameChanged,
-        rules: [rules.required, rules.counter]
       }
     })
     const editButton = wrapper.findComponent({ ref: 'icon-start-edit' })
@@ -220,9 +209,13 @@ describe('ListItem Component', () => {
   })
 
   it('It should not save new text when rules fail', async () => {
-    // mock onSubmit callback succeeds
-    const onDisplayNameChanged = jest.fn().mockReturnValue(true)
-    wrapper = mount(ListItem, {
+      // mock onSubmit callback succeeds
+      const onDisplayNameChanged = jest.fn().mockReturnValue(true)
+      const rules = {
+        required: value => !!value || 'Required.',
+        counter: value => (value.length >= 5 && value.length <= 20) || 'Min 5 and Max 20 characters'
+      }
+      wrapper = await mount(ListItem, {
       localVue,
       vuetify,
       store,
