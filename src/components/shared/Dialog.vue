@@ -1,17 +1,20 @@
 <template>
   <!-- eslint-disable-next-line -->
   <v-dialog
-      id="dialog-component"
+    id="dialog-component"
     :max-width="maxWidth"
     v-model="showModal"
     persistent
   >
-    <v-card id="dialog-card" >
-      <v-card-title id="dialog-title" class="text-h6 grey">
+    <v-card id="dialog-card">
+      <v-card-title
+        id="dialog-title"
+        class="headline"
+      >
         {{ modalTitle }}
       </v-card-title>
       <br>
-      <v-card-text id="dialog-text" >
+      <v-card-text id="dialog-text">
         {{ modalText }}
       </v-card-text>
 
@@ -24,7 +27,7 @@
           text
           @click="leftBtnFunc()"
         >
-          Confirm
+          {{leftBtnText}}
         </v-btn>
 
         <v-btn
@@ -32,7 +35,7 @@
           text
           @click="rightBtnFunc()"
         >
-          Cancel
+          {{rightBtnText}}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -61,6 +64,14 @@ export default {
     visibility: {
       type: Boolean,
       default: false
+    },
+    rightBtnText: {
+      type: String,
+      default: 'Cancel'
+    },
+    leftBtnText: {
+      type: String,
+      default: 'Confirm'
     },
     leftBtnFunc: {
       type: function () {},

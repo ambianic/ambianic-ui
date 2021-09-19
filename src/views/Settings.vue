@@ -8,6 +8,14 @@
         :right-btn-func="() => closeDialog()"
         :left-btn-func="() => sendEdgeAddress()"
       />
+      <Dialog
+          modal-title="Reset device pairing?"
+          :modal-text="`Are you switching to a new Ambianic Edge device? \n \n
+                      Resetting a device association is usually done when switching to
+                      a new edge device with a different Peer ID.`"
+          :visibility="showResetDialog"
+          leftBtnText="Yes, Reset"
+      />
       <v-row
         align="start"
         justify="center"
@@ -148,35 +156,6 @@
                   <v-stepper-content step="3" />
                 </v-stepper>
               </v-col>
-              <v-dialog
-                max-width="500"
-              >
-                <v-card flat>
-                  <v-card-title class="headline">
-                    Reset device pairing?
-                  </v-card-title>
-                  <v-card-text>
-                    <p>
-                      Are you switching to a new Ambianic Edge device?
-                      Resetting a device association is usually done when switching to
-                      a new edge device with a different Peer ID.
-                    </p>
-                  </v-card-text>
-                  <v-card-actions>
-                    <v-spacer />
-                    <v-btn
-                      text
-                    >
-                      Cancel
-                    </v-btn>
-                    <v-btn
-                      text
-                    >
-                      Yes, Reset
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
             </v-row>
           </v-container>
         </v-card>
@@ -337,7 +316,7 @@ export default {
   components: {
     AmbBanner: () => import('@/components/shared/Banner.vue'),
     AmbListItem,
-    Dialog: () => import('@/components/shared/Dialog.spec.js'),
+    Dialog: () => import('@/components/shared/Dialog.vue'),
     AmbAppFrame: () => import('@/components/AppFrame.vue')
   },
   data () {
@@ -353,6 +332,7 @@ export default {
       edgeDeviceError: null,
       connectionStep: 1,
       showRepairDialog: false,
+      showResetDialog: false,
       connectionStatusText: PEER_CONNECTING_NOTIFICATION,
       connectionStatusIcon: 'cloud-sync-outline'
     }
