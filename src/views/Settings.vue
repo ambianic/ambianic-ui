@@ -4,7 +4,7 @@
       fluid
     >
       <v-row
-        align='center'
+        align="center"
       >
         <v-col cols="12">
           <v-alert
@@ -26,27 +26,27 @@
         align="center"
       >
         >
-          <v-dialog
-            v-model="syncing"
-            persistent
-            max-width="300"
-          >
-            <v-card>
-              <v-card-text
-                color="accent"
-              >
-                Syncing with Ambianic Edge device
-                <v-progress-linear
-                  indeterminate
-                />
-              </v-card-text>
-            </v-card>
-          </v-dialog>
+        <v-dialog
+          v-model="syncing"
+          persistent
+          max-width="300"
+        >
+          <v-card>
+            <v-card-text
+              color="accent"
+            >
+              Syncing with Ambianic Edge device
+              <v-progress-linear
+                indeterminate
+              />
+            </v-card-text>
+          </v-card>
+        </v-dialog>
       </v-row>
       <v-row
         justify="center"
         class="pb-5"
-        align='center'
+        align="center"
       >
         <v-card flat>
           <v-card-title
@@ -386,12 +386,12 @@ export default {
         const details = await this.edgeAPI.getEdgeStatus()
         console.debug(`Edge device details fetched. Version: ${details.version}`)
         if (!details || !details.version) {
-          this.edgeDeviceError = 'Edge device requires update. Edge details: ' + { details }
+          this.edgeDeviceError = 'Edge device requires update.'
         } else {
           this.$store.commit(EDGE_DEVICE_DETAILS, details)
         }
       } catch (e) {
-        this.edgeDeviceError = 'Edge device offline or unreachable.' + e + '\n stacktrace: ' + e.stack
+        this.edgeDeviceError = 'Edge device API offline or unreachable.'
       }
     },
     async onDisplayNameChanged (newDisplayName) {
@@ -430,7 +430,7 @@ export default {
       peerFetch: state => state.pnp.peerFetch,
       edgeVersion: state => state.edgeDevice.edgeSoftwareVersion,
       edgeDisplayName: state => {
-        const deviceLabel = (state.edgeDevice.edgeDisplayName)
+        const deviceLabel = (state.edgeDevice.edgeDisplayName) ? state.edgeDevice.edgeDisplayName : 'My Ambianic Edge Device'
         return deviceLabel
       }
     }),

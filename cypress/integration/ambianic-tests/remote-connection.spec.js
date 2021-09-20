@@ -41,7 +41,7 @@ const checkViewPort = (cy, device) => {
       // fake peerFetch instance
       const fakePeerFetch = cy.stub()
       fakePeerFetch.request = cy.stub().callsFake( (config) => {
-        //if (url.match(/status$/)) {
+        if (config.url.endsWith('status')) {
           return {
             content: {
               status: 'OK',
@@ -49,7 +49,7 @@ const checkViewPort = (cy, device) => {
               display_name: 'Kitchen Monitor'
             }
           }
-        //}
+        }
       })
       fakePeerFetch.jsonify = cy.stub().callsFake( (data) => data )
       // fake pnp connect action

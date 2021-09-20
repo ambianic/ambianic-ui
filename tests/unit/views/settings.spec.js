@@ -189,6 +189,6 @@ describe('Settings View', () => {
 
     await wrapper.vm.fetchEdgeDetails()
 
-    expect(wrapper.vm.edgeDeviceError).toBe('Edge device offline or requires update.')
+    expect(wrapper.vm.edgeDeviceError).toBe('Edge device requires update.')
   })
 })
