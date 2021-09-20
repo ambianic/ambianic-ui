@@ -42,6 +42,7 @@
             <v-flex>
               <amb-list-item
                 ref="version-info"
+                id="version-info"
                 :title="version"
                 icon-name="alpha-v-circle-outline"
                 subtitle="UI App Version"

@@ -14,7 +14,7 @@ const appVersion = require('@/../package.json').version
 describe('About Page', () => {
   let wrapper
   const localVue = createLocalVue()
-  
+
   localVue.use(VueRouter)
   const router = new VueRouter()
 
@@ -26,13 +26,13 @@ describe('About Page', () => {
 
   beforeEach(() => {
     const state = {
-        uiAppVersion: appVersion
-      }
+      uiAppVersion: appVersion
+    }
 
     const modules = {
-        pnp: clone(pnpStoreModule),
-        snackBar: clone(snackBarModule)
-      }
+      pnp: clone(pnpStoreModule),
+      snackBar: clone(snackBarModule)
+    }
 
     const getters = {
     //   ...

@@ -32,12 +32,12 @@
           disabled
           id="peerId-container"
           :type="sensitive ? 'password' : 'text'"
-          data-cy="input-title"
+          data-cy="input-title-sensitive"
         />
       </v-list-item-title>
       <v-list-item-title
         v-else
-        data-cy="title-text"
+        data-cy="title-text-read-only"
         ref="title-read-only"
       >
         {{ inputTitleEditValue }}

@@ -83,7 +83,7 @@ describe('ListItem Component', () => {
         title: 'Kitchen Monitor',
         subtitle: 'Display Name',
         iconName: 'tag',
-        editOption: true,
+        editOption: true
       }
     })
     const editButton = wrapper.findComponent({ ref: 'icon-start-edit' })
@@ -115,7 +115,7 @@ describe('ListItem Component', () => {
         subtitle: 'Display Name',
         iconName: 'tag',
         editOption: true,
-        onSubmit: onDisplayNameChanged,
+        onSubmit: onDisplayNameChanged
       }
     })
     const editButton = wrapper.findComponent({ ref: 'icon-start-edit' })
@@ -150,7 +150,7 @@ describe('ListItem Component', () => {
         subtitle: 'Display Name',
         iconName: 'tag',
         editOption: true,
-        onSubmit: onDisplayNameChanged,
+        onSubmit: onDisplayNameChanged
       }
     })
     const editButton = wrapper.findComponent({ ref: 'icon-start-edit' })
@@ -183,7 +183,7 @@ describe('ListItem Component', () => {
         subtitle: 'Display Name',
         iconName: 'tag',
         editOption: true,
-        onSubmit: onDisplayNameChanged,
+        onSubmit: onDisplayNameChanged
       }
     })
     const editButton = wrapper.findComponent({ ref: 'icon-start-edit' })
@@ -209,13 +209,13 @@ describe('ListItem Component', () => {
   })
 
   it('It should not save new text when rules fail', async () => {
-      // mock onSubmit callback succeeds
-      const onDisplayNameChanged = jest.fn().mockReturnValue(true)
-      const rules = {
-        required: value => !!value || 'Required.',
-        counter: value => (value.length >= 5 && value.length <= 20) || 'Min 5 and Max 20 characters'
-      }
-      wrapper = await mount(ListItem, {
+    // mock onSubmit callback succeeds
+    const onDisplayNameChanged = jest.fn().mockReturnValue(true)
+    const rules = {
+      required: value => !!value || 'Required.',
+      counter: value => (value.length >= 5 && value.length <= 20) || 'Min 5 and Max 20 characters'
+    }
+    wrapper = await mount(ListItem, {
       localVue,
       vuetify,
       store,

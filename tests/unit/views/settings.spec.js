@@ -174,7 +174,7 @@ describe('Settings View', () => {
       store: newStore
     })
     await Vue.nextTick()
-    const versionElement = wrapper.findComponent({ ref: "list-item-edgeVersion" })
+    const versionElement = wrapper.findComponent({ ref: 'list-item-edgeVersion' })
     expect(versionElement.exists()).toBeTrue()
     const versionLabel = versionElement.findComponent({ ref: 'title-read-only' })
     expect(versionLabel.exists()).toBeTrue()

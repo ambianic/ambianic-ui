@@ -38,9 +38,9 @@ describe('PeerRoom class coverage - p2p communication layer', () => {
   test('EdgeAPI._get()', async () => {
     pnp.peerFetch.request = jest.fn().mockReturnValue({ content: '{event: "object_detection"}' })
     const edgeAPI = new EdgeAPI(pnp)
-    const response = await edgeAPI._get('timeline')
+    const response = await edgeAPI._get({url: 'timeline'})
     expect(pnp.peerFetch.request).toHaveBeenCalledTimes(1)
-    expect(pnp.peerFetch.request).toHaveBeenCalledWith('timeline')
+    expect(pnp.peerFetch.request).toHaveBeenCalledWith({"method": "GET", "url": "timeline"})
     expect(pnp.peerFetch.request).toHaveReturnedWith({ content: '{event: "object_detection"}' })
     expect(response).toEqual({ content: '{event: "object_detection"}' })
   })
@@ -51,8 +51,8 @@ describe('PeerRoom class coverage - p2p communication layer', () => {
     const edgeAPI = new EdgeAPI(pnp)
     await expect(edgeAPI._get('wrong_parameter'))
       .rejects
-      .toThrow("/^Cannot create property 'method'/")
-      await expect(edgeAPI._get({ url: 'wrong_method' }))
+      .toThrow(/^Cannot create property 'method'/)
+    await expect(edgeAPI._get({ url: 'wrong_method' }))
       .rejects
       .toThrow('Edge device peer not connected.')
   })
@@ -61,9 +61,9 @@ describe('PeerRoom class coverage - p2p communication layer', () => {
     pnp.peerFetch.request = jest.fn().mockReturnValue({ content: '{event: "object_detection"}' })
     pnp.peerFetch.jsonify = jest.fn().mockImplementation((data) => data)
     const edgeAPI = new EdgeAPI(pnp)
-    const response = await edgeAPI._getJSON('timeline')
+    const response = await edgeAPI._getJSON({"method": "GET", "url": "timeline"})
     expect(pnp.peerFetch.request).toHaveBeenCalledTimes(1)
-    expect(pnp.peerFetch.request).toHaveBeenCalledWith('timeline')
+    expect(pnp.peerFetch.request).toHaveBeenCalledWith({"method": "GET", "url": "timeline"})
     expect(pnp.peerFetch.request).toHaveReturnedWith({ content: '{event: "object_detection"}' })
     expect(response).toEqual('{event: "object_detection"}')
   })
@@ -75,13 +75,13 @@ describe('PeerRoom class coverage - p2p communication layer', () => {
     const response = await edgeAPI.getTimelinePage(4)
     expect(pnp.peerFetch.request).toHaveBeenCalledTimes(1)
     expect(pnp.peerFetch.request).toHaveBeenCalledWith({
-      method: 'GET',      
+      method: 'GET',
       url: `http://${API_HOST}:${API_PORT}/${API_ROOT}/timeline`,
       params: {
         page: 4
       }
     })
-    expect(pnp.peerFetch.get).toHaveReturnedWith({ content: '{event: "object_detection"}' })
+    expect(pnp.peerFetch.request).toHaveReturnedWith({ content: '{event: "object_detection"}' })
     expect(response).toEqual('{event: "object_detection"}')
   })
 
@@ -96,7 +96,7 @@ describe('PeerRoom class coverage - p2p communication layer', () => {
 
     expect(pnp.peerFetch.request).toHaveBeenCalledTimes(1)
     expect(pnp.peerFetch.request).toHaveBeenCalledWith({
-      method: 'GET',      
+      method: 'GET',
       url: `http://${API_HOST}:${API_PORT}/${API_ROOT}/status`
     })
 

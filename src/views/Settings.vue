@@ -1,44 +1,60 @@
 <template>
   <amb-app-frame>
-    <v-container fluid>
+    <v-container
+      fluid
+    >
       <v-row
-        align="start"
+        align='center'
+      >
+        <v-col cols="12">
+          <v-alert
+            v-if="this.edgeDeviceError"
+            outlined
+            type="warning"
+            dense
+            align-self="center"
+            class="text-center"
+            transition="scale-transition"
+            dismissible
+            data-cy="edge-device-error"
+          >
+            {{ this.edgeDeviceError }}
+          </v-alert>
+        </v-col>
+      </v-row>
+      <v-row
+        align="center"
+      >
+        >
+          <v-dialog
+            v-model="syncing"
+            persistent
+            max-width="300"
+          >
+            <v-card>
+              <v-card-text
+                color="accent"
+              >
+                Syncing with Ambianic Edge device
+                <v-progress-linear
+                  indeterminate
+                />
+              </v-card-text>
+            </v-card>
+          </v-dialog>
+      </v-row>
+      <v-row
         justify="center"
         class="pb-5"
-        data-cy="template-row"
+        align='center'
       >
-        <v-dialog
-          v-model="syncing"
-          persistent
-          max-width="300"
-        >
-          <v-card>
-            <v-card-text
-              color="accent"
-            >
-              Syncing with Ambianic Edge device
-              <v-progress-linear
-                indeterminate
-              />
-            </v-card-text>
-          </v-card>
-        </v-dialog>
-        <v-alert
-          v-if="this.edgeDeviceError"
-          outlined
-          type="warning"
-          class="mt-5 text-left"
-          dense
-        >
-          {{ this.edgeDeviceError }}
-        </v-alert>
         <v-card flat>
           <v-card-title
             data-cy="titlecard"
           >
             Ambianic Edge connection details
           </v-card-title>
-          <v-container grid-list-sm>
+          <v-card-text grid-list-sm>
             <v-row
               align="start"
               justify="space-around"
@@ -63,6 +79,7 @@
                   banner-class="text-left"
                   icon="cloud-off-outline"
                   icon-color="info"
+                  data-cy="edge-device-disconnected"
                   text="Ambianic Edge device disconnected."
                 />
                 <v-card
@@ -75,6 +92,7 @@
                   >
                     <amb-list-item
                       ref="list-item-edgeDeviceName"
+                      data-cy="list-item-edgeDeviceName"
                       :title="edgeDisplayName"
                       subtitle="Display Name"
                       icon-name="tag"
@@ -188,7 +206,7 @@
                 </v-card>
               </v-dialog>
             </v-row>
-          </v-container>
+          </v-card-text>
         </v-card>
       </v-row>
       <v-row
@@ -356,27 +374,24 @@ export default {
     ...mapActions([
       'CHANGE_REMOTE_PEER_ID'
     ]),
-    sendEdgeAddress () {
-      this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.edgeAddress)
+    async sendEdgeAddress () {
+      await this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.edgeAddress)
     },
-    localEdgeAddress () {
+    async localEdgeAddress () {
       this.edgeAddress = undefined
-      this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
+      await this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
     },
     async fetchEdgeDetails () {
       try {
-        this.syncing = true
         const details = await this.edgeAPI.getEdgeStatus()
         console.debug(`Edge device details fetched. Version: ${details.version}`)
         if (!details || !details.version) {
-          this.edgeDeviceError = 'Edge device offline or requires update.'
+          this.edgeDeviceError = 'Edge device requires update. Edge details: ' + { details }
         } else {
           this.$store.commit(EDGE_DEVICE_DETAILS, details)
         }
       } catch (e) {
-        this.edgeDeviceError = 'Edge device offline or requires update.'
-      } finally {
-        this.syncing = false
+        this.edgeDeviceError = 'Edge device offline or unreachable.' + e + '\n stacktrace: ' + e.stack
       }
     },
     async onDisplayNameChanged (newDisplayName) {
@@ -416,7 +431,6 @@ export default {
       edgeVersion: state => state.edgeDevice.edgeSoftwareVersion,
       edgeDisplayName: state => {
         const deviceLabel = (state.edgeDevice.edgeDisplayName)
-          ? state.edgeDevice.edgeDisplayName : 'My Ambianic Edge Device'
         return deviceLabel
       }
     }),

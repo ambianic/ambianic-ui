@@ -1,7 +1,8 @@
 import { EDGE_DEVICE_DETAILS, EDGE_DEVICE_DISPLAY_NAME } from './mutation-types'
 
 const state = {
-  edgeSoftwareVersion: null
+  edgeSoftwareVersion: undefined,
+  edgeDisplayName: undefined
 }
 
 const mutations = {
@@ -10,8 +11,8 @@ const mutations = {
       if (edgeDetails.version) {
         state.edgeSoftwareVersion = edgeDetails.version
       }
-      if (edgeDetails.displayName) {
-        state.edgeDisplayName = edgeDetails.displayName
+      if (edgeDetails.display_name) {
+        state.edgeDisplayName = edgeDetails.display_name
       }
     }
   },
