@@ -199,7 +199,7 @@
                   </v-btn>
                 </div>
 
-                <div v-if="stepContentName == 'edge-installation-question'">
+                <div v-if="stepContentName === 'edge-installation-question'">
                   <div class="flex-between">
                     <v-card-text class="step-text">
                       Are you installing Ambianic Edge Device on your
@@ -247,8 +247,9 @@
 
                       <br>
                       <br>
-                      Click the button below to request invitation granting
-                      access.
+                      {{ hasRemotePeerID ? "Provide the remote peer ID of an edge device to connect to it." :
+                        "Click the button below to request invitation granting                            access."
+                      }}
                     </v-card-text>
                   </div>
 
@@ -256,10 +257,67 @@
                     <v-btn
                       color="primary"
                       data-cy="request-access"
+                      v-if="!hasRemotePeerID"
                       @click="setStepContent('send-message')"
                     >
                       Request Access
                     </v-btn>
+                  </div>
+
+                  <div>
+                    <v-card-text
+                      id="click-text"
+                      @click="hasRemotePeerID = true"
+                      v-if="!hasRemotePeerID"
+                    >
+                      Already have a valid Remote PeerID?
+                    </v-card-text>
+
+                    <div v-else>
+                      <v-text-field
+                        v-model="recievedPeerID"
+                        type="text"
+                        label="Remote Peer ID*"
+                        placeholder="Enter your remote peer ID"
+                        id="recievedPeerID"
+                        outlined
+                        data-cy="existingRemotePeerID-input"
+                        style="width: 100%"
+                        class="input"
+                        name="peerid-input"
+                      />
+                      <div
+                        class="flex-between"
+                        style="flex-direction: row"
+                      >
+                        <v-container>
+                          <v-row dense>
+                            <v-col>
+                              <v-btn
+                                color="primary"
+                                :disabled="!isCorrectPeerId || isLoading"
+                                data-cy="submit-existing-remotePeerID"
+                                @click="submitPeerId()"
+                              >
+                                {{ !isLoading ? "Connect" : "Connecting" }} To Edge Device
+                              </v-btn>
+                            </v-col>
+
+                            <v-col>
+                              <div>
+                                <v-btn
+                                  color="primary"
+                                  data-cy="cancel-input-existing-remoteID"
+                                  @click="cancelConnectionWithExistingRemoteId()"
+                                >
+                                  Cancel, Request Access
+                                </v-btn>
+                              </div>
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -338,7 +396,7 @@
                         style="flex-direction: column;"
                       >
                         <v-card-text class="info-text">
-                          Use recieved
+                          Use received
                           <b>PeerID</b>
                           to pair with remote Ambianic Edge Device.
                         </v-card-text>
@@ -350,8 +408,8 @@
                             <v-text-field
                               v-model="recievedPeerID"
                               type="text"
-                              label="Recieved Peer ID*"
-                              placeholder="Enter recieved Peer ID"
+                              label="Received Peer ID*"
+                              placeholder="Enter received Peer ID"
                               id="recievedPeerID"
                               outlined
                               dense
@@ -362,13 +420,13 @@
 
                           <div class="align-center">
                             <v-btn
-                              :disabled="!isCorrectPeerId"
+                              :disabled="!isCorrectPeerId || isLoading"
                               style="margin-left: 20px; margin-bottom: 20px;"
                               color="primary"
                               @click="submitPeerId()"
                               data-cy="submit-button"
                             >
-                              Submit PeerID
+                              {{ !isLoading ? "Submit" : "Submitting" }} PeerID
                             </v-btn>
                           </div>
                         </div>
@@ -616,6 +674,7 @@ export default {
   name: 'Onboarding',
   data () {
     return {
+      isLoading: false,
       pwaInstallPrompt: undefined,
       pwaInstallOutcomeMessage: '',
       stepLevel: localStorage.getItem('lastOnboardingStage') || 1,
@@ -624,6 +683,7 @@ export default {
       invitationMessage: 'Hi ____, can you please share access to your Ambianic Edge device.',
       appInstallationComplete: false,
       completedSteps: [],
+      hasRemotePeerID: false,
       sendRequestDialog: false,
       hasSentAccessRequest: false,
       MESSAGE_CLIENTS,
@@ -752,7 +812,14 @@ export default {
     },
 
     submitPeerId () {
+      this.isLoading = true
       this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.recievedPeerID)
+    },
+
+    cancelConnectionWithExistingRemoteId () {
+      this.hasRemotePeerID = false
+      this.recievedPeerID = ''
+      this.isLoading = false
     }
   },
   watch: {
@@ -760,6 +827,7 @@ export default {
       if (newVal) {
         this.stepLevel = 3
         this.stepContentName = 'settings'
+        this.isLoading = false
       }
     },
     recievedPeerID: function (value) {
@@ -788,16 +856,6 @@ export default {
   cursor: pointer;
 }
 
-.btn {
-  width: auto;
-  padding: 0.5rem 3rem;
-}
-
-.list {
-  list-style: none;
-  padding-left: 30px;
-}
-
 .info-text {
   font-size: 0.95rem;
   color: rgb(84, 84, 84);
@@ -807,9 +865,8 @@ export default {
   display: flex;
   align-items: center;
   padding: 0.5rem 1rem;
-  margin: 0.7rem 1rem;
   transition: all 300ms;
-  margin-right: 20px;
+  margin: 0.7rem 20px 0.7rem 1rem;
 }
 
 .list-item:hover {
@@ -819,10 +876,6 @@ export default {
 
 .title {
   font-weight: semi-bold;
-}
-
-.hover-text {
-  color: grey;
 }
 
 .message-container {
@@ -841,11 +894,6 @@ export default {
   flex-direction: row;
 }
 
-.space-btns {
-  display: flex;
-  justify-content: space-evenly;
-}
-
 .step-text {
   opacity: 0.95;
   text-align: left;
@@ -859,14 +907,6 @@ export default {
 
 .right-btn {
   text-align: right;
-}
-
-.button-flex {
-  display: flex;
-}
-
-.see-thru {
-  opacity: 0.8;
 }
 
 .container {
@@ -889,6 +929,17 @@ export default {
 
 .input {
   width: 400px;
+}
+
+#click-text {
+  font-size: 0.90rem;
+  margin: .7em 0;
+  color: #c0c0c0;
+}
+
+#click-text:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 @media (max-width: 800px) {
