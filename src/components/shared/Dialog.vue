@@ -27,7 +27,7 @@
           text
           @click="leftBtnFunc()"
         >
-          {{leftBtnText}}
+          {{ leftBtnText }}
         </v-btn>
 
         <v-btn
@@ -35,7 +35,7 @@
           text
           @click="rightBtnFunc()"
         >
-          {{rightBtnText}}
+          {{ rightBtnText }}
         </v-btn>
       </v-card-actions>
     </v-card>

@@ -9,12 +9,12 @@
         :left-btn-func="() => sendEdgeAddress()"
       />
       <Dialog
-          modal-title="Reset device pairing?"
-          :modal-text="`Are you switching to a new Ambianic Edge device? \n \n
+        modal-title="Reset device pairing?"
+        :modal-text="`Are you switching to a new Ambianic Edge device? \n \n
                       Resetting a device association is usually done when switching to
                       a new edge device with a different Peer ID.`"
-          :visibility="showResetDialog"
-          leftBtnText="Yes, Reset"
+        :visibility="showResetDialog"
+        left-btn-text="Yes, Reset"
       />
       <v-row
         align="start"
