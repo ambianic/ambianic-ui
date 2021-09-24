@@ -3,6 +3,7 @@ import { PEER_CONNECTED, PEER_DISCONNECTED } from '@/store/mutation-types'
 import { ambianicConf } from '@/config.js'
 
 const API_HOST = ambianicConf.AMBIANIC_EDGE_HOST
+const API_SCHEMA = ambianicConf.AMBIANIC_EDGE_API_SCHEMA
 const API_PORT = ambianicConf.AMBIANIC_EDGE_API_PORT
 const API_ROOT = ambianicConf.AMBIANIC_EDGE_API_ROOT
 
@@ -32,7 +33,7 @@ describe('PeerRoom class coverage - p2p communication layer', () => {
   test('EdgeAPI._getRootURL()', () => {
     const edgeAPI = new EdgeAPI(pnp)
     const rootURL = edgeAPI._getRootURL()
-    expect(rootURL).toEqual(`http://${API_HOST}:${API_PORT}/${API_ROOT}/`)
+    expect(rootURL).toEqual(`${API_SCHEMA}://${API_HOST}:${API_PORT}/${API_ROOT}/`)
   })
 
   test('EdgeAPI._get()', async () => {
@@ -76,7 +77,7 @@ describe('PeerRoom class coverage - p2p communication layer', () => {
     expect(pnp.peerFetch.request).toHaveBeenCalledTimes(1)
     expect(pnp.peerFetch.request).toHaveBeenCalledWith({
       method: 'GET',
-      url: `http://${API_HOST}:${API_PORT}/${API_ROOT}/timeline`,
+      url: `${API_SCHEMA}://${API_HOST}:${API_PORT}/${API_ROOT}/timeline`,
       params: {
         page: 4
       }
@@ -97,7 +98,7 @@ describe('PeerRoom class coverage - p2p communication layer', () => {
     expect(pnp.peerFetch.request).toHaveBeenCalledTimes(1)
     expect(pnp.peerFetch.request).toHaveBeenCalledWith({
       method: 'GET',
-      url: `http://${API_HOST}:${API_PORT}/${API_ROOT}/status`
+      url: `${API_SCHEMA}://${API_HOST}:${API_PORT}/${API_ROOT}/status`
     })
 
     expect(response).toEqual('{ status: "OK",  version: "1.14.7"}')
@@ -111,7 +112,7 @@ describe('PeerRoom class coverage - p2p communication layer', () => {
     expect(pnp.peerFetch.request).toHaveBeenCalledTimes(1)
     expect(pnp.peerFetch.request).toHaveBeenCalledWith({
       method: 'GET',
-      url: `http://${API_HOST}:${API_PORT}/${API_ROOT}/data/detection123/snapshot.png`
+      url: `${API_SCHEMA}://${API_HOST}:${API_PORT}/${API_ROOT}/data/detection123/snapshot.png`
     })
     expect(localImageURL).toMatch('http://localstore')
   })

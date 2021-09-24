@@ -45,6 +45,7 @@ export class PeerFetch {
       },
       1000 // every second
     )
+    console.debug('Pings scheduled.')
   }
 
   /**
@@ -107,7 +108,7 @@ export class PeerFetch {
         // the first one containing the http header info
         // and the second contatning the http body
         if (!pair.response) {
-          console.debug('Processing response header')
+          console.debug('Processing response header', data)
           // this is the first data message from the responses
           const header = peerFetch.jsonify(data)
           if (header.status === undefined) {
@@ -117,6 +118,14 @@ export class PeerFetch {
             console.debug('Received keepalive ping')
             // server accepted the request but still working
             // ignore and keep waiting until result or timeout
+          } else if (header.status === 204) {
+            // Successfully processed request, no response content.
+            //  Normally returned in response to PUT requests.
+            console.debug('Received HTTP 204 response: Success. No content.')
+            // return 204 header and no response content
+            const receivedAll = true
+            const content = undefined
+            pair.response = { header, content, receivedAll }
           } else {
             console.debug('Received web server final response header',
               { header })
@@ -261,12 +270,13 @@ export class PeerFetch {
     console.assert(request != null, { ticket, request })
     const jsonRequest = JSON.stringify(request)
     const requestMap = this._requestMap
-    console.debug('Sending request to remote peer',
+    console.debug('PeerFetch: Sending request to remote peer',
       { requestMap, ticket, request })
     try {
       this._dataConnection.send(jsonRequest)
+      console.debug('PeerFetch: Request sent to remote peer: ', jsonRequest)
     } catch (error) {
-      console.error('Error sending message via Peer DataConnection', { error })
+      console.error('PeerFetch: Error sending message via Peer DataConnection', { error })
     }
   }
 
@@ -305,7 +315,10 @@ export class PeerFetch {
 
   jsonify (data) {
     let decodedString
-    if (typeof data === 'string') {
+    console.debug('jsonify', data)
+    if (!data) {
+      decodedString = '{}'
+    } else if (typeof data === 'string') {
       decodedString = data
     } else {
       decodedString = this.textDecode(data)

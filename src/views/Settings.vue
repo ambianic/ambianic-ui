@@ -329,7 +329,6 @@ import {
   REMOVE_REMOTE_PEER_ID
 } from '../store/action-types.js'
 import AmbListItem from '@/components/shared/ListItem.vue'
-import { EdgeAPI } from '@/remote/edgeAPI'
 
 export default {
   components: {
@@ -350,7 +349,6 @@ export default {
     }
   },
   created () {
-    this.edgeAPI = new EdgeAPI(this.pnp)
     // if a connection to the edge device is already established
     // but version info has not been fetched yet, let's do it now
     if (this.isEdgeConnected && !this.edgeVersion) {
@@ -383,7 +381,7 @@ export default {
     },
     async fetchEdgeDetails () {
       try {
-        const details = await this.edgeAPI.getEdgeStatus()
+        const details = await this.pnp.edgeAPI.getEdgeStatus()
         console.debug(`Edge device details fetched. Version: ${details.version}`)
         if (!details || !details.version) {
           this.edgeDeviceError = 'Edge device requires update.'
@@ -404,11 +402,12 @@ export default {
           //    show blocking dialog with spinner https://vuetifyjs.com/en/components/dialogs/#loader
           //    await dispatch to push new device display name: 1. to device, 2. to local device store
           this.syncing = true
-          await this.edgeAPI.setDeviceDisplayName(newDisplayName)
+          await this.pnp.edgeAPI.setDeviceDisplayName(newDisplayName)
           this.$store.commit(EDGE_DEVICE_DISPLAY_NAME, newDisplayName)
           updated = true
         } catch (e) {
-          this.edgeDeviceError = 'Error sending new display name to edge device. Is it disconnected or outdated?'
+          this.edgeDeviceError = 'Error updating display name on edge device. Could be offline or outdated.'
+          console.error('Exception calling setDeviceDisplayName()', e, e.stack)
         } finally {
           this.syncing = false
         }

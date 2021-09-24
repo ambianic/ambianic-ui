@@ -17,7 +17,8 @@ import {
   NEW_PEER_ID,
   NEW_REMOTE_PEER_ID,
   REMOTE_PEER_ID_REMOVED,
-  PEER_FETCH
+  PEER_FETCH,
+  EDGE_API
 } from './mutation-types.js'
 import {
   INITIALIZE_PNP,
@@ -34,6 +35,7 @@ import { ambianicConf } from '@/config'
 import Peer from 'peerjs'
 import { PeerRoom } from '@/remote/peer-room'
 import { PeerFetch } from '@/remote/peer-fetch'
+import { EdgeAPI } from '@/remote/edgeAPI'
 export const STORAGE_KEY = 'ambianic-pnp-settings'
 
 const state = {
@@ -144,6 +146,10 @@ const mutations = {
   [PEER_FETCH] (state, peerFetch) {
     console.debug('PEER_FETCH: Setting PeerFetch instance.')
     state.peerFetch = peerFetch
+  },
+  [EDGE_API] (state, edgeAPI) {
+    console.debug('EDGE_API: Setting EdgeAPI instance.')
+    state.edgeAPI = edgeAPI
   }
 }
 
@@ -270,7 +276,8 @@ function setPeerConnectionHandlers ({
     const peerFetch = new PeerFetch(peerConnection)
     console.debug('Peer DataConnection is now open. Creating PeerFetch wrapper.')
     commit(PEER_FETCH, peerFetch)
-    setTimeout(() => dispatch(PEER_AUTHENTICATE, peerConnection), 1000)
+    // schedule an async PEER_AUTHENTICATE step
+    dispatch(PEER_AUTHENTICATE, peerConnection)
     // try {
     //   peerConnection.send('HELLO from peerConnection.on_open')
     // } catch (error) {
@@ -294,6 +301,7 @@ function setPeerConnectionHandlers ({
     clearTimeout(hungupConnectionResetTimer)
     commit(USER_MESSAGE, 'Error in connection to remote peer ID', peerConnection.peer)
     console.info(`Error in connection to remote peer ID ${peerConnection.peer}`, err)
+    // schedule an async HANDLE_PEER_CONNECTION_ERROR action
     dispatch(HANDLE_PEER_CONNECTION_ERROR, { peerConnection, err })
   })
 
@@ -475,22 +483,29 @@ const actions = {
   * Authenticate remote peer. Make sure its a genuine Ambianic Edge device.
   *
   */
-  async [PEER_AUTHENTICATE] ({ state, commit, dispatch }, peerConnection) {
+  async [PEER_AUTHENTICATE] (context, peerConnection) {
+    const { state, commit, dispatch } = context
     commit(PEER_AUTHENTICATING)
     commit(USER_MESSAGE, `Authenticating remote peer: ${peerConnection.peer}`)
-    console.log('Authenticating remote Peer ID: ', peerConnection.peer)
-    const url = 'http://localhost:8778'
+    console.debug('Authenticating remote Peer ID: ', peerConnection.peer)
     let authPassed = false
     try {
-      const response = await state.peerFetch.get(url)
-      console.log('PEER_AUTHENTICATE', { url, response })
+      console.debug('PEER_AUTHENTICATE start')
+      console.debug('PEER_AUTHENTICATE instantiating EdgeAPI with context:', context)
+      const edgeAPI = new EdgeAPI(context)
+      commit(EDGE_API, edgeAPI)
+      console.debug('PEER_AUTHENTICATE calling EdgeAPI.auth()')
+      const response = await state.edgeAPI.auth()
+      console.debug('PEER_AUTHENTICATE API called')
       if (response.header.status === 200) {
-        console.log('PEER_AUTHENTICATE status OK')
+        console.debug('PEER_AUTHENTICATE status OK')
+        console.debug(`PEER_AUTHENTICATE response.content: ${response.content}`)
         const text = state.peerFetch.textDecode(response.content)
+        console.debug(`PEER_AUTHENTICATE response.content decoded: ${response.content}`)
         // if data is authentication challenge response, verify it
         // for now we naively check for Ambianic in the response.
         authPassed = text.includes('Ambianic')
-        console.log(`PEER_AUTHENTICATE response body OK = ${authPassed}`)
+        console.debug(`PEER_AUTHENTICATE response body OK = ${authPassed}`)
       }
     } catch (err) {
       console.warn(`PEER_AUTHENTICATE action. Error while connecting to remote peer ID: ${peerConnection.peer}`, err)

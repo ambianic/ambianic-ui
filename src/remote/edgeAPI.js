@@ -3,6 +3,7 @@ import { PEER_CONNECTED } from '@/store/mutation-types'
 
 // const DEFAULT_API_ROOT = ambianicConf.AMBIANIC_API_FALLBACK_URI
 const API_HOST = ambianicConf.AMBIANIC_EDGE_HOST
+const API_SCHEMA = ambianicConf.AMBIANIC_EDGE_API_SCHEMA
 const API_PORT = ambianicConf.AMBIANIC_EDGE_API_PORT
 const API_ROOT = ambianicConf.AMBIANIC_EDGE_API_ROOT
 
@@ -12,15 +13,15 @@ export class EdgeAPI {
   }
 
   _getRootURL () {
-    var apiRoot = `http://${API_HOST}:${API_PORT}/${API_ROOT}/`
+    var apiRoot = `${API_SCHEMA}://${API_HOST}:${API_PORT}/${API_ROOT}/`
     return apiRoot
   }
 
   async _request (config) {
-    if (this.pnp.peerConnectionStatus !== PEER_CONNECTED) {
+    if (this.pnp.state.peerConnectionStatus !== PEER_CONNECTED) {
       throw Error('Edge device peer not connected.')
     } else {
-      return await this.pnp.peerFetch.request(config)
+      return await this.pnp.state.peerFetch.request(config)
     }
   }
 
@@ -36,13 +37,13 @@ export class EdgeAPI {
 
   async _getJSON (request) {
     const response = await this._get(request)
-    const jsn = this.pnp.peerFetch.jsonify(response.content)
+    const jsn = this.pnp.state.peerFetch.jsonify(response.content)
     return jsn
   }
 
   async _putJSON (request) {
     const response = await this._put(request)
-    const jsn = this.pnp.peerFetch.jsonify(response.content)
+    const jsn = this.pnp.state.peerFetch.jsonify(response.content)
     return jsn
   }
 
@@ -100,8 +101,22 @@ export class EdgeAPI {
     const esc = encodeURIComponent
     const urlEncodedName = esc(newName)
     const request = {
-      url: `${apiRoot}/api/device/display_name/${urlEncodedName}`
+      url: `${apiRoot}/device/display_name/${urlEncodedName}`
     }
     return await this._putJSON(request)
+  }
+
+  async auth () {
+    console.debug('PEER_AUTHENTICATE auth() start')
+    const authURL = `${API_SCHEMA}://${API_HOST}:${API_PORT}/`
+    const request = {
+      method: 'GET',
+      url: authURL
+    }
+    console.debug('PEER_AUTHENTICATE API request:', request)
+    console.debug('PEER_AUTHENTICATE this.pnp.state.peerFetch:', this.pnp.state.peerFetch)
+    const response = await this.pnp.state.peerFetch.request(request)
+    console.debug('PEER_AUTHENTICATE API response:', response)
+    return response
   }
 }
