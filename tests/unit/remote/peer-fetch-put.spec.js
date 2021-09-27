@@ -31,18 +31,19 @@ describe('PeerFetch class coverage - p2p communication layer', () => {
     jest.clearAllTimers()
   })
 
-test('PeerFetch put()', async () => {
-  const dataConnection = jest.fn()
-  dataConnection.on = jest.fn()
-  const mockResponse = jest.fn()
-  const peerFetch = new PeerFetch(dataConnection)
-  dataConnection.send = jest.fn().mockImplementation((jsonRequest) => {
-    const pair = peerFetch._requestMap.get(peerFetch._nextTicketInLine)
-    pair.response = mockResponse
-    pair.response.receivedAll = true
+  test('PeerFetch put()', async () => {
+    const dataConnection = jest.fn()
+    dataConnection.on = jest.fn()
+    const mockResponse = jest.fn()
+    const peerFetch = new PeerFetch(dataConnection)
+    dataConnection.send = jest.fn().mockImplementation((jsonRequest) => {
+      const pair = peerFetch._requestMap.get(peerFetch._nextTicketInLine)
+      pair.response = mockResponse
+      pair.response.receivedAll = true
+    })
+    jest.useRealTimers()
+    const nextResponse = await peerFetch.get({ url: '/testlink', params: { a: 'one', b: 'two' } })
+    expect(dataConnection.send).toHaveBeenCalledTimes(1)
+    expect(nextResponse).toBe(mockResponse)
   })
-  jest.useRealTimers()
-  const nextResponse = await peerFetch.get({ url: '/testlink', params: { a: 'one', b: 'two' } })
-  expect(dataConnection.send).toHaveBeenCalledTimes(1)
-  expect(nextResponse).toBe(mockResponse)
 })

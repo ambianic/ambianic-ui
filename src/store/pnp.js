@@ -84,6 +84,10 @@ const state = {
   */
   peerFetch: undefined,
   /**
+    EdgeAPI instance
+  */
+  edgeAPI: undefined,
+  /**
    * The duration in milliseconds to pause between pair discovery retries
    */
   discoveryLoopPause: 3000
@@ -97,6 +101,7 @@ const mutations = {
     state.peerConnection = undefined
     state.peerConnectionStatus = PEER_DISCONNECTED
     state.peerFetch = undefined
+    state.edgeAPI = undefined
   },
   [PEER_DISCOVERED] (state) {
     state.peerConnectionStatus = PEER_DISCOVERED
