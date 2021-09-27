@@ -136,7 +136,6 @@ const mutations = {
   },
   [NEW_PEER_ID] (state, newPeerId) {
     state.myPeerId = newPeerId
-    // window.localStorage.setItem(`${STORAGE_KEY}.myPeerId`, newPeerId)
   },
   [NEW_REMOTE_PEER_ID] (state, newRemotePeerId) {
     console.debug('NEW_REMOTE_PEER_ID: Setting state.remotePeerId to : ', newRemotePeerId)
