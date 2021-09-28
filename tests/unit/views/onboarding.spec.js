@@ -7,7 +7,7 @@ import { pnpStoreModule } from '@/store/pnp'
 import snackBarModule from '@/store/status-snackbar'
 import { clone } from 'lodash'
 import { PEER_DISCOVER } from '@/store/action-types'
-import Feedback from '@/views/Feedback.vue'
+import Onboarding from '@/views/Onboarding.vue'
 
 describe('Feedback Page', () => {
   let wrapper
@@ -65,22 +65,12 @@ describe('Feedback Page', () => {
     wrapper.destroy()
   })
 
-  test('Offers github issues button', async () => {
-    wrapper = await mount(Feedback, options)
+  test('Shows initial install headline', async () => {
+    wrapper = await mount(Onboarding, options)
     await wrapper.vm.$nextTick()
     console.debug({ wrapper })
-    const appFrame = wrapper.findComponent({ ref: 'app-frame' })
-    expect(appFrame.exists()).toBeTrue()
-    console.debug({ appFrame })
-    const feedbackListItem = wrapper.findComponent({ ref: 'feedback-title' })
-    console.debug('feedbackListItem HTML', feedbackListItem.html())
-    expect(feedbackListItem.exists()).toBeTrue()
-    console.debug('feedbackListItem props', feedbackListItem.props())
-    expect(feedbackListItem.props('title')).toEqual('Send Feedback')
-    const feedbackButton = wrapper.findComponent({ ref: 'btn-feedback' })
-    console.debug('feedbackButton HTML', feedbackButton.html())
-    expect(feedbackButton.exists()).toBeTrue()
-    console.debug('feedbackButton props', feedbackButton.props())
-    expect(feedbackButton.props('href')).toEqual('https://github.com/ambianic/ambianic-ui/issues')
+    const headline = wrapper.findComponent({ ref: 'headline' })
+    expect(headline.exists()).toBeTrue()
+    expect(headline.isVisible()).toBeTrue()
   })
 })

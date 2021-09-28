@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import { createLocalVue, mount } from '@vue/test-utils'
 import Vuetify from 'vuetify'
-import VueX from 'vuex'
 import VueRouter from 'vue-router'
 import Home from '@/views/Home.vue'
 

@@ -68,7 +68,10 @@
         <v-list-item justify="center">
           <v-list-item-content>
             <nav style="display: flex; flex-direction: row;">
-              <v-list-item-title class="headline">
+              <v-list-item-title 
+                class="headline"
+                ref="headline"
+              >
                 <h5>Getting Started</h5>
               </v-list-item-title>
 
