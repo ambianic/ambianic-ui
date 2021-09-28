@@ -68,7 +68,7 @@
         <v-list-item justify="center">
           <v-list-item-content>
             <nav style="display: flex; flex-direction: row;">
-              <v-list-item-title 
+              <v-list-item-title
                 class="headline"
                 ref="headline"
               >

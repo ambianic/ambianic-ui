@@ -73,6 +73,6 @@ describe('Help Page', () => {
     expect(title.props('title')).toEqual('Need Help with Ambianic?')
     const docs = wrapper.findComponent({ ref: 'btn-docs' })
     expect(docs.exists()).toBeTrue()
-    expect(feedbackButton.props('href')).toEqual('https://docs.ambianic.ai')
+    expect(docs.props('href')).toEqual('https://docs.ambianic.ai')
   })
 })
