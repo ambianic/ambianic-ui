@@ -9,8 +9,6 @@ import { clone } from 'lodash'
 import { PEER_DISCOVER } from '@/store/action-types'
 import Feedback from '@/views/Feedback.vue'
 
-const appVersion = require('@/../package.json').version
-
 describe('Feedback Page', () => {
   let wrapper
   const localVue = createLocalVue()
