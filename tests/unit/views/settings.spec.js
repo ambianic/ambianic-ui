@@ -183,9 +183,17 @@ describe('Settings View', () => {
   })
 
   test('`fetchEdgeDetails` method handles missing edge version response', async () => {
-    wrapper.vm.edgeAPI.getEdgeStatus = jest.fn().mockResolvedValue({
+    store.state.pnp.peerConnectionStatus = PEER_CONNECTED
+    store.state.pnp.remotePeerId = '0da0d142-9859-4371-96b7-decb180fcd37'
+    // mock edgeAPI instance
+    store.state.pnp.edgeAPI = jest.fn()
+    store.state.pnp.edgeAPI.getEdgeStatus = jest.fn().mockResolvedValue({
+      // mock return of status but no version attribute in json response.
+      // emulate older edge device whose status API does not include version info
       status: 'OK'
     })
+    wrapper = await mount(Settings, options)
+    await Vue.nextTick()
 
     await wrapper.vm.fetchEdgeDetails()
 

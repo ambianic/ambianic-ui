@@ -60,7 +60,7 @@ export default {
   props: {
     detections: {
       type: Array,
-      default: []
+      default: () => []
     }
   },
   directives: {

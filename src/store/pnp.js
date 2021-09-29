@@ -267,6 +267,14 @@ function setPnPServiceConnectionHandlers (
   })
 }
 
+// exporting a private class to allow access from jest tests
+export const _auth = {
+  _scheduleAuth ({ dispatch, peerConnection }) {
+    // schedule an async PEER_AUTHENTICATE step
+    dispatch(PEER_AUTHENTICATE, peerConnection)
+  }
+}
+
 function setPeerConnectionHandlers ({
   state,
   commit,
@@ -280,13 +288,7 @@ function setPeerConnectionHandlers ({
     const peerFetch = new PeerFetch(peerConnection)
     console.debug('Peer DataConnection is now open. Creating PeerFetch wrapper.')
     commit(PEER_FETCH, peerFetch)
-    // schedule an async PEER_AUTHENTICATE step
-    dispatch(PEER_AUTHENTICATE, peerConnection)
-    // try {
-    //   peerConnection.send('HELLO from peerConnection.on_open')
-    // } catch (error) {
-    //   console.error('Error sending message via webrtc datachannel', { error })
-    // }
+    _auth._scheduleAuth({ dispatch, peerConnection })
   })
 
   peerConnection.on('close', function () {
@@ -501,7 +503,7 @@ const actions = {
       console.debug('PEER_AUTHENTICATE calling EdgeAPI.auth()')
       const response = await state.edgeAPI.auth()
       console.debug('PEER_AUTHENTICATE API called')
-      if (response.header.status === 200) {
+      if (response && response.header && response.header.status === 200) {
         console.debug('PEER_AUTHENTICATE status OK')
         console.debug(`PEER_AUTHENTICATE response.content: ${response.content}`)
         const text = state.peerFetch.textDecode(response.content)
@@ -509,7 +511,9 @@ const actions = {
         // if data is authentication challenge response, verify it
         // for now we naively check for Ambianic in the response.
         authPassed = text.includes('Ambianic')
-        console.debug(`PEER_AUTHENTICATE response body OK = ${authPassed}`)
+        console.debug('PEER_AUTHENTICATE response body OK', { authPassed })
+      } else {
+        console.error('PEER_AUTHENTICATE unexpended auth response.', { response })
       }
     } catch (err) {
       console.warn(`PEER_AUTHENTICATE action. Error while connecting to remote peer ID: ${peerConnection.peer}`, err)

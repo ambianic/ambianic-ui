@@ -1,7 +1,7 @@
 import { createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 import { cloneDeep } from 'lodash'
-import { pnpStoreModule } from '@/store/pnp.js'
+import { pnpStoreModule, _auth } from '@/store/pnp.js'
 import {
   PEER_DISCONNECTED,
   PEER_CONNECTING,
@@ -596,6 +596,8 @@ describe('PnP state machine actions - p2p communication layer', () => {
     onConnectionCallback[1](peerConnection)
     // check that peerConnection callbacks were setup
     expect(peerConnection.on).toHaveBeenCalledTimes(3)
+    console.debug({ _auth })
+    jest.spyOn(_auth, '_scheduleAuth')
     // emulate peerConnection open
     const onPeerConnectionOpenCallback =
         peerConnection.on.mock.calls.find(callbackDetails => callbackDetails[0] === 'open')
@@ -607,8 +609,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
     const peerFetch = PeerFetch.mock.instances[0]
     expect(store.state.pnp.peerFetch).toBe(peerFetch)
     // check if the peer authentication sequence has been scheduled
-    expect(setTimeout).toHaveBeenCalledTimes(1)
-    expect(setTimeout).toHaveBeenCalledWith(expect.anything(), 1000)
+    expect(_auth._scheduleAuth).toHaveBeenCalledTimes(1)
   })
 
   test('RTCPeerConnection "close" callback: RTCPeerConnection.on("close")', async () => {
@@ -674,7 +675,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
     // mock a peerfetch object
     const peerFetch = new PeerFetch()
     // mock return of expected successful peerfetch get
-    jest.spyOn(PeerFetch.prototype, 'get').mockImplementationOnce(
+    jest.spyOn(PeerFetch.prototype, 'request').mockImplementationOnce(
       (request) => {
         console.debug('mock get', request)
         const response = jest.fn()
@@ -704,8 +705,8 @@ describe('PnP state machine actions - p2p communication layer', () => {
       console.debug('mutation.payload', mutation.payload)
     })
     await store.dispatch(PEER_AUTHENTICATE, peerConnection)
-    expect(peerFetch.get).toHaveBeenCalledTimes(1)
-    expect(peerFetch.get).toHaveBeenCalledWith('http://localhost:8778')
+    expect(peerFetch.request).toHaveBeenCalledTimes(1)
+    expect(peerFetch.request).toHaveBeenCalledWith({ method: 'GET', url: 'http://localhost:8778/' })
     expect(store.state.pnp.peerConnection).toBe(peerConnection)
     expect(store.state.pnp.peerConnectionStatus).toBe(PEER_CONNECTED)
     expect(window.localStorage.setItem).not.toHaveBeenCalled()
@@ -724,9 +725,9 @@ describe('PnP state machine actions - p2p communication layer', () => {
     // mock a peerfetch object
     const peerFetch = new PeerFetch()
     // mock return of expected successful peerfetch get
-    jest.spyOn(PeerFetch.prototype, 'get').mockImplementationOnce(
+    jest.spyOn(PeerFetch.prototype, 'request').mockImplementationOnce(
       (request) => {
-        console.debug('mock get', request)
+        console.debug('mock request', request)
         const response = jest.fn()
         response.header = jest.fn()
         response.header.status = 200
@@ -754,8 +755,8 @@ describe('PnP state machine actions - p2p communication layer', () => {
       console.debug('mutation.payload', mutation.payload)
     })
     await store.dispatch(PEER_AUTHENTICATE, peerConnection)
-    expect(peerFetch.get).toHaveBeenCalledTimes(1)
-    expect(peerFetch.get).toHaveBeenCalledWith('http://localhost:8778')
+    expect(peerFetch.request).toHaveBeenCalledTimes(1)
+    expect(peerFetch.request).toHaveBeenCalledWith({ method: 'GET', url: 'http://localhost:8778/' })
     expect(store.state.pnp.peerConnection).toBe(peerConnection)
     expect(store.state.pnp.peerConnectionStatus).toBe(PEER_CONNECTED)
     console.debug('window.localStorage', window.localStorage)
@@ -776,9 +777,9 @@ describe('PnP state machine actions - p2p communication layer', () => {
     // mock a peerfetch object
     const peerFetch = new PeerFetch()
     // mock exception thrown by peerfetch get
-    jest.spyOn(PeerFetch.prototype, 'get').mockImplementationOnce(
+    jest.spyOn(PeerFetch.prototype, 'request').mockImplementationOnce(
       (request) => {
-        throw new Error('Problem occured during peer discovery.')
+        throw new Error('Some kind of problem occured during peer discovery.')
       }
     )
     store.state.pnp.peerFetch = peerFetch
@@ -791,8 +792,8 @@ describe('PnP state machine actions - p2p communication layer', () => {
       console.debug('mutation.payload', mutation.payload)
     })
     await store.dispatch(PEER_AUTHENTICATE, peerConnection)
-    expect(peerFetch.get).toHaveBeenCalledTimes(1)
-    expect(peerFetch.get).toHaveBeenCalledWith('http://localhost:8778')
+    expect(peerFetch.request).toHaveBeenCalledTimes(1)
+    expect(peerFetch.request).toHaveBeenCalledWith({ method: 'GET', url: 'http://localhost:8778/' })
     expect(userMessage).toBe('Remote peer authentication failed.')
     // release mutation subscription
     unsub()
