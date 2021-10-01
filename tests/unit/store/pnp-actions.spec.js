@@ -629,12 +629,6 @@ describe('PnP state machine actions - p2p communication layer', () => {
     onPeerConnectionOpenCallback[1]()
     expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
     expect(store.state.pnp.userMessage).toEqual(expect.stringContaining('Connection to remote peer closed'))
-    // check if the peer discovery sequence has been scheduled
-    expect(setTimeout).toHaveBeenCalledTimes(1)
-    expect(setTimeout).toHaveBeenCalledWith(expect.anything(), 3000)
-    // fast forward to discovery loop
-    await jest.runOnlyPendingTimers()
-    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCOVERING)
   })
 
   test('RTCPeerConnection "error" callback: RTCPeerConnection.on("error")', async () => {
@@ -658,12 +652,6 @@ describe('PnP state machine actions - p2p communication layer', () => {
     expect(store.state.pnp.userMessage).toEqual(expect.stringContaining('Error in connection to remote peer ID'))
     // remote peer should be added to problematic list
     expect(store.state.pnp.problematicRemotePeers).toContain('a_remote_peer_id')
-    // check if the peer discovery sequence has been scheduled
-    expect(setTimeout).toHaveBeenCalledTimes(1)
-    expect(setTimeout).toHaveBeenCalledWith(expect.anything(), 3000)
-    // fast forward to discovery loop
-    await jest.runOnlyPendingTimers()
-    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCOVERING)
   })
 
   test('PEER_AUTHENTICATE with 200 response and authentication passing and reused remote peer id.', async () => {
@@ -845,7 +833,6 @@ describe('PnP state machine actions - p2p communication layer', () => {
     unsub()
     expect(mutations[0]).toBe('PEER_DISCONNECTED')
     expect(mutations[1]).toBe('REMOTE_PEER_ID_REMOVED')
-    expect(mutations[2]).toBe('PEER_DISCOVERING')
     expect(peerConnection.close).toHaveBeenCalledTimes(1)
   })
 
@@ -873,7 +860,6 @@ describe('PnP state machine actions - p2p communication layer', () => {
     unsub()
     expect(mutations[0]).toBe('PEER_DISCONNECTED')
     expect(mutations[1]).toBe('REMOTE_PEER_ID_REMOVED')
-    expect(mutations[2]).toBe('PEER_DISCOVERING')
     expect(peerConnection.close).toHaveBeenCalledTimes(1)
   })
 })

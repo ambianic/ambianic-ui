@@ -225,8 +225,6 @@ function setPnPServiceConnectionHandlers (
     }
     console.log('pnp client: myPeerId: ', peer.id)
     // signaling server connection established
-    // we can advance to peer discovery
-    dispatch(PEER_DISCOVER)
   })
   peer.on('disconnected', function () {
     commit(PNP_SERVICE_DISCONNECTED)
@@ -296,11 +294,6 @@ function setPeerConnectionHandlers ({
     commit(PEER_DISCONNECTED)
     commit(USER_MESSAGE, 'Connection to remote peer closed')
     console.debug('#########>>>>>>>>> p2p connection closed')
-    console.debug('Will try to open a new peer connection shortly.')
-    setTimeout( // give the network a few moments to recover
-      () => dispatch(PEER_DISCOVER),
-      3000
-    )
   })
 
   peerConnection.on('error', function (err) {
@@ -552,15 +545,15 @@ const actions = {
    * them or let them connect to you.
    */
   async [CHANGE_REMOTE_PEER_ID] ({ state, commit, dispatch }, remotePeerId) {
-    commit(NEW_REMOTE_PEER_ID, remotePeerId)
     commit(PEER_DISCONNECTED)
+    commit(NEW_REMOTE_PEER_ID, remotePeerId)
     await dispatch(PEER_CONNECT, remotePeerId)
   },
   /**
   * Remove remote peer id from local store.
   * Maybe the edge device is damaged and its id cannot be recovered.
   * In such cases the user will request removal of the existing device
-  * association and force discovery of a new edge device id.
+  * association and after request local device discovery or direct connection to a new edge device id.
   */
   async [REMOVE_REMOTE_PEER_ID] ({ state, commit, dispatch }) {
     if (state.peerConnectionStatus !== PEER_DISCONNECTED) {
@@ -575,19 +568,13 @@ const actions = {
       commit(PEER_DISCONNECTED)
     }
     commit(REMOTE_PEER_ID_REMOVED)
-    await dispatch(PEER_DISCOVER)
   },
   async [HANDLE_PEER_CONNECTION_ERROR] ({ state, commit, dispatch }, { peerConnection, err }) {
     console.info('######>>>>>>> p2p connection error', err)
-    console.info('Problematic remote peer ID:', peerConnection.peer)
+    console.info('Error while connecting to remote peer ID:', peerConnection.peer)
     state.problematicRemotePeers.add(peerConnection.peer)
     commit(PEER_CONNECTION_ERROR, err)
-    console.info('Will try a new connection shortly.')
     commit(PEER_DISCONNECTED)
-    setTimeout( // give the network a few moments to recover
-      () => dispatch(PEER_DISCOVER),
-      3000
-    )
   }
 }
 

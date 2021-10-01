@@ -242,6 +242,7 @@
                     :small="$vuetify.breakpoint.mdAndUp"
                     @click="localEdgeAddress"
                     id="btn-discoverLocal"
+                    data-cy="btn-discoverLocal"
                   >
                     <v-icon v-if="$vuetify.breakpoint.xsOnly">
                       mdi-wifi
@@ -382,7 +383,7 @@ export default {
     async fetchEdgeDetails () {
       try {
         const details = await this.pnp.edgeAPI.getEdgeStatus()
-        console.debug(`Edge device details fetched. Version: ${details.version}`)
+        console.debug('Edge device details fetched:', { details })
         if (!details || !details.version) {
           this.edgeDeviceError = 'Edge device requires update.'
         } else {
