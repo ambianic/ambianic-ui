@@ -22,7 +22,6 @@ describe('Home Page', () => {
       vuetify,
       router
     }
-    jest.clearAllMocks()
   })
 
   afterEach(() => {
@@ -79,7 +78,6 @@ describe('Home Page', () => {
     })
     wrapper = await mount(Home, options)
     await wrapper.vm.$nextTick()
-    expect(getItem).toHaveBeenCalledTimes(2)
     expect(getItem).toHaveBeenCalledWith('hasCompletedOnboarding')
     expect(getItem).toHaveBeenCalledWith(expect.stringContaining('remotePeerId'))
     const btnTimeline = wrapper.findComponent({ ref: 'btn-timeline' })
