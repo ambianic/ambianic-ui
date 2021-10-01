@@ -26,6 +26,7 @@ describe('Home Page', () => {
 
   afterEach(() => {
     wrapper.destroy()
+    jest.clearAllMocks()
   })
 
   test('Shows home screen title', async () => {
@@ -68,6 +69,8 @@ describe('Home Page', () => {
   })
 
   test('Shows Timeline button for returning users - localstorage logic test', async () => {
+    // mock localStorage access
+    // ref: https://github.com/facebook/jest/issues/6858#issuecomment-413677180
     const getItem = jest.spyOn(Storage.prototype, 'getItem').mockImplementation((key) => {
       if (key === 'hasCompletedOnboarding') {
         return true
@@ -76,6 +79,8 @@ describe('Home Page', () => {
     wrapper = await mount(Home, options)
     await wrapper.vm.$nextTick()
     expect(getItem).toHaveBeenCalledTimes(2)
+    expect(getItem).toHaveBeenCalledWith('hasCompletedOnboarding')
+    expect(getItem).toHaveBeenCalledWith(expect.stringContaining('remotePeerId'))
     const btnTimeline = wrapper.findComponent({ ref: 'btn-timeline' })
     expect(btnTimeline.exists()).toBeTrue()
     expect(btnTimeline.isVisible()).toBeTrue()
