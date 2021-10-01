@@ -22,6 +22,7 @@ describe('Home Page', () => {
       vuetify,
       router
     }
+    jest.clearAllMocks()
   })
 
   afterEach(() => {
