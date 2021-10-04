@@ -121,13 +121,12 @@ describe('More Settings View tests', () => {
     expect(editIcon.exists()).toBeTrue()
   })
 
-
   test.only('should handle save errors for custom edge display name', async () => {
     store.state.pnp.peerConnectionStatus = PEER_CONNECTED
     store.state.pnp.remotePeerId = '0da0d142-9859-4371-96b7-decb180fcd37'
     // mock edgeAPI instance
     store.state.pnp.edgeAPI = jest.fn()
-    const errorMessage = "Remote API error while saving new device name"
+    const errorMessage = 'Remote API error while saving new device name'
     store.state.pnp.edgeAPI.setDeviceDisplayName = jest.fn().mockImplementation(() => {
       throw new Error(errorMessage)
     })
@@ -170,5 +169,4 @@ describe('More Settings View tests', () => {
     const errorBox = wrapper.findComponent({ ref: 'edge-device-error' })
     expect(errorBox.html()).toContain('Error updating display name on edge device.')
   })
-
 })

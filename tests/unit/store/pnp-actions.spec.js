@@ -37,7 +37,7 @@ jest.mock('@/remote/peer-fetch') // PeerFetch is now a mock class
 const STORAGE_KEY = 'ambianic-pnp-settings'
 
 describe('PnP state machine actions - p2p communication layer', () => {
-// global
+  // global
 
   // localVue is used for tests instead of the production Vue instance
   let localVue
@@ -350,7 +350,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
     expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_CONNECTING)
   })
 
-  test('PEER_CONNECT attempt connection to a remote peer that is not responding', async () => {
+  test.only('PEER_CONNECT attempt connection to a remote peer that is not responding', async () => {
     // emulate peer is disconnected
     store.state.pnp.peerConnectionStatus = PEER_DISCONNECTED
     // emulate PNP signaling service connection exists
@@ -384,13 +384,14 @@ describe('PnP state machine actions - p2p communication layer', () => {
     await jest.runOnlyPendingTimers()
 
     // existing peer should have been destroyed
-    expect(peer.destroy).toHaveBeenCalledTimes(1)
+    await expect(peer.destroy).toHaveBeenCalledTimes(1)
     // new peer instance should have been created
     console.debug('Peer constructor calls', Peer.mock.calls)
-    expect(Peer).toHaveBeenCalledTimes(2)
-    expect(store.state.pnp.peer).not.toBe(peer)
+    await expect(Peer).toHaveBeenCalledWith('some_saved_ID', expect.anything())
+    await expect(Peer).toHaveBeenCalledTimes(2)
+    await expect(store.state.pnp.peer).not.toBe(peer)
     // reconnect sequence should have been started
-    expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_CONNECTING)
+    await expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_CONNECTING)
   })
 
   test('PEER_CONNECT attempt while PNP Service is NOT CONNECTED', async () => {
