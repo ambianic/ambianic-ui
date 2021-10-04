@@ -74,6 +74,9 @@ describe('More Settings View tests', () => {
   test('should edit and save custom edge display name', async () => {
     store.state.pnp.peerConnectionStatus = PEER_CONNECTED
     store.state.pnp.remotePeerId = '0da0d142-9859-4371-96b7-decb180fcd37'
+    // mock edgeAPI instance
+    store.state.pnp.edgeAPI = jest.fn()
+    store.state.pnp.edgeAPI.setDeviceDisplayName = jest.fn()
     wrapper = await mount(Settings, options)
     await Vue.nextTick()
     const deviceName = 'My Ambianic Edge Device'
@@ -95,16 +98,26 @@ describe('More Settings View tests', () => {
       onSubmit: expect.any(Function),
       rules: [expect.anything(), expect.anything()]
     })
-    const editIcon = listItem.findComponent({ ref: 'icon-start-edit' })
+    let editIcon = listItem.findComponent({ ref: 'icon-start-edit' })
+    expect(editIcon.exists()).toBeTrue()
     await editIcon.trigger('click')
-    await Vue.nextTick()
-    expect(editIcon.isVisible()).toBe(false)
-    const nameInput = listItem.findComponent({ ref: 'inputTitleEdit' })
-    nameInput.instance().value = 'Kitchen Monitor'
-    nameInput.simulate('change')
+    editIcon = listItem.findComponent({ ref: 'icon-start-edit' })
+    expect(editIcon.exists()).toBeFalse()
+    const nameInput = listItem.findComponent({ ref: 'inputTitleEdit' }).find('input[type="text"]')
+    expect(nameInput.exists()).toBeTrue()
+    nameInput.setValue('Kitchen Monitor')
+    console.debug('amb-list-item HTML', listItem.html())
     const saveIcon = listItem.findComponent({ ref: 'icon-save-edit' })
-    saveIcon.simulate('click')
-    expect(nameInput.instance().value).toBe('Kitchen Monitor')
-    expect(editIcon.isVisible()).toBe(true)
+    await saveIcon.trigger('click')
+    expect(store.state.pnp.edgeAPI.setDeviceDisplayName).toHaveBeenCalledTimes(1)
+    expect(store.state.pnp.edgeAPI.setDeviceDisplayName).toHaveBeenCalledWith('Kitchen Monitor')
+    await Vue.nextTick()
+    console.debug('amb-list-item HTML', listItem.html())
+    const nameLabel = listItem.findComponent({ ref: 'title-read-only' })
+    expect(nameLabel.exists()).toBeTrue()
+    console.debug('nameLabel HTML', nameLabel.html())
+    expect(nameLabel.html()).toContain('Kitchen Monitor')
+    editIcon = listItem.findComponent({ ref: 'icon-start-edit' })
+    expect(editIcon.exists()).toBeTrue()
   })
 })
