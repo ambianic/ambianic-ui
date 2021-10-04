@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [2.19.0](https://github.com/ambianic/ambianic-ui/compare/v2.18.0...v2.19.0) (2021-10-04)
+
+
+### Features
+
+* allow users to customize(edit) edge device display name; closes [#702](https://github.com/ambianic/ambianic-ui/issues/702); closes [#730](https://github.com/ambianic/ambianic-ui/issues/730) ([#724](https://github.com/ambianic/ambianic-ui/issues/724)) ([b148fed](https://github.com/ambianic/ambianic-ui/commit/b148fedd5052975d0b528d7f6439e486174ac066))
+
 # [2.18.0](https://github.com/ambianic/ambianic-ui/compare/v2.17.0...v2.18.0) (2021-09-03)
 
 
