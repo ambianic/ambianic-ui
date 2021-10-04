@@ -240,7 +240,7 @@
                   <v-btn
                     color="primary"
                     :small="$vuetify.breakpoint.mdAndUp"
-                    @click="localEdgeAddress"
+                    @click="discoverLocalEdgeDevice"
                     id="btn-discoverLocal"
                     data-cy="btn-discoverLocal"
                   >
@@ -327,6 +327,7 @@ import {
 } from '@/store/mutation-types'
 import {
   CHANGE_REMOTE_PEER_ID,
+  PEER_DISCOVER,
   REMOVE_REMOTE_PEER_ID
 } from '../store/action-types.js'
 import AmbListItem from '@/components/shared/ListItem.vue'
@@ -376,9 +377,13 @@ export default {
     async sendEdgeAddress () {
       await this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.edgeAddress)
     },
-    async localEdgeAddress () {
+    async discoverLocalEdgeDevice () {
       this.edgeAddress = undefined
+      console.debug('discoverLocalEdgeDevice() called')
+      console.debug('removing any existing peer connection')
       await this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
+      await this.$store.dispatch(PEER_DISCOVER)
+      console.debug('discoverLocalEdgeDevice() ended')
     },
     async fetchEdgeDetails () {
       try {

@@ -166,8 +166,10 @@ const mutations = {
 */
 async function discoverRemotePeerId ({ state, commit }) {
   const peer = state.peer
+  console.debug('iscoverRemotePeerId() start')
   // first see if we got a remote Edge ID entered to connect to
   if (state.remotePeerId) {
+    console.debug('iscoverRemotePeerId() returning known remotePeerId')
     return state.remotePeerId
   } else {
   // first try to find the remote peer ID in the same room
@@ -395,24 +397,25 @@ const actions = {
       // its possible that the PNP signaling server connection was disrupted
       // while looping in peer discovery mode
       if (state.pnpServiceConnectionStatus !== PNP_SERVICE_CONNECTED) {
-        console.log('PNP Service disconnected. Reconnecting...')
+        console.debug('PNP Service disconnected. Reconnecting...')
         await dispatch(PNP_SERVICE_CONNECT)
       }
       let remotePeerId
       try {
         if (state.pnpServiceConnectionStatus === PNP_SERVICE_CONNECTED) {
+          console.debug('discovering peers on the local network...')
           remotePeerId = await discoverRemotePeerId({ state, commit })
         } else {
           // signaling server connection is still not ready, skip this cycle
           // and wait for the next scheduled retry
-          console.log('PNP Service still not connected. Will retry shortly.')
+          console.debug('PNP Service still not connected. Will retry shortly.')
         }
       } catch (err) {
-        console.log('Error while looking for remote peer. Will retry shortly.',
+        console.debug('Error while looking for remote peer. Will retry shortly.',
           err)
       }
       if (remotePeerId) {
-        console.log('Remote peer Id found', remotePeerId)
+        console.debug('Remote peer Id found', remotePeerId)
         commit(PEER_DISCOVERED)
         // remote Edge peer discovered, let's connect to it
         await dispatch(PEER_CONNECT, remotePeerId)
@@ -462,7 +465,8 @@ const actions = {
       try {
         state.problematicRemotePeers.add(remotePeerId)
         console.debug('Problematic remote peer ID:', remotePeerId)
-        peer.destroy()
+        await peer.disconnect()
+        await peer.destroy()
       } catch (err) {
         console.warn('Error destroying peer.')
       } finally {
