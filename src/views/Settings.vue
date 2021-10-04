@@ -17,6 +17,7 @@
             transition="scale-transition"
             dismissible
             data-cy="edge-device-error"
+            ref="edge-device-error"
           >
             {{ this.edgeDeviceError }}
           </v-alert>

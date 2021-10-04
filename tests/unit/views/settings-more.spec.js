@@ -120,4 +120,55 @@ describe('More Settings View tests', () => {
     editIcon = listItem.findComponent({ ref: 'icon-start-edit' })
     expect(editIcon.exists()).toBeTrue()
   })
+
+
+  test.only('should handle save errors for custom edge display name', async () => {
+    store.state.pnp.peerConnectionStatus = PEER_CONNECTED
+    store.state.pnp.remotePeerId = '0da0d142-9859-4371-96b7-decb180fcd37'
+    // mock edgeAPI instance
+    store.state.pnp.edgeAPI = jest.fn()
+    const errorMessage = "Remote API error while saving new device name"
+    store.state.pnp.edgeAPI.setDeviceDisplayName = jest.fn().mockImplementation(() => {
+      throw new Error(errorMessage)
+    })
+    wrapper = await mount(Settings, options)
+    await Vue.nextTick()
+    const deviceName = 'My Ambianic Edge Device'
+    const listItem = wrapper.findComponent({ ref: 'list-item-edgeDeviceName' })
+    expect(listItem.exists()).toBe(true)
+    expect(listItem.props()).toEqual({
+      sensitiveField: false,
+      align: null,
+      justify: null,
+      title: deviceName,
+      subtitle: 'Display Name',
+      iconName: 'tag',
+      twoLine: false,
+      copyOption: false,
+      editOption: true,
+      error: undefined,
+      onSubmit: expect.any(Function),
+      rules: [expect.anything(), expect.anything()]
+    })
+    let editIcon = listItem.findComponent({ ref: 'icon-start-edit' })
+    expect(editIcon.exists()).toBeTrue()
+    await editIcon.trigger('click')
+    const nameInput = listItem.findComponent({ ref: 'inputTitleEdit' }).find('input[type="text"]')
+    expect(nameInput.exists()).toBeTrue()
+    nameInput.setValue('Stairs Monitor')
+    const saveIcon = listItem.findComponent({ ref: 'icon-save-edit' })
+    await saveIcon.trigger('click')
+    const api = store.state.pnp.edgeAPI.setDeviceDisplayName
+    expect(api).toHaveBeenCalledTimes(1)
+    expect(api).toHaveBeenCalledWith('Stairs Monitor')
+    expect(api).toThrow(Error(errorMessage))
+    const nameLabel = listItem.findComponent({ ref: 'title-read-only' })
+    expect(nameLabel.exists()).toBeTrue()
+    expect(nameLabel.html()).toContain(deviceName)
+    editIcon = listItem.findComponent({ ref: 'icon-start-edit' })
+    expect(editIcon.exists()).toBeTrue()
+    const errorBox = wrapper.findComponent({ ref: 'edge-device-error' })
+    expect(errorBox.html()).toContain('Error updating display name on edge device.')
+  })
+
 })
