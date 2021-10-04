@@ -110,7 +110,7 @@ describe('Settings View', () => {
     console.debug('amb-list-item component:', { listItem })
     expect(listItem.exists()).toBe(true)
     console.debug('listItem.props()', listItem.props())
-    expect(listItem.props()).toStrictEqual({
+    expect(listItem.props()).toEqual({
       sensitiveField: true,
       align: null,
       justify: null,
@@ -119,7 +119,10 @@ describe('Settings View', () => {
       iconName: 'identifier',
       twoLine: false,
       copyOption: true,
-      error: undefined
+      editOption: false,
+      error: undefined,
+      rules: [],
+      onSubmit: expect.any(Function)
     })
   })
 
@@ -133,7 +136,7 @@ describe('Settings View', () => {
     console.debug('amb-list-item component:', { listItem })
     expect(listItem.exists()).toBe(true)
     console.debug('listItem.props()', listItem.props())
-    expect(listItem.props()).toStrictEqual({
+    expect(listItem.props()).toEqual({
       sensitiveField: false,
       align: null,
       justify: null,
@@ -142,11 +145,14 @@ describe('Settings View', () => {
       iconName: 'tag',
       twoLine: false,
       copyOption: false,
-      error: undefined
+      editOption: true,
+      error: undefined,
+      onSubmit: expect.any(Function),
+      rules: [expect.anything(), expect.anything()]
     })
   })
 
-  test('Connected Edge device version is shown', () => {
+  test('Connected Edge device version is shown', async () => {
     const localEdgeVersion = '2.50.5'
 
     const newStore = new VueX.Store({
@@ -161,24 +167,36 @@ describe('Settings View', () => {
     newStore.state.pnp.peerConnectionStatus = PEER_CONNECTED
     newStore.state.pnp.remotePeerId = '1234-1234-1234-1234-1234'
 
-    const component = mount(Settings, {
+    wrapper = await mount(Settings, {
       localVue,
       vuetify,
       router,
       store: newStore
     })
-
-    const versionElement = component.get('#version-element')
-    expect(versionElement.find('#title').text()).toBe(localEdgeVersion)
+    await Vue.nextTick()
+    const versionElement = wrapper.findComponent({ ref: 'list-item-edgeVersion' })
+    expect(versionElement.exists()).toBeTrue()
+    const versionLabel = versionElement.findComponent({ ref: 'title-read-only' })
+    expect(versionLabel.exists()).toBeTrue()
+    expect(versionLabel.html()).toContain(localEdgeVersion)
+    expect(versionLabel.text()).toBe(localEdgeVersion)
   })
 
   test('`fetchEdgeDetails` method handles missing edge version response', async () => {
-    wrapper.vm.edgeAPI.getEdgeStatus = jest.fn().mockResolvedValue({
+    store.state.pnp.peerConnectionStatus = PEER_CONNECTED
+    store.state.pnp.remotePeerId = '0da0d142-9859-4371-96b7-decb180fcd37'
+    // mock edgeAPI instance
+    store.state.pnp.edgeAPI = jest.fn()
+    store.state.pnp.edgeAPI.getEdgeStatus = jest.fn().mockResolvedValue({
+      // mock return of status but no version attribute in json response.
+      // emulate older edge device whose status API does not include version info
       status: 'OK'
     })
+    wrapper = await mount(Settings, options)
+    await Vue.nextTick()
 
     await wrapper.vm.fetchEdgeDetails()
 
-    expect(wrapper.vm.edgeDeviceError).toBe('Unavailable. Outdated device?')
+    expect(wrapper.vm.edgeDeviceError).toBe('Edge device requires update.')
   })
 })

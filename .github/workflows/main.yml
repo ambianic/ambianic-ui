@@ -88,7 +88,8 @@ jobs:
           temporaryPublicStorage: true # upload lighthouse report to the temporary storage
 
     - name: Semantic Release
-      if: github.event_name == 'push' && ${{ github.ref == 'refs/heads/master' }}
+      #  Runs only on the upstream ambianic master branch.
+      if: github.repository_owner == 'ambianic' && github.event_name == 'push' && ${{ github.ref == 'refs/heads/master' }}
       run: npx semantic-release
       env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

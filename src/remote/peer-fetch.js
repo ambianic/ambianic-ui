@@ -1,6 +1,10 @@
 /**
- * Emulates HTML Fetch API over peer-to-peer
- * DataConnection (WebRTC DataChannel)
+ * Emulates HTML Fetch API over p2p WebRTC DataChannel.
+ * Provides convenience HTTP methods similar to axios.
+ *
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/fetch fetch}
+ * @see {@link https://github.com/axios/axios axious}
+ *
 */
 export class PeerFetch {
   constructor (dataConnection) {
@@ -31,15 +35,17 @@ export class PeerFetch {
         // check if there are any pending requests
         // no ping needed as long as there is traffic on the channel
         if (!this._pendingRequests()) {
-          // request top page
-          const request = {
-            url: 'ping'
+          try {
+            // request pong to keep the webrtc datachannel connection alive
+            await this.get('ping')
+          } catch (err) {
+            console.warn('ping request timed out while waiting for pong from remote peer.')
           }
-          await this.get(request)
         }
       },
       1000 // every second
     )
+    console.debug('Pings scheduled.')
   }
 
   /**
@@ -51,6 +57,7 @@ export class PeerFetch {
 
   /**
     Return the next available ticket number
+    for the HTTP request processing queue
     and simultaneously increment the ticket counter.
   */
   _drawNewTicket () {
@@ -65,7 +72,7 @@ export class PeerFetch {
   }
 
   /**
-    Move on to next pending ticket
+    Move on to next pending ticket for the HTTP request queue
   */
   _ticketProcessed (ticket) {
     const errorMsg = 'response received out of order!'
@@ -101,7 +108,7 @@ export class PeerFetch {
         // the first one containing the http header info
         // and the second contatning the http body
         if (!pair.response) {
-          console.debug('Processing response header')
+          console.debug('Processing response header', data)
           // this is the first data message from the responses
           const header = peerFetch.jsonify(data)
           if (header.status === undefined) {
@@ -111,6 +118,14 @@ export class PeerFetch {
             console.debug('Received keepalive ping')
             // server accepted the request but still working
             // ignore and keep waiting until result or timeout
+          } else if (header.status === 204) {
+            // Successfully processed request, no response content.
+            //  Normally returned in response to PUT requests.
+            console.debug('Received HTTP 204 response: Success. No content.')
+            // return 204 header and no response content
+            const receivedAll = true
+            const content = undefined
+            pair.response = { header, content, receivedAll }
           } else {
             console.debug('Received web server final response header',
               { header })
@@ -143,33 +158,79 @@ export class PeerFetch {
   }
 
   /**
-  * REST API over HTTP GET
+  * Similar to axios.request(config)
+  *
+  * @see {@link https://github.com/axios/axios#axiosrequestconfig}
+  * @see {@link https://github.com/axios/axios#request-config}
   */
-  async get ({ url = '/', params = {} }) {
-    console.debug('PeerFetch.get enter', { url, params })
+  async request ({ url = '/', method = 'GET', params = {} }) {
+    console.debug('PeerFetch.request enter', { url, method, params })
     var esc = encodeURIComponent
     var query = Object.keys(params)
       .map(k => esc(k) + '=' + esc(params[k]))
       .join('&')
     url += '?' + query
-    console.debug('PeerFetch.get', { url, query })
-    console.debug('PeerFetch.get post process', { url })
+    console.debug('PeerFetch.request', { url, method, query })
     const request = {
       url,
-      method: 'GET'
+      method
     }
     // get a ticket that matches the request
     // and use it to claim the corresponding
     // response when available
     const ticket = this._enqueueRequest(request)
+    const response = await this._receiveResponse(ticket)
+    return response
+  }
 
-    try {
-      const response = await this._receiveResponse(ticket)
+  /**
+   *
+   * Similar to axious get(url,[config])
+   *
+   * @see {@link https://github.com/axios/axios#axiosgeturl-config}
+   *
+   * @param {*} url resource to GET
+   * @param {*} config request header options
+   */
+  async get (url = '/', config = {}) {
+    config.url = url
+    config.method = 'GET'
+    return await this.request(config)
+  }
 
-      return response
-    } catch (e) {
-      console.log(e)
-    }
+  /**
+   *
+   * Similar to axious get(url,[config])
+   *
+   * @see {@link https://github.com/axios/axios#axiosputurl-data-config}
+   * @see {@link https://masteringjs.io/tutorials/axios/put}
+   *
+   * @param {*} url resource URL for the PUT request
+   * @param {*} data data payload for the PUT request
+   * @param {*} config request header options
+   */
+  async put (url, data, config = {}) {
+    config.url = url
+    config.method = 'PUT'
+    config.data = data
+    return await this.request(config)
+  }
+
+  /**
+   *
+   * Similar to HTML fetch()
+   *
+   * @see {@link https://fetch.spec.whatwg.org/#dom-global-fetch}
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/fetch#parameters}
+   *
+   * @param {*} input resource URL to fetch
+   * @param {*} init request header options
+   */
+  async fetch (input = '/', init = { method: 'GET' }) {
+    const config = {}
+    config.url = input
+    config.method = init.method
+    return await this.request(config)
   }
 
   _enqueueRequest (request) {
@@ -209,12 +270,13 @@ export class PeerFetch {
     console.assert(request != null, { ticket, request })
     const jsonRequest = JSON.stringify(request)
     const requestMap = this._requestMap
-    console.debug('Sending request to remote peer',
+    console.debug('PeerFetch: Sending request to remote peer',
       { requestMap, ticket, request })
     try {
       this._dataConnection.send(jsonRequest)
+      console.debug('PeerFetch: Request sent to remote peer: ', jsonRequest)
     } catch (error) {
-      console.error('Error sending message via Peer DataConnection', { error })
+      console.error('PeerFetch: Error sending message via Peer DataConnection', { error })
     }
   }
 
@@ -253,7 +315,10 @@ export class PeerFetch {
 
   jsonify (data) {
     let decodedString
-    if (typeof data === 'string') {
+    console.debug('jsonify', data)
+    if (!data) {
+      decodedString = '{}'
+    } else if (typeof data === 'string') {
       decodedString = data
     } else {
       decodedString = this.textDecode(data)

@@ -22,11 +22,13 @@
               icon-name="help-circle-outline"
               title="Need Help with Ambianic?"
               subtitle="Please reference our online docs or connect on Twitter."
+              ref="help-title"
             />
           </v-list>
           <v-card-actions>
             <v-btn
               id="btn-docs"
+              ref="btn-docs"
               text
               href="https://docs.ambianic.ai"
               target="_blank"

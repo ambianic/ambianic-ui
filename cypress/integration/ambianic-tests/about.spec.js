@@ -31,6 +31,6 @@ context('AboutPage', () => {
       .should('contain.text', 'UI App Version')
 
       const versionNumber = require('../../../package.json').version
-      cy.get('[data-cy=title-text]').should('contain.text', versionNumber )
+      cy.get('[data-cy=title-text-read-only]').should('contain.text', versionNumber )
   })
 })

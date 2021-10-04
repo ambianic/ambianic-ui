@@ -18,13 +18,19 @@
             justify="center"
           >
             <v-list-item-content>
-              <v-list-item-title class="headline">
+              <v-list-item-title
+                class="headline"
+                ref="headline-title"
+              >
                 Welcome to Ambianic.ai
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
-          <v-img src="@/assets/home-screen-logo.png" />
+          <v-img
+            src="@/assets/home-screen-logo.png"
+            ref="logo-image"
+          />
 
           <v-card-text id="welcome-text">
             <v-list-item-subtitle class="center">
@@ -44,6 +50,7 @@
                 class="ma-2 white--text"
                 to="onboarding"
                 id="btn-setup"
+                ref="btn-setup"
                 v-if="!hasSetupSystem"
               >
                 Begin Setup
@@ -59,6 +66,7 @@
                 class="ma-2 white--text"
                 to="timeline"
                 id="btn-dashboard"
+                ref="btn-timeline"
                 v-else
               >
                 View Timeline

@@ -3,7 +3,7 @@
     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
     v-resize.initial="onResize"
     ref="container"
-    v-if="detections.length > 0 && detections[0].box !== undefined"
+    v-if="detections && detections.length > 0 && detections[0].box !== undefined"
   >
     <v-overlay
       absolute
@@ -18,6 +18,7 @@
         <v-layer>
           <v-rect
             v-for="(inf, rect_index) in detections"
+            ref="rects"
             :key="rect_index"
             :config="{
               x: inf.box.xmin * stageSize.width,

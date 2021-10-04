@@ -217,7 +217,6 @@
 /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import Vue from 'vue'
 import VueObserveVisibility from 'vue-observe-visibility'
-import { EdgeAPI } from '@/remote/edgeAPI'
 import { mapState } from 'vuex'
 import {
   PEER_CONNECTED,
@@ -241,7 +240,6 @@ export default {
     }
   },
   created () {
-    this.edgeAPI = new EdgeAPI(this.pnp)
     this.pnpUnsubscribe = this.$store.subscribe((mutation, state) => {
       if (mutation.type === NEW_REMOTE_PEER_ID) {
         // eslint-disable-next-line
@@ -254,7 +252,6 @@ export default {
     })
   },
   beforeDestroy () {
-    this.pnpUnsubscribe()
     this.pnpUnsubscribe()
   },
   components: {
@@ -281,7 +278,7 @@ export default {
       // console.log(`isImageLoaded[${index}]: ${this.isImageLoaded[index]}`)
     },
     updateImageURL (relDir, fileName, id) {
-      this.edgeAPI.getImageURL(relDir, fileName).then(fullImageURL => {
+      this.pnp.edgeAPI.getImageURL(relDir, fileName).then(fullImageURL => {
         this.$set(this.imageURL, id, fullImageURL)
       })
     },
@@ -290,7 +287,12 @@ export default {
       var timelineEvents
       do {
         try {
-          timelineEvents = await this.edgeAPI.getTimelinePage(pageno)
+          if (this.pnp.edgeAPI) {
+            timelineEvents = await this.pnp.edgeAPI.getTimelinePage(pageno)
+          } else {
+            console.info('edgeAPI instance is not available at the moment. Will retry in a little bit.') // eslint-disable-line no-console
+            await new Promise(resolve => setTimeout(resolve, 2000)) // sleep for 2 seconds
+          }
         } catch (error) {
           console.info('Unable to feetch timeline page. Will keep trying.', error) // eslint-disable-line no-console
           await new Promise(resolve => setTimeout(resolve, 2000)) // sleep for 2 seconds

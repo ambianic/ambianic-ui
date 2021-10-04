@@ -1,5 +1,7 @@
 <template>
-  <amb-app-frame>
+  <amb-app-frame
+    ref="app-frame"
+  >
     <v-row
       align="start"
       justify="space-around"
@@ -19,6 +21,7 @@
           >
             <amb-list-item
               id="feedback-title"
+              ref="feedback-title"
               icon-name="comment-quote-outline"
               title="Send Feedback"
               subtitle="We currently use github to gather user feedbaack. Click the button below to open an issue."
@@ -27,6 +30,7 @@
           <v-card-actions>
             <v-btn
               id="btn-feedback"
+              ref="btn-feedback"
               text
               href="https://github.com/ambianic/ambianic-ui/issues"
               target="_blank"

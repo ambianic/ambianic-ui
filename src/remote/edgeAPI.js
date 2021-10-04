@@ -3,6 +3,7 @@ import { PEER_CONNECTED } from '@/store/mutation-types'
 
 // const DEFAULT_API_ROOT = ambianicConf.AMBIANIC_API_FALLBACK_URI
 const API_HOST = ambianicConf.AMBIANIC_EDGE_HOST
+const API_SCHEMA = ambianicConf.AMBIANIC_EDGE_API_SCHEMA
 const API_PORT = ambianicConf.AMBIANIC_EDGE_API_PORT
 const API_ROOT = ambianicConf.AMBIANIC_EDGE_API_ROOT
 
@@ -12,22 +13,37 @@ export class EdgeAPI {
   }
 
   _getRootURL () {
-    var apiRoot = `http://${API_HOST}:${API_PORT}/${API_ROOT}/`
+    var apiRoot = `${API_SCHEMA}://${API_HOST}:${API_PORT}/${API_ROOT}/`
     return apiRoot
   }
 
-  async _get (request) {
-    if (this.pnp.peerConnectionStatus !== PEER_CONNECTED) {
+  async _request (config) {
+    if (this.pnp.state.peerConnectionStatus !== PEER_CONNECTED) {
       throw Error('Edge device peer not connected.')
     } else {
-      const response = await this.pnp.peerFetch.get(request)
-      return response
+      return await this.pnp.state.peerFetch.request(config)
     }
+  }
+
+  async _get (request) {
+    request.method = 'GET'
+    return await this._request(request)
+  }
+
+  async _put (request) {
+    request.method = 'PUT'
+    return await this._request(request)
   }
 
   async _getJSON (request) {
     const response = await this._get(request)
-    const jsn = this.pnp.peerFetch.jsonify(response.content)
+    const jsn = this.pnp.state.peerFetch.jsonify(response.content)
+    return jsn
+  }
+
+  async _putJSON (request) {
+    const response = await this._put(request)
+    const jsn = this.pnp.state.peerFetch.jsonify(response.content)
     return jsn
   }
 
@@ -36,7 +52,7 @@ export class EdgeAPI {
   */
   async getTimelinePage (pageNum = 1) {
     const apiRoot = this._getRootURL()
-    const timelineURL = apiRoot + 'timeline.json'
+    const timelineURL = apiRoot + 'timeline'
     let timelinePage = []
     const request = {
       url: timelineURL,
@@ -77,11 +93,30 @@ export class EdgeAPI {
     const request = {
       url: `${apiRoot}status`
     }
+    return await this._getJSON(request)
+  }
 
-    try {
-      return await this._getJSON(request)
-    } catch (e) {
-      console.log('Error fetching Edge Status', e)
+  async setDeviceDisplayName (newName) {
+    const apiRoot = this._getRootURL()
+    const esc = encodeURIComponent
+    const urlEncodedName = esc(newName)
+    const request = {
+      url: `${apiRoot}/device/display_name/${urlEncodedName}`
     }
+    return await this._putJSON(request)
+  }
+
+  async auth () {
+    console.debug('PEER_AUTHENTICATE auth() start')
+    const authURL = `${API_SCHEMA}://${API_HOST}:${API_PORT}/`
+    const request = {
+      method: 'GET',
+      url: authURL
+    }
+    console.debug('PEER_AUTHENTICATE API request:', request)
+    console.debug('PEER_AUTHENTICATE this.pnp.state.peerFetch:', this.pnp.state.peerFetch)
+    const response = await this.pnp.state.peerFetch.request(request)
+    console.debug('PEER_AUTHENTICATE API response:', response)
+    return response
   }
 }
