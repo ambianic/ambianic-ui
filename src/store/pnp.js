@@ -525,20 +525,13 @@ const actions = {
         commit(NEW_REMOTE_PEER_ID, peerConnection.peer)
       }
     } else {
-      commit(USER_MESSAGE, 'Remote peer authentication failed.')
-      await dispatch(HANDLE_PEER_CONNECTION_ERROR, { peerConnection, err: 'Remote peer authentication faied.' })
+      const errMsg = 'Remote peer authentication failed.'
+      console.warn(errMsg)
+      commit(USER_MESSAGE, errMsg)
+      await dispatch(HANDLE_PEER_CONNECTION_ERROR, { peerConnection, err: errMsg })
     }
     console.debug('DataChannel transport capabilities',
       peerConnection.dataChannel)
-    //
-    // const request2 = {
-    //   url: 'http://192.168.86.22:8778/api/timeline'
-    // }
-    // console.debug('peerFetch.get', { request2 })
-    // const response2 = await state.peerFetch.get(request2)
-    // const text2 = state.peerFetch.jsonify(response2)
-    // console.debug('peerFetch.get returned response', { request, response, text2 })
-    // console.debug('peerFetch.get returned response', { request2, response2 })
   },
   /**
    * @param {*} remotePeerId The Ambianic Edge PeerJS ID
@@ -564,7 +557,8 @@ const actions = {
       const conn = state.peerConnection
       if (conn) {
         try {
-          conn.close()
+          console.debug('Closing Peer DataConnection.', { conn })
+          await conn.close()
         } catch (err) {
           console.debug('Error while closing peer DataConnection.', err)
         }
@@ -578,7 +572,6 @@ const actions = {
     console.info('Error while connecting to remote peer ID:', peerConnection.peer)
     state.problematicRemotePeers.add(peerConnection.peer)
     commit(PEER_CONNECTION_ERROR, err)
-    commit(PEER_DISCONNECTED)
   }
 }
 
