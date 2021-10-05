@@ -17,7 +17,8 @@ import {
   NEW_PEER_ID,
   NEW_REMOTE_PEER_ID,
   REMOTE_PEER_ID_REMOVED,
-  PEER_FETCH
+  PEER_FETCH,
+  EDGE_API
 } from './mutation-types.js'
 import {
   INITIALIZE_PNP,
@@ -34,6 +35,7 @@ import { ambianicConf } from '@/config'
 import Peer from 'peerjs'
 import { PeerRoom } from '@/remote/peer-room'
 import { PeerFetch } from '@/remote/peer-fetch'
+import { EdgeAPI } from '@/remote/edgeAPI'
 export const STORAGE_KEY = 'ambianic-pnp-settings'
 
 const state = {
@@ -82,6 +84,10 @@ const state = {
   */
   peerFetch: undefined,
   /**
+    EdgeAPI instance
+  */
+  edgeAPI: undefined,
+  /**
    * The duration in milliseconds to pause between pair discovery retries
    */
   discoveryLoopPause: 3000
@@ -95,6 +101,7 @@ const mutations = {
     state.peerConnection = undefined
     state.peerConnectionStatus = PEER_DISCONNECTED
     state.peerFetch = undefined
+    state.edgeAPI = undefined
   },
   [PEER_DISCOVERED] (state) {
     state.peerConnectionStatus = PEER_DISCOVERED
@@ -129,7 +136,6 @@ const mutations = {
   },
   [NEW_PEER_ID] (state, newPeerId) {
     state.myPeerId = newPeerId
-    // window.localStorage.setItem(`${STORAGE_KEY}.myPeerId`, newPeerId)
   },
   [NEW_REMOTE_PEER_ID] (state, newRemotePeerId) {
     console.debug('NEW_REMOTE_PEER_ID: Setting state.remotePeerId to : ', newRemotePeerId)
@@ -144,6 +150,10 @@ const mutations = {
   [PEER_FETCH] (state, peerFetch) {
     console.debug('PEER_FETCH: Setting PeerFetch instance.')
     state.peerFetch = peerFetch
+  },
+  [EDGE_API] (state, edgeAPI) {
+    console.debug('EDGE_API: Setting EdgeAPI instance.')
+    state.edgeAPI = edgeAPI
   }
 }
 
@@ -156,8 +166,10 @@ const mutations = {
 */
 async function discoverRemotePeerId ({ state, commit }) {
   const peer = state.peer
+  console.debug('iscoverRemotePeerId() start')
   // first see if we got a remote Edge ID entered to connect to
   if (state.remotePeerId) {
+    console.debug('iscoverRemotePeerId() returning known remotePeerId')
     return state.remotePeerId
   } else {
   // first try to find the remote peer ID in the same room
@@ -215,8 +227,6 @@ function setPnPServiceConnectionHandlers (
     }
     console.log('pnp client: myPeerId: ', peer.id)
     // signaling server connection established
-    // we can advance to peer discovery
-    dispatch(PEER_DISCOVER)
   })
   peer.on('disconnected', function () {
     commit(PNP_SERVICE_DISCONNECTED)
@@ -257,6 +267,14 @@ function setPnPServiceConnectionHandlers (
   })
 }
 
+// exporting a private class to allow access from jest tests
+export const _auth = {
+  _scheduleAuth ({ dispatch, peerConnection }) {
+    // schedule an async PEER_AUTHENTICATE step
+    dispatch(PEER_AUTHENTICATE, peerConnection)
+  }
+}
+
 function setPeerConnectionHandlers ({
   state,
   commit,
@@ -270,12 +288,7 @@ function setPeerConnectionHandlers ({
     const peerFetch = new PeerFetch(peerConnection)
     console.debug('Peer DataConnection is now open. Creating PeerFetch wrapper.')
     commit(PEER_FETCH, peerFetch)
-    setTimeout(() => dispatch(PEER_AUTHENTICATE, peerConnection), 1000)
-    // try {
-    //   peerConnection.send('HELLO from peerConnection.on_open')
-    // } catch (error) {
-    //   console.error('Error sending message via webrtc datachannel', { error })
-    // }
+    _auth._scheduleAuth({ dispatch, peerConnection })
   })
 
   peerConnection.on('close', function () {
@@ -283,17 +296,13 @@ function setPeerConnectionHandlers ({
     commit(PEER_DISCONNECTED)
     commit(USER_MESSAGE, 'Connection to remote peer closed')
     console.debug('#########>>>>>>>>> p2p connection closed')
-    console.debug('Will try to open a new peer connection shortly.')
-    setTimeout( // give the network a few moments to recover
-      () => dispatch(PEER_DISCOVER),
-      3000
-    )
   })
 
   peerConnection.on('error', function (err) {
     clearTimeout(hungupConnectionResetTimer)
     commit(USER_MESSAGE, 'Error in connection to remote peer ID', peerConnection.peer)
     console.info(`Error in connection to remote peer ID ${peerConnection.peer}`, err)
+    // schedule an async HANDLE_PEER_CONNECTION_ERROR action
     dispatch(HANDLE_PEER_CONNECTION_ERROR, { peerConnection, err })
   })
 
@@ -388,24 +397,25 @@ const actions = {
       // its possible that the PNP signaling server connection was disrupted
       // while looping in peer discovery mode
       if (state.pnpServiceConnectionStatus !== PNP_SERVICE_CONNECTED) {
-        console.log('PNP Service disconnected. Reconnecting...')
+        console.debug('PNP Service disconnected. Reconnecting...')
         await dispatch(PNP_SERVICE_CONNECT)
       }
       let remotePeerId
       try {
         if (state.pnpServiceConnectionStatus === PNP_SERVICE_CONNECTED) {
+          console.debug('discovering peers on the local network...')
           remotePeerId = await discoverRemotePeerId({ state, commit })
         } else {
           // signaling server connection is still not ready, skip this cycle
           // and wait for the next scheduled retry
-          console.log('PNP Service still not connected. Will retry shortly.')
+          console.debug('PNP Service still not connected. Will retry shortly.')
         }
       } catch (err) {
-        console.log('Error while looking for remote peer. Will retry shortly.',
+        console.debug('Error while looking for remote peer. Will retry shortly.',
           err)
       }
       if (remotePeerId) {
-        console.log('Remote peer Id found', remotePeerId)
+        console.debug('Remote peer Id found', remotePeerId)
         commit(PEER_DISCOVERED)
         // remote Edge peer discovered, let's connect to it
         await dispatch(PEER_CONNECT, remotePeerId)
@@ -455,7 +465,8 @@ const actions = {
       try {
         state.problematicRemotePeers.add(remotePeerId)
         console.debug('Problematic remote peer ID:', remotePeerId)
-        peer.destroy()
+        await peer.disconnect()
+        await peer.destroy()
       } catch (err) {
         console.warn('Error destroying peer.')
       } finally {
@@ -475,27 +486,34 @@ const actions = {
   * Authenticate remote peer. Make sure its a genuine Ambianic Edge device.
   *
   */
-  async [PEER_AUTHENTICATE] ({ state, commit, dispatch }, peerConnection) {
+  async [PEER_AUTHENTICATE] (context, peerConnection) {
+    const { state, commit, dispatch } = context
     commit(PEER_AUTHENTICATING)
     commit(USER_MESSAGE, `Authenticating remote peer: ${peerConnection.peer}`)
-    console.log('Authenticating remote Peer ID: ', peerConnection.peer)
-    const request = {
-      url: 'http://localhost:8778'
-    }
+    console.debug('Authenticating remote Peer ID: ', peerConnection.peer)
     let authPassed = false
     try {
-      const response = await state.peerFetch.get(request)
-      console.log('PEER_AUTHENTICATE', { request, response })
-      if (response.header.status === 200) {
-        console.log('PEER_AUTHENTICATE status OK')
+      console.debug('PEER_AUTHENTICATE start')
+      console.debug('PEER_AUTHENTICATE instantiating EdgeAPI with context:', context)
+      const edgeAPI = new EdgeAPI(context)
+      commit(EDGE_API, edgeAPI)
+      console.debug('PEER_AUTHENTICATE calling EdgeAPI.auth()')
+      const response = await state.edgeAPI.auth()
+      console.debug('PEER_AUTHENTICATE API called')
+      if (response && response.header && response.header.status === 200) {
+        console.debug('PEER_AUTHENTICATE status OK')
+        console.debug(`PEER_AUTHENTICATE response.content: ${response.content}`)
         const text = state.peerFetch.textDecode(response.content)
+        console.debug(`PEER_AUTHENTICATE response.content decoded: ${response.content}`)
         // if data is authentication challenge response, verify it
         // for now we naively check for Ambianic in the response.
         authPassed = text.includes('Ambianic')
-        console.log(`PEER_AUTHENTICATE response body OK = ${authPassed}`)
+        console.debug('PEER_AUTHENTICATE response body OK', { authPassed })
+      } else {
+        console.error('PEER_AUTHENTICATE unexpended auth response.', { response })
       }
     } catch (err) {
-      console.log(`peerFetch.get() Error while connecting to remote peer ID: ${peerConnection.peer}`, err)
+      console.warn(`PEER_AUTHENTICATE action. Error while connecting to remote peer ID: ${peerConnection.peer}`, err)
     }
     if (authPassed) {
       // console.debug('Remote peer authenticated as:', authMessage.name)
@@ -507,20 +525,13 @@ const actions = {
         commit(NEW_REMOTE_PEER_ID, peerConnection.peer)
       }
     } else {
-      commit(USER_MESSAGE, 'Remote peer authentication failed.')
-      await dispatch(HANDLE_PEER_CONNECTION_ERROR, { peerConnection, err: 'Remote peer authentication faied.' })
+      const errMsg = 'Remote peer authentication failed.'
+      console.warn(errMsg)
+      commit(USER_MESSAGE, errMsg)
+      await dispatch(HANDLE_PEER_CONNECTION_ERROR, { peerConnection, err: errMsg })
     }
     console.debug('DataChannel transport capabilities',
       peerConnection.dataChannel)
-    //
-    // const request2 = {
-    //   url: 'http://192.168.86.22:8778/api/timeline.json'
-    // }
-    // console.debug('peerFetch.get', { request2 })
-    // const response2 = await state.peerFetch.get(request2)
-    // const text2 = state.peerFetch.jsonify(response2)
-    // console.debug('peerFetch.get returned response', { request, response, text2 })
-    // console.debug('peerFetch.get returned response', { request2, response2 })
   },
   /**
    * @param {*} remotePeerId The Ambianic Edge PeerJS ID
@@ -531,22 +542,23 @@ const actions = {
    * them or let them connect to you.
    */
   async [CHANGE_REMOTE_PEER_ID] ({ state, commit, dispatch }, remotePeerId) {
-    commit(NEW_REMOTE_PEER_ID, remotePeerId)
     commit(PEER_DISCONNECTED)
+    commit(NEW_REMOTE_PEER_ID, remotePeerId)
     await dispatch(PEER_CONNECT, remotePeerId)
   },
   /**
   * Remove remote peer id from local store.
   * Maybe the edge device is damaged and its id cannot be recovered.
   * In such cases the user will request removal of the existing device
-  * association and force discovery of a new edge device id.
+  * association and after request local device discovery or direct connection to a new edge device id.
   */
   async [REMOVE_REMOTE_PEER_ID] ({ state, commit, dispatch }) {
     if (state.peerConnectionStatus !== PEER_DISCONNECTED) {
       const conn = state.peerConnection
       if (conn) {
         try {
-          conn.close()
+          console.debug('Closing Peer DataConnection.', { conn })
+          await conn.close()
         } catch (err) {
           console.debug('Error while closing peer DataConnection.', err)
         }
@@ -554,19 +566,12 @@ const actions = {
       commit(PEER_DISCONNECTED)
     }
     commit(REMOTE_PEER_ID_REMOVED)
-    await dispatch(PEER_DISCOVER)
   },
   async [HANDLE_PEER_CONNECTION_ERROR] ({ state, commit, dispatch }, { peerConnection, err }) {
     console.info('######>>>>>>> p2p connection error', err)
-    console.info('Problematic remote peer ID:', peerConnection.peer)
+    console.info('Error while connecting to remote peer ID:', peerConnection.peer)
     state.problematicRemotePeers.add(peerConnection.peer)
     commit(PEER_CONNECTION_ERROR, err)
-    console.info('Will try a new connection shortly.')
-    commit(PEER_DISCONNECTED)
-    setTimeout( // give the network a few moments to recover
-      () => dispatch(PEER_DISCOVER),
-      3000
-    )
   }
 }
 

@@ -6,8 +6,20 @@
       </v-icon>
     </v-list-item-icon>
     <v-list-item-content>
+      <v-list-item-title
+        v-if="isEditing"
+      >
+        <v-text-field
+          v-model="inputTitleEditValue"
+          :type="sensitive ? 'password' : 'text'"
+          @keyup.enter="saveEdit"
+          :rules="rules"
+          data-cy="input-title-edit"
+          ref="inputTitleEdit"
+        />
+      </v-list-item-title>
       <v-skeleton-loader
-        v-if="!title"
+        v-else-if="!inputTitleEditValue"
         v-bind="attrs"
         data-cy="title-loader"
         type="list-item-two-line"
@@ -15,24 +27,25 @@
       <v-list-item-title
         v-else-if="sensitiveField"
       >
-        <input
-          :value="title"
-          :placeholder="title"
+        <v-text-field
+          v-model="inputTitleEditValue"
           disabled
           id="peerId-container"
           :type="sensitive ? 'password' : 'text'"
-          data-cy="input-title"
-        >
+          data-cy="input-title-sensitive"
+        />
       </v-list-item-title>
       <v-list-item-title
         v-else
-        data-cy="title-text"
-        id="title"
+        data-cy="title-text-read-only"
+        ref="title-read-only"
       >
-        {{ title }}
+        {{ inputTitleEditValue }}
       </v-list-item-title>
 
-      <v-list-item-subtitle>
+      <v-list-item-subtitle
+        ref="subtitle-label"
+      >
         {{ subtitle }}
       </v-list-item-subtitle>
 
@@ -53,7 +66,6 @@
           #activator="{ on, attrs : eyeAttr }"
         >
           <v-icon
-            style="padding-bottom: 14px"
             v-if="sensitive"
             id="toggle-visibility"
             @click="sensitive = false"
@@ -64,7 +76,6 @@
             mdi-eye
           </v-icon>
           <v-icon
-            style="padding-bottom: 15px"
             v-else
             @click="sensitive = true"
             v-bind="attrs"
@@ -80,7 +91,6 @@
           #activator="{ on, attrs : copyAttr}"
         >
           <v-icon
-            style="padding-bottom: 14px"
             v-if="copyOption"
             id="toggle-copy-option"
             @click="doCopy"
@@ -92,6 +102,60 @@
           </v-icon>
         </template>
         <span>Copy to clipboard</span>
+      </v-tooltip>
+      <v-tooltip
+        bottom
+        v-if="editOption && !isEditing"
+      >
+        <template #activator="{ on, attrs }">
+          <v-icon
+            id="toggle-edit-option"
+            @click="startEdit"
+            data-cy="icon-start-edit"
+            ref="icon-start-edit"
+            v-bind="attrs"
+            v-on="on"
+          >
+            edit
+          </v-icon>
+        </template>
+        <span>Edit field value.</span>
+      </v-tooltip>
+      <v-tooltip
+        bottom
+        v-if="editOption && isEditing"
+      >
+        <template #activator="{ on, attrs }">
+          <v-icon
+            id="toggle-edit-option"
+            @click="saveEdit"
+            data-cy="icon-save-edit"
+            ref="icon-save-edit"
+            v-bind="attrs"
+            v-on="on"
+          >
+            done
+          </v-icon>
+        </template>
+        <span>Save changes</span>
+      </v-tooltip>
+      <v-tooltip
+        bottom
+        v-if="editOption && isEditing"
+      >
+        <template #activator="{ on, attrs }">
+          <v-icon
+            id="toggle-edit-option"
+            @click="cancelEdit"
+            data-cy="icon-cancel-edit"
+            ref="icon-cancel-edit"
+            v-bind="attrs"
+            v-on="on"
+          >
+            clear
+          </v-icon>
+        </template>
+        <span>Cancel edit</span>
       </v-tooltip>
     </v-list-item-action>
   </v-list-item>
@@ -138,18 +202,32 @@ export default {
       type: Boolean,
       default: false
     },
+    editOption: {
+      type: Boolean,
+      default: false
+    },
     error: {
       type: String,
       default: undefined
+    },
+    onSubmit: {
+      type: Function,
+      default: function () {}
+    },
+    rules: {
+      type: Array,
+      default: () => []
     }
   },
   data () {
     return {
-      sensitive: true,
+      sensitive: this.sensitiveField,
       attrs: {
         boilerplate: true,
         elevation: 2
-      }
+      },
+      isEditing: false,
+      inputTitleEditValue: this.title
     }
   },
   methods: {
@@ -157,8 +235,38 @@ export default {
       try {
         await this.$copyText(this.title)
       } catch (e) {
-        console.warn('Can not copy `title` element value to clipboard', e)
+        console.debug('Can not copy `title` element value to clipboard', e)
       }
+    },
+    startEdit: async function () {
+      this.isEditing = true
+      this.$nextTick(() => this.$refs.inputTitleEdit.focus())
+    },
+    saveEdit: async function (e) {
+      const newValue = this.inputTitleEditValue
+      console.debug(`saveEdit called with value: ${newValue}`)
+      for (let index = 0; index < this.rules.length; index++) {
+        const rule = this.rules[index]
+        console.debug(`next rule: ${rule}`)
+        const valid = typeof rule === 'function' ? rule(newValue) : rule
+        if (valid !== true) return
+      }
+      if (!await this.onSubmit(newValue)) {
+        // if onSubmit did not succeed, revert the edit
+        console.debug('onSubmit failed')
+        this.cancelEdit()
+      }
+      this.isEditing = false
+      console.debug('saveEdit ended')
+    },
+    cancelEdit: async function () {
+      this.isEditing = false
+      this.inputTitleEditValue = this.title
+    }
+  },
+  watch: {
+    title (value) {
+      this.inputTitleEditValue = value
     }
   }
 }

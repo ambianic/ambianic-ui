@@ -1,3 +1,4 @@
+
 image:
   file: .gitpod.Dockerfile
 
@@ -13,9 +14,9 @@ tasks:
       npm run serve
   - command: |
       echo "Waiting for npm install to finish"
+      npm install cypress
       gp await-port 8080 && gp preview $(gp url 8080)/index.html
       echo "Starting Ambianic PWA testsuite"
-      npm install cypress
       npm run test
   - command: |
       echo "Starting http server for local HTML file preview"
@@ -32,3 +33,7 @@ github:
   prebuilds:
     addComment: true
 
+
+vscode:
+  extensions:
+    - octref.vetur

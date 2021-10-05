@@ -41,7 +41,7 @@
                 data-cy="connection-status"
                 :icon="connectionStatusIcon"
                 :color="connectionIconColor"
-                to="edge-connect"
+                to="#"
                 v-bind="attrs"
                 v-on="on"
               />
@@ -83,7 +83,6 @@
         to="about"
       >
         <v-avatar
-          size="32px"
           item
         >
           <v-img

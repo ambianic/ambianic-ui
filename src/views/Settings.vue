@@ -1,11 +1,52 @@
 <template>
   <amb-app-frame>
-    <v-container fluid>
+    <v-container
+      fluid
+    >
       <v-row
-        align="start"
+        align="center"
+      >
+        <v-col cols="12">
+          <v-alert
+            v-if="this.edgeDeviceError"
+            outlined
+            type="warning"
+            dense
+            align-self="center"
+            class="text-center"
+            transition="scale-transition"
+            dismissible
+            data-cy="edge-device-error"
+            ref="edge-device-error"
+          >
+            {{ this.edgeDeviceError }}
+          </v-alert>
+        </v-col>
+      </v-row>
+      <v-row
+        align="center"
+      >
+        <v-dialog
+          v-model="syncing"
+          persistent
+          max-width="300"
+        >
+          <v-card>
+            <v-card-text
+              color="accent"
+            >
+              Syncing with Ambianic Edge device
+              <v-progress-linear
+                indeterminate
+              />
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+      </v-row>
+      <v-row
         justify="center"
         class="pb-5"
-        data-cy="template-row"
+        align="center"
       >
         <v-card flat>
           <v-card-title
@@ -13,7 +54,7 @@
           >
             Ambianic Edge connection details
           </v-card-title>
-          <v-container grid-list-sm>
+          <v-card-text grid-list-sm>
             <v-row
               align="start"
               justify="space-around"
@@ -29,29 +70,34 @@
                 <amb-banner
                   v-if="isEdgeConnected"
                   banner-class="text-left"
-                  icon="wifi"
+                  icon="cloud-check-outline"
                   text="Ambianic Edge device connected!"
                 />
                 <amb-banner
                   v-else
-                  progress
                   banner-class="text-left"
-                  icon="wifi-off"
+                  icon="cloud-off-outline"
                   icon-color="info"
-                  text="Connecting to Ambianic Edge device..."
+                  data-cy="edge-device-disconnected"
+                  text="Ambianic Edge device disconnected."
                 />
                 <v-card
                   class="mx-auto text-left"
                   flat
+                  v-if="isEdgeConnected"
                 >
                   <v-list
                     two-line
                   >
                     <amb-list-item
                       ref="list-item-edgeDeviceName"
-                      title="My Ambianic Edge Device"
+                      data-cy="list-item-edgeDeviceName"
+                      :title="edgeDisplayName"
                       subtitle="Display Name"
                       icon-name="tag"
+                      :edit-option="true"
+                      :on-submit="onDisplayNameChanged"
+                      :rules="[rules.required, rules.counter]"
                     />
                     <v-divider inset />
                     <amb-list-item
@@ -64,9 +110,8 @@
                       data-cy="list-item-edgePeerID"
                     />
                     <amb-list-item
-                      ref="list-item-releaseVersion"
+                      ref="list-item-edgeVersion"
                       :title="edgeVersion"
-                      :error="edgeDeviceError"
                       id="version-element"
                       subtitle="Edge Software Version"
                       icon-name="alpha-v-circle-outline"
@@ -103,20 +148,12 @@
                   </v-stepper-step>
                   <v-stepper-content step="1">
                     <v-progress-linear
+                      v-if="!this.isPeerConnectionError"
                       color="info"
                       indeterminate
                       :size="50"
                       :width="7"
                     />
-                    <v-alert
-                      v-if="this.$store.state.pnp.userMessage"
-                      outlined
-                      type="warning"
-                      class="mt-5 text-left"
-                      dense
-                    >
-                      {{ this.$store.state.pnp.userMessage }}
-                    </v-alert>
                   </v-stepper-content>
                   <v-stepper-step
                     :complete="connectStep > 2"
@@ -169,7 +206,7 @@
                 </v-card>
               </v-dialog>
             </v-row>
-          </v-container>
+          </v-card-text>
         </v-card>
       </v-row>
       <v-row
@@ -203,8 +240,9 @@
                   <v-btn
                     color="primary"
                     :small="$vuetify.breakpoint.mdAndUp"
-                    @click="localEdgeAddress"
+                    @click="discoverLocalEdgeDevice"
                     id="btn-discoverLocal"
+                    data-cy="btn-discoverLocal"
                   >
                     <v-icon v-if="$vuetify.breakpoint.xsOnly">
                       mdi-wifi
@@ -284,14 +322,15 @@ import {
   PEER_AUTHENTICATING,
   PEER_CONNECTED,
   PEER_CONNECTION_ERROR,
-  EDGE_DEVICE_DETAILS
+  EDGE_DEVICE_DETAILS,
+  EDGE_DEVICE_DISPLAY_NAME
 } from '@/store/mutation-types'
 import {
   CHANGE_REMOTE_PEER_ID,
+  PEER_DISCOVER,
   REMOVE_REMOTE_PEER_ID
 } from '../store/action-types.js'
 import AmbListItem from '@/components/shared/ListItem.vue'
-import { EdgeAPI } from '@/remote/edgeAPI'
 
 export default {
   components: {
@@ -303,11 +342,15 @@ export default {
     return {
       edgeAddress: undefined,
       correctEdgeAddress: false,
-      edgeDeviceError: null
+      edgeDeviceError: null,
+      syncing: false, // is the UI in the process of syncing with remote device data
+      rules: {
+        required: value => !!value || 'Required.',
+        counter: value => (value.length >= 5 && value.length <= 20) || 'Min 5 and Max 20 characters'
+      }
     }
   },
   created () {
-    this.edgeAPI = new EdgeAPI(this.pnp)
     // if a connection to the edge device is already established
     // but version info has not been fetched yet, let's do it now
     if (this.isEdgeConnected && !this.edgeVersion) {
@@ -331,48 +374,75 @@ export default {
     ...mapActions([
       'CHANGE_REMOTE_PEER_ID'
     ]),
-    sendEdgeAddress () {
-      this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.edgeAddress)
+    async sendEdgeAddress () {
+      await this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.edgeAddress)
     },
-    localEdgeAddress () {
+    async discoverLocalEdgeDevice () {
       this.edgeAddress = undefined
-      this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
+      console.debug('discoverLocalEdgeDevice() called')
+      console.debug('removing any existing peer connection')
+      await this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
+      await this.$store.dispatch(PEER_DISCOVER)
+      console.debug('discoverLocalEdgeDevice() ended')
     },
     async fetchEdgeDetails () {
       try {
-        const details = await this.edgeAPI.getEdgeStatus()
-
-        if (!details.version) {
-          this.edgeDeviceError = 'Unavailable. Outdated device?'
+        const details = await this.pnp.edgeAPI.getEdgeStatus()
+        console.debug('Edge device details fetched:', { details })
+        if (!details || !details.version) {
+          this.edgeDeviceError = 'Edge device requires update.'
+        } else {
+          this.$store.commit(EDGE_DEVICE_DETAILS, details)
         }
-        await this.$store.commit(EDGE_DEVICE_DETAILS, details)
       } catch (e) {
-        this.edgeDeviceError = 'Unavailable. Outdated device?'
+        this.edgeDeviceError = 'Edge device API offline or unreachable.'
       }
+    },
+    async onDisplayNameChanged (newDisplayName) {
+      console.debug(`newDisplayName: ${newDisplayName}`)
+      let updated = false
+      if (newDisplayName) {
+        try {
+          console.debug(`New device display name: ${newDisplayName}`)
+          // trigger edit change callback
+          //    show blocking dialog with spinner https://vuetifyjs.com/en/components/dialogs/#loader
+          //    await dispatch to push new device display name: 1. to device, 2. to local device store
+          this.syncing = true
+          await this.pnp.edgeAPI.setDeviceDisplayName(newDisplayName)
+          this.$store.commit(EDGE_DEVICE_DISPLAY_NAME, newDisplayName)
+          updated = true
+        } catch (e) {
+          this.edgeDeviceError = 'Error updating display name on edge device. Could be offline or outdated.'
+          console.error('Exception calling setDeviceDisplayName()', e, e.stack)
+        } finally {
+          this.syncing = false
+        }
+      }
+      return updated
     }
   },
   computed: {
-    peerConnectionError: function () {
-      console.log('this.$store.state.pnp.peerConnectionStatus', this.$store.state.pnp.peerConnectionStatus)
-      return this.$store.state.pnp.peerConnectionStatus === PEER_CONNECTION_ERROR
-    },
     ...mapState({
       peerConnectionStatus: state => state.pnp.peerConnectionStatus,
+      isPeerConnectionError: state => state.pnp.peerConnectionStatus === PEER_CONNECTION_ERROR,
       isEdgeConnected: state =>
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
       pnp: state => state.pnp,
       edgePeerId: state => state.pnp.remotePeerId,
       peerFetch: state => state.pnp.peerFetch,
-      edgeVersion: state => state.edgeDevice.edgeSoftwareVersion
+      edgeVersion: state => state.edgeDevice.edgeSoftwareVersion,
+      edgeDisplayName: state => {
+        const deviceLabel = (state.edgeDevice.edgeDisplayName) ? state.edgeDevice.edgeDisplayName : 'My Ambianic Edge Device'
+        return deviceLabel
+      }
     }),
     connectStep: function () {
       let step = 1
       switch (this.peerConnectionStatus) {
         case PEER_DISCONNECTED:
-        case PEER_CONNECTION_ERROR:
+        case PEER_DISCOVERING:
           step = 1
           break
-        case PEER_DISCOVERING:
         case PEER_DISCOVERED:
         case PEER_CONNECTING:
         case PEER_AUTHENTICATING:
@@ -393,8 +463,19 @@ export default {
       this.validateIP(value)
     },
     isEdgeConnected: async function (isConnected) {
-      if (isConnected && !this.edgeVersion) {
+      if (isConnected) {
         await this.fetchEdgeDetails()
+      }
+    },
+    isPeerConnectionError: async function (isError) {
+      console.debug('watch peerConnectionError triggered. New value', { isError })
+      if (isError) {
+        this.edgeDeviceError = this.$store.state.pnp.userMessage
+        console.debug('isPeerConnectionError TRUE. Error message:', this.edgeDeviceError)
+      } else {
+        // clear the user friendly error message
+        this.edgeDeviceError = undefined
+        console.debug('isPeerConnectionError FALSE. Error message:', this.edgeDeviceError)
       }
     }
   }
