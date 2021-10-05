@@ -129,10 +129,10 @@ describe('More Settings View tests', () => {
     store.state.pnp.edgeAPI = jest.fn()
     const errorMessage = 'Remote API error while saving new device name'
     store.state.pnp.edgeAPI.getEdgeStatus = jest.fn().mockResolvedValue({
-        status: 'OK',
-        version: 'Oct.4.2021.testing',
-        display_name: 'New Device Name'
-      })      
+      status: 'OK',
+      version: 'Oct.4.2021.testing',
+      display_name: 'New Device Name'
+    })
     store.state.pnp.edgeAPI.setDeviceDisplayName = jest.fn().mockImplementation(() => {
       throw new Error(errorMessage)
     })
