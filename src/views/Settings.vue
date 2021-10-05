@@ -26,7 +26,6 @@
       <v-row
         align="center"
       >
-        >
         <v-dialog
           v-model="syncing"
           persistent
@@ -76,7 +75,6 @@
                 />
                 <amb-banner
                   v-else
-                  progress
                   banner-class="text-left"
                   icon="cloud-off-outline"
                   icon-color="info"
@@ -150,6 +148,7 @@
                   </v-stepper-step>
                   <v-stepper-content step="1">
                     <v-progress-linear
+                      v-if="!this.isPeerConnectionError"
                       color="info"
                       indeterminate
                       :size="50"
@@ -423,12 +422,9 @@ export default {
     }
   },
   computed: {
-    peerConnectionError: function () {
-      console.log('this.$store.state.pnp.peerConnectionStatus', this.$store.state.pnp.peerConnectionStatus)
-      return this.$store.state.pnp.peerConnectionStatus === PEER_CONNECTION_ERROR
-    },
     ...mapState({
       peerConnectionStatus: state => state.pnp.peerConnectionStatus,
+      isPeerConnectionError: state => state.pnp.peerConnectionStatus === PEER_CONNECTION_ERROR,
       isEdgeConnected: state =>
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
       pnp: state => state.pnp,
@@ -444,10 +440,9 @@ export default {
       let step = 1
       switch (this.peerConnectionStatus) {
         case PEER_DISCONNECTED:
-        case PEER_CONNECTION_ERROR:
+        case PEER_DISCOVERING:
           step = 1
           break
-        case PEER_DISCOVERING:
         case PEER_DISCOVERED:
         case PEER_CONNECTING:
         case PEER_AUTHENTICATING:
@@ -472,9 +467,15 @@ export default {
         await this.fetchEdgeDetails()
       }
     },
-    peerConnectionError: async function (isError) {
+    isPeerConnectionError: async function (isError) {
+      console.debug('watch peerConnectionError triggered. New value', { isError })
       if (isError) {
         this.edgeDeviceError = this.$store.state.pnp.userMessage
+        console.debug('isPeerConnectionError TRUE. Error message:', this.edgeDeviceError)
+      } else {
+        // clear the user friendly error message
+        this.edgeDeviceError = undefined
+        console.debug('isPeerConnectionError FALSE. Error message:', this.edgeDeviceError)
       }
     }
   }

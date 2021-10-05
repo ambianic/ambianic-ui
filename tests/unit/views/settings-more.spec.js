@@ -121,18 +121,24 @@ describe('More Settings View tests', () => {
     expect(editIcon.exists()).toBeTrue()
   })
 
-  test.only('should handle save errors for custom edge display name', async () => {
+  test('should handle save errors for custom edge display name', async () => {
     store.state.pnp.peerConnectionStatus = PEER_CONNECTED
     store.state.pnp.remotePeerId = '0da0d142-9859-4371-96b7-decb180fcd37'
+    const deviceName = 'My Ambianic Edge Device'
     // mock edgeAPI instance
     store.state.pnp.edgeAPI = jest.fn()
     const errorMessage = 'Remote API error while saving new device name'
+    store.state.pnp.edgeAPI.getEdgeStatus = jest.fn().mockResolvedValue({
+        status: 'OK',
+        version: 'Oct.4.2021.testing',
+        display_name: 'New Device Name'
+      })      
     store.state.pnp.edgeAPI.setDeviceDisplayName = jest.fn().mockImplementation(() => {
       throw new Error(errorMessage)
     })
     wrapper = await mount(Settings, options)
     await Vue.nextTick()
-    const deviceName = 'My Ambianic Edge Device'
+    console.debug('wrapper HTML', wrapper.html())
     const listItem = wrapper.findComponent({ ref: 'list-item-edgeDeviceName' })
     expect(listItem.exists()).toBe(true)
     expect(listItem.props()).toEqual({
@@ -163,7 +169,7 @@ describe('More Settings View tests', () => {
     expect(api).toThrow(Error(errorMessage))
     const nameLabel = listItem.findComponent({ ref: 'title-read-only' })
     expect(nameLabel.exists()).toBeTrue()
-    expect(nameLabel.html()).toContain(deviceName)
+    expect(nameLabel.html()).toContain('New Device Name')
     editIcon = listItem.findComponent({ ref: 'icon-start-edit' })
     expect(editIcon.exists()).toBeTrue()
     const errorBox = wrapper.findComponent({ ref: 'edge-device-error' })
