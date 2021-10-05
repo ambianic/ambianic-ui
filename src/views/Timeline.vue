@@ -294,7 +294,7 @@ export default {
             await new Promise(resolve => setTimeout(resolve, 2000)) // sleep for 2 seconds
           }
         } catch (error) {
-          console.info('Unable to feetch timeline page. Will keep trying.', error) // eslint-disable-line no-console
+          console.info('Unable to feetch timeline page. Will keep trying. ', error) // eslint-disable-line no-console
           await new Promise(resolve => setTimeout(resolve, 2000)) // sleep for 2 seconds
         }
       } while (timelineEvents === undefined)

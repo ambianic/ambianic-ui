@@ -12,9 +12,10 @@
     "codecov:e2e": "codecov -f ./coverage/coverage-final.json",
     "codecov:unit": "codecov -f ./coverage/jest/coverage-final.json",
     "codecov": "codecov -r ./coverage/",
+    "coverage": "npx nyc report --reporter html --reporter text -t coverage --report-dir coverage/summary",
     "test:unit": "jest",
-    "test:e2e": "npx cypress run",
-    "test": "npm_config_yes=true npx browserslist@latest --update-db && npm run test:unit && npm run test:e2e"
+    "test:e2e": "npm_config_yes=true npx browserslist@latest --update-db && npx cypress run",
+    "test": "npm run test:unit && npm run test:e2e && npm run coverage"
   },
   "dependencies": {
     "@cypress/webpack-dev-server": "^1.5.0",
