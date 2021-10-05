@@ -29,6 +29,7 @@ import { ambianicConf } from '@/config'
 import Peer from 'peerjs'
 import { PeerRoom } from '@/remote/peer-room'
 import { PeerFetch } from '@/remote/peer-fetch'
+import { PEER_CONNECTION_ERROR } from '../../../src/store/mutation-types'
 
 jest.mock('peerjs') // Peer is now a mock class
 jest.mock('@/remote/peer-room') // PeerRoom is now a mock class
@@ -350,7 +351,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
     expect(store.state.pnp.pnpServiceConnectionStatus).toBe(PNP_SERVICE_CONNECTING)
   })
 
-  test.only('PEER_CONNECT attempt connection to a remote peer that is not responding', async () => {
+  test('PEER_CONNECT attempt connection to a remote peer that is not responding', async () => {
     // emulate peer is disconnected
     store.state.pnp.peerConnectionStatus = PEER_DISCONNECTED
     // emulate PNP signaling service connection exists
@@ -598,7 +599,6 @@ describe('PnP state machine actions - p2p communication layer', () => {
     // check that peerConnection callbacks were setup
     expect(peerConnection.on).toHaveBeenCalledTimes(3)
     console.debug({ _auth })
-    jest.spyOn(_auth, '_scheduleAuth')
     // emulate peerConnection open
     const onPeerConnectionOpenCallback =
         peerConnection.on.mock.calls.find(callbackDetails => callbackDetails[0] === 'open')
@@ -610,7 +610,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
     const peerFetch = PeerFetch.mock.instances[0]
     expect(store.state.pnp.peerFetch).toBe(peerFetch)
     // check if the peer authentication sequence has been scheduled
-    expect(_auth._scheduleAuth).toHaveBeenCalledTimes(1)
+    expect(setTimeout).toHaveBeenCalledTimes(1)
   })
 
   test('RTCPeerConnection "close" callback: RTCPeerConnection.on("close")', async () => {
@@ -649,7 +649,7 @@ describe('PnP state machine actions - p2p communication layer', () => {
         peerConnection.on.mock.calls.find(callbackDetails => callbackDetails[0] === 'error')
     // emulate peerConnection.on('error')
     onPeerConnectionOpenCallback[1]()
-    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
+    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_CONNECTION_ERROR)
     expect(store.state.pnp.userMessage).toEqual(expect.stringContaining('Error in connection to remote peer ID'))
     // remote peer should be added to problematic list
     expect(store.state.pnp.problematicRemotePeers).toContain('a_remote_peer_id')
