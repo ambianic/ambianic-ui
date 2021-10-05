@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.19.1](https://github.com/ambianic/ambianic-ui/compare/v2.19.0...v2.19.1) (2021-10-05)
+
+
+### Bug Fixes
+
+* settings page edge connectivity error handling ([#744](https://github.com/ambianic/ambianic-ui/issues/744)) ([f93f0e1](https://github.com/ambianic/ambianic-ui/commit/f93f0e176b7743bbaf516b6dec387decaf043bde))
+
 # [2.19.0](https://github.com/ambianic/ambianic-ui/compare/v2.18.0...v2.19.0) (2021-10-04)
 
 
