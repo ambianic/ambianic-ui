@@ -46,3 +46,27 @@ export const setTimelineEventColor = (priority) => {
   color = 'white--text ' + color + ' lighten-2'
   return color
 }
+
+export const ONBOARDING_MESSAGE_CLIENTS = [
+  {
+    name: 'Email',
+    content: `mailto:bob@gmail.com?subject=Ambianic Edge Access Request&body=Bob please send me an access invitation to your Ambianic Edge device.
+https://ui.ambianic.ai/share`,
+    icon: 'email'
+  },
+  {
+    name: 'SMS Message',
+    content: 'sms:&body=Testing%Ambianic%UI',
+    icon: 'message-processing'
+  },
+  {
+    name: 'Whatsapp',
+    content: 'whatsapp://send?text=Testing%Ambianic%sharing',
+    icon: 'whatsapp'
+  },
+  {
+    name: 'iMessage',
+    content: '#',
+    icon: 'apple'
+  }
+]

@@ -28,7 +28,7 @@
           <!-- end -->
 
           <li
-            v-for="client in MESSAGE_CLIENTS"
+            v-for="client in ONBOARDING_MESSAGE_CLIENTS"
             :key="client.name"
             class="list-item"
           >
@@ -645,30 +645,7 @@
 import { mapActions, mapState } from 'vuex'
 import { PEER_CONNECTED } from '@/store/mutation-types'
 import { CHANGE_REMOTE_PEER_ID, PEER_DISCOVER } from '@/store/action-types'
-
-const MESSAGE_CLIENTS = [
-  {
-    name: 'Email',
-    content: `mailto:bob@gmail.com?subject=Ambianic Edge Access Request&body=Bob please send me an access invitation to your Ambianic Edge device.
-https://ui.ambianic.ai/share`,
-    icon: 'email'
-  },
-  {
-    name: 'SMS Message',
-    content: 'sms:&body=Testing%Ambianic%UI',
-    icon: 'message-processing'
-  },
-  {
-    name: 'Whatsapp',
-    content: 'whatsapp://send?text=Testing%Ambianic%sharing',
-    icon: 'whatsapp'
-  },
-  {
-    name: 'iMessage',
-    content: '#',
-    icon: 'apple'
-  }
-]
+import { ONBOARDING_MESSAGE_CLIENTS } from '@/components/utils'
 
 export default {
   name: 'Onboarding',
@@ -686,7 +663,7 @@ export default {
       hasRemotePeerID: false,
       sendRequestDialog: false,
       hasSentAccessRequest: false,
-      MESSAGE_CLIENTS,
+      ONBOARDING_MESSAGE_CLIENTS,
       recievedPeerID: undefined,
       isCorrectPeerId: false,
       onBeforeinstallprompt: undefined
@@ -838,15 +815,6 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.input-field {
-  color: #000;
-  border: 1px solid #c0c0c0;
-  border-radius: 3px;
-  height: 40px;
-  width: 23rem;
-  padding: 0.4rem 1rem;
-}
-
 .action-text {
   color: red;
   margin: 0 0.5rem;
