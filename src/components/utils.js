@@ -70,3 +70,11 @@ https://ui.ambianic.ai/share`,
     icon: 'apple'
   }
 ]
+
+export const validatePeerIdHelper = value => {
+  const regexEval = /^([a-zA-Z0-9]{8})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{12})$/.test(value)
+
+  return {
+    isCorrectPeerId: regexEval
+  }
+}

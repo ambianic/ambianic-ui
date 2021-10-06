@@ -1,64 +1,13 @@
 <template>
   <div class="body">
-    <v-dialog
-      v-model="sendRequestDialog"
-      width="500"
-      data-cy="messaging-option-modal"
-    >
-      <v-card>
-        <v-card-title class="headline grey lighten-2">
-          <h5 class="title">
-            Messaging Client
-          </h5>
-        </v-card-title>
-        <br>
+    <OnboardingDialog
+      modal-title="Messaging Client"
+      modal-text="Select a messaging client below;"
+      :visibility="sendRequestDialog"
+      :handle-access-item-click="() => handleAccessRequest(true)"
+      :right-btn-func="() => handleAccessRequest(false)"
+    />
 
-        <p align="center">
-          Select a messaging client below;
-        </p>
-        <ul>
-          <!-- For cypress test runner only -->
-          <div
-            data-cy="select-client"
-            style="opacity: 0;"
-            @click="handleAccessRequest(true)"
-          >
-            <p>A hidden item</p>
-          </div>
-          <!-- end -->
-
-          <li
-            v-for="client in ONBOARDING_MESSAGE_CLIENTS"
-            :key="client.name"
-            class="list-item"
-          >
-            <div @click="handleAccessRequest(true, client.name)">
-              <a
-                :href="client.content"
-                style="text-decoration: none; padding-top: 10px;"
-              >
-                <v-icon left>mdi-{{ client.icon }}</v-icon>
-                {{ client.name }}
-              </a>
-            </div>
-          </li>
-        </ul>
-        <br>
-
-        <v-divider />
-
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            color="primary"
-            text
-            @click="handleRequestDialog(false)"
-          >
-            Cancel
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
     <div class="container">
       <v-card
         data-cy="installationCard"
@@ -69,24 +18,20 @@
           <v-list-item-content>
             <nav style="display: flex; flex-direction: row;">
               <v-list-item-title
-                class="headline"
                 ref="headline"
+                class="headline"
               >
                 <h5>Getting Started</h5>
               </v-list-item-title>
 
-              <div
+              <a
                 v-if="stepLevel < 3"
-                class="skip-link"
                 @click="finishOnboarding()"
+                style="text-decoration: none; color: grey;"
+                href="timeline"
               >
-                <a
-                  style="text-decoration: none; color: grey;"
-                  href="timeline"
-                >
-                  Skip
-                </a>
-              </div>
+                Skip
+              </a>
             </nav>
 
             <br>
@@ -97,53 +42,40 @@
               vertical
             >
               <v-stepper-step
-                @click="
-                  afterPwaInstall()
-                "
+                @click="afterPwaInstall()"
                 editable
                 data-cy="stepper"
                 :complete="stepLevel > 1"
                 step="1"
               >
                 App Installation
-                <br>
               </v-stepper-step>
 
               <v-stepper-content step="1">
-                <div v-if="!appInstallationComplete">
-                  <div class="flex-between">
-                    <v-card-text class="step-text">
-                      First, let's install the Ambianic UI App on your device.
-                    </v-card-text>
+                <div
+                  v-if="!appInstallationComplete"
+                  class="flex-between"
+                >
+                  <v-card-text class="step-text">
+                    First, let's install the Ambianic UI App on your device.
+                  </v-card-text>
 
-                    <v-btn
-                      style="padding: 1.2rem 1.2rem;"
-                      color="primary"
-                      size="2"
-                      data-cy="install-app"
-                      @click="installApp()"
-                    >
-                      <p
-                        style="padding-top: 15px;"
-                        v-if="!isInstallingApp"
-                      >
-                        Install App
-                      </p>
-                      <p
-                        style="padding-top: 15px;"
-                        v-else
-                      >
-                        Installing App
-                      </p>
+                  <v-btn
+                    style="padding: 1.2rem 1.2rem;"
+                    color="primary"
+                    size="2"
+                    data-cy="install-app"
+                    @click="installApp()"
+                  >
+                    {{ !isInstallingApp ? "Install App" : "Installing App" }}
 
-                      <v-progress-circular
-                        style="padding-left: 50px;"
-                        indeterminate
-                        color="white"
-                        v-if="isInstallingApp"
-                      />
-                    </v-btn>
-                  </div>
+                    <v-progress-circular
+                      style="padding-left: 50px;"
+                      indeterminate
+                      color="white"
+                      v-if="isInstallingApp"
+                    />
+                  </v-btn>
                 </div>
                 <div v-else>
                   <div class="flex-between">
@@ -206,7 +138,7 @@
                   <div class="flex-between">
                     <v-card-text class="step-text">
                       Are you installing Ambianic Edge Device on your
-                      local WiFi network, or you will be conneciting to a device on a
+                      local WiFi network, or you will be connecting to a device on a
                       remote network?
                     </v-card-text>
                   </div>
@@ -226,17 +158,15 @@
                         </v-btn>
                       </v-col>
 
-                      <v-col>
-                        <div class="align-center">
-                          <v-btn
-                            style="width: 100%; padding: 0.5rem 2.5rem;"
-                            color="primary"
-                            data-cy="local-button"
-                            @click="setStepContent('local')"
-                          >
-                            Local Device
-                          </v-btn>
-                        </div>
+                      <v-col class="align-center">
+                        <v-btn
+                          style="width: 100%; padding: 0.5rem 2.5rem;"
+                          color="primary"
+                          data-cy="local-button"
+                          @click="setStepContent('local')"
+                        >
+                          Local Device
+                        </v-btn>
                       </v-col>
                     </v-row>
                   </v-container>
@@ -251,7 +181,7 @@
                       <br>
                       <br>
                       {{ hasRemotePeerID ? "Provide the remote peer ID of an edge device to connect to it." :
-                        "Click the button below to request invitation granting                            access."
+                        "Click the button below to request invitation granting access."
                       }}
                     </v-card-text>
                   </div>
@@ -289,37 +219,34 @@
                         class="input"
                         name="peerid-input"
                       />
-                      <div
+
+                      <v-container
                         class="flex-between"
                         style="flex-direction: row"
                       >
-                        <v-container>
-                          <v-row dense>
-                            <v-col>
-                              <v-btn
-                                color="primary"
-                                :disabled="!isCorrectPeerId || isLoading"
-                                data-cy="submit-existing-remotePeerID"
-                                @click="submitPeerId()"
-                              >
-                                {{ !isLoading ? "Connect" : "Connecting" }} To Edge Device
-                              </v-btn>
-                            </v-col>
+                        <v-row dense>
+                          <v-col>
+                            <v-btn
+                              color="primary"
+                              :disabled="!isCorrectPeerId || isLoading"
+                              data-cy="submit-existing-remotePeerID"
+                              @click="submitPeerId()"
+                            >
+                              {{ !isLoading ? "Connect" : "Connecting" }} To Edge Device
+                            </v-btn>
+                          </v-col>
 
-                            <v-col>
-                              <div>
-                                <v-btn
-                                  color="primary"
-                                  data-cy="cancel-input-existing-remoteID"
-                                  @click="cancelConnectionWithExistingRemoteId()"
-                                >
-                                  Cancel, Request Access
-                                </v-btn>
-                              </div>
-                            </v-col>
-                          </v-row>
-                        </v-container>
-                      </div>
+                          <v-col>
+                            <v-btn
+                              color="primary"
+                              data-cy="cancel-input-existing-remoteID"
+                              @click="cancelConnectionWithExistingRemoteId()"
+                            >
+                              Cancel, Request Access
+                            </v-btn>
+                          </v-col>
+                        </v-row>
+                      </v-container>
                     </div>
                   </div>
                 </div>
@@ -333,7 +260,6 @@
                     <div class="message-container">
                       <v-card-text class="step-text">
                         {{ invitationMessage }}
-                        <br>
                       </v-card-text>
                     </div>
                     <br>
@@ -350,21 +276,16 @@
                     </div>
                   </div>
                   <div v-else>
-                    <v-card-text
-                      style="step-text"
-                      align="center"
-                    >
-                      Messaging client to send access request initiated
-                      sucessfully.
+                    <v-card-text align="center">
+                      Messaging client to send access request initiated successfully.
                     </v-card-text>
                     <v-card-text
-                      style="step-text"
+                      class="step-text"
                       align="center"
                     >
                       Access Request wasn't sent successfully?
 
                       <span
-                        color="pink darken-4"
                         class="action-text"
                         @click="handleAccessRequest(false)"
                       >
@@ -374,64 +295,56 @@
 
                     <br>
 
-                    <div class="align-center">
-                      <div class="flex">
-                        <p style="margin: 0.5rem 0.5rem;">
-                          Awaiting edge device connection
-                        </p>
+                    <div class="flex">
+                      <p style="margin: 0.5rem 0.5rem;">
+                        Awaiting edge device connection
+                      </p>
 
-                        <div class="align-center">
-                          <v-progress-circular
-                            style="padding-left: 50px;"
-                            indeterminate
-                            color="primary"
-                          />
-                        </div>
-                      </div>
+                      <v-progress-circular
+                        size="26"
+                        indeterminate
+                      />
                     </div>
-                    <br>
                     <br>
                     <hr>
                     <br>
-                    <div>
+                    <div
+                      class="align-center"
+                      style="flex-direction: column;"
+                    >
+                      <v-card-text class="info-text">
+                        Use received
+                        <b>PeerID</b>
+                        to pair with remote Ambianic Edge Device.
+                      </v-card-text>
                       <div
-                        class="align-center"
-                        style="flex-direction: column;"
+                        class="flex"
+                        style="justify-content: space-around;"
                       >
-                        <v-card-text class="info-text">
-                          Use received
-                          <b>PeerID</b>
-                          to pair with remote Ambianic Edge Device.
-                        </v-card-text>
-                        <div
-                          class="flex"
-                          style="justify-content: space-around;"
-                        >
-                          <div class="align-center">
-                            <v-text-field
-                              v-model="recievedPeerID"
-                              type="text"
-                              label="Received Peer ID*"
-                              placeholder="Enter received Peer ID"
-                              id="recievedPeerID"
-                              outlined
-                              dense
-                              class="input"
-                              name="peerid-input"
-                            />
-                          </div>
+                        <div class="align-center">
+                          <v-text-field
+                            v-model="recievedPeerID"
+                            type="text"
+                            label="Received Peer ID*"
+                            placeholder="Enter received Peer ID"
+                            id="recievedPeerID"
+                            outlined
+                            dense
+                            class="input"
+                            name="peerid-input"
+                          />
+                        </div>
 
-                          <div class="align-center">
-                            <v-btn
-                              :disabled="!isCorrectPeerId || isLoading"
-                              style="margin-left: 20px; margin-bottom: 20px;"
-                              color="primary"
-                              @click="submitPeerId()"
-                              data-cy="submit-button"
-                            >
-                              {{ !isLoading ? "Submit" : "Submitting" }} PeerID
-                            </v-btn>
-                          </div>
+                        <div class="align-center">
+                          <v-btn
+                            :disabled="!isCorrectPeerId || isLoading"
+                            style="margin-left: 20px; margin-bottom: 20px;"
+                            color="primary"
+                            @click="submitPeerId()"
+                            data-cy="submit-button"
+                          >
+                            {{ !isLoading ? "Submit" : "Submitting" }} PeerID
+                          </v-btn>
                         </div>
                       </div>
                     </div>
@@ -439,12 +352,10 @@
                 </div>
 
                 <div v-if="stepContentName === 'local'">
-                  <div class="flex-between">
-                    <v-card-text class="step-text">
-                      Are you using a pre-installed Certified Ambianic Edge
-                      device or a device that you built yourself (DIY)?
-                    </v-card-text>
-                  </div>
+                  <v-card-text class="step-text">
+                    Are you using a pre-installed Certified Ambianic Edge
+                    device or a device that you built yourself (DIY)?
+                  </v-card-text>
 
                   <v-container>
                     <v-row dense>
@@ -459,55 +370,48 @@
                       </v-col>
 
                       <v-col>
-                        <div style="padding-left: 50px;">
-                          <v-btn
-                            color="primary"
-                            style="width: 100%"
-                            @click="setStepContent('my-own')"
-                          >
-                            My Own (DIY)
-                          </v-btn>
-                        </div>
+                        <v-btn
+                          color="primary"
+                          style="width: 100%; margin-left: 50px;"
+                          @click="setStepContent('my-own')"
+                        >
+                          My Own (DIY)
+                        </v-btn>
                       </v-col>
                     </v-row>
                   </v-container>
                 </div>
 
                 <div v-if="stepContentName === 'my-own'">
-                  <div class="flex-between">
-                    <v-card-text class="step-text">
-                      Please follow the
-                      <a
-                        href="https://docs.ambianic.ai/users/quickstart"
-                        target="_blank"
-                        rel="no-oopener"
-                      >
-                        Ambianic Edge Install Guide
-                      </a>
-                      . When finished click, continue.
-                    </v-card-text>
-                  </div>
-
-                  <div class="right-btn">
-                    <v-btn
-                      color="primary"
-                      @click="setStepContent('certified')"
+                  <v-card-text class="step-text">
+                    Please follow the
+                    <a
+                      href="https://docs.ambianic.ai/users/quickstart"
+                      target="_blank"
+                      rel="no-oopener"
                     >
-                      Continue
+                      Ambianic Edge Install Guide
+                    </a>
+                    . When finished click, continue.
+                  </v-card-text>
 
-                      <v-icon right>
-                        mdi-arrow-right
-                      </v-icon>
-                    </v-btn>
-                  </div>
+                  <v-btn
+                    style="text-align: right"
+                    color="primary"
+                    @click="setStepContent('certified')"
+                  >
+                    Continue
+
+                    <v-icon right>
+                      mdi-arrow-right
+                    </v-icon>
+                  </v-btn>
                 </div>
 
                 <div v-if="stepContentName === 'certified'">
-                  <div class="flex-between">
-                    <v-card-text class="step-text">
-                      Let's connect to your Ambianic Edge device.
-                    </v-card-text>
-                  </div>
+                  <v-card-text class="step-text">
+                    Let's connect to your Ambianic Edge device.
+                  </v-card-text>
 
                   <div class="right-btn">
                     <v-btn
@@ -533,7 +437,6 @@
               >
                 Connection Settings
               </v-stepper-step>
-              <br>
 
               <v-stepper-content step="3">
                 <div v-if="stepContentName === 'discovering'">
@@ -638,7 +541,6 @@
           </v-list-item-content>
         </v-list-item>
         <br>
-        <br>
       </v-card>
     </div>
   </div>
@@ -648,10 +550,13 @@
 import { mapActions, mapState } from 'vuex'
 import { PEER_CONNECTED } from '@/store/mutation-types'
 import { CHANGE_REMOTE_PEER_ID, PEER_DISCOVER } from '@/store/action-types'
-import { ONBOARDING_MESSAGE_CLIENTS } from '@/components/utils'
+import { validatePeerIdHelper } from '../components/utils'
 
 export default {
   name: 'Onboarding',
+  components: {
+    OnboardingDialog: () => import('@/components/shared/onboardingDialog.vue')
+  },
   data () {
     return {
       isLoading: false,
@@ -666,7 +571,6 @@ export default {
       hasRemotePeerID: false,
       sendRequestDialog: false,
       hasSentAccessRequest: false,
-      ONBOARDING_MESSAGE_CLIENTS,
       recievedPeerID: undefined,
       isCorrectPeerId: false,
       onBeforeinstallprompt: undefined
@@ -701,17 +605,7 @@ export default {
     ...mapActions(['CHANGE_REMOTE_PEER_ID']),
 
     validatePeerId (value) {
-      if (
-        /^([a-zA-Z0-9]{8})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{12})$/.test(
-          value
-        )
-      ) {
-        this.isCorrectPeerId = true
-        return this.isCorrectPeerId
-      } else {
-        this.isCorrectPeerId = false
-        return this.isCorrectPeerId
-      }
+      this.isCorrectPeerId = validatePeerIdHelper(value)
     },
 
     async installApp () {
@@ -830,23 +724,6 @@ export default {
 .info-text {
   font-size: 0.95rem;
   color: rgb(84, 84, 84);
-}
-
-.list-item {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  transition: all 300ms;
-  margin: 0.7rem 20px 0.7rem 1rem;
-}
-
-.list-item:hover {
-  cursor: pointer;
-  background: rgba(233, 241, 251, 0.81);
-}
-
-.title {
-  font-weight: semi-bold;
 }
 
 .message-container {

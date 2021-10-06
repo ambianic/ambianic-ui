@@ -43,7 +43,10 @@ context('Onboarding Wizard', () => {
     cy.get('[data-cy=request-access]').click()
 
     cy.get('[data-cy=send-message]').click()
-    cy.get('[data-cy=select-client]').click()
+
+    cy.get('.messaging-client').each((item, index, element) => {
+      element[1].click()
+    })
   })
 
   it('Should have PeerID input field and enabled Submit button after validation', () => {

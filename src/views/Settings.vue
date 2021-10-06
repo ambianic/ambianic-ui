@@ -331,6 +331,7 @@ import {
   REMOVE_REMOTE_PEER_ID
 } from '../store/action-types.js'
 import AmbListItem from '@/components/shared/ListItem.vue'
+import { validatePeerIdHelper } from '../components/utils'
 
 export default {
   components: {
@@ -362,14 +363,7 @@ export default {
   methods: {
     // Validate the user input so the ID has the correct format before showing the connect button
     validateIP (value) {
-      if (/^([a-zA-Z0-9]{8})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{12})$/.test(value)) {
-        this.correctEdgeAddress = true
-        return this.correctEdgeAddress
-      } else {
-        // if value is not matching regex, remove button
-        this.correctEdgeAddress = false
-        return this.correctEdgeAddress
-      }
+      this.correctEdgeAddress = validatePeerIdHelper(value)
     },
     ...mapActions([
       'CHANGE_REMOTE_PEER_ID'
