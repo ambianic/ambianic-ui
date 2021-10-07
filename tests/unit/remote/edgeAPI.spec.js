@@ -38,13 +38,28 @@ describe('PeerRoom class coverage - p2p communication layer', () => {
   })
 
   test('EdgeAPI._get()', async () => {
-    pnp.state.peerFetch.request = jest.fn().mockReturnValue({ content: '{event: "object_detection"}' })
+    pnp.state.peerFetch.request = jest.fn().mockReturnValue(
+      { 
+        header: { status: 200 },
+        content: '{event: "object_detection"}' 
+      }
+    )
     const edgeAPI = new EdgeAPI(pnp)
     const response = await edgeAPI._get({ url: 'timeline' })
     expect(pnp.state.peerFetch.request).toHaveBeenCalledTimes(1)
     expect(pnp.state.peerFetch.request).toHaveBeenCalledWith({ method: 'GET', url: 'timeline' })
-    expect(pnp.state.peerFetch.request).toHaveReturnedWith({ content: '{event: "object_detection"}' })
-    expect(response).toEqual({ content: '{event: "object_detection"}' })
+    expect(pnp.state.peerFetch.request).toHaveReturnedWith(
+      { 
+        header: { status: 200 },
+        content: '{event: "object_detection"}' 
+      }
+    )
+    expect(response).toEqual(
+      { 
+        header: { status: 200 },
+        content: '{event: "object_detection"}' 
+      }
+    )
   })
 
   test('EdgeAPI._get() throws exception', async () => {
@@ -60,18 +75,33 @@ describe('PeerRoom class coverage - p2p communication layer', () => {
   })
 
   test('EdgeAPI._getJSON()', async () => {
-    pnp.state.peerFetch.request = jest.fn().mockReturnValue({ content: '{event: "object_detection"}' })
+    pnp.state.peerFetch.request = jest.fn().mockReturnValue(
+      { 
+        header: { status: 200 },
+        content: '{event: "object_detection"}' 
+      }
+    )
     pnp.state.peerFetch.jsonify = jest.fn().mockImplementation((data) => data)
     const edgeAPI = new EdgeAPI(pnp)
     const response = await edgeAPI._getJSON({ method: 'GET', url: 'timeline' })
     expect(pnp.state.peerFetch.request).toHaveBeenCalledTimes(1)
     expect(pnp.state.peerFetch.request).toHaveBeenCalledWith({ method: 'GET', url: 'timeline' })
-    expect(pnp.state.peerFetch.request).toHaveReturnedWith({ content: '{event: "object_detection"}' })
+    expect(pnp.state.peerFetch.request).toHaveReturnedWith(
+      { 
+        header: { status: 200 },
+        content: '{event: "object_detection"}' 
+      }
+    )
     expect(response).toEqual('{event: "object_detection"}')
   })
 
   test('EdgeAPI.getTimelinePage()', async () => {
-    pnp.state.peerFetch.request = jest.fn().mockReturnValue({ content: '{event: "object_detection"}' })
+    pnp.state.peerFetch.request = jest.fn().mockReturnValue(
+      { 
+        header: { status: 200 },
+        content: '{event: "object_detection"}' 
+      }
+    )
     pnp.state.peerFetch.jsonify = jest.fn().mockImplementation((data) => data)
     const edgeAPI = new EdgeAPI(pnp)
     const response = await edgeAPI.getTimelinePage(4)
@@ -83,12 +113,18 @@ describe('PeerRoom class coverage - p2p communication layer', () => {
         page: 4
       }
     })
-    expect(pnp.state.peerFetch.request).toHaveReturnedWith({ content: '{event: "object_detection"}' })
+    expect(pnp.state.peerFetch.request).toHaveReturnedWith(
+      { 
+        header: { status: 200 },
+        content: '{event: "object_detection"}' 
+      }
+    )
     expect(response).toEqual('{event: "object_detection"}')
   })
 
   test('EdgeAPI.getEdgeStatus()', async () => {
     pnp.state.peerFetch.request = jest.fn().mockReturnValue({
+      header: { status: 200 },
       content: '{ status: "OK",  version: "1.14.7"}'
     })
     pnp.state.peerFetch.jsonify = jest.fn().mockImplementation((data) => data)
@@ -122,7 +158,12 @@ describe('PeerRoom class coverage - p2p communication layer', () => {
     window.URL.createObjectURL = jest.fn().mockImplementation(
       (blob) => { throw new Error('Failed to create local image from blob') }
     )
-    pnp.state.peerFetch.request = jest.fn().mockReturnValue({ content: 'binary_image_data' })
+    pnp.state.peerFetch.request = jest.fn().mockReturnValue(
+      { 
+        header: { status: 200 },
+        content: 'binary_image_data' 
+      }
+    )
     const edgeAPI = new EdgeAPI(pnp)
     const localImageURL = await edgeAPI.getImageURL('detection123', 'snapshot.png')
     expect(localImageURL).toBeUndefined()

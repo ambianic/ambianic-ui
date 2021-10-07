@@ -267,14 +267,6 @@ function setPnPServiceConnectionHandlers (
   })
 }
 
-// exporting a private class to allow access from jest tests
-export const _auth = {
-  _scheduleAuth ({ dispatch, peerConnection }) {
-    // schedule an async PEER_AUTHENTICATE step
-    dispatch(PEER_AUTHENTICATE, peerConnection)
-  }
-}
-
 function setPeerConnectionHandlers ({
   state,
   commit,
@@ -288,7 +280,10 @@ function setPeerConnectionHandlers ({
     const peerFetch = new PeerFetch(peerConnection)
     console.debug('Peer DataConnection is now open. Creating PeerFetch wrapper.')
     commit(PEER_FETCH, peerFetch)
-    _auth._scheduleAuth({ dispatch, peerConnection })
+    // schedule an async PEER_AUTHENTICATE step
+    // There is 1 second delay to allow the RTCDataChannel to prepare
+    // Without the delay, sometimes the datachannel "jams"
+    setTimeout(() => dispatch(PEER_AUTHENTICATE, peerConnection), 1000)
   })
 
   peerConnection.on('close', function () {

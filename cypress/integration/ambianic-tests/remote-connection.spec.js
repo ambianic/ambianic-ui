@@ -88,7 +88,7 @@ context('RemoteConnections',    () => {
         // cypress automatically clears cookies and local storage after each test
     })
 
-    it.only('Should discover and display local device', () => {
+    it('Should discover and display local device', () => {
       cy.window().then(win => {
         // mock auto discovery
         win.__store__.state.pnp.peerDiscover = cy.stub()

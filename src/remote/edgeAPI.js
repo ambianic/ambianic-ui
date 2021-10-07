@@ -37,14 +37,24 @@ export class EdgeAPI {
 
   async _getJSON (request) {
     const response = await this._get(request)
-    const jsn = this.pnp.state.peerFetch.jsonify(response.content)
-    return jsn
+    if (response.header.status > 400) {
+      // HTTP Error code in 400s or 500s. Something went wrong.
+      throw Error(`HTTP Error Code: ${response.header.status}`)
+    } else {
+      const jsn = this.pnp.state.peerFetch.jsonify(response.content)
+      return jsn
+    }
   }
 
   async _putJSON (request) {
     const response = await this._put(request)
-    const jsn = this.pnp.state.peerFetch.jsonify(response.content)
-    return jsn
+    if (response.header.status > 400) {
+      // HTTP Error code in 400s or 500s. Something went wrong.
+      throw Error(`HTTP Error Code: ${response.header.status}`)
+    } else {
+      const jsn = this.pnp.state.peerFetch.jsonify(response.content)
+      return jsn
+    }
   }
 
   /**
@@ -101,9 +111,11 @@ export class EdgeAPI {
     const esc = encodeURIComponent
     const urlEncodedName = esc(newName)
     const request = {
-      url: `${apiRoot}/device/display_name/${urlEncodedName}`
+      url: `${apiRoot}device/display_name/${urlEncodedName}`
     }
-    return await this._putJSON(request)
+    const response = await this._putJSON(request)
+    console.debug('setDeviceDisplayName() received response', { request }, { response })
+    return response
   }
 
   async auth () {

@@ -173,6 +173,6 @@ describe('More Settings View tests', () => {
     editIcon = listItem.findComponent({ ref: 'icon-start-edit' })
     expect(editIcon.exists()).toBeTrue()
     const errorBox = wrapper.findComponent({ ref: 'edge-device-error' })
-    expect(errorBox.html()).toContain('Error updating display name on edge device.')
+    expect(errorBox.html()).toContain('Error updating display name.')
   })
 })

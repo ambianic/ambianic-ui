@@ -406,8 +406,8 @@ export default {
           this.$store.commit(EDGE_DEVICE_DISPLAY_NAME, newDisplayName)
           updated = true
         } catch (e) {
-          this.edgeDeviceError = 'Error updating display name on edge device. Could be offline or outdated.'
-          console.error('Exception calling setDeviceDisplayName()', e, e.stack)
+          this.edgeDeviceError = 'Error updating display name. Edge device offline or has outdated API.'
+          console.error('Exception calling setDeviceDisplayName()', { e })
         } finally {
           this.syncing = false
         }

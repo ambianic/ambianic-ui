@@ -1,5 +1,5 @@
 /**
- * Emulates HTML Fetch API over p2p WebRTC DataChannel.
+ * Implements HTML Fetch API over p2p WebRTC DataChannel.
  * Provides convenience HTTP methods similar to axios.
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/fetch fetch}
@@ -111,28 +111,34 @@ export class PeerFetch {
           console.debug('Processing response header', data)
           // this is the first data message from the responses
           const header = peerFetch.jsonify(data)
-          if (header.status === undefined) {
-            console.warn('Expected http header packet with status attribute.', { ticket, header })
-            console.warn('Remote peer may not be using a compatible protocol.')
-          } else if (header.status === 202) {
-            console.debug('Received keepalive ping')
-            // server accepted the request but still working
-            // ignore and keep waiting until result or timeout
-          } else if (header.status === 204) {
-            // Successfully processed request, no response content.
-            //  Normally returned in response to PUT requests.
-            console.debug('Received HTTP 204 response: Success. No content.')
-            // return 204 header and no response content
-            const receivedAll = true
-            const content = undefined
-            pair.response = { header, content, receivedAll }
-          } else {
-            console.debug('Received web server final response header',
-              { header })
-            // save header part of the response
-            // and wait for the p2p data messages with the content body
-            const receivedAll = false
-            pair.response = { header, receivedAll }
+          let receivedAll = false
+          let content
+          switch (header.status) {
+            case 202:
+              console.debug('Received keepalive ping')
+              // server accepted the request but still working
+              // ignore and keep waiting until result or timeout
+              break
+            case 204:
+              // Successfully processed request, no response content.
+              //  Normally returned in response to PUT requests.
+              console.debug('Received HTTP 204 response: Success. No content.')
+              // return 204 header and no response content
+              receivedAll = true
+              content = undefined
+              pair.response = { header, content, receivedAll }
+              break
+            case undefined:
+              console.warn('Expected http header packet with status attribute.', { ticket, header })
+              console.warn('Remote peer may not be using a compatible protocol.')
+              break
+            default:
+              console.debug('Received web server final response header',
+                { header })
+              // save header part of the response
+              // and wait for the p2p data messages with the content body
+              receivedAll = false
+              pair.response = { header, receivedAll }
           }
         } else {
           console.debug('Processing response content')
@@ -213,7 +219,7 @@ export class PeerFetch {
     config.url = url
     config.method = 'PUT'
     config.data = data
-    return await this.request(config)
+    await this.request(config)
   }
 
   /**

@@ -1,6 +1,6 @@
 {
   "name": "ambianic-ui",
-  "version": "2.19.1",
+  "version": "2.19.3",
   "description": "Ambianic UI is the main user interface to Ambianic Edge deployments.",
   "author": "Ivelin Ivanov",
   "scripts": {
@@ -12,9 +12,11 @@
     "codecov:e2e": "codecov -f ./coverage/coverage-final.json",
     "codecov:unit": "codecov -f ./coverage/jest/coverage-final.json",
     "codecov": "codecov -r ./coverage/",
+    "coverage:merge": "cp coverage/jest/coverage-final.json coverage/jest-coverage-final.json && npx nyc merge coverage/ .nyc_output/out.json",
+    "coverage": "npm run coverage:merge && npx nyc --exclude cypress report --reporter html --reporter text -t coverage --report-dir coverage/summary",
     "test:unit": "jest",
-    "test:e2e": "npx cypress run",
-    "test": "npm_config_yes=true npx browserslist@latest --update-db && npm run test:unit && npm run test:e2e"
+    "test:e2e": "npm_config_yes=true npx browserslist@latest --update-db && npx cypress run",
+    "test": "npm run test:unit && npm run test:e2e && npm run coverage"
   },
   "dependencies": {
     "@cypress/webpack-dev-server": "^1.5.0",
