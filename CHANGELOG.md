@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.19.3](https://github.com/ambianic/ambianic-ui/compare/v2.19.2...v2.19.3) (2021-10-07)
+
+
+### Bug Fixes
+
+* setDeviceDisplayName() bug ([7f8da51](https://github.com/ambianic/ambianic-ui/commit/7f8da513542bde23e781713365eda245aac7b2f7))
+
 ## [2.19.2](https://github.com/ambianic/ambianic-ui/compare/v2.19.1...v2.19.2) (2021-10-05)
 
 
