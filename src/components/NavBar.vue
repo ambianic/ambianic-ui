@@ -41,7 +41,7 @@
                 data-cy="connection-status"
                 :icon="connectionStatusIcon"
                 :color="connectionIconColor"
-                to="#"
+                :to="connectionIconLink"
                 v-bind="attrs"
                 v-on="on"
               />
@@ -198,6 +198,7 @@ export default {
     newFavorites: 0,
     newAlerts: 2,
     connectionIconColor: 'warning',
+    connectionIconLink: '/settings',
     logo: '../assets/logo5.svg',
     items: [
       { icon: 'history', text: 'Timeline', link: '/timeline' },
@@ -240,10 +241,12 @@ export default {
         this.connectionStatusTooltipText = 'Disconnected'
         this.connectionStatusIcon = 'cloud-off-outline'
         this.connectionIconColor = 'warning'
+        this.connectionIconLink = '/settings'
       } else if (this.peerConnectionStatus === 'PEER_CONNECTING') {
         this.connectionStatusIcon = 'cloud-sync-outline'
         this.connectionIconColor = 'info'
         this.connectionStatusTooltipText = 'Connecting ...'
+        this.connectionIconLink = '/settings'
       }
     }
   },
