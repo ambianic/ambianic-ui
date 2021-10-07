@@ -1,4 +1,4 @@
-import { INVITATION_REQUEST, CHANGE_STEP_CONTENT_NAME, PWA_INSTALLATION_STATUS, CHANGE_INSTALLATION_STEP } from './mutation-types'
+import { INVITATION_REQUEST, CHANGE_STEP_CONTENT_NAME, PWA_INSTALLATION_EVENT, PWA_INSTALLATION_STATUS, CHANGE_INSTALLATION_STEP } from './mutation-types'
 import { INSTALL_PWA_APP, INITIATE_PWA_INSTALLATION } from './action-types'
 
 const state = {
@@ -32,6 +32,9 @@ const mutations = {
 
     state.invitationDialog = dialogState
     state.hasSentAccessRequest = shouldSendAccessRequest
+  },
+  [PWA_INSTALLATION_EVENT] (state, event) {
+    state.pwaInstallPrompt = event
   }
 }
 
@@ -42,7 +45,7 @@ const actions = {
 
     event.preventDefault()
     console.info('Registered event listener for PWA install prompt.', event)
-    this.pwaInstallPrompt = event
+    commit(PWA_INSTALLATION_EVENT, event)
   },
 
   async [INSTALL_PWA_APP] ({ state, commit, _ }) {

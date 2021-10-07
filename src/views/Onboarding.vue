@@ -582,6 +582,13 @@ export default {
       hasSentAccessRequest: state => state.onboardingWizard.hasSentAccessRequest
     })
   },
+  created () {
+    console.log('I AM CREATED')
+    window.addEventListener('beforeinstallprompt', (event) => {
+      console.log('MOUNTED BEFORE-INSTALL-PROMPT')
+      this.$store.dispatch(INITIATE_PWA_INSTALLATION, { event, message: 'Browser supports PWA install.' })
+    })
+  },
   mounted () {
     // handle window beforeinstallprompt event
     // for PWA install
@@ -592,6 +599,7 @@ export default {
     //   console.info('Registered event listener for PWA install prompt.', e)
     //   this.pwaInstallPrompt = e
     // }
+    console.log('I AM MOUNTED')
     window.addEventListener('beforeinstallprompt', (event) => {
       console.log('MOUNTED BEFORE-INSTALL-PROMPT')
       this.$store.dispatch(INITIATE_PWA_INSTALLATION, { event, message: 'Browser supports PWA install.' })
@@ -601,7 +609,6 @@ export default {
   beforeDestroy () {
     // cleanup window event handlers
     window.removeEventListener('beforeinstallprompt', (event) => {
-      console.log('BEFOREDESTROY BEFORE-INSTALL-PROMPT')
       this.$store.dispatch(INITIATE_PWA_INSTALLATION, { event, message: 'Browser supports PWA install.' })
     })
   },
