@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.19.5](https://github.com/ambianic/ambianic-ui/compare/v2.19.4...v2.19.5) (2021-10-07)
+
+
+### Bug Fixes
+
+* pwa error - no icon with purpose any ([#751](https://github.com/ambianic/ambianic-ui/issues/751)) ([74fd418](https://github.com/ambianic/ambianic-ui/commit/74fd418346dbd4958b4895e627f066750473bcdb))
+
 ## [2.19.4](https://github.com/ambianic/ambianic-ui/compare/v2.19.3...v2.19.4) (2021-10-07)
 
 
