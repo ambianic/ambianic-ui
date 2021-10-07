@@ -6,7 +6,10 @@ context('Check Navbar Items', () => {
   })
 
   it('Should display a connection-offline icon before edge connection', () => {
-    cy.get('[data-cy=connection-status]').should('exist')
+    cy.get('[data-cy=connection-status]')
+      .should('exist')
+      .should('be.visible').click()
+      cy.url().should('include', '/settings')
   })
 
   /** future buttons
