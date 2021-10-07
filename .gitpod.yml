@@ -9,7 +9,7 @@ tasks:
       npm update
       npm audit fix
       npm install -g @vue/cli
-    command: |
+  - command: |
       echo "Starting Ambianic UI in dev mode:"
       npm run serve
   - command: |
