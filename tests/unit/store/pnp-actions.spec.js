@@ -13,6 +13,7 @@ import {
   USER_MESSAGE,
   NEW_PEER_ID,
   NEW_REMOTE_PEER_ID
+  , PEER_CONNECTION_ERROR
 } from '@/store/mutation-types.js'
 import {
   INITIALIZE_PNP,
@@ -29,7 +30,6 @@ import { ambianicConf } from '@/config'
 import Peer from 'peerjs'
 import { PeerRoom } from '@/remote/peer-room'
 import { PeerFetch } from '@/remote/peer-fetch'
-import { PEER_CONNECTION_ERROR } from '../../../src/store/mutation-types'
 
 jest.mock('peerjs') // Peer is now a mock class
 jest.mock('@/remote/peer-room') // PeerRoom is now a mock class
