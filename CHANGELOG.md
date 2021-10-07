@@ -1,5 +1,13 @@
 # Semantic Versioning Changelog
 
+## [2.19.4](https://github.com/ambianic/ambianic-ui/compare/v2.19.3...v2.19.4) (2021-10-07)
+
+
+### Bug Fixes
+
+* cloud button in navbar now links to /settings page ([e4c6208](https://github.com/ambianic/ambianic-ui/commit/e4c620830a56d3a4a36e96d3f18fa5404770a955))
+* setDeviceDisplayName() bug ([5367be2](https://github.com/ambianic/ambianic-ui/commit/5367be22737c7487c5a01eead03724be80cec1d4))
+
 ## [2.19.3](https://github.com/ambianic/ambianic-ui/compare/v2.19.2...v2.19.3) (2021-10-07)
 
 
