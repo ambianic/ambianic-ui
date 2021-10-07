@@ -8,6 +8,7 @@ import snackBarModule from '@/store/status-snackbar'
 import { clone } from 'lodash'
 import { PEER_DISCOVER } from '@/store/action-types'
 import Onboarding from '@/views/Onboarding.vue'
+import OnboardingWizard from '@/store/onboarding-wizard'
 
 describe('Feedback Page', () => {
   let wrapper
@@ -28,7 +29,8 @@ describe('Feedback Page', () => {
 
     const modules = {
       pnp: clone(pnpStoreModule),
-      snackBar: clone(snackBarModule)
+      snackBar: clone(snackBarModule),
+      onboardingWizard: OnboardingWizard
     }
 
     const getters = {
