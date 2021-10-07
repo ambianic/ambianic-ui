@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { pnpStoreModule } from './pnp.js'
 import edgeDevice from './edge-device'
+import onboardingWizard from './onboarding-wizard'
 // import { INITIALIZE_PNP } from './action-types.js'
 import { UPDATE_AVAILABLE } from './mutation-types'
 import snackBarModule from '@/store/status-snackbar'
@@ -18,12 +19,11 @@ const store = new Vuex.Store({
       state.updateToBeInstalled = updateToBeInstalled
     }
   },
-  actions: {
-  },
   modules: {
     pnp: pnpStoreModule,
     edgeDevice: edgeDevice,
-    snackBar: snackBarModule
+    snackBar: snackBarModule,
+    onboardingWizard: onboardingWizard
   }
 })
 

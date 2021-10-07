@@ -24,7 +24,6 @@ const mutations = {
       throw new Error('Device Display Name cannot have an empty value')
     }
   }
-
 }
 
 const edgeDevice = {

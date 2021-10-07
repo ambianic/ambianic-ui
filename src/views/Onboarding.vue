@@ -3,9 +3,6 @@
     <OnboardingDialog
       modal-title="Messaging Client"
       modal-text="Select a messaging client below;"
-      :visibility="sendRequestDialog"
-      :handle-access-item-click="() => handleAccessRequest(true)"
-      :right-btn-func="() => handleAccessRequest(false)"
     />
 
     <div class="container">
@@ -33,9 +30,6 @@
                 Skip
               </a>
             </nav>
-
-            <br>
-            <br>
 
             <v-stepper
               v-model="stepLevel"
@@ -65,7 +59,7 @@
                     color="primary"
                     size="2"
                     data-cy="install-app"
-                    @click="installApp()"
+                    @click="handleAppInstallationBtn()"
                   >
                     {{ !isInstallingApp ? "Install App" : "Installing App" }}
 
@@ -287,7 +281,7 @@
 
                       <span
                         class="action-text"
-                        @click="handleAccessRequest(false)"
+                        @click="$store.commit('INVITATION_REQUEST', { shouldSendAccessRequest : true, dialogState: true })"
                       >
                         Resend Request
                       </span>
@@ -548,9 +542,15 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import { PEER_CONNECTED } from '@/store/mutation-types'
-import { CHANGE_REMOTE_PEER_ID, PEER_DISCOVER } from '@/store/action-types'
+import { CHANGE_REMOTE_PEER_ID, PEER_DISCOVER, INSTALL_PWA_APP, INITIATE_PWA_INSTALLATION } from '@/store/action-types'
 import { validatePeerIdHelper } from '../components/utils'
+import {
+  PEER_CONNECTED,
+  CHANGE_INSTALLATION_STEP,
+  CHANGE_STEP_CONTENT_NAME,
+  INVITATION_REQUEST
+  // PWA_INSTALLATION_STATUS
+} from '../store/mutation-types'
 
 export default {
   name: 'Onboarding',
@@ -560,17 +560,8 @@ export default {
   data () {
     return {
       isLoading: false,
-      pwaInstallPrompt: undefined,
-      pwaInstallOutcomeMessage: '',
-      stepLevel: localStorage.getItem('lastOnboardingStage') || 1,
-      stepContentName: localStorage.getItem('lastOnboardingStep') || '',
-      isInstallingApp: false,
       invitationMessage: 'Hi ____, can you please share access to your Ambianic Edge device.',
-      appInstallationComplete: false,
-      completedSteps: [],
       hasRemotePeerID: false,
-      sendRequestDialog: false,
-      hasSentAccessRequest: false,
       recievedPeerID: undefined,
       isCorrectPeerId: false,
       onBeforeinstallprompt: undefined
@@ -579,85 +570,63 @@ export default {
   computed: {
     ...mapState({
       peerConnectionStatus: (state) => state.pnp.peerConnectionStatus,
-      isEdgeConnected: (state) =>
-        state.pnp.peerConnectionStatus === PEER_CONNECTED,
+      isEdgeConnected: (state) => state.pnp.peerConnectionStatus === PEER_CONNECTED,
       edgePeerId: (state) => state.pnp.remotePeerId,
-      version: (state) => state.version
+      version: (state) => state.version,
+      stepLevel: state => state.onboardingWizard.stepLevel,
+      stepContentName: state => state.onboardingWizard.stepContentName,
+      isInstallingApp: state => state.onboardingWizard.isInstallingApp,
+      appInstallationComplete: state => state.onboardingWizard.isAppInstallationComplete,
+      pwaInstallPrompt: state => state.onboardingWizard.pwaInstallPrompt,
+      pwaInstallOutcomeMessage: state => state.onboardingWizard.pwaInstallOutcomeMessage,
+      hasSentAccessRequest: state => state.onboardingWizard.hasSentAccessRequest
     })
   },
   mounted () {
     // handle window beforeinstallprompt event
     // for PWA install
-    this.onBeforeinstallprompt = (e) => {
-      this.pwaInstallOutcomeMessage += 'Browser supports PWA install. '
-      e.preventDefault()
-      console.info('Registered event listener for PWA install prompt.', e)
-      this.pwaInstallPrompt = e
-    }
-    window.addEventListener('beforeinstallprompt', this.onBeforeinstallprompt)
+    // this.onBeforeinstallprompt = (e) => {
+    //   this.$store.commit(PWA_INSTALLATION_STATUS, { message: 'Browser supports PWA install.' })
+    //
+    //   e.preventDefault()
+    //   console.info('Registered event listener for PWA install prompt.', e)
+    //   this.pwaInstallPrompt = e
+    // }
+    window.addEventListener('beforeinstallprompt', (event) => {
+      console.log('MOUNTED BEFORE-INSTALL-PROMPT')
+      this.$store.dispatch(INITIATE_PWA_INSTALLATION, { event, message: 'Browser supports PWA install.' })
+    })
     // this.pwaInstallDone('Called window.addEventListener(beforeinstallprompt) !!!!!')
   },
   beforeDestroy () {
     // cleanup window event handlers
-    window.removeEventListener('beforeinstallprompt', this.onBeforeinstallprompt)
+    window.removeEventListener('beforeinstallprompt', (event) => {
+      console.log('BEFOREDESTROY BEFORE-INSTALL-PROMPT')
+      this.$store.dispatch(INITIATE_PWA_INSTALLATION, { event, message: 'Browser supports PWA install.' })
+    })
   },
   methods: {
-    ...mapActions(['CHANGE_REMOTE_PEER_ID']),
+    ...mapActions(['CHANGE_REMOTE_PEER_ID', INSTALL_PWA_APP]),
 
     validatePeerId (value) {
       this.isCorrectPeerId = validatePeerIdHelper(value)
     },
 
-    async installApp () {
-      this.isInstallingApp = true
-
-      // catch error in case pwaInstallPrompt is undefined as previous app installtion has been done
-      if (this.pwaInstallPrompt) {
-        try {
-          this.pwaInstallPrompt.prompt()
-          // Wait for the user to respond to the prompt
-          const { outcome } = await this.pwaInstallPrompt.userChoice
-          console.log(`User response to the install prompt: ${outcome}`)
-          if (outcome === 'accepted') {
-            this.pwaInstallDone('Ambianic can be now accesssed as a native home screen app on this device.')
-          } else {
-            // userChoice.outcome === "dismissed":
-            this.afterPwaInstall()
-            // this.pwaInstallDone('User cancelled install.')
-          }
-        } catch (e) {
-          let message = 'Error during app install.'
-          console.warn(message, e)
-          message +=
-            ' <a href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Installing">Check here</a> to see if your browser supports PWA install.' /
-            'Otherwise, you can still bookmark and open the app as a regular web page.'
-          this.pwaInstallDone(message)
-        }
-      } else {
-        this.pwaInstallDone('App already installed or browser does not support PWA install.')
-      }
+    handleAppInstallationBtn () {
+      this.$store.dispatch(INSTALL_PWA_APP)
     },
 
     moveStep (stage) {
-      this.stepLevel = stage
-
-      localStorage.setItem('lastOnboardingStage', stage)
+      this.$store.commit(CHANGE_INSTALLATION_STEP, stage)
     },
 
     setStepContent (name) {
-      this.stepContentName = name
-
-      localStorage.setItem('lastOnboardingStep', name)
+      this.$store.commit(CHANGE_STEP_CONTENT_NAME, name)
     },
 
     async setDiscoveringStep () {
       this.setStepContent('discovering')
       await this.$store.dispatch(PEER_DISCOVER)
-    },
-
-    pwaInstallDone (message) {
-      this.pwaInstallOutcomeMessage += message
-      this.appInstallationComplete = true
     },
 
     afterPwaInstall () {
@@ -672,17 +641,12 @@ export default {
           text: this.invitationMessage
         })
       } else {
-        this.sendRequestDialog = state
+        this.$store.commit(INVITATION_REQUEST, { dialogState: state })
       }
     },
 
     finishOnboarding () {
       window.localStorage.setItem('hasCompletedOnboarding', true)
-    },
-
-    handleAccessRequest (state) {
-      this.sendRequestDialog = false
-      this.hasSentAccessRequest = state
     },
 
     submitPeerId () {
@@ -699,8 +663,8 @@ export default {
   watch: {
     isEdgeConnected: function (newVal, oldVal) {
       if (newVal) {
-        this.stepLevel = 3
-        this.stepContentName = 'settings'
+        this.$store.commit(CHANGE_INSTALLATION_STEP, 3)
+        this.$store.commit(CHANGE_STEP_CONTENT_NAME, 'settings')
         this.isLoading = false
       }
     },

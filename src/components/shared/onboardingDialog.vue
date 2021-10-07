@@ -1,9 +1,8 @@
 <template>
-  <!-- eslint-disable-next-line -->
   <v-dialog
     id="dialog-component"
     :max-width="maxWidth"
-    v-model="showModal"
+    v-model="invitationDialog"
     persistent
     data-cy="messaging-option-modal"
   >
@@ -28,7 +27,7 @@
         >
           <div
             class="messaging-client"
-            @click="() => handleAccessItemClick(client.name)"
+            @click="$store.commit('INVITATION_REQUEST', { shouldSendAccessRequest: true })"
           >
             <a
               :href="client.content"
@@ -51,7 +50,7 @@
           color="primary"
           text
           data-cy="dialog-close-btn"
-          @click="rightBtnFunc()"
+          @click="$store.commit('INVITATION_REQUEST', { dialogState : false })"
         >
           {{ rightBtnText }}
         </v-btn>
@@ -61,14 +60,19 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { ONBOARDING_MESSAGE_CLIENTS } from '@/components/utils'
 
 export default {
   name: 'OnboardingDialog',
   data: () => ({
-    showModal: false,
     ONBOARDING_MESSAGE_CLIENTS
   }),
+  computed: {
+    ...mapState({
+      invitationDialog: state => state.onboardingWizard.invitationDialog
+    })
+  },
   props: {
     maxWidth: {
       type: String,
@@ -82,26 +86,9 @@ export default {
       type: String,
       required: true
     },
-    visibility: {
-      type: Boolean,
-      default: false
-    },
     rightBtnText: {
       type: String,
       default: 'Cancel'
-    },
-    handleAccessItemClick: {
-      type: function () {},
-      default: () => {}
-    },
-    rightBtnFunc: {
-      type: () => {},
-      default: () => {}
-    }
-  },
-  watch: {
-    visibility: function (val) {
-      this.showModal = val
     }
   }
 }
