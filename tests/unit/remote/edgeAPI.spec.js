@@ -114,9 +114,9 @@ describe('PeerRoom class coverage - p2p communication layer', () => {
       }
     })
     expect(pnp.state.peerFetch.request).toHaveReturnedWith(
-      { 
+      {
         header: { status: 200 },
-        content: '{event: "object_detection"}' 
+        content: '{event: "object_detection"}'
       }
     )
     expect(response).toEqual('{event: "object_detection"}')
