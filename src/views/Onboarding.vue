@@ -71,29 +71,30 @@
                     />
                   </v-btn>
                 </div>
-                <div v-else>
-                  <div class="flex-between">
-                    <v-card-text
-                      class="step-text"
-                      data-cy="label-pwaInstallOutcomeMessage"
-                    >
-                      {{ pwaInstallOutcomeMessage }}
-                    </v-card-text>
-                    <v-btn
-                      style="padding: 0.5rem 2rem;"
-                      color="primary"
-                      data-cy="continue-to-edge-installation"
-                      @click="
-                        moveStep(2)
-                        setStepContent('edge-installation')
-                      "
-                    >
-                      Continue
-                      <v-icon right>
-                        mdi-arrow-right
-                      </v-icon>
-                    </v-btn>
-                  </div>
+                <div
+                  class="flex-between"
+                  v-else
+                >
+                  <v-card-text
+                    class="step-text"
+                    data-cy="label-pwaInstallOutcomeMessage"
+                  >
+                    {{ pwaInstallOutcomeMessage }}
+                  </v-card-text>
+                  <v-btn
+                    style="padding: 0.5rem 2rem;"
+                    color="primary"
+                    data-cy="continue-to-edge-installation"
+                    @click="
+                      moveStep(2)
+                      setStepContent('edge-installation')
+                    "
+                  >
+                    Continue
+                    <v-icon right>
+                      mdi-arrow-right
+                    </v-icon>
+                  </v-btn>
                 </div>
               </v-stepper-content>
 
@@ -582,26 +583,10 @@ export default {
       hasSentAccessRequest: state => state.onboardingWizard.hasSentAccessRequest
     })
   },
-  created () {
-    console.log('I AM CREATED')
-    window.addEventListener('beforeinstallprompt', (event) => {
-      console.log('MOUNTED BEFORE-INSTALL-PROMPT')
-      this.$store.dispatch(INITIATE_PWA_INSTALLATION, { event, message: 'Browser supports PWA install.' })
-    })
-  },
   mounted () {
     // handle window beforeinstallprompt event
     // for PWA install
-    // this.onBeforeinstallprompt = (e) => {
-    //   this.$store.commit(PWA_INSTALLATION_STATUS, { message: 'Browser supports PWA install.' })
-    //
-    //   e.preventDefault()
-    //   console.info('Registered event listener for PWA install prompt.', e)
-    //   this.pwaInstallPrompt = e
-    // }
-    console.log('I AM MOUNTED')
     window.addEventListener('beforeinstallprompt', (event) => {
-      console.log('MOUNTED BEFORE-INSTALL-PROMPT')
       this.$store.dispatch(INITIATE_PWA_INSTALLATION, { event, message: 'Browser supports PWA install.' })
     })
     // this.pwaInstallDone('Called window.addEventListener(beforeinstallprompt) !!!!!')

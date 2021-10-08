@@ -80,7 +80,7 @@ const actions = {
         // this.pwaInstallDone(message)
         commit(PWA_INSTALLATION_STATUS, {
           message,
-          completionState: false
+          completionState: true
         })
       }
     } else {

@@ -31,24 +31,31 @@ context('Onboarding Wizard', () => {
   })
 
   it('Handles browser PWA beforeinstallprompt event', () => {
+    // cy.get('[data-cy=install-app]').should('be.visible')
     cy.window().then((win) => {
       cy.get('[data-cy=install-app]').should('be.visible').then(() => {
         expect(win.addEventListener).to.be.calledWith('beforeinstallprompt')
-        // emulate PWA install enabled browser that doesn't have Ambianic UI installed
-        // by firing beforeinstallprompt
+         // emulate PWA install enabled browser that doesn't have Ambianic UI installed
+         // by firing beforeinstallprompt
         const pwaInstallEvent = new Event('beforeinstallprompt')
         pwaInstallEvent.prompt = cy.stub()
         win.dispatchEvent(pwaInstallEvent)
-        // emulate user choice: confirm PWA install
+         // emulate user choice: confirm PWA install
         pwaInstallEvent.userChoice = new Promise((resolve, reject) => {
           return resolve({ outcome: 'accepted' })
         })
+
         cy.get('[data-cy=install-app]')
           .click()
           .get('[data-cy=label-pwaInstallOutcomeMessage]')
           .should('be.visible')
           .within(($listItem) => {
-            cy.contains('Browser supports PWA install.')
+            /*
+            UPDATE: Changed assertion text due to execution flow.
+            From `onboarding-wizard.js`, 'Ambianic can be now accessed as a native home screen app on this device.'
+            should be displayed when `outcome === accepted`
+             */
+            cy.contains('Ambianic can be now accessed as a native home screen app on this device.')
               .should('be.visible')
           })
       })
@@ -73,14 +80,14 @@ context('Onboarding Wizard', () => {
           .get('[data-cy=label-pwaInstallOutcomeMessage]')
           .should('be.visible')
           .within(($listItem) => {
-            cy.contains('Ambianic can be now accesssed as a native home screen app on this device.')
+            cy.contains('Ambianic can be now accessed as a native home screen app on this device.')
               .should('be.visible')
           })
       })
     })
   })
 
-  it('It skipps install step when PWA beforeinstallprompt fires and user cancels', () => {
+  it('It skips install step when PWA beforeinstallprompt fires and user cancels', () => {
     cy.window().then((win) => {
       cy.get('[data-cy=install-app]').should('be.visible').then(() => {
         // emulate PWA install enabled browser that doesn't have Ambianic UI installed
@@ -119,7 +126,7 @@ context('Onboarding Wizard', () => {
         pwaInstallEvent.prompt = cy.stub().throws()
         // emulate user choice: confirm PWA install
         pwaInstallEvent.userChoice = new Promise((resolve, reject) => {
-          return resolve('This line should not be reached durign this test.')
+          return resolve('This line should not be reached during this test.')
         })
         win.dispatchEvent(pwaInstallEvent)
         cy.get('[data-cy=install-app]')
