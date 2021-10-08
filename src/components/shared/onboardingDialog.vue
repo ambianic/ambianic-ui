@@ -27,7 +27,7 @@
         >
           <div
             class="messaging-client"
-            @click="$store.commit('INVITATION_REQUEST', { shouldSendAccessRequest: true })"
+            @click="$store.commit('ONBOARDING_INVITATION_REQUEST', { shouldSendAccessRequest: true })"
           >
             <a
               :href="client.content"
@@ -50,7 +50,7 @@
           color="primary"
           text
           data-cy="dialog-close-btn"
-          @click="$store.commit('INVITATION_REQUEST', { dialogState : false })"
+          @click="$store.commit('ONBOARDING_INVITATION_REQUEST', { dialogState : false })"
         >
           {{ rightBtnText }}
         </v-btn>

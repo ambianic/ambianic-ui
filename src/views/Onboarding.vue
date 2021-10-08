@@ -176,21 +176,35 @@
                       <br>
                       <br>
                       {{ hasRemotePeerID ? "Provide the remote peer ID of an edge device to connect to it." :
-                        "Click the button below to request invitation granting access."
+                        "Click the Request Access button below to request an invitation granting access."
                       }}
                     </v-card-text>
                   </div>
 
-                  <div class="flex">
-                    <v-btn
-                      color="primary"
-                      data-cy="request-access"
-                      v-if="!hasRemotePeerID"
-                      @click="setStepContent('send-message')"
-                    >
-                      Request Access
-                    </v-btn>
-                  </div>
+                  <v-container v-if="!hasRemotePeerID">
+                    <v-row dense>
+                      <v-col>
+                        <v-btn
+                          color="primary"
+                          data-cy="request-access"
+                          @click="setStepContent('send-message')"
+                        >
+                          Request Access
+                        </v-btn>
+                      </v-col>
+
+                      <v-col class="align-center">
+                        <v-btn
+                          style="width: 100%; padding: 0.5rem 1rem;"
+                          color="primary"
+                          data-cy="back-btn"
+                          @click="setStepContent('edge-installation-question')"
+                        >
+                          Cancel, Go Back
+                        </v-btn>
+                      </v-col>
+                    </v-row>
+                  </v-container>
 
                   <div>
                     <v-card-text
@@ -282,7 +296,7 @@
 
                       <span
                         class="action-text"
-                        @click="$store.commit('INVITATION_REQUEST', { shouldSendAccessRequest : true, dialogState: true })"
+                        @click="$store.commit('ONBOARDING_INVITATION_REQUEST', { shouldSendAccessRequest : true, dialogState: true })"
                       >
                         Resend Request
                       </span>
@@ -547,10 +561,9 @@ import { CHANGE_REMOTE_PEER_ID, PEER_DISCOVER, INSTALL_PWA_APP, INITIATE_PWA_INS
 import { validatePeerIdHelper } from '../components/utils'
 import {
   PEER_CONNECTED,
-  CHANGE_INSTALLATION_STEP,
-  CHANGE_STEP_CONTENT_NAME,
-  INVITATION_REQUEST
-  // PWA_INSTALLATION_STATUS
+  ONBOARDING_CHANGE_INSTALLATION_STEP,
+  ONBOARDING_CHANGE_STEP_CONTENT_NAME,
+  ONBOARDING_INVITATION_REQUEST
 } from '../store/mutation-types'
 
 export default {
@@ -609,11 +622,11 @@ export default {
     },
 
     moveStep (stage) {
-      this.$store.commit(CHANGE_INSTALLATION_STEP, stage)
+      this.$store.commit(ONBOARDING_CHANGE_INSTALLATION_STEP, stage)
     },
 
     setStepContent (name) {
-      this.$store.commit(CHANGE_STEP_CONTENT_NAME, name)
+      this.$store.commit(ONBOARDING_CHANGE_STEP_CONTENT_NAME, name)
     },
 
     async setDiscoveringStep () {
@@ -633,7 +646,7 @@ export default {
           text: this.invitationMessage
         })
       } else {
-        this.$store.commit(INVITATION_REQUEST, { dialogState: state })
+        this.$store.commit(ONBOARDING_INVITATION_REQUEST, { dialogState: state })
       }
     },
 
@@ -655,8 +668,8 @@ export default {
   watch: {
     isEdgeConnected: function (newVal, oldVal) {
       if (newVal) {
-        this.$store.commit(CHANGE_INSTALLATION_STEP, 3)
-        this.$store.commit(CHANGE_STEP_CONTENT_NAME, 'settings')
+        this.$store.commit(ONBOARDING_CHANGE_INSTALLATION_STEP, 3)
+        this.$store.commit(ONBOARDING_CHANGE_STEP_CONTENT_NAME, 'settings')
         this.isLoading = false
       }
     },
