@@ -248,7 +248,7 @@ export default {
         this.connectionStatusTooltipText = 'Connecting ...'
       } else if (this.peerConnectionStatus === 'PEER_CONNECTED') {
         this.connectionStatusIcon = 'cloud-check-outline'
-        this.connectionStatusTooltipText = 'UI Connected!'
+        this.connectionStatusTooltipText = 'Connected!'
       }
     }
   },
@@ -258,8 +258,7 @@ export default {
         console.debug(
           `app frame: state.pnp.peerConnectionStatus: ${state.pnp.peerConnectionStatus}`
         )
-        const isConnected = state.pnp.peerConnectionStatus === PEER_CONNECTED
-        return isConnected
+        return state.pnp.peerConnectionStatus === PEER_CONNECTED
       },
       peerConnectionStatus: state => state.pnp.peerConnectionStatus
     })
