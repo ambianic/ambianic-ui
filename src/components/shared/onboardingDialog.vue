@@ -24,6 +24,7 @@
         <li
           v-for="client in ONBOARDING_MESSAGE_CLIENTS"
           :key="client.name"
+          :class="client.name"
         >
           <div
             class="messaging-client"

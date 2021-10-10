@@ -38,13 +38,25 @@ context('Onboarding Wizard', () => {
     cy.get('[data-cy=cancel-input-existing-remoteID]').click()
   })
 
-  it('It confirms remote request message and request grant', () => {
-
+  it('OnboardingDialog displays data from `ONBOARDING_MESSAGE_CLIENTS` array', () => {
     cy.get('[data-cy=request-access]').click()
 
     cy.get('[data-cy=send-message]').click()
 
-    cy.get('.messaging-client').each((item, index, element) => {
+    cy.get('li').should(elements => {
+      const classes = elements.map((i, el) => {
+        return Cypress.$(el).attr('class')
+      })
+
+      expect(elements).to.have.length(4)
+
+      expect(classes.get().includes('Email')).to.be.true
+      expect(classes.get().includes('Whatsapp')).to.be.true
+      expect(classes.get().includes('iMessage')).to.be.true
+      expect(classes.get().includes('SMS Message')).to.be.true
+    })
+
+    cy.get('.messaging-client').should('be.visible').each((item, index, element) => {
       element[1].click()
     })
   })
