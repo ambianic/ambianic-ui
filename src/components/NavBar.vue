@@ -29,12 +29,11 @@
       <div>
         <v-tooltip bottom>
           <template
-            v-if="!isEdgeConnected"
-            #activator="{ on, attrs }"
+            #activator="{ on : cloudIconOn, attrs }"
           >
             <div
               v-bind="attrs"
-              v-on="on"
+              v-on="cloudIconOn"
             >
               <nav-button
                 :id="connectionStatusIcon"
@@ -43,7 +42,7 @@
                 :color="connectionIconColor"
                 :to="connectionIconLink"
                 v-bind="attrs"
-                v-on="on"
+                v-on="cloudIconOn"
               />
             </div>
           </template>
@@ -237,16 +236,19 @@ export default {
   }),
   methods: {
     setConnectionTooltipText () {
+      this.connectionIconLink = '/settings'
+      this.connectionIconColor = 'info'
+
       if (this.peerConnectionStatus === 'PEER_DISCONNECTED') {
         this.connectionStatusTooltipText = 'Disconnected'
         this.connectionStatusIcon = 'cloud-off-outline'
         this.connectionIconColor = 'warning'
-        this.connectionIconLink = '/settings'
       } else if (this.peerConnectionStatus === 'PEER_CONNECTING') {
         this.connectionStatusIcon = 'cloud-sync-outline'
-        this.connectionIconColor = 'info'
         this.connectionStatusTooltipText = 'Connecting ...'
-        this.connectionIconLink = '/settings'
+      } else if (this.peerConnectionStatus === 'PEER_CONNECTED') {
+        this.connectionStatusIcon = 'cloud-check-outline'
+        this.connectionStatusTooltipText = 'UI Connected!'
       }
     }
   },

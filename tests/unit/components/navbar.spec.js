@@ -5,7 +5,7 @@ import VueX from 'vuex'
 import VueRouter from 'vue-router'
 import NavBar from '@/components/NavBar.vue'
 import { pnpStoreModule } from '@/store/pnp'
-import { PEER_CONNECTING, PEER_DISCONNECTED } from '@/store/mutation-types'
+import { PEER_CONNECTING, PEER_DISCONNECTED, PEER_CONNECTED } from '@/store/mutation-types'
 
 describe('NavBar', () => {
 // global
@@ -75,5 +75,15 @@ describe('NavBar', () => {
     })
 
     expect(newComponent.find('#cloud-sync-outline').exists()).toBeTruthy()
+
+    store.state.pnp.peerConnectionStatus = PEER_CONNECTED
+    const connectedComponent = wrapper = mount(NavBar, {
+      localVue,
+      vuetify,
+      router,
+      store
+    })
+
+    expect(connectedComponent.find('#cloud-check-outline').exists()).toBeTruthy()
   })
 })
