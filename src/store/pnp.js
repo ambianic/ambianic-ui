@@ -445,7 +445,7 @@ const actions = {
     if (state.peerConnection) {
       // make sure any previous connection is closed and cleaned up
       console.info('>>>>>>> Closing and cleaning up existing peer connection.')
-      state.peerConnection.close()
+      await state.peerConnection.close()
     }
     console.info('>>>>>> Opening new peer connection.')
     const peer = state.peer
@@ -457,17 +457,29 @@ const actions = {
     // the remote peer is not available or the networking stack got corrupted.
     // Let's mark the remote peer as problematic temporarily and reset the webrtc stack.
     const hungupConnectionResetTimer = setTimeout(async () => {
-      try {
-        state.problematicRemotePeers.add(remotePeerId)
-        console.debug('Problematic remote peer ID:', remotePeerId)
-        await peer.disconnect()
-        await peer.destroy()
-      } catch (err) {
-        console.warn('Error destroying peer.')
-      } finally {
-        console.info('It took too long to setup a connection. Resetting peer.')
-        await dispatch(INITIALIZE_PNP)
-      }
+      // TODO: Move this logic into the app on a standalone page with a modal dialog for new peer discovery.
+      //
+      // The logic in the section below was commented out on Oct 11, 2021 because it was part of 
+      // a async backend logic which allowed for an explosion of possible branches and edge cases to handle.
+      // 
+      // When the user is allowed to move around the UI and trigger other connectivity 
+      // related events in the middle of a peer discovery process, that 
+      // causes too many unplannedside effects.
+      //
+      // try {
+      //   state.problematicRemotePeers.add(remotePeerId)
+      //   console.debug('Problematic remote peer ID:', remotePeerId)
+      //   if (state.peerConnection) {
+      //     // make sure any previous connection is closed and cleaned up
+      //     console.info('>>>>>>> Closing and cleaning up existing peer connection.')
+      //     await state.peerConnection.close()
+      //   }
+      // } catch (err) {
+      //   console.warn('Error destroying peer.')
+      // } finally {
+      //   console.info('It took too long to setup a connection. Resetting peer.')
+      //   await dispatch(INITIALIZE_PNP)
+      // }
     }, 30 * 1000) // 30 seconds timeout
     setPeerConnectionHandlers({
       state,
@@ -537,7 +549,7 @@ const actions = {
    * them or let them connect to you.
    */
   async [CHANGE_REMOTE_PEER_ID] ({ state, commit, dispatch }, remotePeerId) {
-    commit(PEER_DISCONNECTED)
+    await dispatch(REMOVE_REMOTE_PEER_ID)
     commit(NEW_REMOTE_PEER_ID, remotePeerId)
     await dispatch(PEER_CONNECT, remotePeerId)
   },
