@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [2.20.0](https://github.com/ambianic/ambianic-ui/compare/v2.19.5...v2.20.0) (2021-10-11)
+
+
+### Features
+
+* show cloud connection icon in navbar when UI is connected to an edge device; closes [#752](https://github.com/ambianic/ambianic-ui/issues/752) ([6ee362f](https://github.com/ambianic/ambianic-ui/commit/6ee362fc94992fb91c0728976eac6e871c9554fd))
+
 ## [2.19.5](https://github.com/ambianic/ambianic-ui/compare/v2.19.4...v2.19.5) (2021-10-07)
 
 

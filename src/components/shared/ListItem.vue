@@ -63,14 +63,14 @@
         bottom
       >
         <template
-          #activator="{ on, attrs : eyeAttr }"
+          #activator="{ on, eyeOffAttr }"
         >
           <v-icon
             v-if="sensitive"
             id="toggle-visibility"
             @click="sensitive = false"
             data-cy="icon-sensitive-on"
-            v-bind="eyeAttr"
+            v-bind="eyeOffAttr"
             v-on="on"
           >
             mdi-eye
@@ -78,7 +78,7 @@
           <v-icon
             v-else
             @click="sensitive = true"
-            v-bind="attrs"
+            v-bind="eyeOffAttr"
             v-on="on"
           >
             mdi-eye-off-outline
@@ -88,14 +88,14 @@
       </v-tooltip>
       <v-tooltip bottom>
         <template
-          #activator="{ on, attrs : copyAttr}"
+          #activator="{ on, attrs : copyIcon }"
         >
           <v-icon
             v-if="copyOption"
             id="toggle-copy-option"
             @click="doCopy"
             data-cy="icon-copy-on"
-            v-bind="copyAttr"
+            v-bind="copyIcon"
             v-on="on"
           >
             content_copy
@@ -107,13 +107,13 @@
         bottom
         v-if="editOption && !isEditing"
       >
-        <template #activator="{ on, attrs }">
+        <template #activator="{ on, copyIcon }">
           <v-icon
             id="toggle-edit-option"
             @click="startEdit"
             data-cy="icon-start-edit"
             ref="icon-start-edit"
-            v-bind="attrs"
+            v-bind="copyIcon"
             v-on="on"
           >
             edit
@@ -125,13 +125,13 @@
         bottom
         v-if="editOption && isEditing"
       >
-        <template #activator="{ on, attrs }">
+        <template #activator="{ on, attrs : toggleIcon }">
           <v-icon
             id="toggle-edit-option"
             @click="saveEdit"
             data-cy="icon-save-edit"
             ref="icon-save-edit"
-            v-bind="attrs"
+            v-bind="toggleIcon"
             v-on="on"
           >
             done
@@ -143,13 +143,13 @@
         bottom
         v-if="editOption && isEditing"
       >
-        <template #activator="{ on, attrs }">
+        <template #activator="{ on, attrs : editIcon }">
           <v-icon
             id="toggle-edit-option"
             @click="cancelEdit"
             data-cy="icon-cancel-edit"
             ref="icon-cancel-edit"
-            v-bind="attrs"
+            v-bind="editIcon"
             v-on="on"
           >
             clear
