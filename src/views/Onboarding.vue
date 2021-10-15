@@ -167,7 +167,10 @@
                   </v-container>
                 </div>
 
-                <div v-if="stepContentName === 'remote'">
+                <div
+                  v-if="stepContentName === 'remote'"
+                  data-cy="remote-invitation-request"
+                >
                   <div class="flex-between">
                     <v-card-text class="step-text">
                       OK, you will need an invitation from the user who
@@ -284,7 +287,9 @@
                       </div>
                     </div>
                   </div>
-                  <div v-else>
+                  <div
+                    v-else
+                  >
                     <v-card-text align="center">
                       Messaging client to send access request initiated successfully.
                     </v-card-text>

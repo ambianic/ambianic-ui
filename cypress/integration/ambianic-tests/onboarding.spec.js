@@ -5,6 +5,16 @@ const TEST_REMOTE_PEER_ID = '917d5f0a-6469-4d33-b5c2-efd858118b74'
 context('Onboarding Wizard', () => {
   before(() => {
     cy.visit('/onboarding')
+
+    cy.clearLocalStorageSnapshot()
+  })
+
+  beforeEach(() => {
+    cy.restoreLocalStorage()
+  })
+
+  afterEach(() => {
+    cy.saveLocalStorage()
   })
 
   it('Should have a splashscreen installation card', () => {
@@ -36,6 +46,19 @@ context('Onboarding Wizard', () => {
     cy.get('[data-cy=existingRemotePeerID-input]').type(TEST_REMOTE_PEER_ID)
     cy.get('[data-cy=submit-existing-remotePeerID]').should('not.be.disabled')
     cy.get('[data-cy=cancel-input-existing-remoteID]').click()
+  })
+
+  it('It persists user installation step', () => {
+    expect(cy.get('[data-cy=remote-invitation-request]')).to.exist
+    cy.getLocalStorage('ambianic-onboarding-stage').should('equal', '2')
+
+    // go to /settings page to clear onboarding component state & navigate back to onboarding page
+    cy.visit('/settings')
+    cy.visit('/onboarding')
+
+    // continue from last step
+    expect(cy.get('[data-cy=remote-invitation-request]')).to.exist
+    cy.getLocalStorage('ambianic-onboarding-stage').should('equal', '2')
   })
 
   it('OnboardingDialog displays data from `ONBOARDING_MESSAGE_CLIENTS` array', () => {

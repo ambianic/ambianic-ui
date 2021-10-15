@@ -1,9 +1,12 @@
 import { createLocalVue } from '@vue/test-utils'
 import VueX from 'vuex'
 import { cloneDeep } from 'lodash'
-import onboardingWizard from '@/store/onboarding-wizard.js'
+import onboardingWizard, { ONBOARDING_STAGE_KEY, ONBOARDING_CONTENT_KEY } from '@/store/onboarding-wizard.js'
 import { pnpStoreModule } from '@/store/pnp.js'
-import { ONBOARDING_INVITATION_REQUEST, ONBOARDING_PWA_INSTALLATION_STATUS, ONBOARDING_PWA_INSTALLATION_EVENT } from '@/store/mutation-types'
+import {
+  ONBOARDING_CHANGE_INSTALLATION_STEP,
+  ONBOARDING_CHANGE_STEP_CONTENT_NAME, ONBOARDING_INVITATION_REQUEST, ONBOARDING_PWA_INSTALLATION_STATUS, ONBOARDING_PWA_INSTALLATION_EVENT
+} from '@/store/mutation-types'
 import { INITIATE_PWA_INSTALLATION, INSTALL_PWA_APP } from '../../../src/store/action-types'
 
 describe('Edge Device module', () => {
@@ -14,6 +17,12 @@ describe('Edge Device module', () => {
 
   // global
   localVue.use(VueX)
+
+  beforeAll(() => {
+    global.Storage.prototype.setItem = jest.fn()
+    global.Storage.prototype.getItem = jest.fn()
+    global.Storage.prototype.removeItem = jest.fn()
+  })
 
   beforeEach(() => {
     store = new VueX.Store({
@@ -86,5 +95,15 @@ describe('Edge Device module', () => {
       expect(store.state.onboardingWizard.pwaInstallOutcomeMessage).toBe('Ambianic can be now accessed as a native home screen app on this device.')
       expect(store.state.onboardingWizard.pwaInstallOutcomeMessage).toBe(false)
     }, 1000)
+  })
+
+  it('Should persist user onboarding progress', () => {
+    store.commit(ONBOARDING_CHANGE_STEP_CONTENT_NAME, 'edge-installation')
+    expect(window.localStorage.setItem).toHaveBeenCalled()
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(ONBOARDING_CONTENT_KEY, 'edge-installation')
+
+    store.commit(ONBOARDING_CHANGE_INSTALLATION_STEP, 2)
+    expect(window.localStorage.setItem).toHaveBeenCalled()
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(ONBOARDING_STAGE_KEY, 2)
   })
 })

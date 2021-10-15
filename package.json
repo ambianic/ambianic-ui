@@ -22,6 +22,7 @@
     "@cypress/webpack-dev-server": "^1.5.0",
     "@vue/babel-preset-app": "^4.5.10",
     "compression-webpack-plugin": "^6.1.1",
+    "cypress-localstorage-commands": "^1.5.0",
     "idb": "^6.1.3",
     "konva": "^7.2.5",
     "moment": "^2.26.0",

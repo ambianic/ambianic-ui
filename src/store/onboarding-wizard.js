@@ -1,6 +1,9 @@
 import { ONBOARDING_INVITATION_REQUEST, ONBOARDING_CHANGE_STEP_CONTENT_NAME, ONBOARDING_PWA_INSTALLATION_EVENT, ONBOARDING_PWA_INSTALLATION_STATUS, ONBOARDING_CHANGE_INSTALLATION_STEP } from './mutation-types'
 import { INSTALL_PWA_APP, INITIATE_PWA_INSTALLATION } from './action-types'
 
+export const ONBOARDING_STAGE_KEY = 'ambianic-onboarding-stage'
+export const ONBOARDING_CONTENT_KEY = 'ambianic-onboarding-content'
+
 const state = {
   pwaInstallOutcomeMessage: '',
   isAppInstallationComplete: false,
@@ -8,8 +11,8 @@ const state = {
   pwaInstallPrompt: undefined,
   pwaInstallDone: undefined,
   installationStep: 0,
-  stepLevel: localStorage.getItem('lastOnboardingStage') || 1,
-  stepContentName: localStorage.getItem('lastOnboardingStep') || '',
+  stepLevel: localStorage.getItem(ONBOARDING_STAGE_KEY) || 1,
+  stepContentName: localStorage.getItem(ONBOARDING_CONTENT_KEY) || '',
   invitationDialog: false,
   hasSentAccessRequest: false
 }
@@ -17,9 +20,13 @@ const state = {
 const mutations = {
   [ONBOARDING_CHANGE_STEP_CONTENT_NAME] (state, contentName) {
     state.stepContentName = contentName
+
+    localStorage.setItem(ONBOARDING_CONTENT_KEY, contentName)
   },
   [ONBOARDING_CHANGE_INSTALLATION_STEP] (state, stepNumber) {
     state.stepLevel = stepNumber
+
+    localStorage.setItem(ONBOARDING_STAGE_KEY, stepNumber)
   },
   [ONBOARDING_PWA_INSTALLATION_STATUS] (state, statusObject) {
     const { message, completionState } = statusObject
