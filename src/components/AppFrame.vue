@@ -1,9 +1,14 @@
 <!-- AppFrame.vue -->
 <template>
   <div>
-    <!-- nav goes here -->
+    <!-- Top nav bar -->
     <NavBar />
+
+    <!-- Informs user about system status events -->
     <StatusSnackbar />
+
+    <!-- Blocks UI with a modal dialog while connecting to a remote edge device in order to reduce explosion of edge cases.  -->
+    <ConnectionModal />
 
     <v-main>
       <v-container
@@ -28,12 +33,16 @@
 
 <script>
 import NavBar from './NavBar.vue'
-import StatusSnackbar from '@/components/shared/snackNotification'
+import StatusSnackbar from '@/components/shared/StatusSnackbar'
+import ConnectionModal from '@/components/shared/ConnectionModal'
 
 export default {
   name: 'AppFrame',
   components: {
-    UpdateNotification: () => import('./UpdateNotification'), NavBar, StatusSnackbar
+    UpdateNotification: () => import('./UpdateNotification'),
+    NavBar,
+    StatusSnackbar,
+    ConnectionModal
   },
   data: () => ({
     dialog: false,

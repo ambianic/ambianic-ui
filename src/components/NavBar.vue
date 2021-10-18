@@ -50,33 +50,6 @@
         </v-tooltip>
       </div>
 
-      <!-- Future navbar icons
-      <v-text-field
-        id="searchbar"
-        flat
-        solo-inverted
-        hide-details
-        prepend-inner-icon="search"
-        label="Search"
-        class="hidden-sm-and-down"
-      />
-      <v-spacer />
-      <nav-button
-        with-badge
-        data-cy="heart"
-        icon="heart"
-        :badge-content="newFavorites"
-        :badge-value="newFavorites"
-      />
-      <nav-button
-        with-badge
-        data-cy="bell"
-        icon="bell"
-        :badge-content="newAlerts"
-        :badge-value="newAlerts"
-      />
-      -->
-
       <nav-button
         data-cy="about"
         to="about"

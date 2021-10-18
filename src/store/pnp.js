@@ -6,6 +6,8 @@ import {
   PEER_DISCONNECTED,
   PEER_CONNECTING,
   PEER_DISCOVERING,
+  PEER_DISCOVERING_CANCELLED,
+  PEER_DISCOVERING_OFF,
   PEER_DISCOVERED,
   PEER_AUTHENTICATING,
   PEER_CONNECTED,
@@ -60,6 +62,14 @@ const state = {
   */
   lastPeerId: undefined,
   /**
+   * Status of LAN peer discovery cycle
+   */
+  discoveryStatus: new Set(),
+  /**
+   * Remote peers that were discovered on the local network
+   */
+  discoveredPeers: new Set(),
+  /**
    * Helper list of remote peers that have caused connection issues
    */
   problematicRemotePeers: new Set(),
@@ -103,11 +113,20 @@ const mutations = {
     state.peerFetch = undefined
     state.edgeAPI = undefined
   },
-  [PEER_DISCOVERED] (state) {
-    state.peerConnectionStatus = PEER_DISCOVERED
+  [PEER_DISCOVERED] (state, remotePeerId) {
+    state.discoveryStatus = PEER_DISCOVERED
+    state.discoveredPeers = new Set(remotePeerId)
+    console.debug('Discovered Peer IDs:', state.discoveredPeers)
   },
   [PEER_DISCOVERING] (state) {
-    state.peerConnectionStatus = PEER_DISCOVERING
+    state.discoveryStatus = PEER_DISCOVERING
+    state.discoveredPeers = new Set()
+  },
+  [PEER_DISCOVERING_CANCELLED] (state) {
+    state.discoveryStatus = PEER_DISCOVERING_CANCELLED
+  },
+  [PEER_DISCOVERING_OFF] (state) {
+    state.discoveryStatus = PEER_DISCOVERING_OFF
   },
   [PEER_CONNECTING] (state) {
     state.peerConnectionStatus = PEER_CONNECTING
@@ -276,7 +295,6 @@ function setPeerConnectionHandlers ({
 }) {
   // setup connection progress callbacks
   peerConnection.on('open', function () {
-    clearTimeout(hungupConnectionResetTimer)
     const peerFetch = new PeerFetch(peerConnection)
     console.debug('Peer DataConnection is now open. Creating PeerFetch wrapper.')
     commit(PEER_FETCH, peerFetch)
@@ -287,14 +305,12 @@ function setPeerConnectionHandlers ({
   })
 
   peerConnection.on('close', function () {
-    clearTimeout(hungupConnectionResetTimer)
     commit(PEER_DISCONNECTED)
     commit(USER_MESSAGE, 'Connection to remote peer closed')
     console.debug('#########>>>>>>>>> p2p connection closed')
   })
 
   peerConnection.on('error', function (err) {
-    clearTimeout(hungupConnectionResetTimer)
     commit(USER_MESSAGE, 'Error in connection to remote peer ID', peerConnection.peer)
     console.info(`Error in connection to remote peer ID ${peerConnection.peer}`, err)
     // schedule an async HANDLE_PEER_CONNECTION_ERROR action
@@ -395,27 +411,25 @@ const actions = {
         console.debug('PNP Service disconnected. Reconnecting...')
         await dispatch(PNP_SERVICE_CONNECT)
       }
-      let remotePeerId
       try {
         if (state.pnpServiceConnectionStatus === PNP_SERVICE_CONNECTED) {
           console.debug('discovering peers on the local network...')
-          remotePeerId = await discoverRemotePeerId({ state, commit })
+          const remotePeerId = await discoverRemotePeerId({ state, commit })
+          // Signal to state watchers that we have discovered peers.
+          // Let user inspect discovered peer IDs and decide how to proceed.
+          // Similar UX to local WiFi and Bluetooth device discovery.
+          commit(PEER_DISCOVERED, remotePeerId)
         } else {
           // signaling server connection is still not ready, skip this cycle
           // and wait for the next scheduled retry
           console.debug('PNP Service still not connected. Will retry shortly.')
+          setTimeout(discoveryLoopId, state.discoveryLoopPause)
         }
       } catch (err) {
-        console.debug('Error while looking for remote peer. Will retry shortly.',
+        console.warn('Error while looking for remote peer. Will retry shortly.',
           err)
-      }
-      if (remotePeerId) {
-        console.debug('Remote peer Id found', remotePeerId)
-        commit(PEER_DISCOVERED)
-        // remote Edge peer discovered, let's connect to it
-        await dispatch(PEER_CONNECT, remotePeerId)
-      } else {
-        setTimeout(discoveryLoopId, state.discoveryLoopPause) // retry in a few seconds
+        // TODO: Signal user that dicovery errored. Let user decide how to proceed.
+        // Recommend check internet connection and retry.
       }
     }
     await discoveryLoopId()
@@ -453,40 +467,11 @@ const actions = {
       label: 'http-proxy', reliable: true, serialization: 'raw'
     })
     commit(PEER_CONNECTING)
-    // If we don't connect within a few seconds, there is a good chance
-    // the remote peer is not available or the networking stack got corrupted.
-    // Let's mark the remote peer as problematic temporarily and reset the webrtc stack.
-    const hungupConnectionResetTimer = setTimeout(async () => {
-      // TODO: Move this logic into the app on a standalone page with a modal dialog for new peer discovery.
-      //
-      // The logic in the section below was commented out on Oct 11, 2021 because it was part of 
-      // a async backend logic which allowed for an explosion of possible branches and edge cases to handle.
-      // 
-      // When the user is allowed to move around the UI and trigger other connectivity 
-      // related events in the middle of a peer discovery process, that 
-      // causes too many unplannedside effects.
-      //
-      // try {
-      //   state.problematicRemotePeers.add(remotePeerId)
-      //   console.debug('Problematic remote peer ID:', remotePeerId)
-      //   if (state.peerConnection) {
-      //     // make sure any previous connection is closed and cleaned up
-      //     console.info('>>>>>>> Closing and cleaning up existing peer connection.')
-      //     await state.peerConnection.close()
-      //   }
-      // } catch (err) {
-      //   console.warn('Error destroying peer.')
-      // } finally {
-      //   console.info('It took too long to setup a connection. Resetting peer.')
-      //   await dispatch(INITIALIZE_PNP)
-      // }
-    }, 30 * 1000) // 30 seconds timeout
     setPeerConnectionHandlers({
       state,
       commit,
       dispatch,
-      peerConnection,
-      hungupConnectionResetTimer
+      peerConnection
     })
   },
   /**

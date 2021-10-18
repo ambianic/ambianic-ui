@@ -1,5 +1,5 @@
 <template>
-  <div id="ConnectionStatusSnack-ctn">
+  <div id="ConnectionStatusSnackbar-ctn">
     <v-snackbar
       v-model="visibility"
       data-cy="snackbar"
@@ -31,7 +31,7 @@ import { PEER_CONNECTED_NOTIFICATION, PEER_DISCONNECTED_NOTIFICATION, PEER_CONNE
 import { LAST_PEER_CONNECTION_STATUS } from '@/store/mutation-types'
 
 export default {
-  name: 'ConnectionStatusSnack',
+  name: 'ConnectionStatusSnackbar',
   data: () => ({
     visibility: false,
     message: 'Connecting to Ambianic Edge device'
