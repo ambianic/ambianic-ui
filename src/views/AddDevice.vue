@@ -255,7 +255,6 @@ import { mapActions, mapState } from 'vuex'
 import {
   PEER_DISCONNECTED,
   PEER_DISCOVERING,
-  PEER_DISCOVERED,
   PEER_CONNECTING,
   PEER_AUTHENTICATING,
   PEER_CONNECTED,
@@ -268,12 +267,10 @@ import {
   PEER_DISCOVER,
   REMOVE_REMOTE_PEER_ID
 } from '../store/action-types.js'
-import AmbListItem from '@/components/shared/ListItem.vue'
 
 export default {
   components: {
     AmbBanner: () => import('@/components/shared/Banner.vue'),
-    AmbListItem,
     AmbAppFrame: () => import('@/components/AppFrame.vue')
   },
   data () {

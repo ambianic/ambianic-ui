@@ -60,7 +60,22 @@
               justify="space-around"
             >
               <v-col
-                v-if="edgePeerId" ... supply Edge Peer Id to this page so it can render device details card
+                v-if="edgePeerId"
+                ...
+                supply
+                edge
+                peer
+                id
+                to
+                this
+                page
+                so
+                it
+                can
+                render
+                device
+                details
+                card
                 style="max-width: 420px;"
                 align="center"
                 justify="center"
@@ -128,24 +143,17 @@
   </amb-app-frame>
 </template>
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapState } from 'vuex'
 import {
-  PEER_DISCONNECTED,
-  PEER_DISCOVERING,
-  PEER_CONNECTING,
-  PEER_AUTHENTICATING,
   PEER_CONNECTED,
   PEER_CONNECTION_ERROR,
   EDGE_DEVICE_DETAILS,
   EDGE_DEVICE_DISPLAY_NAME
 } from '@/store/mutation-types'
 
-import AmbListItem from '@/components/shared/ListItem.vue'
-
 export default {
   components: {
     AmbBanner: () => import('@/components/shared/Banner.vue'),
-    AmbListItem,
     AmbAppFrame: () => import('@/components/AppFrame.vue')
   },
   data () {
@@ -219,7 +227,7 @@ export default {
         const deviceLabel = (state.edgeDevice.edgeDisplayName) ? state.edgeDevice.edgeDisplayName : 'My Ambianic Edge Device'
         return deviceLabel
       }
-    }),
+    })
   },
   watch: {
     isEdgeConnected: async function (isConnected) {
