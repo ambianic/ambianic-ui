@@ -68,7 +68,7 @@
                         >
                           Local
                         </v-btn>
-                        <v-spacer></v-spacer>
+                        <v-spacer />
                         <v-btn
                           @click="addDeviceStep = 2"
                         >
@@ -88,7 +88,7 @@
                       v-if="isChoiceDiscoverLocal"
                     >
                       <v-list
-                          v-if="isPeerDiscovered"
+                        v-if="isPeerDiscovered"
                       >
                         <v-subheader>Local Devices</v-subheader>
                         <v-list-item-group
@@ -104,7 +104,7 @@
                               <v-icon>mdi-identifier</v-icon>
                             </v-list-item-icon>
                             <v-list-item-content>
-                              <v-list-item-title v-text="item"></v-list-item-title>
+                              <v-list-item-title v-text="item" />
                             </v-list-item-content>
                           </v-list-item>
                         </v-list-item-group>
@@ -154,7 +154,7 @@
                         >
                           Timeline
                         </v-btn>
-                        <v-spacer></v-spacer>
+                        <v-spacer />
                         <v-btn
                           to="devicecard"
                         >

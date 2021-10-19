@@ -61,21 +61,6 @@
             >
               <v-col
                 v-if="edgePeerId"
-                ...
-                supply
-                edge
-                peer
-                id
-                to
-                this
-                page
-                so
-                it
-                can
-                render
-                device
-                details
-                card
                 style="max-width: 420px;"
                 align="center"
                 justify="center"
@@ -154,6 +139,7 @@ import {
 export default {
   components: {
     AmbBanner: () => import('@/components/shared/Banner.vue'),
+    AmbListItem: () => import('@/components/shared/ListItem.vue'),
     AmbAppFrame: () => import('@/components/AppFrame.vue')
   },
   data () {

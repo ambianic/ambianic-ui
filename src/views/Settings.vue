@@ -152,7 +152,7 @@
               Proceed to adding a new device connection?
             </v-card-text>
 
-            <v-divider></v-divider>
+            <v-divider />
 
             <v-card-actions>
               <v-btn
@@ -160,7 +160,7 @@
               >
                 Continue
               </v-btn>
-              <v-spacer></v-spacer>
+              <v-spacer />
               <v-btn
                 @click="addDeviceDialog = false"
               >
