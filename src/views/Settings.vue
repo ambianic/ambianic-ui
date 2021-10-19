@@ -96,11 +96,21 @@
               class="transition-fast-in-fast-out v-card--reveal"
               style="height: 100%;"
             >
-              <v-card-text class="pb-0">
+              <v-card-text
+                class="pb-0 dottedBorder"
+                color="warning"
+                v-if="!moreDevices"
+              >
+                <p>No other devices added.</p>
+              </v-card-text>
+              <v-card-text
+                class="pb-0"
+                v-else
+              >
                 <p class="text-h4 text--primary">
-                  Origin
+                  Your Devices:
                 </p>
-                <p>late 16th century (as a noun denoting a place where alms were distributed): from medieval Latin eleemosynarius, from late Latin eleemosyna ‘alms’, from Greek eleēmosunē ‘compassion’ </p>
+                <p>...</p>
               </v-card-text>
               <v-card-text style="height: 100px; position: relative">
                 <v-fab-transition>
@@ -111,6 +121,7 @@
                     right
                     large
                     fab
+                    @click="addDeviceDialog = true"
                   >
                     <v-icon>mdi-plus</v-icon>
                   </v-btn>
@@ -120,7 +131,7 @@
                 <v-btn
                   text
                   color="teal accent-4"
-                  @click="reveal = false"
+                  @click="reveal = true"
                 >
                   Close
                 </v-btn>
@@ -128,6 +139,36 @@
             </v-card>
           </v-expand-transition>
         </v-card>
+        <v-dialog
+          v-model="addDeviceDialog"
+          max-width="344"
+        >
+          <v-card>
+            <v-card-title>
+              Add Device
+            </v-card-title>
+
+            <v-card-text>
+              Proceed to adding a new device connection?
+            </v-card-text>
+
+            <v-divider></v-divider>
+
+            <v-card-actions>
+              <v-btn
+                to="adddevice"
+              >
+                Continue
+              </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn
+                @click="addDeviceDialog = false"
+              >
+                Cancel
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-row>
     </v-container>
   </amb-app-frame>
@@ -156,7 +197,9 @@ export default {
       rules: {
         required: value => !!value || 'Required.',
         counter: value => (value.length >= 5 && value.length <= 20) || 'Min 5 and Max 20 characters'
-      }
+      },
+      moreDevices: undefined,
+      addDeviceDialog: false
     }
   },
   created () {
@@ -204,3 +247,7 @@ export default {
   }
 }
 </script>
+
+<style>
+.dottedBorder {border-style: dashed; opacity: 0.5  }
+</style>

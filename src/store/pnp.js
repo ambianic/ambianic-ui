@@ -64,15 +64,15 @@ const state = {
   /**
    * Status of LAN peer discovery cycle
    */
-  discoveryStatus: new Set(),
+  discoveryStatus: PEER_DISCOVERING_OFF,
   /**
    * Remote peers that were discovered on the local network
    */
-  discoveredPeers: new Set(),
+  discoveredPeers: [],
   /**
    * Helper list of remote peers that have caused connection issues
    */
-  problematicRemotePeers: new Set(),
+  problematicRemotePeers: [],
   /**
     Connection status message for user to see
   */
@@ -115,12 +115,12 @@ const mutations = {
   },
   [PEER_DISCOVERED] (state, remotePeerId) {
     state.discoveryStatus = PEER_DISCOVERED
-    state.discoveredPeers = new Set(remotePeerId)
+    state.discoveredPeers.push(remotePeerId)
     console.debug('Discovered Peer IDs:', state.discoveredPeers)
   },
   [PEER_DISCOVERING] (state) {
     state.discoveryStatus = PEER_DISCOVERING
-    state.discoveredPeers = new Set()
+    state.discoveredPeers = []
   },
   [PEER_DISCOVERING_CANCELLED] (state) {
     state.discoveryStatus = PEER_DISCOVERING_CANCELLED
@@ -202,7 +202,7 @@ async function discoverRemotePeerId ({ state, commit }) {
     // find a peerId that is different than this PWA peer ID and
     //   is not in the problematic list of remote peers
     var remotePeerId = peerIds.find(
-      pid => pid !== state.myPeerId && !state.problematicRemotePeers.has(pid))
+      pid => pid !== state.myPeerId && !state.problematicRemotePeers.includes(pid))
     console.debug(`remotePeerId: ${remotePeerId} found among myRoom members: ${peerIds}`)
     if (remotePeerId === undefined && state.problematicRemotePeers.size > 0) {
       // if no fresh remote peer is found, recycle the problematic peers list

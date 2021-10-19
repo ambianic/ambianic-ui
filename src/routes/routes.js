@@ -45,6 +45,14 @@ const routes = [
     component: () => import(/* webpackChunkName: "settings" */ '../views/Settings.vue')
   },
   {
+    path: '/adddevice',
+    name: 'adddevice',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "adddevice" */ '../views/AddDevice.vue')
+  },
+  {
     path: '/feedback',
     name: 'feedback',
     // route level code-splitting

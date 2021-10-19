@@ -24,26 +24,6 @@
         </v-col>
       </v-row>
       <v-row
-        align="center"
-      >
-        <v-dialog
-          v-model="syncing"
-          persistent
-          max-width="300"
-        >
-          <v-card>
-            <v-card-text
-              color="accent"
-            >
-              Syncing with Ambianic Edge device
-              <v-progress-linear
-                indeterminate
-              />
-            </v-card-text>
-          </v-card>
-        </v-dialog>
-      </v-row>
-      <v-row
         justify="center"
         class="pb-5"
         align="center"
@@ -52,7 +32,7 @@
           <v-card-title
             data-cy="titlecard"
           >
-            Ambianic Edge connection details
+            Add Ambianic Edge device
           </v-card-title>
           <v-card-text grid-list-sm>
             <v-row
@@ -66,25 +46,92 @@
                 cols="12"
                 class="pa-0 ma-0 fill-height"
               >
-                <amb-banner
-                  banner-class="text-left"
-                  icon="wifi-off"
-                  icon-color="info"
-                  text="Let's find your Ambianic Edge device and connect to it..."
-                />
                 <v-stepper
-                  v-model="connectStep"
+                  v-model="addDeviceStep"
                   vertical
                 >
                   <v-stepper-step
-                    :complete="connectStep > 1"
+                    :complete="addDeviceStep > 1"
                     step="1"
                     :rules="[() => true]"
                   >
-                    Discovering
-                    <small>Looking for Ambianic Edge device to pair with.</small>
+                    Choose connection method
                   </v-stepper-step>
                   <v-stepper-content step="1">
+                    <v-card>
+                      <v-card-text>
+                        Discover a device on the local WiFi network or connect remotely.
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-btn
+                          @click="chooseDiscoverLocal()"
+                        >
+                          Local
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          @click="addDeviceStep = 2"
+                        >
+                          Remote
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-stepper-content>
+                  <v-stepper-step
+                    :complete="addDeviceStep > 2"
+                    step="2"
+                  >
+                    Identify Device
+                  </v-stepper-step>
+                  <v-stepper-content step="2">
+                    <v-card
+                      v-if="isChoiceDiscoverLocal"
+                    >
+                      <v-list
+                          v-if="isPeerDiscovered"
+                      >
+                        <v-subheader>Local Devices</v-subheader>
+                        <v-list-item-group
+                          color="primary"
+                          v-model="selectedLocalDevice"
+                          mandatory
+                        >
+                          <v-list-item
+                            v-for="(item, i) in discoveredPeers"
+                            :key="i"
+                          >
+                            <v-list-item-icon>
+                              <v-icon>mdi-identifier</v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-content>
+                              <v-list-item-title v-text="item"></v-list-item-title>
+                            </v-list-item-content>
+                          </v-list-item>
+                        </v-list-item-group>
+                      </v-list>
+                      <v-skeleton-loader
+                        v-else
+                        type="list-item-avatar"
+                      />
+                      <v-card-actions>
+                        <v-btn
+                          :disabled="selectedLocalDevice < 0"
+                          @click="clickConnect"
+                        >
+                          Connect
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-stepper-content>
+                  <v-stepper-step
+                    :complete="addDeviceStep > 3"
+                    step="3"
+                    :rules="[() => true]"
+                  >
+                    Connect
+                    <small>Establishing connection with Ambianic Edge device...</small>
+                  </v-stepper-step>
+                  <v-stepper-content step="3">
                     <v-progress-linear
                       v-if="!this.isPeerConnectionError"
                       color="info"
@@ -93,56 +140,31 @@
                       :width="7"
                     />
                   </v-stepper-content>
-                  <v-stepper-step
-                    :complete="connectStep > 2"
-                    step="2"
-                  >
-                    Authenticating
-                    <small>Establishing secure peer-to-peer connection.</small>
-                  </v-stepper-step>
-                  <v-stepper-content step="2">
-                    <v-progress-linear
-                      color="info"
-                      indeterminate
-                      :size="50"
-                      :width="7"
-                    />
-                  </v-stepper-content>
-                  <v-stepper-step step="3">
+                  <v-stepper-step step="4">
                     Done
                   </v-stepper-step>
-                  <v-stepper-content step="3" />
+                  <v-stepper-content step="4">
+                    <v-card>
+                      <v-card-text>
+                        Successfully added a new device. Continue to device timeline or configure settings.
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-btn
+                          to="timeline"
+                        >
+                          Timeline
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          to="devicecard"
+                        >
+                          Settings
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-stepper-content>
                 </v-stepper>
               </v-col>
-              <v-dialog
-                max-width="500"
-              >
-                <v-card flat>
-                  <v-card-title class="headline">
-                    Reset device pairing?
-                  </v-card-title>
-                  <v-card-text>
-                    <p>
-                      Are you switching to a new Ambianic Edge device?
-                      Resetting a device association is usually done when switching to
-                      a new edge device with a different Peer ID.
-                    </p>
-                  </v-card-text>
-                  <v-card-actions>
-                    <v-spacer />
-                    <v-btn
-                      text
-                    >
-                      Cancel
-                    </v-btn>
-                    <v-btn
-                      text
-                    >
-                      Yes, Reset
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
             </v-row>
           </v-card-text>
         </v-card>
@@ -221,7 +243,7 @@
                 (Enter the Peer ID of the remote Ambianic Edge device.)
               </v-subheader>
               <v-text-field
-                v-model="edgeAddress"
+                v-model="edgePeerId"
                 type="text"
                 label="Peer ID of remote Ambianic Edge device*"
                 placeholder="Enter Peer ID"
@@ -235,8 +257,8 @@
 
             <v-card-actions>
               <v-btn
-                :disabled="!correctEdgeAddress"
-                @click="sendEdgeAddress"
+                :disabled="!isPeerIdValid"
+                @click="sendRemotePeerId"
                 color="primary"
                 id="btn-sendRemotePeerID"
                 data-cy="sendRemotePeerID"
@@ -255,12 +277,11 @@ import { mapActions, mapState } from 'vuex'
 import {
   PEER_DISCONNECTED,
   PEER_DISCOVERING,
+  PEER_DISCOVERED,
   PEER_CONNECTING,
   PEER_AUTHENTICATING,
   PEER_CONNECTED,
-  PEER_CONNECTION_ERROR,
-  EDGE_DEVICE_DETAILS,
-  EDGE_DEVICE_DISPLAY_NAME
+  PEER_CONNECTION_ERROR
 } from '@/store/mutation-types'
 import {
   CHANGE_REMOTE_PEER_ID,
@@ -270,106 +291,90 @@ import {
 
 export default {
   components: {
-    AmbBanner: () => import('@/components/shared/Banner.vue'),
     AmbAppFrame: () => import('@/components/AppFrame.vue')
   },
   data () {
     return {
-      edgeAddress: undefined,
-      correctEdgeAddress: false,
+      edgePeerId: undefined,
+      isPeerIdValid: false,
       edgeDeviceError: null,
       syncing: false, // is the UI in the process of syncing with remote device data
       rules: {
         required: value => !!value || 'Required.',
         counter: value => (value.length >= 5 && value.length <= 20) || 'Min 5 and Max 20 characters'
-      }
+      },
+      addDeviceStep: 1, // the sequential step number in the add device stepper flow
+      isChoiceDiscoverLocal: false, // user chooses to discover a local device vs remote connection
+      selectedLocalDevice: -1 // device number picked by the user from a list of discovered local devices
     }
   },
   created () {
-    // if a connection to the edge device is already established
-    // but version info has not been fetched yet, let's do it now
-    if (this.isEdgeConnected && !this.edgeVersion) {
-      this.fetchEdgeDetails()
-    }
   },
   mounted () {
   },
   methods: {
     // Validate the user input so the ID has the correct format before showing the connect button
-    validateIP (value) {
+    validatePeerID (value) {
       if (/^([a-zA-Z0-9]{8})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{12})$/.test(value)) {
-        this.correctEdgeAddress = true
-        return this.correctEdgeAddress
+        this.isPeerIdValid = true
+        return this.isPeerIdValid
       } else {
         // if value is not matching regex, remove button
-        this.correctEdgeAddress = false
-        return this.correctEdgeAddress
+        this.isPeerIdValid = false
+        return this.isPeerIdValid
       }
     },
     ...mapActions([
       'CHANGE_REMOTE_PEER_ID'
     ]),
-    async sendEdgeAddress () {
-      await this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.edgeAddress)
+    /**
+     * User clicked Connect to a selected device
+     */
+    async clickConnect () {
+      console.debug('clickConnect() enter')
+      this.addDeviceStep++
+      this.edgePeerId = this.discoveredPeers[this.selectedLocalDevice]
+      console.debug('User selected device:', this.selectedLocalDevice, this.edgePeerId)
+      this.sendRemotePeerId()
+    },
+    async sendRemotePeerId () {
+      await this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.edgePeerId)
+    },
+    /**
+     * User wants local device discovery
+     */
+    async chooseDiscoverLocal () {
+      console.debug('chooseDiscoverLocal() enter')
+      this.addDeviceStep++
+      this.isChoiceDiscoverLocal = true
+      this.discoverLocalEdgeDevice()
     },
     async discoverLocalEdgeDevice () {
-      this.edgeAddress = undefined
+      this.edgePeerId = undefined
       console.debug('discoverLocalEdgeDevice() called')
       console.debug('removing any existing peer connection')
       await this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
       await this.$store.dispatch(PEER_DISCOVER)
       console.debug('discoverLocalEdgeDevice() ended')
     },
-    async fetchEdgeDetails () {
-      try {
-        const details = await this.pnp.edgeAPI.getEdgeStatus()
-        console.debug('Edge device details fetched:', { details })
-        if (!details || !details.version) {
-          this.edgeDeviceError = 'Edge device requires update.'
-        } else {
-          this.$store.commit(EDGE_DEVICE_DETAILS, details)
-        }
-      } catch (e) {
-        this.edgeDeviceError = 'Edge device API offline or unreachable.'
-      }
-    },
-    async onDisplayNameChanged (newDisplayName) {
-      console.debug(`newDisplayName: ${newDisplayName}`)
-      let updated = false
-      if (newDisplayName) {
-        try {
-          console.debug(`New device display name: ${newDisplayName}`)
-          // trigger edit change callback
-          //    show blocking dialog with spinner https://vuetifyjs.com/en/components/dialogs/#loader
-          //    await dispatch to push new device display name: 1. to device, 2. to local device store
-          this.syncing = true
-          await this.pnp.edgeAPI.setDeviceDisplayName(newDisplayName)
-          this.$store.commit(EDGE_DEVICE_DISPLAY_NAME, newDisplayName)
-          updated = true
-        } catch (e) {
-          this.edgeDeviceError = 'Error updating display name. Edge device offline or has outdated API.'
-          console.error('Exception calling setDeviceDisplayName()', { e })
-        } finally {
-          this.syncing = false
-        }
-      }
-      return updated
+    /**
+     * User wants local device discovery
+     */
+    async connectStepCompleted () {
+      console.debug('connectStepCompleted() enter')
+      this.addDeviceStep++
     }
   },
   computed: {
     ...mapState({
+      discoveryStatus: state => state.pnp.discoveryStatus,
+      isPeerDiscovered: state => state.pnp.discoveryStatus === PEER_DISCOVERED,
+      discoveredPeers: state => state.pnp.discoveredPeers,
       peerConnectionStatus: state => state.pnp.peerConnectionStatus,
       isPeerConnectionError: state => state.pnp.peerConnectionStatus === PEER_CONNECTION_ERROR,
       isEdgeConnected: state =>
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
-      pnp: state => state.pnp,
-      edgePeerId: state => state.pnp.remotePeerId,
-      peerFetch: state => state.pnp.peerFetch,
-      edgeVersion: state => state.edgeDevice.edgeSoftwareVersion,
-      edgeDisplayName: state => {
-        const deviceLabel = (state.edgeDevice.edgeDisplayName) ? state.edgeDevice.edgeDisplayName : 'My Ambianic Edge Device'
-        return deviceLabel
-      }
+      pnp: state => state.pnp
     }),
     connectStep: function () {
       let step = 1
@@ -392,13 +397,13 @@ export default {
     }
   },
   watch: {
-    edgeAddress (value) {
-      this.edgeAddress = value
-      this.validateIP(value)
+    edgePeerId (value) {
+      this.edgePeerId = value
+      this.validatePeerID(value)
     },
     isEdgeConnected: async function (isConnected) {
       if (isConnected) {
-        await this.fetchEdgeDetails()
+        await this.connectStepCompleted()
       }
     },
     isPeerConnectionError: async function (isError) {

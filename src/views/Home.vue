@@ -62,14 +62,14 @@
                 rounded
                 color="pink darken-4"
                 dark
-                data-cy="timeline"
+                data-cy="continue"
                 class="ma-2 white--text"
-                to="timeline"
+                to="settings"
                 id="btn-dashboard"
-                ref="btn-timeline"
+                ref="btn-continue"
                 v-else
               >
-                View Timeline
+                Continue
                 <v-icon right>
                   mdi-arrow-right
                 </v-icon>
