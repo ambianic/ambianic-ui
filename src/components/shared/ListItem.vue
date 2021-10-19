@@ -63,14 +63,14 @@
         bottom
       >
         <template
-          #activator="{ on : eyeOn, eyeOffAttr }"
+          #activator="{ on : eyeOn, eyeAttrIcon }"
         >
           <v-icon
             v-if="sensitive"
             id="toggle-visibility"
             @click="sensitive = false"
             data-cy="icon-sensitive-on"
-            v-bind="eyeOffAttr"
+            v-bind="eyeAttrIcon"
             v-on="eyeOn"
           >
             mdi-eye
@@ -78,7 +78,7 @@
           <v-icon
             v-else
             @click="sensitive = true"
-            v-bind="eyeOffAttr"
+            v-bind="eyeAttrIcon"
             v-on="eyeOn"
           >
             mdi-eye-off-outline

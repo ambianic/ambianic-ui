@@ -212,6 +212,7 @@
                   <div>
                     <v-card-text
                       id="click-text"
+                      color="primary"
                       @click="hasRemotePeerID = true"
                       v-if="!hasRemotePeerID"
                     >
@@ -756,7 +757,6 @@ export default {
 #click-text {
   font-size: 0.90rem;
   margin: .7em 0;
-  color: #c0c0c0;
 }
 
 #click-text:hover {

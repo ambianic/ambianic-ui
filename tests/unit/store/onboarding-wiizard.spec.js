@@ -1,7 +1,7 @@
 import { createLocalVue } from '@vue/test-utils'
 import VueX from 'vuex'
 import { cloneDeep } from 'lodash'
-import onboardingWizard, { ONBOARDING_STAGE_KEY, ONBOARDING_CONTENT_KEY } from '@/store/onboarding-wizard.js'
+import onboardingWizard, { ONBOARDING_STEP_NUMBER_KEY, ONBOARDING_CONTENT_NAME_KEY } from '@/store/onboarding-wizard.js'
 import { pnpStoreModule } from '@/store/pnp.js'
 import {
   ONBOARDING_CHANGE_INSTALLATION_STEP,
@@ -100,10 +100,10 @@ describe('Edge Device module', () => {
   it('Should persist user onboarding progress', () => {
     store.commit(ONBOARDING_CHANGE_STEP_CONTENT_NAME, 'edge-installation')
     expect(window.localStorage.setItem).toHaveBeenCalled()
-    expect(window.localStorage.setItem).toHaveBeenCalledWith(ONBOARDING_CONTENT_KEY, 'edge-installation')
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(ONBOARDING_CONTENT_NAME_KEY, 'edge-installation')
 
     store.commit(ONBOARDING_CHANGE_INSTALLATION_STEP, 2)
     expect(window.localStorage.setItem).toHaveBeenCalled()
-    expect(window.localStorage.setItem).toHaveBeenCalledWith(ONBOARDING_STAGE_KEY, 2)
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(ONBOARDING_STEP_NUMBER_KEY, 2)
   })
 })
