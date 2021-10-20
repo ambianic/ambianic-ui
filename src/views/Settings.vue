@@ -27,8 +27,7 @@
         justify="center"
         v-if="edgePeerId"
       >
-        <v-card
-        >
+        <v-card>
           <v-card-title
             data-cy="titlecard"
           >
@@ -40,8 +39,7 @@
             Your current device selection
           </v-card-subtitle>
           <v-card-text>
-            <v-list-item
-            >
+            <v-list-item>
               <v-list-item-avatar left>
                 <v-icon
                   v-if="isEdgeConnected"
@@ -56,10 +54,13 @@
                   mdi-cloud-off-outline
                 </v-icon>
               </v-list-item-avatar>
-              <v-list-item-content
-              >
-                <v-list-item-title v-if="isEdgeConnected">Connected.</v-list-item-title>
-                <v-list-item-title v-else>Not connected.</v-list-item-title>
+              <v-list-item-content>
+                <v-list-item-title v-if="isEdgeConnected">
+                  Connected.
+                </v-list-item-title>
+                <v-list-item-title v-else>
+                  Not connected.
+                </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
                 <v-btn
@@ -171,7 +172,7 @@
           <v-card-title
             data-cy="titlecard"
           >
-            No Ambianic Edge devices added
+            Your devices
           </v-card-title>
           <v-card-text>
             Add and manage one or more Ambianic Edge devices.

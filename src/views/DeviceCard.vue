@@ -24,32 +24,14 @@
         </v-col>
       </v-row>
       <v-row
-        align="center"
-      >
-        <v-dialog
-          v-model="syncing"
-          persistent
-          max-width="300"
-        >
-          <v-card>
-            <v-card-text
-              color="accent"
-            >
-              Syncing with Ambianic Edge device
-              <v-progress-linear
-                indeterminate
-              />
-            </v-card-text>
-          </v-card>
-        </v-dialog>
-      </v-row>
-      <v-row
         justify="center"
         class="pb-5"
         align="center"
         v-if="edgePeerId"
       >
-        <v-card>
+        <v-card
+          :loading="isSyncing || isEdgeConnecting || isEdgeDisconnecting"
+        >
           <v-card-title
             data-cy="titlecard"
           >
@@ -71,7 +53,7 @@
                   v-if="isEdgeConnected"
                   banner-class="text-left"
                   icon="cloud-check-outline"
-                  text="Ambianic Edge device connected!"
+                  text="Device connected!"
                 />
                 <amb-banner
                   v-else
@@ -134,7 +116,6 @@
             v-else
           >
             <v-btn
-              text
               to="timeline"
             >
               Timeline
@@ -156,7 +137,7 @@
         >
           <v-card>
             <v-card-title>
-              Forget Device
+              Forget Device?
             </v-card-title>
 
             <v-card-text>
@@ -169,15 +150,16 @@
 
             <v-card-actions>
               <v-btn
-                @click="forgetEdgeDevice()"
-              >
-                Forget Device
-              </v-btn>
-              <v-spacer />
-              <v-btn
                 @click="forgetDeviceDialog = false"
               >
                 Cancel
+              </v-btn>
+              <v-spacer />
+              <v-btn
+                @click="forgetEdgeDevice()"
+                color="warning"
+              >
+                Forget Device
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -233,7 +215,7 @@ export default {
     return {
       edgeAddress: undefined,
       edgeDeviceError: null,
-      syncing: false, // is the UI in the process of syncing with remote device data
+      isSyncing: false, // is the UI in the process of syncing with remote device data
       rules: {
         required: value => !!value || 'Required.',
         counter: value => (value.length >= 5 && value.length <= 20) || 'Min 5 and Max 20 characters'
@@ -273,7 +255,7 @@ export default {
           // trigger edit change callback
           //    show blocking dialog with spinner https://vuetifyjs.com/en/components/dialogs/#loader
           //    await dispatch to push new device display name: 1. to device, 2. to local device store
-          this.syncing = true
+          this.isSyncing = true
           await this.pnp.edgeAPI.setDeviceDisplayName(newDisplayName)
           this.$store.commit(EDGE_DEVICE_DISPLAY_NAME, newDisplayName)
           updated = true
@@ -281,7 +263,7 @@ export default {
           this.edgeDeviceError = 'Error updating display name. Edge device offline or has outdated API.'
           console.error('Exception calling setDeviceDisplayName()', { e })
         } finally {
-          this.syncing = false
+          this.isSyncing = false
         }
       }
       return updated
