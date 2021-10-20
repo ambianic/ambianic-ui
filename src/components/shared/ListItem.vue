@@ -20,7 +20,6 @@
       </v-list-item-title>
       <v-skeleton-loader
         v-else-if="!inputTitleEditValue"
-        v-bind="attrs"
         data-cy="title-loader"
         type="list-item-two-line"
       />

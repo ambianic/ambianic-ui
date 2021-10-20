@@ -25,10 +25,9 @@
       </v-row>
       <v-row
         justify="center"
+        v-if="edgePeerId"
       >
         <v-card
-          min-width="344"
-          max-width="344"
         >
           <v-card-title
             data-cy="titlecard"
@@ -38,47 +37,40 @@
           <v-card-subtitle
             data-cy="titlecard"
           >
-            Your current selection
+            Your current device selection
           </v-card-subtitle>
           <v-card-text>
             <v-list-item
-              v-if="isEdgeConnected"
             >
-              <v-avatar align="left">
-                <v-icon large>
+              <v-list-item-avatar left>
+                <v-icon
+                  v-if="isEdgeConnected"
+                  large
+                >
                   mdi-cloud-check-outline
                 </v-icon>
-              </v-avatar>
-              <v-list-item-content>
-                <v-list-item-title>Connected.</v-list-item-title>
-              </v-list-item-content>
-              <v-btn
-                text
-                color="info"
-              >
-                <span>Details</span>
-                <v-icon>info</v-icon>
-              </v-btn>
-            </v-list-item>
-            <v-list-item
-              v-else
-              align="left"
-            >
-              <v-avatar align="left">
-                <v-icon large>
+                <v-icon
+                  v-else
+                  large
+                >
                   mdi-cloud-off-outline
                 </v-icon>
-              </v-avatar>
-              <v-list-item-content>
-                <v-list-item-title>Not connected.</v-list-item-title>
-              </v-list-item-content>
-              <v-btn
-                @click="connectToSelectedEdgeDevice()"
-                text
-                color="primary accent"
+              </v-list-item-avatar>
+              <v-list-item-content
               >
-                Connect
-              </v-btn>
+                <v-list-item-title v-if="isEdgeConnected">Connected.</v-list-item-title>
+                <v-list-item-title v-else>Not connected.</v-list-item-title>
+              </v-list-item-content>
+              <v-list-item-action>
+                <v-btn
+                  text
+                  color="info"
+                  to="devicecard"
+                >
+                  <span>Details</span>
+                  <v-icon>info</v-icon>
+                </v-btn>
+              </v-list-item-action>
             </v-list-item>
           </v-card-text>
           <v-card-actions>
@@ -130,8 +122,7 @@
               <v-card-actions class="pt-0">
                 <v-btn
                   text
-                  color="teal accent-4"
-                  @click="reveal = true"
+                  @click="reveal = false"
                 >
                   Close
                 </v-btn>
@@ -170,6 +161,30 @@
           </v-card>
         </v-dialog>
       </v-row>
+      <v-row
+        justify="center"
+        v-else
+      >
+        <v-card
+          width="344"
+        >
+          <v-card-title
+            data-cy="titlecard"
+          >
+            No Ambianic Edge devices added
+          </v-card-title>
+          <v-card-text>
+            Add and manage one or more Ambianic Edge devices.
+          </v-card-text>
+          <v-card-actions>
+            <v-btn
+              to="adddevice"
+            >
+              Add Device
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-row>
     </v-container>
   </amb-app-frame>
 </template>
@@ -180,7 +195,7 @@ import {
   PEER_CONNECTION_ERROR
 } from '@/store/mutation-types'
 import {
-  CHANGE_REMOTE_PEER_ID, PEER_CONNECT
+  CHANGE_REMOTE_PEER_ID
 } from '../store/action-types.js'
 
 export default {
@@ -212,9 +227,6 @@ export default {
     ]),
     async selectAnotherEdgeDevice () {
       await this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.edgeAddress)
-    },
-    async connectToSelectedEdgeDevice () {
-      await this.$store.dispatch(PEER_CONNECT, this.edgePeerId)
     }
   },
   computed: {
@@ -226,10 +238,7 @@ export default {
       pnp: state => state.pnp,
       edgePeerId: state => state.pnp.remotePeerId,
       peerFetch: state => state.pnp.peerFetch,
-      edgeDisplayName: state => {
-        const deviceLabel = (state.edgeDevice.edgeDisplayName) ? state.edgeDevice.edgeDisplayName : 'My Ambianic Edge Device'
-        return deviceLabel
-      }
+      edgeDisplayName: state => state.edgeDevice.edgeDisplayName
     })
   },
   watch: {

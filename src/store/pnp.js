@@ -5,6 +5,7 @@ import {
   PEER_NEW_INSTANCE,
   PEER_DISCONNECTED,
   PEER_CONNECTING,
+  PEER_DISCONNECTING,
   PEER_DISCOVERING,
   PEER_DISCOVERING_CANCELLED,
   PEER_DISCOVERING_OFF,
@@ -131,6 +132,9 @@ const mutations = {
   [PEER_CONNECTING] (state) {
     state.peerConnectionStatus = PEER_CONNECTING
   },
+  [PEER_DISCONNECTING] (state) {
+    state.peerConnectionStatus = PEER_DISCONNECTING
+  },
   [PEER_AUTHENTICATING] (state) {
     state.peerConnectionStatus = PEER_AUTHENTICATING
   },
@@ -185,10 +189,10 @@ const mutations = {
 */
 async function discoverRemotePeerId ({ state, commit }) {
   const peer = state.peer
-  console.debug('iscoverRemotePeerId() start')
+  console.debug('discoverRemotePeerId() start')
   // first see if we got a remote Edge ID entered to connect to
   if (state.remotePeerId) {
-    console.debug('iscoverRemotePeerId() returning known remotePeerId')
+    console.debug('discoverRemotePeerId() returning known remotePeerId')
     return state.remotePeerId
   } else {
   // first try to find the remote peer ID in the same room
@@ -546,6 +550,7 @@ const actions = {
   */
   async [REMOVE_REMOTE_PEER_ID] ({ state, commit, dispatch }) {
     if (state.peerConnectionStatus !== PEER_DISCONNECTED) {
+      commit(PEER_DISCONNECTING)
       const conn = state.peerConnection
       if (conn) {
         try {

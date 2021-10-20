@@ -47,12 +47,13 @@
         justify="center"
         class="pb-5"
         align="center"
+        v-if="edgePeerId"
       >
-        <v-card flat>
+        <v-card>
           <v-card-title
             data-cy="titlecard"
           >
-            Ambianic Edge connection details
+            Device card
           </v-card-title>
           <v-card-text grid-list-sm>
             <v-row
@@ -60,7 +61,6 @@
               justify="space-around"
             >
               <v-col
-                v-if="edgePeerId"
                 style="max-width: 420px;"
                 align="center"
                 justify="center"
@@ -79,27 +79,15 @@
                   icon="cloud-off-outline"
                   icon-color="info"
                   data-cy="edge-device-disconnected"
-                  text="Ambianic Edge device disconnected."
+                  text="Device disconnected."
                 />
                 <v-card
                   class="mx-auto text-left"
                   flat
-                  v-if="isEdgeConnected"
                 >
                   <v-list
                     two-line
                   >
-                    <amb-list-item
-                      ref="list-item-edgeDeviceName"
-                      data-cy="list-item-edgeDeviceName"
-                      :title="edgeDisplayName"
-                      subtitle="Display Name"
-                      icon-name="tag"
-                      :edit-option="true"
-                      :on-submit="onDisplayNameChanged"
-                      :rules="[rules.required, rules.counter]"
-                    />
-                    <v-divider inset />
                     <amb-list-item
                       :title="edgePeerId"
                       subtitle="Peer ID"
@@ -108,6 +96,16 @@
                       :copy-option="true"
                       ref="list-item-edgePeerID"
                       data-cy="list-item-edgePeerID"
+                    />
+                    <amb-list-item
+                      ref="list-item-edgeDeviceName"
+                      data-cy="list-item-edgeDeviceName"
+                      :title="edgeDisplayName"
+                      subtitle="Friendly Name"
+                      icon-name="tag"
+                      :edit-option="true"
+                      :on-submit="onDisplayNameChanged"
+                      :rules="[rules.required, rules.counter]"
                     />
                     <amb-list-item
                       ref="list-item-edgeVersion"
@@ -122,6 +120,91 @@
               </v-col>
             </v-row>
           </v-card-text>
+          <v-card-actions
+            v-if="!isEdgeConnected"
+          >
+            <v-btn
+              @click="connectToEdgeDevice()"
+              :disabled="isEdgeConnecting"
+            >
+              Connect
+            </v-btn>
+          </v-card-actions>
+          <v-card-actions
+            v-else
+          >
+            <v-btn
+              text
+              to="timeline"
+            >
+              Timeline
+            </v-btn>
+            <v-spacer />
+            <v-btn
+              @click="forgetDeviceDialog = true"
+              :disabled="isEdgeDisconnecting"
+              text
+              color="warning"
+            >
+              Forget This Device
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+        <v-dialog
+          v-model="forgetDeviceDialog"
+          width="344"
+        >
+          <v-card>
+            <v-card-title>
+              Forget Device
+            </v-card-title>
+
+            <v-card-text>
+              Are you sure you want to forget this device?
+              It will no longer show in the list of managed devices.
+              However you can still add it back later.
+            </v-card-text>
+
+            <v-divider />
+
+            <v-card-actions>
+              <v-btn
+                @click="forgetEdgeDevice()"
+              >
+                Forget Device
+              </v-btn>
+              <v-spacer />
+              <v-btn
+                @click="forgetDeviceDialog = false"
+              >
+                Cancel
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-row>
+      <v-row
+        justify="center"
+        class="pb-5"
+        align="center"
+        v-else
+      >
+        <v-card>
+          <v-card-title
+            data-cy="titlecard"
+          >
+            No Ambianic Edge device selected
+          </v-card-title>
+          <v-card-text grid-list-sm>
+            Go to device management to see all your devices and add new ones.
+          </v-card-text>
+          <v-card-actions>
+            <v-btn
+              to="settings"
+            >
+              Manage Devices
+            </v-btn>
+          </v-card-actions>
         </v-card>
       </v-row>
     </v-container>
@@ -131,10 +214,14 @@
 import { mapState } from 'vuex'
 import {
   PEER_CONNECTED,
+  PEER_CONNECTING,
+  PEER_DISCONNECTING,
+  PEER_AUTHENTICATING,
   PEER_CONNECTION_ERROR,
   EDGE_DEVICE_DETAILS,
   EDGE_DEVICE_DISPLAY_NAME
 } from '@/store/mutation-types'
+import { PEER_CONNECT, REMOVE_REMOTE_PEER_ID } from '../store/action-types'
 
 export default {
   components: {
@@ -150,7 +237,8 @@ export default {
       rules: {
         required: value => !!value || 'Required.',
         counter: value => (value.length >= 5 && value.length <= 20) || 'Min 5 and Max 20 characters'
-      }
+      },
+      forgetDeviceDialog: false
     }
   },
   created () {
@@ -197,7 +285,17 @@ export default {
         }
       }
       return updated
+    },
+    async connectToEdgeDevice () {
+      await this.$store.dispatch(PEER_CONNECT, this.edgePeerId)
+    },
+    async forgetEdgeDevice () {
+      await this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
+      // close forget device dialog
+      this.forgetDeviceDialog = false
+      this.$router.push({ name: 'settings' })
     }
+
   },
   computed: {
     ...mapState({
@@ -205,12 +303,17 @@ export default {
       isPeerConnectionError: state => state.pnp.peerConnectionStatus === PEER_CONNECTION_ERROR,
       isEdgeConnected: state =>
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
+      isEdgeConnecting: state =>
+        state.pnp.peerConnectionStatus === PEER_CONNECTING ||
+        state.pnp.peerConnectionStatus === PEER_AUTHENTICATING,
+      isEdgeDisconnecting: state =>
+        state.pnp.peerConnectionStatus === PEER_DISCONNECTING,
       pnp: state => state.pnp,
       edgePeerId: state => state.pnp.remotePeerId,
       peerFetch: state => state.pnp.peerFetch,
       edgeVersion: state => state.edgeDevice.edgeSoftwareVersion,
       edgeDisplayName: state => {
-        const deviceLabel = (state.edgeDevice.edgeDisplayName) ? state.edgeDevice.edgeDisplayName : 'My Ambianic Edge Device'
+        const deviceLabel = (state.edgeDevice.edgeDisplayName) ? state.edgeDevice.edgeDisplayName : ''
         return deviceLabel
       }
     })
