@@ -145,8 +145,19 @@
                   </v-stepper-step>
                   <v-stepper-content step="4">
                     <v-card>
+                      <v-card-title>
+                        <v-icon
+                          x-large
+                          left
+                          color="green"
+                        >
+                          playlist_add_check_circle
+                        </v-icon>
+                        <span>Success!</span>
+                      </v-card-title>
                       <v-card-text>
-                        Successfully added a new device. Continue to device timeline or configure settings.
+                        Device successfully added to your list of managed devices.
+                        Continue to device timeline or configure settings.
                       </v-card-text>
                       <v-card-actions>
                         <v-btn
