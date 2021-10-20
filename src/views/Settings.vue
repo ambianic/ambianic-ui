@@ -39,40 +39,53 @@
             Your current device selection
           </v-card-subtitle>
           <v-card-text>
-            <v-list-item>
-              <v-list-item-avatar left>
-                <v-icon
-                  v-if="isEdgeConnected"
-                  large
-                >
-                  mdi-cloud-check-outline
-                </v-icon>
-                <v-icon
-                  v-else
-                  large
-                >
-                  mdi-cloud-off-outline
-                </v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title v-if="isEdgeConnected">
-                  Connected.
-                </v-list-item-title>
-                <v-list-item-title v-else>
-                  Not connected.
-                </v-list-item-title>
-              </v-list-item-content>
-              <v-list-item-action>
-                <v-btn
-                  text
-                  color="info"
-                  to="devicecard"
-                >
-                  <span>Details</span>
-                  <v-icon>info</v-icon>
-                </v-btn>
-              </v-list-item-action>
-            </v-list-item>
+            <v-list
+              two-line
+            >
+              <amb-list-item
+                :title="edgePeerId"
+                subtitle="Peer ID"
+                icon-name="identifier"
+                :sensitive-field="true"
+                :copy-option="true"
+                ref="list-item-edgePeerID"
+                data-cy="list-item-edgePeerID"
+              />
+              <v-list-item>
+                <v-list-item-avatar left>
+                  <v-icon
+                    v-if="isEdgeConnected"
+                    large
+                  >
+                    mdi-cloud-check-outline
+                  </v-icon>
+                  <v-icon
+                    v-else
+                    large
+                  >
+                    mdi-cloud-off-outline
+                  </v-icon>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title v-if="isEdgeConnected">
+                    Connected.
+                  </v-list-item-title>
+                  <v-list-item-title v-else>
+                    Not connected.
+                  </v-list-item-title>
+                </v-list-item-content>
+                <v-list-item-action>
+                  <v-btn
+                    text
+                    color="info"
+                    to="devicecard"
+                  >
+                    <span>Details</span>
+                    <v-icon>info</v-icon>
+                  </v-btn>
+                </v-list-item-action>
+              </v-list-item>
+            </v-list>
           </v-card-text>
           <v-card-actions>
             <v-btn
@@ -201,7 +214,8 @@ import {
 
 export default {
   components: {
-    AmbAppFrame: () => import('@/components/AppFrame.vue')
+    AmbAppFrame: () => import('@/components/AppFrame.vue'),
+    AmbListItem: () => import('@/components/shared/ListItem.vue')
   },
   data () {
     return {
