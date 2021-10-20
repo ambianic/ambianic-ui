@@ -60,7 +60,9 @@
                   <v-stepper-content step="1">
                     <v-card>
                       <v-card-text>
-                        Discover a device on the local WiFi network or connect remotely.
+                        <p class="text-left">
+                          Discover a device on the local WiFi network or connect remotely.
+                        </p>
                       </v-card-text>
                       <v-card-actions>
                         <v-btn
@@ -156,8 +158,10 @@
                         <span>Success!</span>
                       </v-card-title>
                       <v-card-text>
-                        Device successfully added to your list of managed devices.
-                        Continue to device timeline or configure settings.
+                        <p class="text-left">
+                          Device successfully added to your list of managed devices.
+                          Continue to device timeline or configure settings.
+                        </p>
                       </v-card-text>
                       <v-card-actions>
                         <v-btn
