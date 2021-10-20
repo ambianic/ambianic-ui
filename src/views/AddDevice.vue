@@ -72,7 +72,7 @@
                         </v-btn>
                         <v-spacer />
                         <v-btn
-                          @click="addDeviceStep = 2"
+                          @click="chooseRemoteConnection()"
                         >
                           Remote
                         </v-btn>
@@ -89,36 +89,70 @@
                     <v-card
                       v-if="isChoiceDiscoverLocal"
                     >
-                      <v-list
-                        v-if="isPeerDiscovered"
-                      >
-                        <v-subheader>Local Devices</v-subheader>
-                        <v-list-item-group
-                          color="primary"
-                          v-model="selectedLocalDevice"
-                          mandatory
+                      <v-card-text>
+                        <v-list
+                          v-if="isPeerDiscovered"
                         >
-                          <v-list-item
-                            v-for="(item, i) in discoveredPeers"
-                            :key="i"
+                          <v-subheader>Local Devices</v-subheader>
+                          <v-list-item-group
+                            color="primary"
+                            v-model="selectedLocalDevice"
+                            mandatory
                           >
-                            <v-list-item-icon>
-                              <v-icon>mdi-identifier</v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-content>
-                              <v-list-item-title v-text="item" />
-                            </v-list-item-content>
-                          </v-list-item>
-                        </v-list-item-group>
-                      </v-list>
-                      <v-skeleton-loader
-                        v-else
-                        type="list-item-avatar"
-                      />
+                            <v-list-item
+                              v-for="(item, i) in discoveredPeers"
+                              :key="i"
+                            >
+                              <v-list-item-icon>
+                                <v-icon>mdi-identifier</v-icon>
+                              </v-list-item-icon>
+                              <v-list-item-content>
+                                <v-list-item-title v-text="item" />
+                              </v-list-item-content>
+                            </v-list-item>
+                          </v-list-item-group>
+                        </v-list>
+                        <v-skeleton-loader
+                          v-else
+                          type="list-item-avatar"
+                        />
+                      </v-card-text>
                       <v-card-actions>
                         <v-btn
                           :disabled="selectedLocalDevice < 0"
-                          @click="clickConnect"
+                          @click="clickConnectToDiscoveredDevice()"
+                        >
+                          Connect
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                    <v-card
+                      v-else
+                    >
+                      <v-card-title>
+                        Remote device ID
+                      </v-card-title>
+                      <v-card-text>
+                        <p class="text-left">
+                          Enter the Peer ID of the remote Ambianic Edge device.
+                        </p>
+                        <v-text-field
+                          v-model="edgePeerId"
+                          type="text"
+                          label="Peer ID of remote Ambianic Edge device*"
+                          placeholder="Enter Peer ID"
+                          id="remotePeerID"
+                          outlined
+                          dense
+                          class="mt-4"
+                          data-cy="remotePeerID"
+                          :rules="[rules.required, rules.validPeerID]"
+                        />
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-btn
+                          @click="clickConnectToRemoteDevice"
+                          :disabled="!isPeerIdValid"
                         >
                           Connect
                         </v-btn>
@@ -184,106 +218,6 @@
           </v-card-text>
         </v-card>
       </v-row>
-      <v-row
-        align="start"
-        justify="center"
-        class="pb-5"
-      >
-        <v-card>
-          <v-card-title
-            data-cy="localtitlecard"
-          >
-            Pair with local Ambianic Edge device
-          </v-card-title>
-          <v-container grid-list-sm>
-            <!-- top column -->
-            <v-card
-              min-width="100"
-              flat
-            >
-              <v-card-text class="text-center">
-                <p class="text">
-                  [On by default] Discover and pair with an Ambianic Edge device on
-                  your local network. This is the default pairing mode
-                  that triggers automatically when you open this app for the first time.
-                  Once paired and connected, you can access the Edge device remotely
-                  from any Internet access point.
-                </p>
-              </v-card-text>
-              <v-card-actions>
-                <v-row justify="center">
-                  <v-btn
-                    color="primary"
-                    :small="$vuetify.breakpoint.mdAndUp"
-                    @click="discoverLocalEdgeDevice"
-                    id="btn-discoverLocal"
-                    data-cy="btn-discoverLocal"
-                  >
-                    <v-icon v-if="$vuetify.breakpoint.xsOnly">
-                      mdi-wifi
-                    </v-icon>
-                    <span v-if="$vuetify.breakpoint.smAndUp">
-                      Discover on Local Network
-                    </span>
-                  </v-btn>
-                </v-row>
-              </v-card-actions>
-            </v-card>
-          </v-container>
-        </v-card>
-      </v-row>
-      <v-row
-        align="start"
-        justify="center"
-        class="pb-5"
-      >
-        <v-card>
-          <v-card-title
-            data-cy="remotetitlecard"
-          >
-            Pair with remote Ambianic Edge device
-          </v-card-title>
-          <v-container grid-list-sm>
-            <v-card-text>
-              <p class="text">
-                Use this more advanced option, if you want to pair with an Ambianic Edge device
-                that you don't have physical access to
-                and you are not able to join its local network for an initial
-                pairing sequence. You need to request the device Peer ID
-                from someone who is already connected to it. Once you obtain
-                the Peer ID of the remote Ambiannic Edge device, enter it
-                below and click Pair Remotely.
-              </p>
-              <v-subheader>
-                (Enter the Peer ID of the remote Ambianic Edge device.)
-              </v-subheader>
-              <v-text-field
-                v-model="edgePeerId"
-                type="text"
-                label="Peer ID of remote Ambianic Edge device*"
-                placeholder="Enter Peer ID"
-                id="remotePeerID"
-                outlined
-                dense
-                class="mt-4"
-                data-cy="remotePeerID"
-              />
-            </v-card-text>
-
-            <v-card-actions>
-              <v-btn
-                :disabled="!isPeerIdValid"
-                @click="sendRemotePeerId"
-                color="primary"
-                id="btn-sendRemotePeerID"
-                data-cy="sendRemotePeerID"
-              >
-                Pair Remotely
-              </v-btn>
-            </v-card-actions>
-          </v-container>
-        </v-card>
-      </v-row>
     </v-container>
   </amb-app-frame>
 </template>
@@ -316,7 +250,7 @@ export default {
       syncing: false, // is the UI in the process of syncing with remote device data
       rules: {
         required: value => !!value || 'Required.',
-        counter: value => (value.length >= 5 && value.length <= 20) || 'Min 5 and Max 20 characters'
+        validPeerID: value => this.validatePeerID(value) || 'Must be a valid peer ID.'
       },
       addDeviceStep: 1, // the sequential step number in the add device stepper flow
       isChoiceDiscoverLocal: false, // user chooses to discover a local device vs remote connection
@@ -330,36 +264,45 @@ export default {
   methods: {
     // Validate the user input so the ID has the correct format before showing the connect button
     validatePeerID (value) {
-      if (/^([a-zA-Z0-9]{8})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{12})$/.test(value)) {
+      if (value && /^([a-zA-Z0-9]{8})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{4})-([a-zA-Z0-9]{12})$/.test(value)) {
         this.isPeerIdValid = true
-        return this.isPeerIdValid
       } else {
-        // if value is not matching regex, remove button
+        // if value is not matching regex, hide Connect button
         this.isPeerIdValid = false
-        return this.isPeerIdValid
       }
+      console.debug('isPeerIdValid (value)', { value }, this.isPeerIdValid)
+      return this.isPeerIdValid
     },
     ...mapActions([
       'CHANGE_REMOTE_PEER_ID'
     ]),
     /**
-     * User clicked Connect to a selected device
+     * User clicked Connect to a discovered local device
      */
-    async clickConnect () {
-      console.debug('clickConnect() enter')
+    async clickConnectToDiscoveredDevice () {
+      console.debug('clickConnectToDiscoveredDevice() called')
       this.addDeviceStep++
       this.edgePeerId = this.discoveredPeers[this.selectedLocalDevice]
       console.debug('User selected device:', this.selectedLocalDevice, this.edgePeerId)
-      this.sendRemotePeerId()
+      await this.deviceConnect()
     },
-    async sendRemotePeerId () {
+    /**
+     * User clicked Connect to a remote device
+     */
+    async clickConnectToRemoteDevice () {
+      console.debug('clickConnectToRemoteDevice() called')
+      this.addDeviceStep++
+      console.debug('User requested remote connection to device ID:', this.edgePeerId)
+      await this.deviceConnect()
+    },
+    async deviceConnect () {
       await this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.edgePeerId)
     },
     /**
      * User wants local device discovery
      */
     async chooseDiscoverLocal () {
-      console.debug('chooseDiscoverLocal() enter')
+      console.debug('chooseDiscoverLocal() called')
       this.addDeviceStep++
       this.isChoiceDiscoverLocal = true
       this.discoverLocalEdgeDevice()
@@ -373,10 +316,18 @@ export default {
       console.debug('discoverLocalEdgeDevice() ended')
     },
     /**
-     * User wants local device discovery
+     * User wants to connect to a remote device
+     */
+    async chooseRemoteConnection () {
+      console.debug('chooseDiscoverLocal() called')
+      this.addDeviceStep++
+      this.isChoiceDiscoverLocal = false
+    },
+    /**
+     * Connection step completed.
      */
     async connectStepCompleted () {
-      console.debug('connectStepCompleted() enter')
+      console.debug('connectStepCompleted() called')
       this.addDeviceStep++
     }
   },
@@ -413,7 +364,7 @@ export default {
   },
   watch: {
     edgePeerId (value) {
-      this.edgePeerId = value
+      // this.edgePeerId = value
       this.validatePeerID(value)
     },
     isEdgeConnected: async function (isConnected) {
