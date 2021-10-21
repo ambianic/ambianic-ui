@@ -66,13 +66,13 @@
                       </v-card-text>
                       <v-card-actions>
                         <v-btn
-                          @click="chooseDiscoverLocal()"
+                          @click="chooseDiscoverLocal"
                         >
                           Local
                         </v-btn>
                         <v-spacer />
                         <v-btn
-                          @click="chooseRemoteConnection()"
+                          @click="chooseRemoteConnection"
                         >
                           Remote
                         </v-btn>
@@ -120,7 +120,7 @@
                       <v-card-actions>
                         <v-btn
                           :disabled="selectedLocalDevice < 0"
-                          @click="clickConnectToDiscoveredDevice()"
+                          @click="clickConnectToDiscoveredDevice"
                         >
                           Connect
                         </v-btn>

@@ -106,7 +106,7 @@
             v-if="!isEdgeConnected"
           >
             <v-btn
-              @click="connectToEdgeDevice()"
+              @click="connectToEdgeDevice"
               :disabled="isEdgeConnecting"
             >
               Connect
@@ -156,7 +156,7 @@
               </v-btn>
               <v-spacer />
               <v-btn
-                @click="forgetEdgeDevice()"
+                @click="forgetEdgeDevice"
                 color="warning"
               >
                 Forget Device

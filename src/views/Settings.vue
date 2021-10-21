@@ -36,7 +36,7 @@
           <v-card-subtitle
             data-cy="titlecard"
           >
-            Your current device selection
+            My current device
           </v-card-subtitle>
           <v-card-text>
             <v-list
@@ -114,7 +114,7 @@
                 v-else
               >
                 <p class="text-h4 text--primary">
-                  Your Devices:
+                  My Devices:
                 </p>
                 <p>...</p>
               </v-card-text>
@@ -185,7 +185,7 @@
           <v-card-title
             data-cy="titlecard"
           >
-            Your devices
+            My devices
           </v-card-title>
           <v-card-text>
             Add and manage one or more Ambianic Edge devices.
