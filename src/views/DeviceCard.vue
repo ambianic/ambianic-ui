@@ -103,20 +103,17 @@
             </v-row>
           </v-card-text>
           <v-card-actions
-            v-if="!isEdgeConnected"
           >
             <v-btn
               @click="connectToEdgeDevice"
               :disabled="isEdgeConnecting"
+              v-if="!isEdgeConnected"
             >
               Connect
             </v-btn>
-          </v-card-actions>
-          <v-card-actions
-            v-else
-          >
             <v-btn
               to="timeline"
+              v-else
             >
               Timeline
             </v-btn>

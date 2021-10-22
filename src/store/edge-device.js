@@ -27,9 +27,7 @@ const mutations = {
 
 }
 
-const edgeDevice = {
+export const edgeDevice = {
   state,
   mutations
 }
-
-export default edgeDevice
