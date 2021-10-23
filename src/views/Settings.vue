@@ -25,20 +25,37 @@
       </v-row>
       <v-row
         justify="center"
-        v-if="edgePeerId"
       >
-        <v-card>
+        <v-card
+          width="344"
+        >
           <v-card-title
             data-cy="titlecard"
+            v-if="edgePeerId"
           >
             {{ edgeDisplayName }}
           </v-card-title>
+          <v-card-title
+            data-cy="titlecard"
+            v-else
+          >
+            No device selected.
+          </v-card-title>
           <v-card-subtitle
             data-cy="titlecard"
+            v-if="edgePeerId"
           >
             My current device
           </v-card-subtitle>
-          <v-card-text>
+          <v-card-subtitle
+            data-cy="titlecard"
+            v-else
+          >
+            Select a device to connect to.
+          </v-card-subtitle>
+          <v-card-text
+            v-if="edgePeerId"
+          >
             <v-list
               two-line
             >
@@ -89,27 +106,13 @@
           </v-card-text>
           <v-card-actions>
             <v-btn
-              @click="reveal = true"
-              v-if="!reveal"
+              to="selectdevice"
             >
-              <span>Select Another Device</span>
-              <v-icon>alt_route</v-icon>
+              <span>Select Device</span>
+              <v-icon>list</v-icon>
             </v-btn>
           </v-card-actions>
-          <v-expand-transition
-            v-if="reveal"
-          >
-            <div>
-              <my-devices />
-            </div>
-          </v-expand-transition>
         </v-card>
-      </v-row>
-      <v-row
-        justify="center"
-        v-else
-      >
-        <my-devices />
       </v-row>
     </v-container>
   </amb-app-frame>
@@ -118,18 +121,19 @@
 import { mapState } from 'vuex'
 import {
   PEER_CONNECTED,
-  PEER_CONNECTION_ERROR
+  PEER_CONNECTION_ERROR,
+  PEER_CONNECTING,
+  PEER_DISCONNECTING,
+  PEER_AUTHENTICATING
 } from '@/store/mutation-types'
 
 export default {
   components: {
     AmbAppFrame: () => import('@/components/AppFrame.vue'),
-    AmbListItem: () => import('@/components/shared/ListItem.vue'),
-    MyDevices: () => import('@/components/MyDevices.vue')
+    AmbListItem: () => import('@/components/shared/ListItem.vue')
   },
   data () {
     return {
-      reveal: false,
       edgeAddress: undefined,
       edgeDeviceError: null,
       syncing: false // is the UI in the process of syncing with remote device data
@@ -150,7 +154,12 @@ export default {
       pnp: state => state.pnp,
       edgePeerId: state => state.pnp.remotePeerId,
       peerFetch: state => state.pnp.peerFetch,
-      edgeDisplayName: state => state.edgeDevice.edgeDisplayName
+      edgeDisplayName: state => state.edgeDevice.edgeDisplayName,
+      isEdgeConnecting: state =>
+        state.pnp.peerConnectionStatus === PEER_CONNECTING ||
+        state.pnp.peerConnectionStatus === PEER_AUTHENTICATING,
+      isEdgeDisconnecting: state =>
+        state.pnp.peerConnectionStatus === PEER_DISCONNECTING
     })
   },
   watch: {

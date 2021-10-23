@@ -189,15 +189,13 @@
   </amb-app-frame>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import {
   PEER_CONNECTED,
   PEER_CONNECTING,
   PEER_DISCONNECTING,
   PEER_AUTHENTICATING,
-  PEER_CONNECTION_ERROR,
-  EDGE_DEVICE_DETAILS,
-  EDGE_DEVICE_DISPLAY_NAME
+  PEER_CONNECTION_ERROR
 } from '@/store/mutation-types'
 import { PEER_CONNECT, REMOVE_REMOTE_PEER_ID } from '../store/action-types'
 
@@ -229,6 +227,13 @@ export default {
   mounted () {
   },
   methods: {
+    ...mapActions({
+      deleteCurrentDeviceConnection: REMOVE_REMOTE_PEER_ID,
+      forgetDeviceCard: 'myDevices/forget',
+      forgetCurrentDevice: 'edgeDevice/forget',
+      saveDisplayName: 'edgeDevice/saveDisplayName',
+      saveDeviceDetails: 'edgeDevice/saveDetails'
+    }),
     async fetchEdgeDetails () {
       try {
         const details = await this.pnp.edgeAPI.getEdgeStatus()
@@ -236,7 +241,8 @@ export default {
         if (!details || !details.version) {
           this.edgeDeviceError = 'Edge device requires update.'
         } else {
-          this.$store.commit(EDGE_DEVICE_DETAILS, details)
+          // save device details in local db
+          await this.saveDeviceDetails(details)
         }
       } catch (e) {
         this.edgeDeviceError = 'Edge device API offline or unreachable.'
@@ -253,7 +259,7 @@ export default {
           //    await dispatch to push new device display name: 1. to device, 2. to local device store
           this.isSyncing = true
           await this.pnp.edgeAPI.setDeviceDisplayName(newDisplayName)
-          this.$store.commit(EDGE_DEVICE_DISPLAY_NAME, newDisplayName)
+          await this.saveDisplayName(newDisplayName)
           updated = true
         } catch (e) {
           this.edgeDeviceError = 'Error updating display name. Edge device offline or has outdated API.'
@@ -268,12 +274,17 @@ export default {
       await this.$store.dispatch(PEER_CONNECT, this.edgePeerId)
     },
     async forgetEdgeDevice () {
-      await this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
+      // clear current device selection
+      await this.forgetCurrentDevice()
+      // remove from local db
+      console.debug('forgetDeviceCard', this.edgePeerId)
+      await this.forgetDeviceCard(this.edgePeerId)
+      // delete peer connection to curren device
+      await this.deleteCurrentDeviceConnection()
       // close forget device dialog
       this.forgetDeviceDialog = false
       this.$router.push({ name: 'settings' })
     }
-
   },
   computed: {
     ...mapState({

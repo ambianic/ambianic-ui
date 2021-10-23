@@ -26,9 +26,11 @@ const actions = {
     await localdb.myDevices.update(deviceCard.peerID, deviceCard)
   },
   /**
-   * Forget information about a device given its peerID
+   * Forget(delete) a local device card
+   * @param peerID id of the device card to be deleted
    */
   async forget (context, peerID) {
+    console.debug('forget() -> ', { peerID })
     await localdb.myDevices.delete(peerID)
   },
   /**

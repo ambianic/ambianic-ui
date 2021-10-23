@@ -6,7 +6,7 @@
     width="344"
   >
     <v-card-title>
-      My Devices:
+      My Devices
     </v-card-title>
     <v-card-text
       class="pb-0 dottedBorder"
@@ -22,21 +22,26 @@
       <v-list
         two-line
       >
-        <v-radio-group :mandatory="true" v-model="selectedDeviceID">
-            <template
-              v-for="device in allDeviceCards"
+        <v-radio-group
+          v-model="newSelectedDeviceID"
+        >
+          <template
+            v-for="device in allDeviceCards"
+          >
+            <v-list-item
+              :key="device.peerID"
             >
-              <v-list-item
+              <v-list-item-action>
+                <v-radio
+                  :value="device.peerID"
                   :key="device.peerID"
-              >
-                  <v-list-item-action>
-                    <v-radio :value="device.peerID" :key="device.peerID" />
-                  </v-list-item-action>
-                  <v-list-item-content>
-                    <v-list-item-title>{{ device.displayName }}</v-list-item-title>
-                  </v-list-item-content>
-              </v-list-item>
-            </template>
+                />
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>{{ device.displayName }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
         </v-radio-group>
       </v-list>
     </v-card-text>
@@ -66,7 +71,7 @@
     </v-card-actions>
     <v-dialog
       v-model="addDeviceDialog"
-      max-width="344"
+      width="344"
     >
       <v-card>
         <v-card-title>
@@ -109,7 +114,7 @@ export default {
   data () {
     return {
       addDeviceDialog: false,
-      selectedDeviceID: ''
+      newSelectedDeviceID: ''
     }
   },
   async created () {
@@ -117,21 +122,25 @@ export default {
     console.debug('created () : allDeviceCards -> ', this.allDeviceCards)
   },
   mounted () {
+    this.newSelectedDeviceID = this.currentDevicePeerId
   },
   methods: {
     ...mapActions({
-      switchEdgeDevice: CHANGE_REMOTE_PEER_ID,
-      loadAllCards: 'myDevices/loadAll'
+      switchEdgeDeviceConnection: CHANGE_REMOTE_PEER_ID,
+      loadAllCards: 'myDevices/loadAll',
+      setCurrentDevice: 'edgeDevice/setCurrent'
     }),
     async switchDevice () {
-      await this.switchEdgeDevice(this.selectedDeviceID)
-    },
-    pickDevice ({ id }) {
-      this.selectedDeviceID = id
+      // update current device card details from local db
+      // replacing previous device card details
+      await this.setCurrentDevice(this.newSelectedDeviceID)
+      // do not await connection to complete since we are going to the device card page
+      this.switchEdgeDeviceConnection(this.newSelectedDeviceID)
+      this.$router.push({ name: 'devicecard' })
     }
   },
   computed: {
-    isSelectedDeviceCurrent: function (state) { return (this.selectedDeviceID === state.pnp.remotePeerId) },
+    isSelectedDeviceCurrent: function (state) { return (this.newSelectedDeviceID === state.pnp.remotePeerId) },
     ...mapState({
       allDeviceCards: state => state.myDevices.allDeviceCards,
       currentDevicePeerId: state => state.pnp.remotePeerId,

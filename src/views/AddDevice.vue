@@ -227,8 +227,7 @@ import { EdgeDeviceCard } from '@/store/localdb'
 import {
   PEER_DISCOVERED,
   PEER_CONNECTED,
-  PEER_CONNECTION_ERROR,
-  EDGE_DEVICE_DETAILS
+  PEER_CONNECTION_ERROR
 } from '@/store/mutation-types'
 import {
   CHANGE_REMOTE_PEER_ID,
@@ -271,8 +270,10 @@ export default {
       return this.isPeerIdValid
     },
     ...mapActions({
-      switchEdgeDevice: CHANGE_REMOTE_PEER_ID,
-      addDeviceCard: 'myDevices/add'
+      switchEdgeDeviceConnection: CHANGE_REMOTE_PEER_ID,
+      addDeviceCard: 'myDevices/add',
+      setCurrentDevice: 'edgeDevice/setCurrent',
+      saveDeviceDetails: 'edgeDevice/saveDetails'
     }),
     /**
      * User clicked Connect to a discovered local device
@@ -294,7 +295,7 @@ export default {
       await this.deviceConnect()
     },
     async deviceConnect () {
-      await this.switchEdgeDevice(this.edgePeerId)
+      await this.switchEdgeDeviceConnection(this.edgePeerId)
     },
     /**
      * User wants local device discovery
@@ -335,6 +336,8 @@ export default {
       console.debug('Adding new device card to localdb', { newCard })
       await this.addDeviceCard(newCard)
       console.debug('Added new device card to localdb', { newCard })
+      // switch current device reference in UI state (vuex store)
+      await this.setCurrentDevice(this.edgePeerId)
       this.addDeviceStep++
     },
     async fetchEdgeDetails () {
@@ -344,7 +347,7 @@ export default {
         if (!details || !details.version) {
           this.edgeDeviceError = 'Edge device requires update.'
         } else {
-          this.$store.commit(EDGE_DEVICE_DETAILS, details)
+          this.saveDeviceDetails(details)
         }
         return details
       } catch (e) {
