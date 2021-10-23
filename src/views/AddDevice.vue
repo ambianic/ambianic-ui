@@ -223,20 +223,17 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
+import { EdgeDeviceCard } from '@/store/localdb'
 import {
-  PEER_DISCONNECTED,
-  PEER_DISCOVERING,
   PEER_DISCOVERED,
-  PEER_CONNECTING,
-  PEER_AUTHENTICATING,
   PEER_CONNECTED,
-  PEER_CONNECTION_ERROR
+  PEER_CONNECTION_ERROR,
+  EDGE_DEVICE_DETAILS
 } from '@/store/mutation-types'
 import {
   CHANGE_REMOTE_PEER_ID,
-  PEER_DISCOVER,
-  REMOVE_REMOTE_PEER_ID
-} from '../store/action-types.js'
+  PEER_DISCOVER
+} from '@/store/action-types.js'
 
 export default {
   components: {
@@ -273,9 +270,10 @@ export default {
       console.debug('isPeerIdValid (value)', { value }, this.isPeerIdValid)
       return this.isPeerIdValid
     },
-    ...mapActions([
-      'CHANGE_REMOTE_PEER_ID'
-    ]),
+    ...mapActions({
+      switchEdgeDevice: CHANGE_REMOTE_PEER_ID,
+      addDeviceCard: 'myDevices/add'
+    }),
     /**
      * User clicked Connect to a discovered local device
      */
@@ -296,7 +294,7 @@ export default {
       await this.deviceConnect()
     },
     async deviceConnect () {
-      await this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.edgePeerId)
+      await this.switchEdgeDevice(this.edgePeerId)
     },
     /**
      * User wants local device discovery
@@ -311,7 +309,6 @@ export default {
       this.edgePeerId = undefined
       console.debug('discoverLocalEdgeDevice() called')
       console.debug('removing any existing peer connection')
-      await this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
       await this.$store.dispatch(PEER_DISCOVER)
       console.debug('discoverLocalEdgeDevice() ended')
     },
@@ -328,7 +325,31 @@ export default {
      */
     async connectStepCompleted () {
       console.debug('connectStepCompleted() called')
+      // fetch device info
+      const deviceDetails = await this.fetchEdgeDetails()
+      const newCard = new EdgeDeviceCard()
+      newCard.peerID = this.edgePeerId
+      newCard.displayName = deviceDetails.display_name
+      newCard.version = deviceDetails.version
+      // add to list of known devices
+      console.debug('Adding new device card to localdb', { newCard })
+      await this.addDeviceCard(newCard)
+      console.debug('Added new device card to localdb', { newCard })
       this.addDeviceStep++
+    },
+    async fetchEdgeDetails () {
+      try {
+        const details = await this.pnp.edgeAPI.getEdgeStatus()
+        console.debug('Edge device details fetched:', { details })
+        if (!details || !details.version) {
+          this.edgeDeviceError = 'Edge device requires update.'
+        } else {
+          this.$store.commit(EDGE_DEVICE_DETAILS, details)
+        }
+        return details
+      } catch (e) {
+        this.edgeDeviceError = 'Edge device API offline or unreachable.'
+      }
     }
   },
   computed: {
@@ -341,26 +362,7 @@ export default {
       isEdgeConnected: state =>
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
       pnp: state => state.pnp
-    }),
-    connectStep: function () {
-      let step = 1
-      switch (this.peerConnectionStatus) {
-        case PEER_DISCONNECTED:
-        case PEER_DISCOVERING:
-          step = 1
-          break
-        case PEER_CONNECTING:
-        case PEER_AUTHENTICATING:
-          step = 2
-          break
-        case PEER_CONNECTED:
-          step = 3
-          break
-        default:
-          break
-      }
-      return step
-    }
+    })
   },
   watch: {
     edgePeerId (value) {

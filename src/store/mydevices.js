@@ -5,6 +5,8 @@
 import { localdb } from './localdb'
 
 const state = {
+  // list of all user's device cards
+  allDeviceCards: {}
 }
 
 const actions = {
@@ -12,45 +14,44 @@ const actions = {
    * Add to db info about a new device
    */
   async add (context, deviceCard) {
-    return await this.myDevices.add(deviceCard)
+    console.debug('add() called', { deviceCard })
+    const recordId = await localdb.myDevices.add(deviceCard)
+    console.debug('add() success.', { deviceCard, recordId })
+    return recordId
   },
   /**
    * Update device properties
    */
   async update (context, deviceCard) {
-    await this.myDevices.update(deviceCard.peerID, deviceCard)
+    await localdb.myDevices.update(deviceCard.peerID, deviceCard)
   },
   /**
    * Forget information about a device given its peerID
    */
   async forget (context, peerID) {
-    await this.myDevices.delete(peerID)
-  }
-}
-
-const getters = {
-  /**
-   *
-   * @returns an array of all stored EdgeDeviceCard objects
-   */
-  getAll (context) {
-    localdb.myDevices.orderBy('displayName').toArray()
-      .then((deviceCards) => deviceCards)
+    await localdb.myDevices.delete(peerID)
   },
   /**
    *
-   * @returns the EdgeDeviceCard objects given a peerID.
-   * Or it returns null if there is no record found.
+   * Load all stored EdgeDeviceCard objects into local state object
    */
-  get (context, peerID) {
-    localdb.myDevices.get(peerID)
-      .then((deviceCard) => deviceCard)
+  async loadAll ({ state }) {
+    const deviceCardArray = await localdb.myDevices.orderBy('displayName').toArray()
+    // convery array to a hashmap
+    const deviceCardMap = deviceCardArray.reduce(
+      function (map, deviceCard) {
+        map[deviceCard.peerID] = deviceCard
+        return map
+      },
+      {}
+    )
+    console.debug('getAll() -> ', { deviceCardArray, deviceCardMap })
+    state.allDeviceCards = deviceCardMap
   }
 }
 
 export const myDevices = {
   namespaced: true,
   state,
-  actions,
-  getters
+  actions
 }

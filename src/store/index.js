@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { pnpStoreModule } from './pnp'
-import { edgeDevice } from './edge-device'
-import { myDevices } from './mydevices'
-import { UPDATE_AVAILABLE } from './mutation-types'
+import { pnpStoreModule } from '@/store/pnp'
+import { edgeDevice } from '@/store/edge-device'
+import { myDevices } from '@/store/mydevices'
+import { UPDATE_AVAILABLE } from '@/store/mutation-types'
 import snackBarModule from '@/store/status-snackbar'
 
 Vue.use(Vuex)

@@ -9,7 +9,7 @@ localdb.version(1).stores({
   // mydevices keeps information about user's list of managed edge devices
   // peerid is the primary key using each device's unique peerid
   // displayName is an index that makes sorting by displayName efficient
-  myDevices: 'peerid, displayName'
+  myDevices: '&peerID, displayName'
 })
 
 /**

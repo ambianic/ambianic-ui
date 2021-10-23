@@ -6,23 +6,39 @@
     width="344"
   >
     <v-card-title>
-      My Devices
+      My Devices:
     </v-card-title>
     <v-card-text
       class="pb-0 dottedBorder"
       color="warning"
-      v-if="!all"
+      v-if="!allDeviceCards"
     >
-      <p>No devices added.</p>
+      <p>No device added.</p>
     </v-card-text>
     <v-card-text
       class="pb-0"
       v-else
     >
-      <p class="text-h4 text--primary">
-        My Devices:
-      </p>
-      <p>...</p>
+      <v-list
+        two-line
+      >
+        <v-radio-group :mandatory="true" v-model="selectedDeviceID">
+            <template
+              v-for="device in allDeviceCards"
+            >
+              <v-list-item
+                  :key="device.peerID"
+              >
+                  <v-list-item-action>
+                    <v-radio :value="device.peerID" :key="device.peerID" />
+                  </v-list-item-action>
+                  <v-list-item-content>
+                    <v-list-item-title>{{ device.displayName }}</v-list-item-title>
+                  </v-list-item-content>
+              </v-list-item>
+            </template>
+        </v-radio-group>
+      </v-list>
     </v-card-text>
     <v-card-text style="height: 100px; position: relative">
       <v-fab-transition>
@@ -39,7 +55,14 @@
         </v-btn>
       </v-fab-transition>
     </v-card-text>
-    <v-card-actions class="pt-0">
+    <v-card-actions>
+      <v-btn
+        @click="switchDevice"
+        :disabled="isSelectedDeviceCurrent"
+      >
+        <span>Switch Device</span>
+        <v-icon>alt_route</v-icon>
+      </v-btn>
     </v-card-actions>
     <v-dialog
       v-model="addDeviceDialog"
@@ -85,26 +108,34 @@ export default {
   },
   data () {
     return {
-      addDeviceDialog: false
+      addDeviceDialog: false,
+      selectedDeviceID: ''
     }
   },
-  created () {
+  async created () {
+    await this.loadAllCards()
+    console.debug('created () : allDeviceCards -> ', this.allDeviceCards)
   },
   mounted () {
   },
   methods: {
-    ...mapActions([
-      'CHANGE_REMOTE_PEER_ID'
-    ]),
-    async selectAnotherEdgeDevice () {
-      await this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.edgeAddress)
+    ...mapActions({
+      switchEdgeDevice: CHANGE_REMOTE_PEER_ID,
+      loadAllCards: 'myDevices/loadAll'
+    }),
+    async switchDevice () {
+      await this.switchEdgeDevice(this.selectedDeviceID)
+    },
+    pickDevice ({ id }) {
+      this.selectedDeviceID = id
     }
   },
   computed: {
+    isSelectedDeviceCurrent: function (state) { return (this.selectedDeviceID === state.pnp.remotePeerId) },
     ...mapState({
-      pnp: state => state.pnp,
-      all: state => state.myDevices.getAll,
-      myDevices: state => state.myDevices
+      allDeviceCards: state => state.myDevices.allDeviceCards,
+      currentDevicePeerId: state => state.pnp.remotePeerId,
+      pnp: state => state.pnp
     })
   }
 }

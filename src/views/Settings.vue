@@ -109,8 +109,7 @@
         justify="center"
         v-else
       >
-        <my-devices
-        />
+        <my-devices />
       </v-row>
     </v-container>
   </amb-app-frame>
