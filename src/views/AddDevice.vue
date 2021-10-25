@@ -255,7 +255,8 @@ export default {
   },
   created () {
   },
-  mounted () {
+  async mounted () {
+    await this.loadAllCards()
   },
   methods: {
     // Validate the user input so the ID has the correct format before showing the connect button
@@ -272,8 +273,10 @@ export default {
     ...mapActions({
       switchEdgeDeviceConnection: CHANGE_REMOTE_PEER_ID,
       addDeviceCard: 'myDevices/add',
+      updateDeviceCard: 'myDevices/update',
       setCurrentDevice: 'edgeDevice/setCurrent',
-      saveDeviceDetails: 'edgeDevice/saveDetails'
+      saveDeviceDetails: 'edgeDevice/saveDetails',
+      loadAllCards: 'myDevices/loadAll'
     }),
     /**
      * User clicked Connect to a discovered local device
@@ -332,10 +335,20 @@ export default {
       newCard.peerID = this.edgePeerId
       newCard.displayName = deviceDetails.display_name
       newCard.version = deviceDetails.version
-      // add to list of known devices
-      console.debug('Adding new device card to localdb', { newCard })
-      await this.addDeviceCard(newCard)
-      console.debug('Added new device card to localdb', { newCard })
+      // check if device is already known
+      const knownDevice = this.allDeviceCards.get(newCard.peerID)
+      console.debug('Is this a known device?', { knownDevice })
+      if (knownDevice) {
+        console.debug('Known device card. Already in localdb', { newCard })
+        // its a known device, let's just update its card
+        this.updateDeviceCard(newCard)
+        console.debug('Updated device card in localdb.')
+      } else {
+        // Not a known device. Add its card to db.
+        console.debug('Adding new device card to localdb', { newCard })
+        await this.addDeviceCard(newCard)
+        console.debug('Added new device card to localdb', { newCard })
+      }
       // switch current device reference in UI state (vuex store)
       await this.setCurrentDevice(this.edgePeerId)
       this.addDeviceStep++
@@ -364,7 +377,8 @@ export default {
       isPeerConnectionError: state => state.pnp.peerConnectionStatus === PEER_CONNECTION_ERROR,
       isEdgeConnected: state =>
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
-      pnp: state => state.pnp
+      pnp: state => state.pnp,
+      allDeviceCards: state => state.myDevices.allDeviceCards
     })
   },
   watch: {

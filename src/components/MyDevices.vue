@@ -11,9 +11,9 @@
     <v-card-text
       class="pb-0 dottedBorder"
       color="warning"
-      v-if="!allDeviceCards"
+      v-if="noKnownDevices"
     >
-      <p>No device added.</p>
+      <p>No devices added.</p>
     </v-card-text>
     <v-card-text
       class="pb-0"
@@ -26,7 +26,7 @@
           v-model="newSelectedDeviceID"
         >
           <template
-            v-for="device in allDeviceCards"
+            v-for="device in allDeviceCards.values()"
           >
             <v-list-item
               :key="device.peerID"
@@ -45,28 +45,21 @@
         </v-radio-group>
       </v-list>
     </v-card-text>
-    <v-card-text style="height: 100px; position: relative">
-      <v-fab-transition>
-        <v-btn
-          color="accent"
-          absolute
-          bottom
-          right
-          large
-          fab
-          @click="addDeviceDialog = true"
-        >
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-      </v-fab-transition>
-    </v-card-text>
     <v-card-actions>
       <v-btn
         @click="switchDevice"
         :disabled="isSelectedDeviceCurrent"
+        v-if="!noKnownDevices"
       >
         <span>Switch Device</span>
         <v-icon>alt_route</v-icon>
+      </v-btn>
+      <v-spacer />
+      <v-btn
+        color="accent"
+        @click="addDeviceDialog = true"
+      >
+        <v-icon>mdi-plus</v-icon> Add Device
       </v-btn>
     </v-card-actions>
     <v-dialog
@@ -117,11 +110,10 @@ export default {
       newSelectedDeviceID: ''
     }
   },
-  async created () {
-    await this.loadAllCards()
-    console.debug('created () : allDeviceCards -> ', this.allDeviceCards)
+  created () {
   },
-  mounted () {
+  async mounted () {
+    await this.loadAllCards()
     this.newSelectedDeviceID = this.currentDevicePeerId
   },
   methods: {
@@ -143,6 +135,7 @@ export default {
     isSelectedDeviceCurrent: function (state) { return (this.newSelectedDeviceID === state.pnp.remotePeerId) },
     ...mapState({
       allDeviceCards: state => state.myDevices.allDeviceCards,
+      noKnownDevices: state => !state.myDevices.allDeviceCards || state.myDevices.allDeviceCards.size === 0,
       currentDevicePeerId: state => state.pnp.remotePeerId,
       pnp: state => state.pnp
     })

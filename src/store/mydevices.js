@@ -6,7 +6,7 @@ import { localdb } from './localdb'
 
 const state = {
   // list of all user's device cards
-  allDeviceCards: {}
+  allDeviceCards: new Map()
 }
 
 const actions = {
@@ -39,15 +39,20 @@ const actions = {
    */
   async loadAll ({ state }) {
     const deviceCardArray = await localdb.myDevices.orderBy('displayName').toArray()
+    // remove from vuex state all currently cached device cards
+    state.allDeviceCards.clear()
     // convery array to a hashmap
     const deviceCardMap = deviceCardArray.reduce(
       function (map, deviceCard) {
-        map[deviceCard.peerID] = deviceCard
+        console.debug('map before new element', { map })
+        console.debug('loading element from db: -> ', { deviceCard })
+        map.set(deviceCard.peerID, deviceCard)
+        console.debug('map after new element', { map })
         return map
       },
-      {}
+      new Map()
     )
-    console.debug('getAll() -> ', { deviceCardArray, deviceCardMap })
+    console.debug('loadAll() -> ', { deviceCardArray, deviceCardMap })
     state.allDeviceCards = deviceCardMap
   }
 }

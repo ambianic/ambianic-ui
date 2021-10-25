@@ -27,7 +27,6 @@
         justify="center"
       >
         <v-card
-          width="344"
         >
           <v-card-title
             data-cy="titlecard"
@@ -59,15 +58,6 @@
             <v-list
               two-line
             >
-              <amb-list-item
-                :title="edgePeerId"
-                subtitle="Peer ID"
-                icon-name="identifier"
-                :sensitive-field="true"
-                :copy-option="true"
-                ref="list-item-edgePeerID"
-                data-cy="list-item-edgePeerID"
-              />
               <v-list-item>
                 <v-list-item-avatar left>
                   <v-icon
@@ -102,14 +92,23 @@
                   </v-btn>
                 </v-list-item-action>
               </v-list-item>
+              <amb-list-item
+                :title="edgePeerId"
+                subtitle="Peer ID"
+                icon-name="identifier"
+                :sensitive-field="true"
+                :copy-option="true"
+                ref="list-item-edgePeerID"
+                data-cy="list-item-edgePeerID"
+              />
             </v-list>
           </v-card-text>
           <v-card-actions>
             <v-btn
               to="selectdevice"
             >
-              <span>Select Device</span>
-              <v-icon>list</v-icon>
+              <span>All Devices</span>
+              <v-icon>navigate_next</v-icon>
             </v-btn>
           </v-card-actions>
         </v-card>

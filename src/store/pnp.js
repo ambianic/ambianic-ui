@@ -213,7 +213,7 @@ async function discoverRemotePeerId ({ state, commit }) {
       // and try to connect to them again
       console.log('recycling problematic peers', state.problematicRemotePeers)
       remotePeerId = [...state.problematicRemotePeers][0]
-      state.problematicRemotePeers.clear()
+      state.problematicRemotePeers = []
     }
     if (remotePeerId) {
       return remotePeerId
@@ -567,7 +567,7 @@ const actions = {
   async [HANDLE_PEER_CONNECTION_ERROR] ({ state, commit, dispatch }, { peerConnection, err }) {
     console.info('######>>>>>>> p2p connection error', err)
     console.info('Error while connecting to remote peer ID:', peerConnection.peer)
-    state.problematicRemotePeers.add(peerConnection.peer)
+    state.problematicRemotePeers.push(peerConnection.peer)
     commit(PEER_CONNECTION_ERROR, err)
   }
 }

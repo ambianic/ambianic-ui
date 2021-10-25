@@ -129,7 +129,6 @@
         </v-card>
         <v-dialog
           v-model="forgetDeviceDialog"
-          width="344"
         >
           <v-card>
             <v-card-title>
