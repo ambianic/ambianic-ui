@@ -16,53 +16,7 @@
 
 Ambianic Client UI is an Offline-first Progressive Web App (PWA) to manage Ambianic Edge deployments.
 
-
-<img src="public/img/ambianic-pwa-badge.png" width="600">
-
-&nbsp;
-
-The app is explicitly designed with user privacy and data ownership in mind:
-
-* Stores data exclusively on user's own client device (desktop or mobile).
-* Does not store ANY user information in the cloud.
-* User may explicitly chose to store a backup of their data on a server of their choice.
-* User data remains 100% owned and controlled by the user at all times.
-* No fine print. No obscure opt-in / opt-out pop-ups of any kind.
-
-# Project Status
-
-A hosted version of the app is now available to install here: [https://ui.ambianic.ai/](https://ui.ambianic.ai/)
-
-See the [Quick Start](https://docs.ambianic.ai/users/quickstart/) guide for instructions how to connect Ambianic UI to Ambianic Edge for secure and private data access.
-
-Example screenshots on mobile and desktop:
- 
-<img src="docs/img/ambianic-ui-mobile-screenshot.png" width="300" alt="ambianic UI mobile page example">
-
-&nbsp;
-
-<img src="docs/img/ambianic-ui-dekstop-screenshot.png" width="600" alt="ambianic UI mobile page example">
-
-# Cloud deployment
-
-This project is deployed on Netlify by default and is available at https://ui.ambianic.ai . 
-If you prefer to launch your own deployment from this repo, click the button below:
-
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/ambianic/ambianic-ui)
-
-# Development Environment
-
-For instructions how to build, test and debug Ambianic UI via a virtual Continuous Dev Environment or a local dev environment, see [this guide](https://docs.ambianic.ai/developers/development-environment/).
-
-# Community Support 
-
-If you have questions, ideas or cool projects you'd like to share with the Ambianic team and community, please use the [Ambianic Twitter channel](https://twitter.com/ambianicai).
-
-# Acknowledgements
-
-*  This project's initial version was inspired by
-[David Garoro](https://github.com/davidgaroro)'s [PWA example](https://github.com/davidgaroro/vuetify-todo-pwa).
-*  The project relies heavily on the awesome [Vue.js](https://vuejs.org/) framework with [Vuetify](https://vuetifyjs.com/en/) material design components.
+[Read the docs](https://docs.ambianic.ai/users/ambianicui/) for more information on using, installing and developing with Ambianic UI.
 
 
 ## License
