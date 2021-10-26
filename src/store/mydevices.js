@@ -68,14 +68,15 @@ const actions = {
     console.debug('Updating local state from remote json payload: ', { edgeDetails })
     if (edgeDetails) {
       const deviceCard = new EdgeDeviceCard()
-      deviceCard.peerID = edgeDetails.peerID
+      deviceCard.peerID = state.currentDeviceCard.peerID
       if (edgeDetails.version) {
         deviceCard.version = edgeDetails.version
       }
       if (edgeDetails.display_name) {
         deviceCard.displayName = edgeDetails.display_name
       }
-      localdb.myDevices.update(edgeDetails.peerID, deviceCard)
+      localdb.myDevices.update(deviceCard.peerID, deviceCard)
+      console.debug('Updated localdb device card: ', { deviceCard })
       // refresh vuex state
       await dispatch('syncState')
     }
