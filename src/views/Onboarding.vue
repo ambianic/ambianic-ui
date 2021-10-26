@@ -243,7 +243,7 @@
                               color="primary"
                               :disabled="!isCorrectPeerId || isLoading"
                               data-cy="submit-existing-remotePeerID"
-                              @click="submitPeerId()"
+                              @click="submitPeerId(recievedPeerID)"
                             >
                               {{ !isLoading ? "Connect" : "Connecting" }} To Edge Device
                             </v-btn>
@@ -355,7 +355,7 @@
                             :disabled="!isCorrectPeerId || isLoading"
                             style="margin-left: 20px; margin-bottom: 20px;"
                             color="primary"
-                            @click="submitPeerId()"
+                            @click="submitPeerId(recievedPeerID)"
                             data-cy="submit-button"
                           >
                             {{ !isLoading ? "Submit" : "Submitting" }} PeerID
@@ -563,10 +563,10 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import { CHANGE_REMOTE_PEER_ID, PEER_DISCOVER, INSTALL_PWA_APP, INITIATE_PWA_INSTALLATION } from '@/store/action-types'
+import { REMOVE_REMOTE_PEER_ID, PEER_DISCOVER, INSTALL_PWA_APP, INITIATE_PWA_INSTALLATION } from '@/store/action-types'
 import { validatePeerIdHelper } from '../components/utils'
 import {
-  PEER_CONNECTED,
+  PEER_CONNECTED, NEW_REMOTE_PEER_ID,
   ONBOARDING_CHANGE_INSTALLATION_STEP,
   ONBOARDING_CHANGE_STEP_CONTENT_NAME,
   ONBOARDING_INVITATION_REQUEST
@@ -603,12 +603,10 @@ export default {
     })
   },
   mounted () {
-    // handle window beforeinstallprompt event
-    // for PWA install
+    // handle window beforeinstallprompt event for PWA install
     window.addEventListener('beforeinstallprompt', (event) => {
       this.$store.dispatch(INITIATE_PWA_INSTALLATION, { event, message: 'Browser supports PWA install.' })
     })
-    // this.pwaInstallDone('Called window.addEventListener(beforeinstallprompt) !!!!!')
   },
   beforeDestroy () {
     // cleanup window event handlers
@@ -660,12 +658,15 @@ export default {
       window.localStorage.setItem('hasCompletedOnboarding', true)
     },
 
-    submitPeerId () {
+    submitPeerId (recievedPeerId) {
       this.isLoading = true
-      this.$store.dispatch(CHANGE_REMOTE_PEER_ID, this.recievedPeerID)
+      this.$store.commit(NEW_REMOTE_PEER_ID, recievedPeerId)
+      this.$store.dispatch(PEER_DISCOVER)
     },
 
     cancelConnectionWithExistingRemoteId () {
+      this.$store.dispatch(REMOVE_REMOTE_PEER_ID)
+
       this.hasRemotePeerID = false
       this.recievedPeerID = ''
       this.isLoading = false

@@ -6,12 +6,11 @@ import VueRouter from 'vue-router'
 import { pnpStoreModule } from '@/store/pnp'
 import snackBarModule from '@/store/status-snackbar'
 import { clone } from 'lodash'
-import { PEER_DISCOVER } from '@/store/action-types'
 import Onboarding from '@/views/Onboarding.vue'
 import OnboardingWizard from '@/store/onboarding-wizard'
 
-describe('Feedback Page', () => {
-  let wrapper
+describe('Onboarding Page', () => {
+  let wrapper, store
   const localVue = createLocalVue()
 
   localVue.use(VueRouter)
@@ -24,36 +23,13 @@ describe('Feedback Page', () => {
   const vuetify = new Vuetify()
 
   beforeEach(() => {
-    const state = {
-    }
-
-    const modules = {
-      pnp: clone(pnpStoreModule),
-      snackBar: clone(snackBarModule),
-      onboardingWizard: OnboardingWizard
-    }
-
-    const getters = {
-    //   ...
-    }
-
-    const actions = {
-      [PEER_DISCOVER] (context) {
+    store = new VueX.Store({
+      modules: {
+        pnp: clone(pnpStoreModule),
+        snackBar: clone(snackBarModule),
+        onboardingWizard: OnboardingWizard
       }
-    }
-
-    const mutations = {
-    }
-
-    const store = new VueX.Store(
-      {
-        state,
-        getters,
-        mutations,
-        actions,
-        modules
-      }
-    )
+    })
 
     options = {
       localVue,
@@ -74,5 +50,21 @@ describe('Feedback Page', () => {
     const headline = wrapper.findComponent({ ref: 'headline' })
     expect(headline.exists()).toBeTrue()
     expect(headline.isVisible()).toBeTrue()
+  })
+
+  test('SubmitPeerId stores remotePeerId', async () => {
+    const SAMPLE_REMOTE_ID = '0ad32ad4-4a7e-4c08-8ec7-2806ac236702'
+    wrapper = await mount(Onboarding, options)
+
+    wrapper.vm.submitPeerId(SAMPLE_REMOTE_ID)
+    expect(store.state.pnp.remotePeerId).toBe(SAMPLE_REMOTE_ID)
+  })
+
+  test('`cancelConnectionWithExistingRemoteId` removes remotePeerId', async () => {
+    wrapper = await mount(Onboarding, options)
+
+    wrapper.vm.cancelConnectionWithExistingRemoteId()
+    expect(store.state.pnp.remotePeerId).toBe(undefined)
+    expect(wrapper.vm.recievedPeerID).toBe('')
   })
 })
