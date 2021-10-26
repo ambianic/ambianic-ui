@@ -1,16 +1,6 @@
 <template>
   <amb-app-frame>
-    <v-container
-      fluid
-    >
-      <v-row
-        align="center"
-        justify="center"
-      >
-        <v-col>
-          <v-breadcrumbs :items="breadcrumbs" />
-        </v-col>
-      </v-row>
+    <v-container>
       <v-row
         align="center"
       >
@@ -29,6 +19,13 @@
           >
             {{ this.edgeDeviceError }}
           </v-alert>
+        </v-col>
+      </v-row>
+      <v-row
+        dense
+      >
+        <v-col>
+          <v-breadcrumbs :items="breadcrumbs"/>
         </v-col>
       </v-row>
       <v-row
@@ -215,6 +212,8 @@ export default {
   data () {
     return {
       edgeAddress: undefined,
+      edgeVersion: undefined,
+      edgeDisplayName: undefined,
       edgeDeviceError: null,
       isSyncing: false, // is the UI in the process of syncing with remote device data
       rules: {
@@ -226,12 +225,12 @@ export default {
         {
           text: 'Settings',
           disabled: false,
-          href: 'settings'
+          to: 'settings'
         },
         {
           text: 'Device Card',
           disabled: true,
-          href: 'devicecard'
+          to: 'devicecard'
         }
       ]
     }
@@ -262,10 +261,12 @@ export default {
           this.edgeDeviceError = 'This edge device is running an outdated API.'
         } else {
           // save device details in local db
+          details.peerID = this.edgePeerId
           await this.updateFromRemote(details)
         }
-      } catch (e) {
+      } catch (err) {
         this.edgeDeviceError = 'Edge device API offline or unreachable.'
+        console.error('Error while fetching remote device status', { err })
       }
     },
     async onDisplayNameChanged (newDisplayName) {
@@ -320,8 +321,7 @@ export default {
       pnp: state => state.pnp,
       edgePeerId: state => state.pnp.remotePeerId,
       peerFetch: state => state.pnp.peerFetch,
-      edgeVersion: state => state.myDevices.currentDeviceCard ? state.myDevices.currentDeviceCard.version : '',
-      edgeDisplayName: state => state.myDevices.currentDeviceCard ? state.myDevices.currentDeviceCard.displayName : ''
+      currentDeviceCard: state => state.myDevices.currentDeviceCard
     })
   },
   watch: {
@@ -340,6 +340,11 @@ export default {
         this.edgeDeviceError = undefined
         console.debug('isPeerConnectionError FALSE. Error message:', this.edgeDeviceError)
       }
+    },
+    currentDeviceCard: async function (newVal, oldVal) {
+      console.debug('Current Edge Device Card changed:', { newVal, oldVal })
+      this.edgeVersion = newVal.version
+      this.edgeDisplayName = newVal.displayName
     }
   }
 }

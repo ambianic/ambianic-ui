@@ -189,51 +189,42 @@ const mutations = {
 }
 
 /**
-  Try to discover remote peer ID.
-  If we already know the remote Peer ID, we will use it.
-  Otherwise try to discover it automatically or with user's help.
-  Once discovered, the remote peer Id will be saved
-  and reused until explicitly reset by the user.
+  Try to discover peers in the same signaling server room.
+  This usually relates to peers on the same local wifi.
 */
 async function discoverRemotePeerId ({ state, commit }) {
   const peer = state.peer
   console.debug('discoverRemotePeerId() start')
-  // first see if we got a remote Edge ID entered to connect to
-  if (state.remotePeerId) {
-    console.debug('discoverRemotePeerId() returning known remotePeerId')
-    return state.remotePeerId
-  } else {
   // first try to find the remote peer ID in the same room
-    console.debug(peer)
-    const myRoom = new PeerRoom(peer)
-    console.debug('Fetching room members', myRoom)
-    const roomMembers = await myRoom.getRoomMembers()
-    console.debug('Fetched roomMembers', roomMembers)
-    const peerIds = roomMembers.clientsIds
-    console.debug('myRoom members', peerIds)
-    // find a peerId that is different than this PWA peer ID and
-    //   is not in the problematic list of remote peers
-    var remotePeerId = peerIds.find(
-      pid => pid !== state.myPeerId && !state.problematicRemotePeers.includes(pid))
-    console.debug(`remotePeerId: ${remotePeerId} found among myRoom members: ${peerIds}`)
-    if (remotePeerId === undefined && state.problematicRemotePeers.size > 0) {
-      // if no fresh remote peer is found, recycle the problematic peers list
-      // and try to connect to them again
-      console.log('recycling problematic peers', state.problematicRemotePeers)
-      remotePeerId = [...state.problematicRemotePeers][0]
-      state.problematicRemotePeers = []
-    }
-    if (remotePeerId) {
-      return remotePeerId
-    } else {
-      // unable to auto discover
-      // ask user for help
-      commit(USER_MESSAGE,
-        `Still looking.
-         Please make sure you are on the same local network
-         as the Ambianic Edge device.
-        `)
-    }
+  console.debug(peer)
+  const myRoom = new PeerRoom(peer)
+  console.debug('Fetching room members', myRoom)
+  const roomMembers = await myRoom.getRoomMembers()
+  console.debug('Fetched roomMembers', roomMembers)
+  const peerIds = roomMembers.clientsIds
+  console.debug('myRoom members', peerIds)
+  // find a peerId that is different than this PWA peer ID and
+  //   is not in the problematic list of remote peers
+  var remotePeerId = peerIds.find(
+    pid => pid !== state.myPeerId && !state.problematicRemotePeers.includes(pid))
+  console.debug(`remotePeerId: ${remotePeerId} found among myRoom members: ${peerIds}`)
+  if (remotePeerId === undefined && state.problematicRemotePeers.size > 0) {
+    // if no fresh remote peer is found, recycle the problematic peers list
+    // and try to connect to them again
+    console.log('recycling problematic peers', state.problematicRemotePeers)
+    remotePeerId = [...state.problematicRemotePeers][0]
+    state.problematicRemotePeers = []
+  }
+  if (remotePeerId) {
+    return remotePeerId
+  } else {
+    // unable to auto discover
+    // ask user for help
+    commit(USER_MESSAGE,
+      `Still looking.
+        Please make sure you are on the same local network
+        as the Ambianic Edge device.
+      `)
   }
 }
 
@@ -407,13 +398,6 @@ const actions = {
   *
   */
   async [PEER_DISCOVER] ({ state, commit, dispatch }) {
-    console.log(`######## >>>>> peerConnectionStatus = ${state.peerConnectionStatus}`)
-    if (state.peerConnectionStatus !== PEER_DISCONNECTED) {
-      // avoid redundant discovery loop
-      // in cases like multiple error events on the same connection
-      console.log('Peer still connected. Aborting discovery.')
-      return
-    }
     commit(PEER_DISCOVERING)
     const discoveryLoop = async () => {
       // start a discovery loop
