@@ -48,10 +48,14 @@ const state = {
   */
   peer: undefined, // peerjs.Peer object local to the current browser window/tab session
   /**
-    Reference to the ID of the PeerJS instance active
-    in the current application. Persisted in browser localStorage.
+   * Reference to the ID of the PeerJS instance active
+   * in the current application (browser tab).
+   *
+   * It is not persisted in order to allow multiple browser tabs to access the PWA
+   * simultaneously.
+   *
   */
-  myPeerId: undefined, // window.localStorage.getItem(`${STORAGE_KEY}.myPeerId`),
+  myPeerId: undefined,
   /**
     Reference to the ID of the remote PeerJS instance
     as registered with the PnP service.
@@ -101,7 +105,11 @@ const state = {
   /**
    * The duration in milliseconds to pause between pair discovery retries
    */
-  discoveryLoopPause: 3000
+  discoveryLoopPause: 3000,
+  /**
+   * The duration in milliseconds to pause between peer connect retries
+   */
+  peerConnectLoopPause: 500
 }
 
 const mutations = {
@@ -166,7 +174,7 @@ const mutations = {
     window.localStorage.setItem(`${STORAGE_KEY}.remotePeerId`, newRemotePeerId)
   },
   [REMOTE_PEER_ID_REMOVED] (state) {
-    console.debug('REMOTE_PEER_ID_REMOVED: Removing remote Peer Id from local storage')
+    console.debug('REMOTE_PEER_ID_REMOVED: Removing remote Peer Id from local connection storage.')
     state.remotePeerId = undefined
     window.localStorage.removeItem(`${STORAGE_KEY}.remotePeerId`)
   },
@@ -403,10 +411,11 @@ const actions = {
     if (state.peerConnectionStatus !== PEER_DISCONNECTED) {
       // avoid redundant discovery loop
       // in cases like multiple error events on the same connection
+      console.log('Peer still connected. Aborting discovery.')
       return
     }
     commit(PEER_DISCOVERING)
-    const discoveryLoopId = async () => {
+    const discoveryLoop = async () => {
       // start a discovery loop
       console.log('Discovering remote peer...')
       // its possible that the PNP signaling server connection was disrupted
@@ -426,8 +435,8 @@ const actions = {
         } else {
           // signaling server connection is still not ready, skip this cycle
           // and wait for the next scheduled retry
-          console.debug('PNP Service still not connected. Will retry shortly.')
-          setTimeout(discoveryLoopId, state.discoveryLoopPause)
+          console.debug('PNP signaling server still not connected. Will retry shortly.')
+          setTimeout(discoveryLoop, state.discoveryLoopPause)
         }
       } catch (err) {
         console.warn('Error while looking for remote peer. Will retry shortly.',
@@ -436,7 +445,7 @@ const actions = {
         // Recommend check internet connection and retry.
       }
     }
-    await discoveryLoopId()
+    await discoveryLoop()
   },
   /**
   * Create the connection between the two Peers.
@@ -445,38 +454,52 @@ const actions = {
   * direct peer-to-peer connection and data received on it.
   */
   async [PEER_CONNECT] ({ state, commit, dispatch }, remotePeerId) {
-    // Its possible that the PNP signaling server connection was disrupted
-    // We need the signaling server to negotiate p2p connection terms.
-    if (state.pnpServiceConnectionStatus !== PNP_SERVICE_CONNECTED) {
-      console.log('PNP Service disconnected. Reconnecting...')
-      await dispatch(PNP_SERVICE_CONNECT)
-    }
-    // if already connected to peer, then nothing to do
+    // if already connected or in the process of connecting to remote peer, then stop.
     if (state.peerConnectionStatus === PEER_CONNECTING ||
-        state.peerConnectionStatus === PEER_CONNECTED) {
+      state.peerConnectionStatus === PEER_CONNECTED) {
+      console.log('Peer connection already in progress. Aborting peer connect loop.',
+        state.peerConnectionStatus)
       // avoid redundant connect looping
       // in case of multiple connection errors
       return
     }
-    console.debug(`#####>>>> PNP Service connection status: ${state.pnpServiceConnectionStatus}`)
     console.debug('#####>>>>>>> Connecting to remote peer', remotePeerId)
     if (state.peerConnection) {
       // make sure any previous connection is closed and cleaned up
       console.info('>>>>>>> Closing and cleaning up existing peer connection.')
       await state.peerConnection.close()
     }
-    console.info('>>>>>> Opening new peer connection.')
-    const peer = state.peer
-    const peerConnection = peer.connect(remotePeerId, {
-      label: 'http-proxy', reliable: true, serialization: 'raw'
-    })
-    commit(PEER_CONNECTING)
-    setPeerConnectionHandlers({
-      state,
-      commit,
-      dispatch,
-      peerConnection
-    })
+    const peerConnectLoop = async () => {
+      console.log('Entering peer connect loop...')
+      // Its possible that the PNP signaling server connection was disrupted
+      // We need an active connection to the signaling server
+      // in order to negotiate a p2p connection with the remote peer.
+      if (state.pnpServiceConnectionStatus !== PNP_SERVICE_CONNECTED) {
+        console.debug('PNP Service disconnected. Reconnecting...')
+        await dispatch(PNP_SERVICE_CONNECT)
+        console.debug('PNP Service still not connected. Will retry peer connection shortly.')
+        // check again in a little bit if the signaling connection is ready
+        // and if so, proceed to p2p handshake
+        setTimeout(peerConnectLoop, state.peerConnectLoopPause)
+      } else {
+        // Signaling server is connected, let's proceed to p2p handshake
+        console.debug(`#####>>>> PNP Service connection status: ${state.pnpServiceConnectionStatus}`)
+        console.info('>>>>>> Opening new peer connection.')
+        const peer = state.peer
+        const peerConnection = peer.connect(remotePeerId, {
+          label: 'http-proxy', reliable: true, serialization: 'raw'
+        })
+        commit(PEER_CONNECTING)
+        setPeerConnectionHandlers({
+          state,
+          commit,
+          dispatch,
+          peerConnection
+        })
+      }
+    }
+    // begin peer connection sequence
+    await peerConnectLoop()
   },
   /**
   * Authenticate remote peer. Make sure its a genuine Ambianic Edge device.

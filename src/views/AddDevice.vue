@@ -256,7 +256,6 @@ export default {
   created () {
   },
   async mounted () {
-    await this.loadAllCards()
   },
   methods: {
     // Validate the user input so the ID has the correct format before showing the connect button
@@ -274,9 +273,8 @@ export default {
       switchEdgeDeviceConnection: CHANGE_REMOTE_PEER_ID,
       addDeviceCard: 'myDevices/add',
       updateDeviceCard: 'myDevices/update',
-      setCurrentDevice: 'edgeDevice/setCurrent',
-      saveDeviceDetails: 'edgeDevice/saveDetails',
-      loadAllCards: 'myDevices/loadAll'
+      setCurrentDevice: 'myDevices/setCurrent',
+      updateFromRemote: 'myDevices/updateFromRemote'
     }),
     /**
      * User clicked Connect to a discovered local device
@@ -360,7 +358,8 @@ export default {
         if (!details || !details.version) {
           this.edgeDeviceError = 'Edge device requires update.'
         } else {
-          this.saveDeviceDetails(details)
+          details.peerID = this.edgePeerId
+          this.updateFromRemote(details)
         }
         return details
       } catch (e) {

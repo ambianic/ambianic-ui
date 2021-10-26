@@ -155,7 +155,6 @@
 <script>
 import { mapState } from 'vuex'
 import { PEER_CONNECTED } from '@/store/mutation-types'
-import { PEER_DISCOVER } from '../store/action-types'
 export default {
   name: 'NavBar',
   components: {
@@ -208,8 +207,8 @@ export default {
     ]
   }),
   methods: {
-    setConnectionTooltipText () {
-      this.connectionIconLink = '/settings'
+    setConnectionStatusTooltipText () {
+      this.connectionIconLink = '/devicecard'
       this.connectionIconColor = 'info'
 
       if (this.peerConnectionStatus === 'PEER_DISCONNECTED') {
@@ -237,15 +236,11 @@ export default {
     })
   },
   created () {
-    if (!this.isEdgeConnected) {
-      this.$store.dispatch(PEER_DISCOVER)
-    }
-
-    this.setConnectionTooltipText()
+    this.setConnectionStatusTooltipText()
   },
   watch: {
     peerConnectionStatus: function () {
-      this.setConnectionTooltipText()
+      this.setConnectionStatusTooltipText()
     }
   }
 }

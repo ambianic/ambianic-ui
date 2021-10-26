@@ -26,8 +26,7 @@
       <v-row
         justify="center"
       >
-        <v-card
-        >
+        <v-card>
           <v-card-title
             data-cy="titlecard"
             v-if="edgePeerId"
@@ -107,7 +106,7 @@
             <v-btn
               to="selectdevice"
             >
-              <span>All Devices</span>
+              <span>My Devices</span>
               <v-icon>navigate_next</v-icon>
             </v-btn>
           </v-card-actions>
@@ -117,7 +116,7 @@
   </amb-app-frame>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import {
   PEER_CONNECTED,
   PEER_CONNECTION_ERROR,
@@ -143,6 +142,9 @@ export default {
   mounted () {
   },
   methods: {
+    ...mapActions({
+      setCurrentDevice: 'myDevices/setCurrent'
+    })
   },
   computed: {
     ...mapState({
@@ -153,7 +155,7 @@ export default {
       pnp: state => state.pnp,
       edgePeerId: state => state.pnp.remotePeerId,
       peerFetch: state => state.pnp.peerFetch,
-      edgeDisplayName: state => state.edgeDevice.edgeDisplayName,
+      edgeDisplayName: state => state.myDevices.currentDeviceCard ? state.myDevices.currentDeviceCard.displayName : '',
       isEdgeConnecting: state =>
         state.pnp.peerConnectionStatus === PEER_CONNECTING ||
         state.pnp.peerConnectionStatus === PEER_AUTHENTICATING,

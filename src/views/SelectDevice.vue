@@ -69,7 +69,7 @@ export default {
       pnp: state => state.pnp,
       edgePeerId: state => state.pnp.remotePeerId,
       peerFetch: state => state.pnp.peerFetch,
-      edgeDisplayName: state => state.edgeDevice.edgeDisplayName,
+      edgeDisplayName: state => state.myDevices.currentDeviceCard.displayName,
       isEdgeConnecting: state =>
         state.pnp.peerConnectionStatus === PEER_CONNECTING ||
         state.pnp.peerConnectionStatus === PEER_AUTHENTICATING,

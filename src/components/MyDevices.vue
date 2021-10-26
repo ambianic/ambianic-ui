@@ -112,15 +112,13 @@ export default {
   },
   created () {
   },
-  async mounted () {
-    await this.loadAllCards()
+  mounted () {
     this.newSelectedDeviceID = this.currentDevicePeerId
   },
   methods: {
     ...mapActions({
       switchEdgeDeviceConnection: CHANGE_REMOTE_PEER_ID,
-      loadAllCards: 'myDevices/loadAll',
-      setCurrentDevice: 'edgeDevice/setCurrent'
+      setCurrentDevice: 'myDevices/setCurrent'
     }),
     async switchDevice () {
       // update current device card details from local db

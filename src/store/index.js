@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { pnpStoreModule } from '@/store/pnp'
-import { edgeDevice } from '@/store/edge-device'
 import { myDevices } from '@/store/mydevices'
 import { UPDATE_AVAILABLE } from '@/store/mutation-types'
 import snackBarModule from '@/store/status-snackbar'
@@ -22,7 +21,6 @@ const store = new Vuex.Store({
   },
   modules: {
     pnp: pnpStoreModule,
-    edgeDevice: edgeDevice,
     myDevices: myDevices,
     snackBar: snackBarModule
   }

@@ -5,6 +5,14 @@
     >
       <v-row
         align="center"
+        justify="center"
+      >
+        <v-col>
+          <v-breadcrumbs :items="breadcrumbs" />
+        </v-col>
+      </v-row>
+      <v-row
+        align="center"
       >
         <v-col cols="12">
           <v-alert
@@ -71,6 +79,16 @@
                     two-line
                   >
                     <amb-list-item
+                      ref="list-item-edgeDeviceName"
+                      data-cy="list-item-edgeDeviceName"
+                      :title="edgeDisplayName"
+                      subtitle="Friendly Name"
+                      icon-name="tag"
+                      :edit-option="isEdgeConnected"
+                      :on-submit="onDisplayNameChanged"
+                      :rules="[rules.required, rules.counter]"
+                    />
+                    <amb-list-item
                       :title="edgePeerId"
                       subtitle="Peer ID"
                       icon-name="identifier"
@@ -78,16 +96,6 @@
                       :copy-option="true"
                       ref="list-item-edgePeerID"
                       data-cy="list-item-edgePeerID"
-                    />
-                    <amb-list-item
-                      ref="list-item-edgeDeviceName"
-                      data-cy="list-item-edgeDeviceName"
-                      :title="edgeDisplayName"
-                      subtitle="Friendly Name"
-                      icon-name="tag"
-                      :edit-option="true"
-                      :on-submit="onDisplayNameChanged"
-                      :rules="[rules.required, rules.counter]"
                     />
                     <amb-list-item
                       ref="list-item-edgeVersion"
@@ -213,35 +221,48 @@ export default {
         required: value => !!value || 'Required.',
         counter: value => (value.length >= 5 && value.length <= 20) || 'Min 5 and Max 20 characters'
       },
-      forgetDeviceDialog: false
+      forgetDeviceDialog: false,
+      breadcrumbs: [
+        {
+          text: 'Settings',
+          disabled: false,
+          href: 'settings'
+        },
+        {
+          text: 'Device Card',
+          disabled: true,
+          href: 'devicecard'
+        }
+      ]
     }
   },
   created () {
-    // if a connection to the edge device is already established
-    // but version info has not been fetched yet, let's do it now
-    if (this.isEdgeConnected && !this.edgeVersion) {
-      this.fetchEdgeDetails()
-    }
   },
-  mounted () {
+  async mounted () {
+    // If a connection to the edge device is already established
+    // let's pull the latest info from it in case there are changes
+    // this UI client does not know about yet.
+    if (this.isEdgeConnected) {
+      await this.fetchEdgeDetails()
+    }
   },
   methods: {
     ...mapActions({
       deleteCurrentDeviceConnection: REMOVE_REMOTE_PEER_ID,
       forgetDeviceCard: 'myDevices/forget',
-      forgetCurrentDevice: 'edgeDevice/forget',
-      saveDisplayName: 'edgeDevice/saveDisplayName',
-      saveDeviceDetails: 'edgeDevice/saveDetails'
+      updateDisplayName: 'myDevices/updateDisplayName',
+      updateFromRemote: 'myDevices/updateFromRemote',
+      setCurrentDevice: 'myDevices/setCurrent'
     }),
     async fetchEdgeDetails () {
       try {
         const details = await this.pnp.edgeAPI.getEdgeStatus()
         console.debug('Edge device details fetched:', { details })
         if (!details || !details.version) {
-          this.edgeDeviceError = 'Edge device requires update.'
+          this.edgeDeviceError = 'This edge device is running an outdated API.'
         } else {
           // save device details in local db
-          await this.saveDeviceDetails(details)
+          await this.updateFromRemote(details)
         }
       } catch (e) {
         this.edgeDeviceError = 'Edge device API offline or unreachable.'
@@ -257,12 +278,14 @@ export default {
           //    show blocking dialog with spinner https://vuetifyjs.com/en/components/dialogs/#loader
           //    await dispatch to push new device display name: 1. to device, 2. to local device store
           this.isSyncing = true
+          // send changes to remote edge device
           await this.pnp.edgeAPI.setDeviceDisplayName(newDisplayName)
-          await this.saveDisplayName(newDisplayName)
+          // save changes to localdb
+          await this.updateDisplayName({ peerID: this.edgePeerId, displayName: newDisplayName })
           updated = true
         } catch (e) {
           this.edgeDeviceError = 'Error updating display name. Edge device offline or has outdated API.'
-          console.error('Exception calling setDeviceDisplayName()', { e })
+          console.error('Exception calling updateDisplayName()', { e })
         } finally {
           this.isSyncing = false
         }
@@ -273,9 +296,7 @@ export default {
       await this.$store.dispatch(PEER_CONNECT, this.edgePeerId)
     },
     async forgetEdgeDevice () {
-      // clear current device selection
-      await this.forgetCurrentDevice()
-      // remove from local db
+      // remove from local db and vuex state
       console.debug('forgetDeviceCard', this.edgePeerId)
       await this.forgetDeviceCard(this.edgePeerId)
       // delete peer connection to curren device
@@ -299,11 +320,8 @@ export default {
       pnp: state => state.pnp,
       edgePeerId: state => state.pnp.remotePeerId,
       peerFetch: state => state.pnp.peerFetch,
-      edgeVersion: state => state.edgeDevice.edgeSoftwareVersion,
-      edgeDisplayName: state => {
-        const deviceLabel = (state.edgeDevice.edgeDisplayName) ? state.edgeDevice.edgeDisplayName : ''
-        return deviceLabel
-      }
+      edgeVersion: state => state.myDevices.currentDeviceCard ? state.myDevices.currentDeviceCard.version : '',
+      edgeDisplayName: state => state.myDevices.currentDeviceCard ? state.myDevices.currentDeviceCard.displayName : ''
     })
   },
   watch: {
