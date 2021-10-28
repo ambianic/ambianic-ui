@@ -21,7 +21,7 @@
               id="help-title"
               icon-name="help-circle-outline"
               title="Need Help with Ambianic?"
-              subtitle="Please reference our online docs or connect on Twitter."
+              subtitle="Please reference our online docs or connect on Slack."
               ref="help-title"
             />
           </v-list>
@@ -44,16 +44,16 @@
             <v-btn
               id="btn-community"
               text
-              href="https://twitter.com/ambianicai"
+              href="https://join.slack.com/t/ambianicai/shared_invite/zt-eosk4tv5-~GR3Sm7ccGbv1R7IEpk7OQ"
               target="_blank"
             >
               <v-icon
                 left
                 dark
               >
-                mdi-twitter
+                mdi-slack
               </v-icon>
-              Twitter
+              Chat on Slack
             </v-btn>
           </v-card-actions>
         </v-card>

@@ -5,13 +5,16 @@
         dense
       >
         <v-col class="ma-0 pa-0">
-          <v-breadcrumbs :items="breadcrumbs"/>
+          <v-breadcrumbs :items="breadcrumbs" />
         </v-col>
       </v-row>
       <v-row
         align="center"
       >
-        <v-col cols="12" class="ma-0 pa-0">
+        <v-col
+          cols="12"
+          class="ma-0 pa-0"
+        >
           <v-alert
             v-if="this.edgeDeviceError"
             outlined

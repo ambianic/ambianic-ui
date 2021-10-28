@@ -7,7 +7,7 @@
         dense
       >
         <v-col class="ma-0 pa-0">
-          <v-breadcrumbs :items="breadcrumbs"/>
+          <v-breadcrumbs :items="breadcrumbs" />
         </v-col>
       </v-row>
       <v-row

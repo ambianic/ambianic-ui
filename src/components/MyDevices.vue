@@ -13,7 +13,12 @@
       color="warning"
       v-if="noKnownDevices"
     >
-      <p>No devices added.</p>
+      <p>No Ambianic Edge devices added.</p>
+      <p>
+        <a href="https://docs.ambianic.ai/users/ambianicedge/" target="_new_window">
+          What is an Ambianic Edge device?
+        </a>
+      </p>
     </v-card-text>
     <v-card-text
       class="pb-0"
@@ -142,5 +147,5 @@ export default {
 </script>
 
 <style>
-.dottedBorder {border-style: dashed; opacity: 0.5  }
+.dottedBorder {border-style: dashed; opacity: 0.7  }
 </style>

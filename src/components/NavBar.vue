@@ -16,7 +16,8 @@
         @click.stop="drawer = !drawer"
       />
 
-      <v-app-bar-title>
+      <v-app-bar-title class="text-center">
+        <span v-if="edgeDisplayName">{{ edgeDisplayName }} - </span>
         <span class="hidden-sm-and-down">{{ $route.meta.title }}</span>
       </v-app-bar-title>
 
@@ -96,15 +97,6 @@
                 {{ item.heading }}
               </v-subheader>
             </v-col>
-            <v-col
-              cols="6"
-              class="text-center"
-            >
-              <a
-                href="#!"
-                class="body-2 black--text"
-              >EDIT</a>
-            </v-col>
           </v-row>
           <v-list-group
             v-else-if="item.children"
@@ -177,7 +169,7 @@ export default {
     newAlerts: 2,
     connectionIconColor: 'warning',
     connectionIconLink: '/settings',
-    logo: '../assets/logo5.svg',
+    edgeDisplayName: '',
     menuItems: [
       { icon: 'history', text: 'Timeline', link: '/timeline' },
       // { icon: 'mdi-account-heart-outline', text: 'People', link: '/people' },
@@ -239,15 +231,27 @@ export default {
         )
         return state.pnp.peerConnectionStatus === PEER_CONNECTED
       },
-      peerConnectionStatus: state => state.pnp.peerConnectionStatus
+      peerConnectionStatus: state => state.pnp.peerConnectionStatus,
+      currentDeviceCard: state => state.myDevices.currentDeviceCard
     })
   },
   created () {
     this.setConnectionStatusTooltipText()
   },
+  mounted () {
+    this.edgeDisplayName = this.$store.state.myDevices.currentDeviceCard ? this.$store.state.myDevices.currentDeviceCard.displayName : ''
+  },
   watch: {
     peerConnectionStatus: function () {
       this.setConnectionStatusTooltipText()
+    },
+    currentDeviceCard: async function (newVal, oldVal) {
+      if (newVal) {
+        console.debug('Current Edge Device Card changed:', { newVal, oldVal })
+        this.edgeDisplayName = newVal.displayName
+      } else {
+        this.edgeDisplayName = ''
+      }
     }
   }
 }

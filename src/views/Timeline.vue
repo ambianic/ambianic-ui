@@ -42,7 +42,7 @@
                 alt="Detection Event"
                 contain
                 @load="setImageLoaded(index)"
-                lazy-src="/img/lazy-load-bg.gif"
+                lazy-src="/img/image-icon.png"
               >
                 <template #placeholder>
                   <div>

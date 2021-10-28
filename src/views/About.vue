@@ -8,7 +8,8 @@
         <v-card
           max-width="344"
         >
-          <v-card-text id="welcome-text"
+          <v-card-text
+            id="welcome-text"
             class="text-center"
           >
             <v-avatar

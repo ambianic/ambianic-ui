@@ -75,10 +75,6 @@ const state = {
    */
   discoveredPeers: [],
   /**
-   * Helper list of remote peers that have caused connection issues
-   */
-  problematicRemotePeers: [],
-  /**
     Connection status message for user to see
   */
   userMessage: '',
@@ -103,13 +99,17 @@ const state = {
   */
   edgeAPI: undefined,
   /**
-   * The duration in milliseconds to pause between pair discovery retries
+   * discoveryLoopPause is the duration in milliseconds to pause between pair discovery retries
    */
   discoveryLoopPause: 3000,
   /**
-   * The duration in milliseconds to pause between peer connect retries
+   * peerConnectLoopPause is the duration in milliseconds to pause between peer connect retries
    */
-  peerConnectLoopPause: 500
+  peerConnectLoopPause: 500,
+  /**
+   * peerConnectOfferTimeout is the duration in milliseconds for a remote peer connection offer to expire
+   */
+  peerConnectOfferTimeout: 15000
 }
 
 const mutations = {
@@ -122,9 +122,9 @@ const mutations = {
     state.peerFetch = undefined
     state.edgeAPI = undefined
   },
-  [PEER_DISCOVERED] (state, remotePeerId) {
+  [PEER_DISCOVERED] (state, remotePeerIds) {
     state.discoveryStatus = PEER_DISCOVERED
-    state.discoveredPeers.push(remotePeerId)
+    state.discoveredPeers = remotePeerIds
     console.debug('Discovered Peer IDs:', state.discoveredPeers)
   },
   [PEER_DISCOVERING] (state) {
@@ -192,9 +192,9 @@ const mutations = {
   Try to discover peers in the same signaling server room.
   This usually relates to peers on the same local wifi.
 */
-async function discoverRemotePeerId ({ state, commit }) {
+async function discoverRemotePeerIds ({ state, commit }) {
   const peer = state.peer
-  console.debug('discoverRemotePeerId() start')
+  console.debug('discoverRemotePeerIds() start')
   // first try to find the remote peer ID in the same room
   console.debug(peer)
   const myRoom = new PeerRoom(peer)
@@ -203,20 +203,11 @@ async function discoverRemotePeerId ({ state, commit }) {
   console.debug('Fetched roomMembers', roomMembers)
   const peerIds = roomMembers.clientsIds
   console.debug('myRoom members', peerIds)
-  // find a peerId that is different than this PWA peer ID and
-  //   is not in the problematic list of remote peers
-  var remotePeerId = peerIds.find(
-    pid => pid !== state.myPeerId && !state.problematicRemotePeers.includes(pid))
-  console.debug(`remotePeerId: ${remotePeerId} found among myRoom members: ${peerIds}`)
-  if (remotePeerId === undefined && state.problematicRemotePeers.size > 0) {
-    // if no fresh remote peer is found, recycle the problematic peers list
-    // and try to connect to them again
-    console.log('recycling problematic peers', state.problematicRemotePeers)
-    remotePeerId = [...state.problematicRemotePeers][0]
-    state.problematicRemotePeers = []
-  }
-  if (remotePeerId) {
-    return remotePeerId
+  // find all peerIds that are different than this PWA peer ID
+  var remotePeerIds = peerIds.filter(pid => pid !== state.myPeerId)
+  console.debug(`remotePeerIds: ${remotePeerIds} found among myRoom members: ${peerIds}`)
+  if (remotePeerIds.length > 0) {
+    return remotePeerIds
   } else {
     // unable to auto discover
     // ask user for help
@@ -252,25 +243,25 @@ function setPnPServiceConnectionHandlers (
   })
   peer.on('disconnected', function () {
     commit(PNP_SERVICE_DISCONNECTED)
-    commit(USER_MESSAGE, 'PnP service connection lost. Please check your internet connection.')
-    console.log('pnp client: Connection lost. Please reconnect.')
+    commit(USER_MESSAGE, 'Disconnected. Please check your internet connection.')
+    console.log('pnp client: Disconnected from signaling server. Will try to reconnect.')
+    setTimeout(() => { // give the network a few moments to recover
+      dispatch(PNP_SERVICE_CONNECT)
+    }, 3000)
   })
   peer.on('close', function () {
-    // peerConnection = null
-    commit(USER_MESSAGE, 'PnP service connection closed. Will attempt to reconnect in a moment.')
-    console.log('Connection to PnP server destroyed')
-    console.log('Reconnecting to PnP server...')
     commit(PNP_SERVICE_DISCONNECTED)
-    commit(PEER_DISCONNECTED)
+    commit(USER_MESSAGE, 'Signaling server closed connection. Will try to reconnect.')
+    console.log('Connection to PnP server closed. Will try to reconnect.')
     setTimeout(() => { // give the network a few moments to recover
-      dispatch(INITIALIZE_PNP)
+      dispatch(PNP_SERVICE_CONNECT)
     }, 3000)
   })
   peer.on('error', function (err) {
     console.log('PnP service connection error', err)
     commit(USER_MESSAGE,
       `
-      Error while connecting. Will retry shortly. Is the Internet connection OK?
+      Error while connecting. Will retry shortly. Is your Internet connection OK?
       `)
     commit(PNP_SERVICE_DISCONNECTED)
     commit(PEER_DISCONNECTED)
@@ -278,10 +269,10 @@ function setPnPServiceConnectionHandlers (
     console.log('Will try to reconnect to PnP server...')
     // retry peer connection in a few seconds
     setTimeout(() => { // give the network a few moments to recover
-      dispatch(INITIALIZE_PNP)
+      dispatch(PNP_SERVICE_CONNECT)
     }, 3000)
   })
-  // remote peer tries to initiate connection
+  // remote peer is trying to initiate a connection
   peer.on('connection', function (peerConnection) {
     console.debug('#####>>>>> remote peer trying to establish connection')
     setPeerConnectionHandlers({ state, commit, dispatch, peerConnection })
@@ -294,10 +285,11 @@ function setPeerConnectionHandlers ({
   commit,
   dispatch,
   peerConnection,
-  hungupConnectionResetTimer
+  peerConnectOfferTimer
 }) {
   // setup connection progress callbacks
   peerConnection.on('open', function () {
+    clearTimeout(peerConnectOfferTimer)
     const peerFetch = new PeerFetch(peerConnection)
     console.debug('Peer DataConnection is now open. Creating PeerFetch wrapper.')
     commit(PEER_FETCH, peerFetch)
@@ -308,16 +300,18 @@ function setPeerConnectionHandlers ({
   })
 
   peerConnection.on('close', function () {
+    clearTimeout(peerConnectOfferTimer)
     commit(PEER_DISCONNECTED)
     commit(USER_MESSAGE, 'Connection to remote peer closed')
     console.debug('#########>>>>>>>>> p2p connection closed')
   })
 
   peerConnection.on('error', function (err) {
-    commit(USER_MESSAGE, 'Error in connection to remote peer ID', peerConnection.peer)
-    console.info(`Error in connection to remote peer ID ${peerConnection.peer}`, err)
+    clearTimeout(peerConnectOfferTimer)
+    const errMsg = `Error in connection to remote peer ID: ${peerConnection.peer}`
+    console.info(errMsg, { err })
     // schedule an async HANDLE_PEER_CONNECTION_ERROR action
-    dispatch(HANDLE_PEER_CONNECTION_ERROR, { peerConnection, err })
+    dispatch(HANDLE_PEER_CONNECTION_ERROR, { peerConnection, errMsg })
   })
 
   console.debug('peerConnection.on(event) handlers all set.')
@@ -411,11 +405,11 @@ const actions = {
       try {
         if (state.pnpServiceConnectionStatus === PNP_SERVICE_CONNECTED) {
           console.debug('discovering peers on the local network...')
-          const remotePeerId = await discoverRemotePeerId({ state, commit })
+          const remotePeerIds = await discoverRemotePeerIds({ state, commit })
           // Signal to state watchers that we have discovered peers.
           // Let user inspect discovered peer IDs and decide how to proceed.
           // Similar UX to local WiFi and Bluetooth device discovery.
-          commit(PEER_DISCOVERED, remotePeerId)
+          commit(PEER_DISCOVERED, remotePeerIds)
         } else {
           // signaling server connection is still not ready, skip this cycle
           // and wait for the next scheduled retry
@@ -447,10 +441,10 @@ const actions = {
       // in case of multiple connection errors
       return
     }
-    console.debug('#####>>>>>>> Connecting to remote peer', remotePeerId)
+    console.debug('#####>>>>>>> Connecting to remote peer', { remotePeerId })
     if (state.peerConnection) {
       // make sure any previous connection is closed and cleaned up
-      console.info('>>>>>>> Closing and cleaning up existing peer connection.')
+      console.info('>>>>>>> Closing and cleaning up existing peer connection.', { remotePeerId })
       await state.peerConnection.close()
     }
     const peerConnectLoop = async () => {
@@ -470,15 +464,27 @@ const actions = {
         console.debug(`#####>>>> PNP Service connection status: ${state.pnpServiceConnectionStatus}`)
         console.info('>>>>>> Opening new peer connection.')
         const peer = state.peer
+        commit(PEER_CONNECTING)
         const peerConnection = peer.connect(remotePeerId, {
           label: 'http-proxy', reliable: true, serialization: 'raw'
         })
-        commit(PEER_CONNECTING)
+        const handlePeerConnectOfferTimeout = async function () {
+          if (state.peerConnection) {
+            // In case a connection object was created in the connection OFFER process
+            // make sure to close and cleaned it up.
+            console.info('Peer connection OFFER expired. Closing and cleaning up peer connection object.', { remotePeerId })
+            await state.peerConnection.close()
+          }
+          const errMsg = 'Peer connection attempt failed. Is the remote device online?'
+          await dispatch(HANDLE_PEER_CONNECTION_ERROR, { peerConnection, errMsg })
+        }
+        const peerConnectOfferTimer = setTimeout(handlePeerConnectOfferTimeout, state.peerConnectOfferTimeout)
         setPeerConnectionHandlers({
           state,
           commit,
           dispatch,
-          peerConnection
+          peerConnection,
+          peerConnectOfferTimer
         })
       }
     }
@@ -530,8 +536,7 @@ const actions = {
     } else {
       const errMsg = 'Remote peer authentication failed.'
       console.warn(errMsg)
-      commit(USER_MESSAGE, errMsg)
-      await dispatch(HANDLE_PEER_CONNECTION_ERROR, { peerConnection, err: errMsg })
+      await dispatch(HANDLE_PEER_CONNECTION_ERROR, { peerConnection, errMsg })
     }
     console.debug('DataChannel transport capabilities',
       peerConnection.dataChannel)
@@ -571,11 +576,11 @@ const actions = {
     }
     commit(REMOTE_PEER_ID_REMOVED)
   },
-  async [HANDLE_PEER_CONNECTION_ERROR] ({ state, commit, dispatch }, { peerConnection, err }) {
-    console.info('######>>>>>>> p2p connection error', err)
+  async [HANDLE_PEER_CONNECTION_ERROR] ({ state, commit, dispatch }, { peerConnection, errMsg }) {
+    console.info('######>>>>>>> p2p connection error', errMsg)
     console.info('Error while connecting to remote peer ID:', peerConnection.peer)
-    state.problematicRemotePeers.push(peerConnection.peer)
-    commit(PEER_CONNECTION_ERROR, err)
+    commit(USER_MESSAGE, errMsg)
+    commit(PEER_CONNECTION_ERROR, errMsg)
   }
 }
 
