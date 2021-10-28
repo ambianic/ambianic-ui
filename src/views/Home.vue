@@ -27,14 +27,30 @@
             </v-list-item-content>
           </v-list-item>
 
-          <v-img
-            src="@/assets/home-screen-logo.png"
-            ref="logo-image"
-          />
-
-          <v-card-text id="welcome-text">
+          <v-card-text id="welcome-text"
+            class="text-center"
+          >
+            <v-avatar
+              rounded
+              size="200"
+            >
+              <v-img
+                v-if="this.$vuetify.theme.dark"
+                src="@/assets/home-screen-logo-dark.png"
+                ref="logo-image"
+              />
+              <v-img
+                v-else
+                src="@/assets/home-screen-logo-light.png"
+                ref="logo-image"
+              />
+            </v-avatar>
+            <p />
             <v-list-item-subtitle class="center">
-              Safer Home via Ambient Intelligence
+              Safer Home via Ambient Intelligence.
+            </v-list-item-subtitle>
+            <v-list-item-subtitle class="center">
+              Privacy Preserving. Decentralized.
             </v-list-item-subtitle>
           </v-card-text>
 
@@ -119,7 +135,6 @@ export default {
 }
 .body {
   display: flex;
-  background: rgba(233, 241, 251, 0.81);
   justify-content: center;
   align-items : center;
   width : 100%;

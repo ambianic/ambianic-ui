@@ -2,9 +2,16 @@
   <amb-app-frame>
     <v-container>
       <v-row
+        dense
+      >
+        <v-col class="ma-0 pa-0">
+          <v-breadcrumbs :items="breadcrumbs"/>
+        </v-col>
+      </v-row>
+      <v-row
         align="center"
       >
-        <v-col cols="12">
+        <v-col cols="12" class="ma-0 pa-0">
           <v-alert
             v-if="this.edgeDeviceError"
             outlined
@@ -22,13 +29,6 @@
         </v-col>
       </v-row>
       <v-row
-        dense
-      >
-        <v-col>
-          <v-breadcrumbs :items="breadcrumbs"/>
-        </v-col>
-      </v-row>
-      <v-row
         justify="center"
         class="pb-5"
         align="center"
@@ -37,11 +37,6 @@
         <v-card
           :loading="isSyncing || isEdgeConnecting || isEdgeDisconnecting"
         >
-          <v-card-title
-            data-cy="titlecard"
-          >
-            Device card
-          </v-card-title>
           <v-card-text grid-list-sm>
             <v-row
               align="start"
@@ -175,16 +170,16 @@
           <v-card-title
             data-cy="titlecard"
           >
-            No Ambianic Edge device selected
+            No device selected
           </v-card-title>
           <v-card-text grid-list-sm>
-            Go to device management to see all your devices and add new ones.
+            Go ahead and pick a device to connect to.
           </v-card-text>
           <v-card-actions>
             <v-btn
-              to="settings"
+              to="selectdevice"
             >
-              Manage Devices
+              My Devices
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -211,9 +206,8 @@ export default {
   },
   data () {
     return {
-      edgeAddress: undefined,
-      edgeVersion: undefined,
-      edgeDisplayName: undefined,
+      edgeVersion: this.$store.state.myDevices.currentDeviceCard ? this.$store.state.myDevices.currentDeviceCard.version : '',
+      edgeDisplayName: this.$store.state.myDevices.currentDeviceCard ? this.$store.state.myDevices.currentDeviceCard.displayName : '',
       edgeDeviceError: null,
       isSyncing: false, // is the UI in the process of syncing with remote device data
       rules: {
@@ -304,7 +298,7 @@ export default {
       await this.deleteCurrentDeviceConnection()
       // close forget device dialog
       this.forgetDeviceDialog = false
-      this.$router.push({ name: 'settings' })
+      this.$router.replace({ name: 'settings' })
     }
   },
   computed: {
@@ -343,8 +337,15 @@ export default {
     },
     currentDeviceCard: async function (newVal, oldVal) {
       console.debug('Current Edge Device Card changed:', { newVal, oldVal })
-      this.edgeVersion = newVal.version
-      this.edgeDisplayName = newVal.displayName
+      if (newVal) {
+        this.edgeVersion = newVal.version
+        this.edgeDisplayName = newVal.displayName
+      } else {
+        // right after the use requests to forget a device
+        // there is no current device selected
+        this.edgeVersion = ''
+        this.edgeDisplayName = ''
+      }
     }
   }
 }

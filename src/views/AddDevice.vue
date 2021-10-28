@@ -4,6 +4,13 @@
       fluid
     >
       <v-row
+        dense
+      >
+        <v-col class="ma-0 pa-0">
+          <v-breadcrumbs :items="breadcrumbs"/>
+        </v-col>
+      </v-row>
+      <v-row
         align="center"
       >
         <v-col cols="12">
@@ -250,7 +257,25 @@ export default {
       },
       addDeviceStep: 1, // the sequential step number in the add device stepper flow
       isChoiceDiscoverLocal: false, // user chooses to discover a local device vs remote connection
-      selectedLocalDevice: -1 // device number picked by the user from a list of discovered local devices
+      selectedLocalDevice: -1, // device number picked by the user from a list of discovered local devices
+      breadcrumbs: [
+        {
+          text: 'Settings',
+          disabled: false,
+          to: 'settings'
+        },
+        {
+          text: 'Select Device',
+          disabled: false,
+          to: 'selectdevice'
+        },
+        {
+          text: 'Add Device',
+          disabled: true,
+          to: 'adddevice'
+        }
+
+      ]
     }
   },
   created () {

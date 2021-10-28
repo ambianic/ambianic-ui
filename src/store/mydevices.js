@@ -19,7 +19,10 @@ const actions = {
    */
   async add (context, deviceCard) {
     console.debug('add() called', { deviceCard })
-    const recordId = await localdb.myDevices.add(deviceCard)
+    // use Dexie put instead of add to prevent exception
+    // in case a deviceCard with the same peer ID
+    // has already been added to indexeddb
+    const recordId = await localdb.myDevices.put(deviceCard)
     console.debug('add() success.', { deviceCard, recordId })
     return recordId
   },
@@ -49,7 +52,13 @@ const actions = {
    */
   async setCurrent ({ state }, devicePeerID) {
     console.debug('Setting current device card for peer ID:', devicePeerID)
-    state.currentDeviceCard = state.allDeviceCards.get(devicePeerID)
+    let current = state.allDeviceCards.get(devicePeerID)
+    if (!current) {
+      // if device card is no stored in indexeddb yet
+      current = new EdgeDeviceCard()
+      current.peerID = devicePeerID
+    }
+    state.currentDeviceCard = current
     console.debug('Set current device card to:', state.currentDeviceCard)
   },
   /**
@@ -75,7 +84,10 @@ const actions = {
       if (edgeDetails.display_name) {
         deviceCard.displayName = edgeDetails.display_name
       }
-      await localdb.myDevices.update(deviceCard.peerID, deviceCard)
+      // use Dexie put instead of update
+      // in order to cover the case when a device card is not found in indexeddb
+      console.debug('Putting localdb device card: ', { deviceCard })
+      await localdb.myDevices.put(deviceCard)
       console.debug('Updated localdb device card: ', { deviceCard })
       // refresh vuex state
       await dispatch('syncState')

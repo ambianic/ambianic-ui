@@ -4,6 +4,13 @@
       fluid
     >
       <v-row
+        dense
+      >
+        <v-col class="ma-0 pa-0">
+          <v-breadcrumbs :items="breadcrumbs"/>
+        </v-col>
+      </v-row>
+      <v-row
         align="center"
       >
         <v-col cols="12">
@@ -51,7 +58,19 @@ export default {
       reveal: false,
       edgeAddress: undefined,
       edgeDeviceError: null,
-      syncing: false // is the UI in the process of syncing with remote device data
+      syncing: false, // is the UI in the process of syncing with remote device data
+      breadcrumbs: [
+        {
+          text: 'Settings',
+          disabled: false,
+          to: 'settings'
+        },
+        {
+          text: 'Select Device',
+          disabled: true,
+          to: 'selectdevice'
+        }
+      ]
     }
   },
   created () {

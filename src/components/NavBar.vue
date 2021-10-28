@@ -6,63 +6,73 @@
   >
     <v-app-bar
       app
-      color="blue darken-3"
+      hide-on-scroll
+      absolute
+      dense
+      flat
     >
-      <v-toolbar-title
-        style="width: 300px"
-        class="ml-0 pl-4"
-      >
-        <v-app-bar-nav-icon
-          id="drawer"
-          @click.stop="drawer = !drawer"
-        />
-        <span class="hidden-sm-and-down">Ambianic</span>
-      </v-toolbar-title>
-      <v-spacer />
-
-      <nav-button
-        data-cy="timeline-icon"
-        icon="history"
-        to="timeline"
+      <v-app-bar-nav-icon
+        id="drawer"
+        @click.stop="drawer = !drawer"
       />
 
-      <div>
-        <v-tooltip bottom>
-          <template
-            #activator="{ on : cloudIconOn, attrs }"
-          >
-            <div
-              v-bind="attrs"
-              v-on="cloudIconOn"
-            >
-              <nav-button
-                :id="connectionStatusIcon"
-                data-cy="connection-status"
-                :icon="connectionStatusIcon"
-                :color="connectionIconColor"
-                :to="connectionIconLink"
-                v-bind="attrs"
-                v-on="cloudIconOn"
-              />
-            </div>
-          </template>
-          <span>{{ connectionStatusTooltipText }}</span>
-        </v-tooltip>
-      </div>
+      <v-app-bar-title>
+        <span class="hidden-sm-and-down">{{ $route.meta.title }}</span>
+      </v-app-bar-title>
 
-      <nav-button
-        data-cy="about"
-        to="about"
-      >
-        <v-avatar
-          item
+      <v-spacer />
+
+      <v-tooltip bottom>
+        <template
+          #activator="{ on: timelineBtnEvents, attrs: timelineBtnAttrs }"
         >
-          <v-img
-            src="@/assets/logo5.svg"
-            alt="Ambianic.ai logo"
-          />
-        </v-avatar>
-      </nav-button>
+          <v-btn
+            icon
+            data-cy="timeline-icon"
+            to="timeline"
+            v-bind="timelineBtnAttrs"
+            v-on="timelineBtnEvents"
+          >
+            <v-icon>history</v-icon>
+          </v-btn>
+        </template>
+        <span>Event Timeline</span>
+      </v-tooltip>
+
+      <v-tooltip bottom>
+        <template
+          #activator="{ on: connectionBtnEvents, attrs: connectionBtnAttrs }"
+        >
+          <v-btn
+            v-bind="connectionBtnAttrs"
+            v-on="connectionBtnEvents"
+            icon
+            data-cy="connection-status"
+            :color="connectionIconColor"
+            :to="connectionIconLink"
+          >
+            <v-icon>mdi-{{ connectionStatusIcon }}</v-icon>
+          </v-btn>
+        </template>
+        <span>{{ connectionStatusTooltipText }}</span>
+      </v-tooltip>
+
+      <v-tooltip bottom>
+        <template
+          #activator="{ on: settingsBtnEvents, attrs: settingsBtnAttrs }"
+        >
+          <v-btn
+            v-bind="settingsBtnAttrs"
+            v-on="settingsBtnEvents"
+            icon
+            data-cy="settings-icon"
+            to="settings"
+          >
+            <v-icon>settings</v-icon>
+          </v-btn>
+        </template>
+        <span>Settings</span>
+      </v-tooltip>
     </v-app-bar>
 
     <!-- drawer -->
@@ -74,7 +84,7 @@
       expand-on-hover
     >
       <v-list dense>
-        <template v-for="item in items">
+        <template v-for="item in menuItems">
           <v-row
             v-if="item.heading"
             :key="item.heading"
@@ -157,9 +167,6 @@ import { mapState } from 'vuex'
 import { PEER_CONNECTED } from '@/store/mutation-types'
 export default {
   name: 'NavBar',
-  components: {
-    NavButton: () => import('./shared/Button.vue')
-  },
   data: () => ({
     connectionStatusIcon: 'cloud-off-outline',
     dialog: false,
@@ -171,7 +178,7 @@ export default {
     connectionIconColor: 'warning',
     connectionIconLink: '/settings',
     logo: '../assets/logo5.svg',
-    items: [
+    menuItems: [
       { icon: 'history', text: 'Timeline', link: '/timeline' },
       // { icon: 'mdi-account-heart-outline', text: 'People', link: '/people' },
       // class: 'hidden-sm-and-down' ensures that an item is not shown
@@ -208,7 +215,7 @@ export default {
   }),
   methods: {
     setConnectionStatusTooltipText () {
-      this.connectionIconLink = '/devicecard'
+      this.connectionIconLink = '/settings'
       this.connectionIconColor = 'info'
 
       if (this.peerConnectionStatus === 'PEER_DISCONNECTED') {

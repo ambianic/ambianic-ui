@@ -3,35 +3,36 @@
     <v-row
       align="start"
       justify="center"
-      align-content="space-around"
     >
       <template>
         <v-card
           max-width="344"
         >
-          <v-layout
-            column
-            wrap
-            align-start
+          <v-card-text id="welcome-text"
+            class="text-center"
           >
-            <amb-list-item
-              id="about-title"
-              title="Safer Home"
-              subtitle="via Ambient Intelligence"
-            />
-          </v-layout>
-
-          <v-img
-            max-width="300"
-            class="mx-auto"
-            src="@/assets/home-screen-logo.png"
-          />
-
-          <v-card-text id="about-info">
-            Review your home timeline for notable moments.
-            Configure input sensors and camers for Ambianic to observe.
-            Share, purge or backup your data
-            - it never slips out of your control.
+            <v-avatar
+              rounded
+              size="200"
+            >
+              <v-img
+                v-if="this.$vuetify.theme.dark"
+                src="@/assets/home-screen-logo-dark.png"
+                ref="logo-image"
+              />
+              <v-img
+                v-else
+                src="@/assets/home-screen-logo-light.png"
+                ref="logo-image"
+              />
+            </v-avatar>
+            <p />
+            <v-list-item-subtitle class="center">
+              Safer Home via Ambient Intelligence.
+            </v-list-item-subtitle>
+            <v-list-item-subtitle class="center">
+              Privacy Preserving. Decentralized.
+            </v-list-item-subtitle>
           </v-card-text>
 
           <v-layout

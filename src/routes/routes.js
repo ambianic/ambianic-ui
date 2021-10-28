@@ -2,17 +2,20 @@ const routes = [
   {
     path: '/',
     name: 'home',
+    meta: { title: 'Welcome!' },
     // component: Home
     component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
   },
   {
     path: '/index.html',
     name: 'pwahome',
+    meta: { title: 'Welcome!' },
     component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue') // Fix for PWA at /index.html
   },
   {
     path: '/timeline',
     name: 'timeline',
+    meta: { title: 'Event Timeline' },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -21,6 +24,7 @@ const routes = [
   {
     path: '/onboarding',
     name: 'onboarding',
+    meta: { title: 'Onboarding' },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -39,6 +43,7 @@ const routes = [
   {
     path: '/settings',
     name: 'settings',
+    meta: { title: 'Settings' },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -47,6 +52,7 @@ const routes = [
   {
     path: '/adddevice',
     name: 'adddevice',
+    meta: { title: 'Add Device' },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -55,6 +61,7 @@ const routes = [
   {
     path: '/selectdevice',
     name: 'selectdevice',
+    meta: { title: 'Select Device' },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -63,6 +70,7 @@ const routes = [
   {
     path: '/devicecard',
     name: 'devicecard',
+    meta: { title: 'Device Card' },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -71,6 +79,7 @@ const routes = [
   {
     path: '/feedback',
     name: 'feedback',
+    meta: { title: 'Feedback' },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -79,6 +88,7 @@ const routes = [
   {
     path: '/help',
     name: 'help',
+    meta: { title: 'Help' },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -87,6 +97,7 @@ const routes = [
   {
     path: '/about',
     name: 'about',
+    meta: { title: 'About' },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.

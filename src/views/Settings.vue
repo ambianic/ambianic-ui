@@ -6,7 +6,10 @@
       <v-row
         align="center"
       >
-        <v-col cols="12">
+        <v-col
+          cols="12"
+          class="ma-0 pa-0"
+        >
           <v-alert
             v-if="this.edgeDeviceError"
             outlined
@@ -103,6 +106,7 @@
             </v-list>
           </v-card-text>
           <v-card-actions>
+            <v-spacer />
             <v-btn
               to="selectdevice"
             >
@@ -134,7 +138,8 @@ export default {
     return {
       edgeAddress: undefined,
       edgeDeviceError: null,
-      syncing: false // is the UI in the process of syncing with remote device data
+      syncing: false, // is the UI in the process of syncing with remote device data
+      edgeDisplayName: this.$store.state.myDevices.currentDeviceCard ? this.$store.state.myDevices.currentDeviceCard.displayName : ''
     }
   },
   created () {
@@ -155,12 +160,12 @@ export default {
       pnp: state => state.pnp,
       edgePeerId: state => state.pnp.remotePeerId,
       peerFetch: state => state.pnp.peerFetch,
-      edgeDisplayName: state => state.myDevices.currentDeviceCard ? state.myDevices.currentDeviceCard.displayName : '',
       isEdgeConnecting: state =>
         state.pnp.peerConnectionStatus === PEER_CONNECTING ||
         state.pnp.peerConnectionStatus === PEER_AUTHENTICATING,
       isEdgeDisconnecting: state =>
-        state.pnp.peerConnectionStatus === PEER_DISCONNECTING
+        state.pnp.peerConnectionStatus === PEER_DISCONNECTING,
+      currentDeviceCard: state => state.myDevices.currentDeviceCard
     })
   },
   watch: {
@@ -174,6 +179,11 @@ export default {
         this.edgeDeviceError = undefined
         console.debug('isPeerConnectionError FALSE. Error message:', this.edgeDeviceError)
       }
+    },
+    currentDeviceCard: async function (newVal, oldVal) {
+      console.debug('Current Edge Device Card changed:', { newVal, oldVal })
+      this.edgeVersion = newVal.version
+      this.edgeDisplayName = newVal.displayName
     }
   }
 }
