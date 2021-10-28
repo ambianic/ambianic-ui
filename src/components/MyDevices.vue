@@ -15,7 +15,10 @@
     >
       <p>No Ambianic Edge devices added.</p>
       <p>
-        <a href="https://docs.ambianic.ai/users/ambianicedge/" target="_new_window">
+        <a
+          href="https://docs.ambianic.ai/users/ambianicedge/"
+          target="_new_window"
+        >
           What is an Ambianic Edge device?
         </a>
       </p>

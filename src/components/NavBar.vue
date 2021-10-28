@@ -17,8 +17,8 @@
       />
 
       <v-app-bar-title class="text-center">
-        <span v-if="edgeDisplayName">{{ edgeDisplayName }} - </span>
-        <span class="hidden-sm-and-down">{{ $route.meta.title }}</span>
+        <span v-if="edgeDisplayName">{{ edgeDisplayName }}</span>
+        <span class="hidden-sm-and-down"> - {{ $route.meta.title }}</span>
       </v-app-bar-title>
 
       <v-spacer />
