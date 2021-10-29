@@ -23,7 +23,10 @@
         ref="app-bar-title"
       >
         <span v-if="edgeDisplayName">{{ edgeDisplayName }}</span>
-        <span v-if="edgeDisplayName" class="hidden-sm-and-down"> - </span>
+        <span
+          v-if="edgeDisplayName"
+          class="hidden-sm-and-down"
+        > - </span>
         <span class="hidden-sm-and-down">{{ $route.meta.title }}</span>
       </v-app-bar-title>
 

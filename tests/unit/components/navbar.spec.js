@@ -66,41 +66,31 @@ describe('NavBar', () => {
   })
 
   test('`peerConnectionStatus` ConnectionStatusIcon shows off when disonnected', async () => {
-    let btn
-    let cloudIconClasses
-
     wrapper.vm.$store.commit(PEER_DISCONNECTED)
     await wrapper.vm.$nextTick()
-    btn = wrapper.findComponent({ ref: 'connection-status-btn' })
-    cloudIconClasses = btn.find('i').classes()
+    const btn = wrapper.findComponent({ ref: 'connection-status-btn' })
+    const cloudIconClasses = btn.find('i').classes()
     expect(cloudIconClasses.includes('mdi-cloud-off-outline')).toBeTruthy()
   })
 
   test('`peerConnectionStatus` ConnectionStatusIcon shows sync when connecting', async () => {
-    let btn
-    let cloudIconClasses
-
     wrapper.vm.$store.commit(PEER_CONNECTING)
     await wrapper.vm.$nextTick()
-    btn = wrapper.findComponent({ ref: 'connection-status-btn' })
-    cloudIconClasses = btn.find('i').classes()
+    const btn = wrapper.findComponent({ ref: 'connection-status-btn' })
+    const cloudIconClasses = btn.find('i').classes()
     expect(cloudIconClasses.includes('mdi-cloud-off-outline')).toBeFalsy()
     expect(cloudIconClasses.includes('mdi-cloud-sync-outline')).toBeTruthy()
   })
 
   test('`peerConnectionStatus` ConnectionStatusIcon shows checkmark when connected', async () => {
-    let btn
-    let cloudIconClasses
-
     wrapper.vm.$store.commit(PEER_CONNECTED)
     await wrapper.vm.$nextTick()
-    btn = wrapper.findComponent({ ref: 'connection-status-btn' })
-    cloudIconClasses = btn.find('i').classes()
-    console.debug("btn html", btn.html())
+    const btn = wrapper.findComponent({ ref: 'connection-status-btn' })
+    const cloudIconClasses = btn.find('i').classes()
+    console.debug('btn html', btn.html())
     console.debug({ cloudIconClasses })
     expect(cloudIconClasses.includes('mdi-cloud-sync-outline')).toBeFalsy()
     expect(cloudIconClasses.includes('mdi-cloud-off-outline')).toBeFalsy()
     expect(cloudIconClasses.includes('mdi-cloud-check-outline')).toBeTruthy()
   })
-
 })

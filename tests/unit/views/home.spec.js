@@ -67,5 +67,4 @@ describe('Home Page', () => {
     const btnSetup = wrapper.findComponent({ ref: 'btn-setup' })
     expect(btnSetup.exists()).toBeFalse()
   })
-
 })
