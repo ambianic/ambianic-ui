@@ -63,14 +63,14 @@
         bottom
       >
         <template
-          #activator="{ on, attrs : visibilityAttrs }"
+          #activator="{ on, attrs }"
         >
           <v-icon
             v-if="sensitive"
             id="toggle-visibility"
             @click="sensitive = false"
             data-cy="icon-sensitive-on"
-            v-bind="visibilityAttrs"
+            v-bind="attrs"
             v-on="on"
           >
             mdi-eye
@@ -78,7 +78,7 @@
           <v-icon
             v-else
             @click="sensitive = true"
-            v-bind="visibilityAttrs"
+            v-bind="attrs"
             v-on="on"
           >
             mdi-eye-off-outline
@@ -107,7 +107,7 @@
         bottom
         v-if="editOption && !isEditing"
       >
-        <template #activator="{ on, copyIcon }">
+        <template #activator="{ on, attrs: copyIcon }">
           <v-icon
             id="toggle-edit-option"
             @click="startEdit"

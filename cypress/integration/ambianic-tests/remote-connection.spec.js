@@ -19,7 +19,7 @@ import {
     },
     reconnect () {}
   }
-  
+
 const checkViewPort = (cy, device) => {
   cy.viewport(device).window().then(win => {
       // block auto discovery
@@ -28,7 +28,7 @@ const checkViewPort = (cy, device) => {
       win.__store__.commit(NEW_REMOTE_PEER_ID, '917d5f0a-6469-4d33-b5c2-efd85811NA')
       // fake edge connected
       win.__store__.commit(PNP_SERVICE_CONNECTED)
-      win.__store__.commit(PEER_CONNECTED)    
+      win.__store__.commit(PEER_CONNECTED)
       const remotePeerID = '917d5f0a-6469-4d33-b5c2-efd858118b74'
       // inject a PeerJS mock object
       win.__store__.state.pnp.peer = fakePeer
@@ -37,7 +37,7 @@ const checkViewPort = (cy, device) => {
         version: '1.2.testing',
         display_name: 'Cached Edge Device'
       }
-      win.__store__.commit(EDGE_DEVICE_DETAILS, details)      
+      win.__store__.commit(EDGE_DEVICE_DETAILS, details)
       // mockup EdgeAPI
       const edgeAPI = cy.stub()
       edgeAPI.getEdgeStatus = cy.stub().callsFake( () => {
@@ -62,7 +62,7 @@ const checkViewPort = (cy, device) => {
             // fake edge connected
             win.__store__.commit(EDGE_API, edgeAPI)
             win.__store__.commit(PNP_SERVICE_CONNECTED)
-            win.__store__.commit(PEER_CONNECTED)    
+            win.__store__.commit(PEER_CONNECTED)
             cy.get('[data-cy=list-item-edgePeerID').should('be.visible').
                 find('[data-cy=icon-sensitive-on]').should('be.visible')
                 .click()
@@ -152,7 +152,7 @@ context('RemoteConnections',    () => {
         // fake cached edge version
         // mockup EdgeAPI
         const edgeAPI = cy.stub()
-        edgeAPI.getEdgeStatus = cy.stub().callsFake( () => {
+        edgeAPI.getEdgeStatus = cy.stub().callsFake(() => {
           return {
             status: 'OK',
             version: '1.4.testing',
@@ -169,7 +169,7 @@ context('RemoteConnections',    () => {
           .then( ($vp) => {
               // fake edge connected
               win.__store__.commit(EDGE_API, edgeAPI)
-              win.__store__.commit(PEER_CONNECTED)    
+              win.__store__.commit(PEER_CONNECTED)
               cy.scrollTo('top')
               cy.get('[data-cy=list-item-edgePeerID')
                 .should('be.visible')
