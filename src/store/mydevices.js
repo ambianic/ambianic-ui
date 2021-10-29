@@ -10,7 +10,7 @@ const state = {
   // currently selected device card
   // for UI interaction
   // object of type EdgeDeviceCard
-  currentDeviceCard: undefined
+  currentDeviceCard: new EdgeDeviceCard()
 }
 
 const actions = {
@@ -128,7 +128,7 @@ const actions = {
   }
 }
 
-export const myDevices = {
+export const myDevicesStoreModule = {
   namespaced: true,
   state,
   actions

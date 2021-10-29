@@ -10,15 +10,21 @@
       absolute
       dense
       flat
+      ref="app-bar"
     >
       <v-app-bar-nav-icon
         id="drawer"
+        ref="menu-btn"
         @click.stop="drawer = !drawer"
       />
 
-      <v-app-bar-title class="text-center">
+      <v-app-bar-title
+        class="text-center"
+        ref="app-bar-title"
+      >
         <span v-if="edgeDisplayName">{{ edgeDisplayName }}</span>
-        <span class="hidden-sm-and-down"> - {{ $route.meta.title }}</span>
+        <span v-if="edgeDisplayName" class="hidden-sm-and-down"> - </span>
+        <span class="hidden-sm-and-down">{{ $route.meta.title }}</span>
       </v-app-bar-title>
 
       <v-spacer />
@@ -30,6 +36,7 @@
           <v-btn
             icon
             data-cy="timeline-icon"
+            ref="timeline-btn"
             to="timeline"
             v-bind="timelineBtnAttrs"
             v-on="timelineBtnEvents"
@@ -49,6 +56,7 @@
             v-on="connectionBtnEvents"
             icon
             data-cy="connection-status"
+            ref="connection-status-btn"
             :color="connectionIconColor"
             :to="connectionIconLink"
           >
@@ -67,6 +75,7 @@
             v-on="settingsBtnEvents"
             icon
             data-cy="settings-icon"
+            ref="settings-btn"
             to="settings"
           >
             <v-icon>settings</v-icon>

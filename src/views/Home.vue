@@ -63,28 +63,11 @@
                 rounded
                 color="pink darken-4"
                 dark
-                data-cy="button-beginSetup"
-                class="ma-2 white--text"
-                to="onboarding"
-                id="btn-setup"
-                ref="btn-setup"
-                v-if="!hasSetupSystem"
-              >
-                Begin Setup
-                <v-icon right>
-                  mdi-arrow-right
-                </v-icon>
-              </v-btn>
-              <v-btn
-                rounded
-                color="pink darken-4"
-                dark
                 data-cy="continue"
                 class="ma-2 white--text"
                 to="settings"
                 id="btn-dashboard"
                 ref="btn-continue"
-                v-else
               >
                 Continue
                 <v-icon right>
@@ -100,27 +83,13 @@
 </template>
 
 <script>
-import { STORAGE_KEY } from '@/store/pnp'
 export default {
   name: 'Home',
   data () {
     return {
-      hasSetupSystem: false
     }
   },
   created () {
-    const setupStatus = window.localStorage.getItem('hasCompletedOnboarding')
-    // Accessing directly to minimize load time to meet Lighthouse performance benchmark.
-    // When using vuex store, the dependencies push above the lighthouse PWA response time budget.
-    const remotePeerId = window.localStorage.getItem(`${STORAGE_KEY}.remotePeerId`)
-
-    // If the user has already setup an edge device connection
-    // via recent version of the app or
-    // an edge device was setup via an earlier app version
-    // then this app is not a new install.
-    if (setupStatus || remotePeerId) {
-      this.hasSetupSystem = true
-    }
   }
 }
 </script>

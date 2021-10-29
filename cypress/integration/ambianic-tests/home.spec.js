@@ -11,13 +11,6 @@ context('HomePage', () => {
       .should('contain.text', 'Safer Home via Ambient Intelligence')
   })
 
-  it('Loads firsttime installation button', () => {
-    cy.get('#btn-setup > .v-btn__content')
-      .should('contain.text', 'Begin Setup')
-      .click()
-      .url().should('include', '/onboarding')
-  })
-
   it('Ensures returning users are taken directly to timeline', () => {
     cy.window().should('have.property', '__store__')
     cy.window().then((win) => {

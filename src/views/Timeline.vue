@@ -4,6 +4,37 @@
       align="start"
       justify="center"
       dense
+      v-if="!isEdgeConnected"
+    >
+      <v-col :style="maxWidth">
+        <v-card>
+          <v-card-title>
+            Connect to a device
+          </v-card-title>
+          <v-card-subtitle>
+            Timeline view requires device connection.
+          </v-card-subtitle>
+          <v-card-text
+            color="warning"
+          >
+            <p>Connect to an Ambianic Edge device and come back to this page to see its timeline of events.</p>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn
+              to="settings"
+            >
+              <span>Settings</span>
+              <v-icon>settings</v-icon>
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row
+      align="start"
+      justify="center"
+      dense
+      v-else
     >
       <v-col
         :style="maxWidth"

@@ -1,10 +1,6 @@
 <template>
   <!-- Shows a list of user's known edge devices and lets them pick one or add new. -->
-  <v-card
-    class="transition-fast-in-fast-out v-card--reveal"
-    style="height: 100%;"
-    width="344"
-  >
+  <v-card>
     <v-card-title>
       My Devices
     </v-card-title>

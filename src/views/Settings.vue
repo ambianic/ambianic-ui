@@ -40,7 +40,7 @@
             data-cy="titlecard"
             v-else
           >
-            No device selected.
+            Select a device
           </v-card-title>
           <v-card-subtitle
             data-cy="titlecard"
@@ -52,7 +52,7 @@
             data-cy="titlecard"
             v-else
           >
-            Select a device to connect to.
+            Add or select a device to connect to.
           </v-card-subtitle>
           <v-card-text
             v-if="edgePeerId"
