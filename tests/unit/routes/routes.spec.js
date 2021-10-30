@@ -5,6 +5,9 @@ import VueX from 'vuex'
 import VueRouter from 'vue-router'
 import App from '@/App.vue'
 import routes from '@/routes/routes.js'
+import { pnpStoreModule } from '@/store/pnp'
+import { myDevicesStoreModule } from '@/store/mydevices'
+import { clone } from 'lodash'
 
 describe('Routing', () => {
   // global
@@ -31,13 +34,25 @@ describe('Routing', () => {
   }
 
   beforeEach(() => {
+
+    // mock access to IndexedDB
+    myDevicesStoreModule.actions.syncState = jest.fn()
+
+    const store = new VueX.Store({
+      modules: {
+        pnp: clone(pnpStoreModule),
+        myDevices: clone(myDevicesStoreModule)
+      }
+    })
+
     wrapper = mount(App, {
       localVue,
       vuetify,
       router,
-      stubs: ['router-view', 'router-link']
-      // store
+      stubs: ['router-view', 'router-link'],
+      store
     })
+
   })
 
   afterEach(() => {

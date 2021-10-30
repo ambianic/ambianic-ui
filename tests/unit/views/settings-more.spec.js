@@ -102,7 +102,7 @@ describe('More Settings View tests', () => {
     expect(editIcon.exists()).toBeTrue()
     await editIcon.trigger('click')
     editIcon = listItem.findComponent({ ref: 'icon-start-edit' })
-    expect(editIcon.exists()).toBeFalse()
+    expect(editIcon.exists()).toBeFalsy()
     const nameInput = listItem.findComponent({ ref: 'inputTitleEdit' }).find('input[type="text"]')
     expect(nameInput.exists()).toBeTrue()
     nameInput.setValue('Kitchen Monitor')

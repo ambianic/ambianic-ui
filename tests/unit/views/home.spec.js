@@ -65,6 +65,6 @@ describe('Home Page', () => {
     expect(btnTimeline.isVisible()).toBeTrue()
     expect(btnTimeline.text()).toContain('View Timeline')
     const btnSetup = wrapper.findComponent({ ref: 'btn-setup' })
-    expect(btnSetup.exists()).toBeFalse()
+    expect(btnSetup.exists()).toBeFalsy()
   })
 })

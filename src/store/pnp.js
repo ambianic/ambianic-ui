@@ -198,7 +198,7 @@ async function discoverRemotePeerIds ({ state, commit }) {
   // first try to find the remote peer ID in the same room
   console.debug(peer)
   const myRoom = new PeerRoom(peer)
-  console.debug('Fetching room members', myRoom)
+  console.debug('Fetching room members')
   const roomMembers = await myRoom.getRoomMembers()
   console.debug('Fetched roomMembers', roomMembers)
   const peerIds = roomMembers.clientsIds
@@ -419,8 +419,7 @@ const actions = {
       } catch (err) {
         console.warn('Error while looking for remote peer. Will retry shortly.',
           err)
-        // TODO: Signal user that dicovery errored. Let user decide how to proceed.
-        // Recommend check internet connection and retry.
+          commit(USER_MESSAGE, `Error while discovering peers on local WiFi.`)
       }
     }
     await discoveryLoop()

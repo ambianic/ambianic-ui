@@ -19,5 +19,5 @@ module.exports = {
     '<rootDir>/**/*.vue',
     '../src/'
   ],
-  setupFilesAfterEnv: ['jest-extended']
+  setupFilesAfterEnv: ['jest-extended/all']
 }
