@@ -87,8 +87,6 @@ describe('NavBar', () => {
     await wrapper.vm.$nextTick()
     const btn = wrapper.findComponent({ ref: 'connection-status-btn' })
     const cloudIconClasses = btn.find('i').classes()
-    console.debug('btn html', btn.html())
-    console.debug({ cloudIconClasses })
     expect(cloudIconClasses.includes('mdi-cloud-sync-outline')).toBeFalsy()
     expect(cloudIconClasses.includes('mdi-cloud-off-outline')).toBeFalsy()
     expect(cloudIconClasses.includes('mdi-cloud-check-outline')).toBeTruthy()
