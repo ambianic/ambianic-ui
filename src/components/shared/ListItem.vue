@@ -63,14 +63,14 @@
         bottom
       >
         <template
-          #activator="{ on, attrs }"
+          #activator="{ on, eyeOffAttr }"
         >
           <v-icon
             v-if="sensitive"
             id="toggle-visibility"
             @click="sensitive = false"
             data-cy="icon-sensitive-on"
-            v-bind="attrs"
+            v-bind="eyeOffAttr"
             v-on="on"
           >
             mdi-eye
@@ -78,7 +78,7 @@
           <v-icon
             v-else
             @click="sensitive = true"
-            v-bind="attrs"
+            v-bind="eyeOffAttr"
             v-on="on"
           >
             mdi-eye-off-outline
@@ -107,7 +107,7 @@
         bottom
         v-if="editOption && !isEditing"
       >
-        <template #activator="{ on, attrs: copyIcon }">
+        <template #activator="{ on, copyIcon }">
           <v-icon
             id="toggle-edit-option"
             @click="startEdit"
@@ -164,9 +164,7 @@
 <script>
 import Vue from 'vue'
 import VueClipboard from 'vue-clipboard2'
-
 Vue.use(VueClipboard)
-
 export default {
   name: 'ListItem',
   props: {
