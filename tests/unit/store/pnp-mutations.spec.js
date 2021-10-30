@@ -7,7 +7,8 @@ import {
   PEER_DISCONNECTED,
   PEER_CONNECTING,
   PEER_DISCOVERING,
-  PEER_DISCOVERED,
+  PEER_DISCOVERING_OFF,
+  PEER_DISCOVERING_DONE,
   PEER_AUTHENTICATING,
   PEER_CONNECTED,
   PEER_CONNECTION_ERROR,
@@ -65,18 +66,19 @@ describe('PnP state machine mutations - p2p communication layer', () => {
     expect(store.state.pnp.peerFetch).toBe(undefined)
   })
 
-  test('PEER_DISCOVERED', () => {
+  test('PEER_DISCOVERING_DONE', () => {
     store.commit(PEER_DISCONNECTED)
     expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
-    store.commit(PEER_DISCOVERED)
-    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCOVERED)
+    store.commit(PEER_DISCOVERING_DONE)
+    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
+    expect(store.state.pnp.discoveryStatus).toBe(PEER_DISCOVERING_DONE)
   })
 
   test('PEER_DISCOVERING', () => {
-    store.commit(PEER_DISCONNECTED)
-    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
+    store.commit(PEER_DISCOVERING_OFF)
+    expect(store.state.pnp.discoveryStatus).toBe(PEER_DISCOVERING_OFF)
     store.commit(PEER_DISCOVERING)
-    expect(store.state.pnp.peerConnectionStatus).toBe(PEER_DISCOVERING)
+    expect(store.state.pnp.discoveryStatus).toBe(PEER_DISCOVERING)
   })
 
   test('PEER_CONNECTING', () => {

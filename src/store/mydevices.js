@@ -109,7 +109,9 @@ const actions = {
    * Load all stored EdgeDeviceCard objects into local state object
    */
   async syncState ({ state }) {
-    const deviceCardArray = await localdb.myDevices.orderBy('displayName').toArray()
+    const deviceCardArray = await localdb.myDevices.toArray()
+    // fake-indexeddb does not support orderBy, which makes it hard to test
+    console.debug('localdb.myDevices.orderBy("displayName").toArray():', { deviceCardArray })
     // convery array to a hashmap
     const deviceCardMap = deviceCardArray.reduce(
       function (map, deviceCard) {

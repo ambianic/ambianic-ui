@@ -8,8 +8,9 @@ import {
   PEER_DISCONNECTING,
   PEER_DISCOVERING,
   PEER_DISCOVERING_CANCELLED,
+  PEER_DISCOVERING_ERROR,
   PEER_DISCOVERING_OFF,
-  PEER_DISCOVERED,
+  PEER_DISCOVERING_DONE,
   PEER_AUTHENTICATING,
   PEER_CONNECTED,
   PEER_CONNECTION_ERROR,
@@ -122,8 +123,8 @@ const mutations = {
     state.peerFetch = undefined
     state.edgeAPI = undefined
   },
-  [PEER_DISCOVERED] (state, remotePeerIds) {
-    state.discoveryStatus = PEER_DISCOVERED
+  [PEER_DISCOVERING_DONE] (state, remotePeerIds) {
+    state.discoveryStatus = PEER_DISCOVERING_DONE
     state.discoveredPeers = remotePeerIds
     console.debug('Discovered Peer IDs:', state.discoveredPeers)
   },
@@ -133,6 +134,9 @@ const mutations = {
   },
   [PEER_DISCOVERING_CANCELLED] (state) {
     state.discoveryStatus = PEER_DISCOVERING_CANCELLED
+  },
+  [PEER_DISCOVERING_ERROR] (state) {
+    state.discoveryStatus = PEER_DISCOVERING_ERROR
   },
   [PEER_DISCOVERING_OFF] (state) {
     state.discoveryStatus = PEER_DISCOVERING_OFF
@@ -196,7 +200,7 @@ async function discoverRemotePeerIds ({ state, commit }) {
   const peer = state.peer
   console.debug('discoverRemotePeerIds() start')
   // first try to find the remote peer ID in the same room
-  console.debug(peer)
+  console.debug({ peer })
   const myRoom = new PeerRoom(peer)
   console.debug('Fetching room members')
   const roomMembers = await myRoom.getRoomMembers()
@@ -343,26 +347,26 @@ const actions = {
     // if peer exists but not connected then try to reuse it and just reconnect
     if (peer) {
       await dispatch(PNP_SERVICE_RECONNECT)
-      return
+    } else {
+      // Otherwise create a new peer object with connection to shared PeerJS server
+      console.log('pnp client: creating peer')
+      // If we already have an assigned peerId, we will reuse it forever.
+      // We expect that peerId is crypto secure. No need to replace.
+      // Unless the user explicitly requests a refresh.
+      console.log('pnp client: last saved myPeerId', state.myPeerId)
+      const newPeer = new Peer(state.myPeerId,
+        {
+          host: ambianicConf.AMBIANIC_PNP_HOST,
+          port: ambianicConf.AMBIANIC_PNP_PORT,
+          secure: ambianicConf.AMBIANIC_PNP_SECURE,
+          debug: 3
+        }
+      )
+      commit(PEER_NEW_INSTANCE, newPeer)
+      console.log('pnp client: peer created')
+      setPnPServiceConnectionHandlers({ state, commit, dispatch })
+      commit(PNP_SERVICE_CONNECTING)
     }
-    // Otherwise create a new peer object with connection to shared PeerJS server
-    console.log('pnp client: creating peer')
-    // If we already have an assigned peerId, we will reuse it forever.
-    // We expect that peerId is crypto secure. No need to replace.
-    // Unless the user explicitly requests a refresh.
-    console.log('pnp client: last saved myPeerId', state.myPeerId)
-    const newPeer = new Peer(state.myPeerId,
-      {
-        host: ambianicConf.AMBIANIC_PNP_HOST,
-        port: ambianicConf.AMBIANIC_PNP_PORT,
-        secure: ambianicConf.AMBIANIC_PNP_SECURE,
-        debug: 3
-      }
-    )
-    commit(PEER_NEW_INSTANCE, newPeer)
-    console.log('pnp client: peer created')
-    setPnPServiceConnectionHandlers({ state, commit, dispatch })
-    commit(PNP_SERVICE_CONNECTING)
   },
   /**
   * Establish connection to PnP Service and
@@ -409,7 +413,7 @@ const actions = {
           // Signal to state watchers that we have discovered peers.
           // Let user inspect discovered peer IDs and decide how to proceed.
           // Similar UX to local WiFi and Bluetooth device discovery.
-          commit(PEER_DISCOVERED, remotePeerIds)
+          commit(PEER_DISCOVERING_DONE, remotePeerIds)
         } else {
           // signaling server connection is still not ready, skip this cycle
           // and wait for the next scheduled retry
@@ -419,7 +423,8 @@ const actions = {
       } catch (err) {
         console.warn('Error while looking for remote peer. Will retry shortly.',
           err)
-          commit(USER_MESSAGE, `Error while discovering peers on local WiFi.`)
+        commit(PEER_DISCOVERING_ERROR)
+        commit(USER_MESSAGE, 'Error while discovering peers on local WiFi.')
       }
     }
     await discoveryLoop()

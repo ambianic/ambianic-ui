@@ -34,7 +34,6 @@ describe('Routing', () => {
   }
 
   beforeEach(() => {
-
     // mock access to IndexedDB
     myDevicesStoreModule.actions.syncState = jest.fn()
 
@@ -52,7 +51,6 @@ describe('Routing', () => {
       stubs: ['router-view', 'router-link'],
       store
     })
-
   })
 
   afterEach(() => {

@@ -232,7 +232,7 @@
 import { mapActions, mapState } from 'vuex'
 import { EdgeDeviceCard } from '@/store/localdb'
 import {
-  PEER_DISCOVERED,
+  PEER_DISCOVERING_DONE,
   PEER_CONNECTED,
   PEER_CONNECTION_ERROR
 } from '@/store/mutation-types'
@@ -395,7 +395,7 @@ export default {
   computed: {
     ...mapState({
       discoveryStatus: state => state.pnp.discoveryStatus,
-      isPeerDiscovered: state => state.pnp.discoveryStatus === PEER_DISCOVERED,
+      isPeerDiscovered: state => state.pnp.discoveryStatus === PEER_DISCOVERING_DONE,
       discoveredPeers: state => state.pnp.discoveredPeers,
       peerConnectionStatus: state => state.pnp.peerConnectionStatus,
       isPeerConnectionError: state => state.pnp.peerConnectionStatus === PEER_CONNECTION_ERROR,
