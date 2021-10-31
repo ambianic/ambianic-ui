@@ -4,6 +4,7 @@ import Vuetify from 'vuetify'
 import VueX from 'vuex'
 import VueRouter from 'vue-router'
 import { pnpStoreModule } from '@/store/pnp'
+import { myDevicesStoreModule } from '@/store/mydevices'
 import snackBarModule from '@/store/status-snackbar'
 import { clone } from 'lodash'
 import { PEER_DISCOVER } from '@/store/action-types'
@@ -28,7 +29,8 @@ describe('Help Page', () => {
 
     const modules = {
       pnp: clone(pnpStoreModule),
-      snackBar: clone(snackBarModule)
+      snackBar: clone(snackBarModule),
+      myDevices: clone(myDevicesStoreModule)
     }
 
     const getters = {
@@ -70,7 +72,7 @@ describe('Help Page', () => {
     await wrapper.vm.$nextTick()
     const title = wrapper.findComponent({ ref: 'help-title' })
     expect(title.exists()).toBeTrue()
-    expect(title.props('title')).toEqual('Need Help with Ambianic?')
+    expect(title.find('span').text()).toBe('Need Help with Ambianic?')
     const docs = wrapper.findComponent({ ref: 'btn-docs' })
     expect(docs.exists()).toBeTrue()
     expect(docs.props('href')).toEqual('https://docs.ambianic.ai')

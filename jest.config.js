@@ -19,5 +19,5 @@ module.exports = {
     '<rootDir>/**/*.vue',
     '../src/'
   ],
-  setupFilesAfterEnv: ['jest-extended/all', "fake-indexeddb/auto"]
+  setupFilesAfterEnv: ['jest-extended/all', 'fake-indexeddb/auto']
 }

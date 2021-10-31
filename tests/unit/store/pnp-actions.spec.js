@@ -42,8 +42,8 @@ const STORAGE_KEY = 'ambianic-pnp-settings'
 
 // helper function for resolving jest fake timers
 // ref: https://stackoverflow.com/a/58716087
-function flushPromises() {
-  return new Promise(resolve => setImmediate(resolve));
+function flushPromises () {
+  return new Promise(resolve => setImmediate(resolve))
 }
 
 describe('PnP state machine actions - p2p communication layer', () => {

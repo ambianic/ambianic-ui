@@ -3,13 +3,14 @@ import { mount, createLocalVue } from '@vue/test-utils'
 import Vuetify from 'vuetify'
 import VueX from 'vuex'
 import VueRouter from 'vue-router'
-import Settings from '@/views/Settings.vue'
+import DeviceCard from '@/views/DeviceCard.vue'
 import { PEER_DISCOVER } from '@/store/action-types'
-import { PEER_CONNECTED } from '@/store/mutation-types'
+import { PEER_CONNECTED, NEW_PEER_ID } from '@/store/mutation-types'
 import { cloneDeep } from 'lodash'
-import edgeDevice from '@/store/edge-device.js'
+import { myDevicesStoreModule } from '@/store/mydevices'
 import { pnpStoreModule } from '../../../src/store/pnp'
 import snackBarModule from '@/store/status-snackbar'
+import { EdgeDeviceCard } from '../../../src/store/localdb'
 
 describe('More Settings View tests', () => {
   // global
@@ -53,7 +54,7 @@ describe('More Settings View tests', () => {
         modules:
         {
           pnp: cloneDeep(pnpStoreModule),
-          edgeDevice: cloneDeep(edgeDevice),
+          myDevices: cloneDeep(myDevicesStoreModule),
           snackBar: cloneDeep(snackBarModule)
         }
       }
@@ -71,15 +72,22 @@ describe('More Settings View tests', () => {
     await wrapper.destroy()
   })
 
-  test('should edit and save custom edge display name', async () => {
-    store.state.pnp.peerConnectionStatus = PEER_CONNECTED
-    store.state.pnp.remotePeerId = '0da0d142-9859-4371-96b7-decb180fcd37'
+  test.only('should edit and save custom edge display name', async () => {
     // mock edgeAPI instance
     store.state.pnp.edgeAPI = jest.fn()
     store.state.pnp.edgeAPI.setDeviceDisplayName = jest.fn()
-    wrapper = await mount(Settings, options)
+    wrapper = await mount(DeviceCard, options)
     await Vue.nextTick()
-    const deviceName = 'My Ambianic Edge Device'
+    store.commit(PEER_CONNECTED)
+    const remotePeerId = '0da0d142-9859-4371-96b7-decb180fcd37'
+    store.commit(NEW_PEER_ID, remotePeerId)
+    const newDeviceCard = new EdgeDeviceCard()
+    newDeviceCard.peerID = remotePeerId
+    newDeviceCard.displayName = 'New Device'
+    newDeviceCard.version = '1.2.3.test'
+    await store.dispatch('myDevices/add', newDeviceCard)
+    await store.dispatch('myDevices/setCurrent', '0da0d142-9859-4371-96b7-decb180fcd37')
+    const deviceName = null
     const listItem = wrapper.findComponent({ ref: 'list-item-edgeDeviceName' })
     console.debug('amb-list-item component:', { listItem })
     expect(listItem.exists()).toBe(true)
@@ -89,7 +97,7 @@ describe('More Settings View tests', () => {
       align: null,
       justify: null,
       title: deviceName,
-      subtitle: 'Display Name',
+      subtitle: 'Friendly Name',
       iconName: 'tag',
       twoLine: false,
       copyOption: false,
@@ -136,7 +144,7 @@ describe('More Settings View tests', () => {
     store.state.pnp.edgeAPI.setDeviceDisplayName = jest.fn().mockImplementation(() => {
       throw new Error(errorMessage)
     })
-    wrapper = await mount(Settings, options)
+    wrapper = await mount(DeviceCard, options)
     await Vue.nextTick()
     console.debug('wrapper HTML', wrapper.html())
     const listItem = wrapper.findComponent({ ref: 'list-item-edgeDeviceName' })

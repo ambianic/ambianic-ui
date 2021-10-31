@@ -39,17 +39,7 @@ describe('Home Page', () => {
     expect(headline.text()).toContain('Welcome to Ambianic.ai')
   })
 
-  test('Shows Begin Setup button for new users', async () => {
-    wrapper = await mount(Home, options)
-    await wrapper.vm.$nextTick()
-    console.debug({ wrapper })
-    const btnSetup = wrapper.findComponent({ ref: 'btn-setup' })
-    expect(btnSetup.exists()).toBeTrue()
-    expect(btnSetup.isVisible()).toBeTrue()
-    expect(btnSetup.text()).toContain('Begin Setup')
-  })
-
-  test('Shows Timeline button for returning users', async () => {
+  test('Shows Continue button', async () => {
     wrapper = await mount(Home, {
       ...options,
       data () {
@@ -60,11 +50,9 @@ describe('Home Page', () => {
     })
     await wrapper.vm.$nextTick()
     console.debug({ wrapper })
-    const btnTimeline = wrapper.findComponent({ ref: 'btn-timeline' })
-    expect(btnTimeline.exists()).toBeTrue()
-    expect(btnTimeline.isVisible()).toBeTrue()
-    expect(btnTimeline.text()).toContain('View Timeline')
-    const btnSetup = wrapper.findComponent({ ref: 'btn-setup' })
-    expect(btnSetup.exists()).toBeFalsy()
+    const btnContinue = wrapper.findComponent({ ref: 'btn-continue' })
+    expect(btnContinue.exists()).toBeTrue()
+    expect(btnContinue.isVisible()).toBeTrue()
+    expect(btnContinue.text()).toContain('Continue')
   })
 })
