@@ -5,12 +5,16 @@ import VueX from 'vuex'
 import VueRouter from 'vue-router'
 import Settings from '@/views/Settings.vue'
 import { PEER_DISCOVER } from '@/store/action-types'
-import { PEER_CONNECTED } from '@/store/mutation-types'
+import { PEER_CONNECTED, PEER_DISCONNECTED, NEW_REMOTE_PEER_ID }
+  from '@/store/mutation-types'
 import AmbListItem from '@/components/shared/ListItem.vue'
 import { cloneDeep } from 'lodash'
-import edgeDevice from '@/store/edge-device.js'
-import { pnpStoreModule } from '../../../src/store/pnp'
+import { pnpStoreModule } from '@/store/pnp'
 import snackBarModule from '@/store/status-snackbar'
+import { myDevicesStoreModule } from '@/store/mydevices'
+import flushPromises from 'flush-promises'
+import { EdgeDeviceCard } from '@/store/localdb'
+import sleep from 'sleep-promise'
 
 describe('Settings View', () => {
   // global
@@ -54,7 +58,7 @@ describe('Settings View', () => {
         modules:
         {
           pnp: cloneDeep(pnpStoreModule),
-          edgeDevice: cloneDeep(edgeDevice),
+          myDevices: cloneDeep(myDevicesStoreModule),
           snackBar: cloneDeep(snackBarModule)
         }
       }
@@ -76,36 +80,37 @@ describe('Settings View', () => {
   test('Connection details loaded', async () => {
     wrapper = await mount(Settings, options)
     await Vue.nextTick()
-    const card = wrapper.find('.v-card')
-    expect(card.find('.v-card__title').text()).toBe('Ambianic Edge connection details')
-    expect(card.exists()).toBe(true)
+    const cardTitle = wrapper.findComponent({ ref: 'device-card-title' })
+    expect(cardTitle.exists()).toBe(true)
+    expect(cardTitle.text()).toBe('Select a device')
   })
 
-  test('should have Discover Local button', async () => {
+  test('should have My Devices button', async () => {
     wrapper = await mount(Settings, options)
-    const btn = wrapper.find('#btn-discoverLocal')
-    expect(btn.exists()).toBe(true)
-  })
-
-  test('should have Pair Remotely button', async () => {
-    wrapper = await mount(Settings, options)
-    const btn = wrapper.find('#btn-sendRemotePeerID')
+    await Vue.nextTick()
+    const btn = wrapper.findComponent({ ref: 'mydevices-btn' })
     expect(btn.exists()).toBe(true)
   })
 
   test('should have correct edge peerID display information', async () => {
-    store.state.pnp.peerConnectionStatus = PEER_CONNECTED
-    store.state.pnp.remotePeerId = '0da0d142-9859-4371-96b7-decb180fcd37'
+    const localEdgeVersion = '2.50.5'
+    expect(state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
+    const remotePeerId = '0da0d142-9859-4371-96b7-decb180fcd37'
+    const newDeviceCard = new EdgeDeviceCard()
+    newDeviceCard.peerID = remotePeerId
+    newDeviceCard.displayName = 'New Device'
+    newDeviceCard.version = localEdgeVersion
     wrapper = await mount(Settings, options)
+    await Vue.nextTick()
+    wrapper.vm.$store.commit(NEW_REMOTE_PEER_ID, remotePeerId)
+    await wrapper.vm.$store.dispatch('myDevices/add', newDeviceCard)
+    await wrapper.vm.$store.dispatch('myDevices/setCurrent', remotePeerId)
+    wrapper.vm.$store.commit(PEER_CONNECTED)
     await Vue.nextTick()
     expect(wrapper.vm.edgePeerId).toBe(store.state.pnp.remotePeerId)
     const listItems = wrapper.findAllComponents(AmbListItem)
     console.debug('Settings.vue amb-list-item components:', { listItems })
-    expect(listItems.length).toBe(3)
-    // for (const item of listItems.wrappers) {
-    //  console.debug('amb-list-item component:', { item })
-    // }
-    // console.debug('Settings.vue HTML:[', wrapper.html(), ']')
+    expect(listItems.length).toBe(1)
     const listItem = wrapper.findComponent({ ref: 'list-item-edgePeerID' })
     console.debug('amb-list-item component:', { listItem })
     expect(listItem.exists()).toBe(true)
@@ -127,76 +132,68 @@ describe('Settings View', () => {
   })
 
   test('should have correct edge display name', async () => {
-    store.state.pnp.peerConnectionStatus = PEER_CONNECTED
-    store.state.pnp.remotePeerId = '0da0d142-9859-4371-96b7-decb180fcd37'
-    wrapper = await mount(Settings, options)
-    await Vue.nextTick()
-    const deviceName = 'My Ambianic Edge Device'
-    const listItem = wrapper.findComponent({ ref: 'list-item-edgeDeviceName' })
-    console.debug('amb-list-item component:', { listItem })
-    expect(listItem.exists()).toBe(true)
-    console.debug('listItem.props()', listItem.props())
-    expect(listItem.props()).toEqual({
-      sensitiveField: false,
-      align: null,
-      justify: null,
-      title: deviceName,
-      subtitle: 'Display Name',
-      iconName: 'tag',
-      twoLine: false,
-      copyOption: false,
-      editOption: true,
-      error: undefined,
-      onSubmit: expect.any(Function),
-      rules: [expect.anything(), expect.anything()]
-    })
-  })
-
-  test('Connected Edge device version is shown', async () => {
     const localEdgeVersion = '2.50.5'
-
-    const newStore = new VueX.Store({
-      modules: {
-        pnp: cloneDeep(pnpStoreModule),
-        edgeDevice: cloneDeep(edgeDevice),
-        snackBar: cloneDeep(snackBarModule)
-      }
-    })
-
-    newStore.state.edgeDevice.edgeSoftwareVersion = localEdgeVersion
-    newStore.state.pnp.peerConnectionStatus = PEER_CONNECTED
-    newStore.state.pnp.remotePeerId = '1234-1234-1234-1234-1234'
-
-    wrapper = await mount(Settings, {
-      localVue,
-      vuetify,
-      router,
-      store: newStore
-    })
-    await Vue.nextTick()
-    const versionElement = wrapper.findComponent({ ref: 'list-item-edgeVersion' })
-    expect(versionElement.exists()).toBeTrue()
-    const versionLabel = versionElement.findComponent({ ref: 'title-read-only' })
-    expect(versionLabel.exists()).toBeTrue()
-    expect(versionLabel.html()).toContain(localEdgeVersion)
-    expect(versionLabel.text()).toBe(localEdgeVersion)
-  })
-
-  test('`fetchEdgeDetails` method handles missing edge version response', async () => {
-    store.state.pnp.peerConnectionStatus = PEER_CONNECTED
-    store.state.pnp.remotePeerId = '0da0d142-9859-4371-96b7-decb180fcd37'
-    // mock edgeAPI instance
-    store.state.pnp.edgeAPI = jest.fn()
-    store.state.pnp.edgeAPI.getEdgeStatus = jest.fn().mockResolvedValue({
-      // mock return of status but no version attribute in json response.
-      // emulate older edge device whose status API does not include version info
-      status: 'OK'
-    })
+    expect(state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
+    const remotePeerId = '0da0d142-9859-4371-96b7-decb180fcd37'
+    const newDeviceCard = new EdgeDeviceCard()
+    newDeviceCard.peerID = remotePeerId
+    newDeviceCard.displayName = 'New Device'
+    newDeviceCard.version = localEdgeVersion
     wrapper = await mount(Settings, options)
     await Vue.nextTick()
-
-    await wrapper.vm.fetchEdgeDetails()
-
-    expect(wrapper.vm.edgeDeviceError).toBe('Edge device requires update.')
+    wrapper.vm.$store.commit(NEW_REMOTE_PEER_ID, remotePeerId)
+    await wrapper.vm.$store.dispatch('myDevices/add', newDeviceCard)
+    await wrapper.vm.$store.dispatch('myDevices/setCurrent', remotePeerId)
+    wrapper.vm.$store.commit(PEER_CONNECTED)
+    await Vue.nextTick()
+    flushPromises()
+    const deviceName = newDeviceCard.displayName
+    const listItem = wrapper.findComponent({ ref: 'device-card-title' })
+    console.debug('device-card-title component:', { listItem })
+    expect(listItem.exists()).toBe(true)
+    expect(listItem.text()).toBe(deviceName)
   })
+
+  test('Connected Edge device ID and Display Name are shown', async () => {
+    const localEdgeVersion = '2.50.5'
+    expect(state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
+    const remotePeerId = '0da0d142-9859-4371-96b7-decb180fcd37'
+    const newDeviceCard = new EdgeDeviceCard()
+    newDeviceCard.peerID = remotePeerId
+    newDeviceCard.displayName = 'New Device'
+    newDeviceCard.version = localEdgeVersion
+    wrapper = await mount(Settings, options)
+    await Vue.nextTick()
+    wrapper.vm.$store.commit(NEW_REMOTE_PEER_ID, remotePeerId)
+    await wrapper.vm.$store.dispatch('myDevices/add', newDeviceCard)
+    await wrapper.vm.$store.dispatch('myDevices/setCurrent', remotePeerId)
+    wrapper.vm.$store.commit(PEER_CONNECTED)
+    await Vue.nextTick()
+    await flushPromises()
+    await sleep(100)
+    console.debug('state.myDevices.allDeviceCards: ', state.myDevices.allDeviceCards)
+    console.debug('state.myDevices.currentDeviceCard: ', state.myDevices.currentDeviceCard)
+    console.debug('wrapper.vm.edgePeerId:', wrapper.vm.edgePeerId)
+    const versionElement = wrapper.findComponent({ ref: 'list-item-edgeVersion' })
+    expect(versionElement.exists()).toBeFalse()
+    let idElement = wrapper.findComponent({ ref: 'list-item-edgePeerID' })
+    expect(idElement.exists()).toBeTrue()
+    let idLabel = idElement.findComponent({ ref: 'input-title-sensitive' })
+    expect(idLabel.exists()).toBeTrue()
+    console.debug('idLabel.html(): ', idLabel.html())
+    let revealIcon = idElement.findComponent({ ref: 'icon-sensitive-on' })
+    expect(revealIcon.exists()).toBeTrue()
+    await revealIcon.trigger('click')
+    await Vue.nextTick()
+    await flushPromises()
+    idElement = wrapper.findComponent({ ref: 'list-item-edgePeerID' })
+    expect(idElement.exists()).toBeTrue()
+    expect(idElement.props('title')).toBe(remotePeerId)
+    idLabel = idElement.findComponent({ ref: 'input-title-sensitive' })
+    expect(idLabel.exists()).toBeTrue()
+    console.debug('idLabel.html(): ', idLabel.html())
+    expect(idLabel.props('disabled')).toBe(true)
+    expect(idLabel.props('type')).toBe('text')
+  })
+
 })

@@ -31,25 +31,27 @@
       >
         <v-card>
           <v-card-title
-            data-cy="titlecard"
+            data-cy="device-card-title"
+            ref="device-card-title"
             v-if="edgePeerId"
           >
             {{ edgeDisplayName }}
           </v-card-title>
           <v-card-title
-            data-cy="titlecard"
+            data-cy="device-card-title"
+            ref="device-card-title"
             v-else
           >
             Select a device
           </v-card-title>
           <v-card-subtitle
-            data-cy="titlecard"
+            data-cy="device-card-title"
             v-if="edgePeerId"
           >
             My current device
           </v-card-subtitle>
           <v-card-subtitle
-            data-cy="titlecard"
+            data-cy="device-card-title"
             v-else
           >
             Add or select a device to connect to.
@@ -108,6 +110,7 @@
           <v-card-actions>
             <v-spacer />
             <v-btn
+              ref="mydevices-btn"
               to="selectdevice"
             >
               <span>My Devices</span>

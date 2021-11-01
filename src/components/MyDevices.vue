@@ -20,7 +20,6 @@
       </p>
     </v-card-text>
     <v-card-text
-      class="pb-0"
       v-else
     >
       <v-list
@@ -55,7 +54,7 @@
         :disabled="isSelectedDeviceCurrent"
         v-if="!noKnownDevices"
       >
-        <span>Switch Device</span>
+        <span>Switch</span>
         <v-icon>alt_route</v-icon>
       </v-btn>
       <v-spacer />

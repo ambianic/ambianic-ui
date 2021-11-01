@@ -33,6 +33,7 @@
             id="peerId-container"
             :type="sensitive ? 'password' : 'text'"
             data-cy="input-title-sensitive"
+            ref="input-title-sensitive"
           />
         </v-list-item-title>
         <v-list-item-title
@@ -69,6 +70,7 @@
               id="toggle-visibility"
               @click="sensitive = false"
               data-cy="icon-sensitive-on"
+              ref="icon-sensitive-on"
               v-bind="eyeOffAttr"
               v-on="on"
             >

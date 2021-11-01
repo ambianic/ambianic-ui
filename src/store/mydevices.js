@@ -17,13 +17,15 @@ const actions = {
   /**
    * Add to db info about a new device
    */
-  async add (context, deviceCard) {
+  async add ({ dispatch }, deviceCard) {
     console.debug('add() called', { deviceCard })
     // use Dexie put instead of add to prevent exception
     // in case a deviceCard with the same peer ID
     // has already been added to indexeddb
     const recordId = await localdb.myDevices.put(deviceCard)
     console.debug('add() success.', { deviceCard, recordId })
+    // refresh vuex state
+    await dispatch('syncState')
     return recordId
   },
   /**

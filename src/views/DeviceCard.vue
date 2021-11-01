@@ -38,7 +38,8 @@
         v-if="edgePeerId"
       >
         <v-card
-          :loading="isSyncing || isEdgeConnecting || isEdgeDisconnecting"
+          :loading="isLoading"
+          :disabled="isLoading"
         >
           <v-card-text grid-list-sm>
             <v-row
@@ -57,14 +58,17 @@
                   banner-class="text-left"
                   icon="cloud-check-outline"
                   text="Device connected!"
+                  data-cy="edge-device-connected"
+                  ref="edge-device-connected"
                 />
                 <amb-banner
                   v-else
                   banner-class="text-left"
                   icon="cloud-off-outline"
                   icon-color="info"
-                  data-cy="edge-device-disconnected"
                   text="Device disconnected."
+                  data-cy="edge-device-disconnected"
+                  ref="edge-device-disconnected"
                 />
                 <v-card
                   class="mx-auto text-left"
@@ -132,6 +136,7 @@
         </v-card>
         <v-dialog
           v-model="forgetDeviceDialog"
+          width="344"
         >
           <v-card>
             <v-card-title>
@@ -215,7 +220,7 @@ export default {
       isSyncing: false, // is the UI in the process of syncing with remote device data
       rules: {
         required: value => !!value || 'Required.',
-        counter: value => (value.length >= 5 && value.length <= 20) || 'Min 5 and Max 20 characters'
+        counter: value => (!!value && value.length >= 5 && value.length <= 20) || 'Min 5 and Max 20 characters'
       },
       forgetDeviceDialog: false,
       breadcrumbs: [
@@ -255,7 +260,7 @@ export default {
         const details = await this.pnp.edgeAPI.getEdgeStatus()
         console.debug('Edge device details fetched:', { details })
         if (!details || !details.version) {
-          this.edgeDeviceError = 'This edge device is running an outdated API.'
+          this.edgeDeviceError = 'Edge device requires update.'
         } else {
           // save device details in local db
           details.peerID = this.edgePeerId
@@ -305,6 +310,7 @@ export default {
     }
   },
   computed: {
+    isLoading: function () { return this.isSyncing || this.isEdgeConnecting || this.isEdgeDisconnecting },
     ...mapState({
       peerConnectionStatus: state => state.pnp.peerConnectionStatus,
       isPeerConnectionError: state => state.pnp.peerConnectionStatus === PEER_CONNECTION_ERROR,

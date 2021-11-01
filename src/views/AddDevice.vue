@@ -384,7 +384,7 @@ export default {
           this.edgeDeviceError = 'Edge device requires update.'
         } else {
           details.peerID = this.edgePeerId
-          this.updateFromRemote(details)
+          await this.updateFromRemote(details)
         }
         return details
       } catch (e) {
