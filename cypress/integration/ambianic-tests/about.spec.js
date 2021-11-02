@@ -4,12 +4,16 @@ context('AboutPage', () => {
     cy.visit('/about')
   })
 
+  it('Loads logo', () => {
+      cy.get('[data-cy=logo-image]').should('exist')
+  })
+
   it('Loads title and subtitle', () => {
-    cy.get('#about-title > .v-list-item__content > .v-list-item__title')
+    cy.get('#about-title > .v-list-item__content > .v-list-item__subtitle')
       .should('contain.text', 'Safer Home')
 
     cy.get('#about-title > .v-list-item__content > .v-list-item__subtitle')
-      .should('contain.text', 'via Ambient Intelligence')
+      .should('contain.text', 'Privacy Preserving. Decentralized.')
   })
 
   it('Loads timeline button', () => {
@@ -27,7 +31,7 @@ context('AboutPage', () => {
   })
 
   it('Loads version info', () => {
-    cy.get('#version-info > .v-list-item__content > .v-list-item__subtitle')
+    cy.get('[data-cy=version-info]')
       .should('contain.text', 'UI App Version')
 
       const versionNumber = require('../../../package.json').version

@@ -20,11 +20,13 @@
                 v-if="this.$vuetify.theme.dark"
                 src="@/assets/home-screen-logo-dark.png"
                 ref="logo-image"
+                data-cy="logo-image"
               />
               <v-img
                 v-else
                 src="@/assets/home-screen-logo-light.png"
                 ref="logo-image"
+                data-cy="logo-image"
               />
             </v-avatar>
             <p />
@@ -44,6 +46,7 @@
             <v-flex>
               <amb-list-item
                 ref="version-info"
+                data-cy="version-info"
                 id="version-info"
                 :title="version"
                 icon-name="alpha-v-circle-outline"
