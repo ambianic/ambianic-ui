@@ -20,16 +20,16 @@ tasks:
   - init: |
       echo "Waiting for npm install to complete"
       sleep 1 && while [ -f /tmp/.npm-lock ]; do sleep 1; done
-      gp await-port 8080 && gp preview $(gp url 8080)/index.html
-      echo "Waiting for Ambianic UI to start"
+      # echo "Waiting for Ambianic UI to start..."
+      # gp await-port 8080 && gp preview $(gp url 8080)/index.html
     command: |
       echo "Starting Ambianic PWA testsuite"
       npm run test
   - init: |
       echo "Waiting for npm install to complete"
       sleep 1 && while [ -f /tmp/.npm-lock ]; do sleep 1; done
-      gp await-port 8080 && gp preview $(gp url 8080)/index.html
-      echo "Waiting for Ambianic UI to start"
+      # echo "Waiting for Ambianic UI to start.."
+      # gp await-port 8080 && gp preview $(gp url 8080)/index.html
     command: |
       echo "Starting Cypress in Interactive Mode"
       npm run cy:open
