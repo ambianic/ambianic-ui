@@ -16,7 +16,8 @@
     "coverage": "npm run coverage:merge && npx nyc --exclude cypress report --reporter html --reporter text -t coverage --report-dir coverage/summary",
     "test:unit": "jest",
     "test:e2e": "npm_config_yes=true npx browserslist@latest --update-db && npx cypress run",
-    "test": "npm run test:unit && npm run test:e2e && npm run coverage"
+    "test": "npm run test:unit && npm run test:e2e && npm run coverage",
+    "cy:open": "npx cypress open"
   },
   "dependencies": {
     "@cypress/webpack-dev-server": "^1.6.0",

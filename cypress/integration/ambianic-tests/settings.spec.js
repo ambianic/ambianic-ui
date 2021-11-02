@@ -32,12 +32,12 @@ function _fakeConnect (cy, win, options) {
       win.__store__.commit(NEW_REMOTE_PEER_ID, edgePeerId)
       // fake edge connected
       win.__store__.commit(PNP_SERVICE_CONNECTED)
-      win.__store__.commit(PEER_CONNECTED)    
+      win.__store__.commit(PEER_CONNECTED)
       // inject a PeerJS mock object
       win.__store__.state.pnp.peer = fakePeer
       // fake cached edge version
       let edgeDetails
-      if (!options || !options.edgeDetails) { 
+      if (!options || !options.edgeDetails) {
         edgeDetails = {
           version: '1.2.testing',
           display_name: 'Cached Edge Device'
@@ -45,7 +45,7 @@ function _fakeConnect (cy, win, options) {
       } else {
         edgeDetails = options.edgeDetails
       }
-      win.__store__.commit(EDGE_DEVICE_DETAILS, edgeDetails)      
+      win.__store__.commit(EDGE_DEVICE_DETAILS, edgeDetails)
       // fake peerFetch instance
       const fakePeerFetch = cy.stub()
       fakePeerFetch.request = cy.stub().callsFake( (config) => {
@@ -76,39 +76,25 @@ context('Settings', () => {
       win.__store__.commit(REMOTE_PEER_ID_REMOVED)
       win.__store__.commit(PNP_SERVICE_DISCONNECTED)
       win.__store__.commit(PEER_DISCONNECTED)
-      win.__store__.commit(EDGE_DEVICE_DETAILS, undefined)
     })
   })
 
   it('Should have a title card', () => {
-    cy.get('[data-cy=titlecard]').contains('Ambianic Edge connection details')
+    cy.get('[data-cy=device-card-title]').contains('Select a device')
   })
 
-  it('Should have a local ambianic edge title card', () => {
-    cy.get('[data-cy=localtitlecard]').contains('Pair with local Ambianic Edge device')
+  it('Should have My Devices button', () => {
+    cy.get('[data-cy=mydevices-btn]').contains('My Devices')
   })
 
-  it('Should have a remote ambianic edge title card', () => {
-    cy.get('[data-cy=remotetitlecard]').contains('Pair with remote Ambianic Edge device')
-  })
-
-  it('Should have remote connection button disabled', () => {
-    cy.get('[data-cy=sendRemotePeerID]').should('be.disabled')
-  })
-
-  it('Should have remote connection button enabled', () => {
-    cy.get('[data-cy=remotePeerID]').type('917d5f0a-6469-4d33-b5c2-efd858118b74')
-    cy.get('[data-cy=sendRemotePeerID]').should('be.enabled')
-  })
-
-  it('Should display edge device peer ID', () => {
+  it.only('Should display edge device peer ID', () => {
     cy.window().then(win => {
       cy.get('[data-cy=list-item-edgePeerID]').should('not.exist').then( ($el) => {
         _fakeConnect(cy, win)
         cy.get('[data-cy=list-item-edgePeerID]').should('exist')
           .find('[data-cy=input-title-sensitive]').should('be.visible')
           .should('have.value', edgePeerId)
-      })          
+      })
     })
   })
 
@@ -166,7 +152,7 @@ context('Settings', () => {
       const edgeDetails = {
         version: undefined,
         display_name: undefined
-      }      
+      }
       _fakeConnect(cy, win, { edgeDetails })
       cy.get('[data-cy=list-item-edgeVersion]').should('exist')
         // version number should not be available for a non-existant edge device ID
@@ -183,7 +169,7 @@ context('Settings', () => {
       const edgeDetails = {
         version: '1.2.3.test',
         display_name: undefined
-      }      
+      }
       _fakeConnect(cy, win, { edgeDetails })
       cy.get('[data-cy=list-item-edgeVersion]').should('exist').within(($listItem) => {
         cy.get('[data-cy=title-text-read-only]')

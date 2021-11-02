@@ -350,7 +350,7 @@ export default {
         this.edgeVersion = newVal.version
         this.edgeDisplayName = newVal.displayName
       } else {
-        // right after the use requests to forget a device
+        // right after the user requests to "Forget" a device
         // there is no current device selected
         this.edgeVersion = ''
         this.edgeDisplayName = ''

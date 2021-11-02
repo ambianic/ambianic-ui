@@ -181,7 +181,7 @@ describe('Settings View', () => {
     let idLabel = idElement.findComponent({ ref: 'input-title-sensitive' })
     expect(idLabel.exists()).toBeTrue()
     console.debug('idLabel.html(): ', idLabel.html())
-    let revealIcon = idElement.findComponent({ ref: 'icon-sensitive-on' })
+    const revealIcon = idElement.findComponent({ ref: 'icon-sensitive-on' })
     expect(revealIcon.exists()).toBeTrue()
     await revealIcon.trigger('click')
     await Vue.nextTick()
@@ -195,5 +195,4 @@ describe('Settings View', () => {
     expect(idLabel.props('disabled')).toBe(true)
     expect(idLabel.props('type')).toBe('text')
   })
-
 })

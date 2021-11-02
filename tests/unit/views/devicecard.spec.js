@@ -5,7 +5,7 @@ import VueX from 'vuex'
 import VueRouter from 'vue-router'
 import DeviceCard from '@/views/DeviceCard.vue'
 import { PEER_DISCOVER } from '@/store/action-types'
-import { PEER_CONNECTED, NEW_REMOTE_PEER_ID } from '@/store/mutation-types'
+import { PEER_CONNECTED, NEW_REMOTE_PEER_ID, PEER_DISCONNECTED } from '@/store/mutation-types'
 import { cloneDeep } from 'lodash'
 import { myDevicesStoreModule } from '@/store/mydevices'
 import { pnpStoreModule } from '../../../src/store/pnp'
@@ -13,7 +13,6 @@ import snackBarModule from '@/store/status-snackbar'
 import { EdgeDeviceCard } from '../../../src/store/localdb'
 import flushPromises from 'flush-promises'
 import sleep from 'sleep-promise'
-import { PEER_DISCONNECTED } from '../../../src/store/mutation-types'
 
 describe('More Settings View tests', () => {
   // global
@@ -99,7 +98,7 @@ describe('More Settings View tests', () => {
     console.debug('state.pnp.peerConnectionStatus:', state.pnp.peerConnectionStatus)
     console.debug('state.pnp.remotePeerId:', state.pnp.remotePeerId)
     console.debug('wrapper.vm.edgeDisplayName', wrapper.vm.edgeDisplayName)
-    let listItem = wrapper.findComponent({ ref: 'list-item-edgeDeviceName' })
+    const listItem = wrapper.findComponent({ ref: 'list-item-edgeDeviceName' })
     console.debug('displayName wrapper HTML:\n', listItem.html())
     console.debug('list-item-edgeDeviceName:', { listItem })
     expect(listItem.exists()).toBe(true)
@@ -120,12 +119,11 @@ describe('More Settings View tests', () => {
     })
   })
 
-
   test('should edit and save custom edge display name when connected', async () => {
     // mock edgeAPI instance
     store.state.pnp.edgeAPI = jest.fn()
     store.state.pnp.edgeAPI.setDeviceDisplayName = jest.fn()
-    store.state.pnp.edgeAPI.getEdgeStatus = jest.fn().mockImplementation( async () => {
+    store.state.pnp.edgeAPI.getEdgeStatus = jest.fn().mockImplementation(async () => {
       return {
         status: 'OK',
         version: '1.2.3.test',
@@ -147,7 +145,7 @@ describe('More Settings View tests', () => {
     await flushPromises()
     // flushPromises() is not enough to resolve all vuex interactions
     // which is why we are adding wait time
-    await new Promise(function(resolve) {setTimeout(resolve,100)})
+    await new Promise(function (resolve) { setTimeout(resolve, 100) })
     const deviceName = 'Remote Device'
     // console.debug('wrapper HTML:\n', wrapper.html())
     expect(wrapper.findComponent({ ref: 'edge-device-connected' }).exists()).toBeTrue()
@@ -192,7 +190,7 @@ describe('More Settings View tests', () => {
     await Vue.nextTick()
     // flushPromises() is not enough to resolve all vuex interactions
     // which is why we are adding wait time
-    await new Promise(function(resolve) {setTimeout(resolve,100)})
+    await new Promise(function (resolve) { setTimeout(resolve, 100) })
     expect(store.state.pnp.edgeAPI.setDeviceDisplayName).toHaveBeenCalledTimes(1)
     expect(store.state.pnp.edgeAPI.setDeviceDisplayName).toHaveBeenCalledWith('Kitchen Monitor')
     listItem = wrapper.findComponent({ ref: 'list-item-edgeDeviceName' })
@@ -270,7 +268,6 @@ describe('More Settings View tests', () => {
     const errorBox = wrapper.findComponent({ ref: 'edge-device-error' })
     expect(errorBox.html()).toContain('Error updating display name.')
   })
-
 
   test('`fetchEdgeDetails` method handles missing edge version response', async () => {
     store.state.pnp.peerConnectionStatus = PEER_CONNECTED

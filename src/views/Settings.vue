@@ -111,6 +111,7 @@
             <v-spacer />
             <v-btn
               ref="mydevices-btn"
+              data-cy="mydevices-btn"
               to="selectdevice"
             >
               <span>My Devices</span>
