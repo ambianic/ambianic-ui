@@ -36,9 +36,10 @@ tasks:
   - init: |
       echo "Waiting for npm install to complete"
       sleep 1 && while [ -f /tmp/.npm-lock ]; do sleep 1; done
+      npm install -g browser-sync
     command: |
       echo "Starting http server for local HTML file preview"
-      npx --quiet browser-sync start -s -w
+      npx browser-sync start -s -w
 
 # vscode:
 #  extensions:
