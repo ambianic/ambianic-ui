@@ -39,7 +39,7 @@ tasks:
       npm install -g browser-sync
     command: |
       echo "Starting http server for local HTML file preview"
-      npx browser-sync start -s -w
+      npx browser-sync start --watch --directory --server
 
 # vscode:
 #  extensions:
