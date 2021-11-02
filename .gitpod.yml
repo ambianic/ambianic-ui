@@ -34,8 +34,9 @@ tasks:
       echo "Starting Cypress in Interactive Mode"
       npm run cy:open
   - init: |
-      echo "Starting Browsersync"
-  - command: |
+      echo "Waiting for npm install to complete"
+      sleep 1 && while [ -f /tmp/.npm-lock ]; do sleep 1; done
+    command: |
       echo "Starting http server for local HTML file preview"
       npx browser-sync start -s -w
 

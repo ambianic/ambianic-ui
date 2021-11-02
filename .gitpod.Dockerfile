@@ -1,7 +1,10 @@
 FROM gitpod/workspace-full-vnc
 
+USER root
+# Install custom tools, runtime, etc.
+
 # Install Cypress dependencies.
-RUN sudo apt-get update \
+RUN apt-get update \
  && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
    libgtk2.0-0 \
    libgtk-3-0 \
@@ -15,8 +18,7 @@ RUN sudo apt-get update \
    xvfb \
  && sudo rm -rf /var/lib/apt/lists/* \
 
-USER root
-# Install custom tools, runtime, etc.
+
 # RUN apt-get update && \
 #        DEBIAN_FRONTEND=noninteractive apt-get -qq install \
 #        libgtk2.0-0 libgtk-3-0 libgbm-dev \
