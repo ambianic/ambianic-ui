@@ -43,7 +43,7 @@ tasks:
       sleep 1 && while [ -f /tmp/.npm-lock ]; do sleep 1; done
     command: |
       echo "Starting http server for local HTML file preview"
-      npm install -D browser-sync
+      npm install -g browser-sync
       npx browser-sync start --watch --directory --server
 
 # vscode:
