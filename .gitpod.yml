@@ -27,7 +27,7 @@ tasks:
       # need to install cypress here because
       # it needs system dirs that gitpod deletes on workspace restart
       # https://community.gitpod.io/t/gitpod-and-cypress-disagree-on-cache/5535
-      npm install -D cypress
+      npm install -g cypress
       npm run test
   - init: |
       echo "Waiting for npm install to complete"
@@ -36,7 +36,7 @@ tasks:
       # gp await-port 8080 && gp preview $(gp url 8080)/index.html
     command: |
       echo "Starting Cypress in Interactive Mode"
-      npm install -D cypress
+      npm install -g cypress
       npm run cy:open
   - init: |
       echo "Waiting for npm install to complete"
