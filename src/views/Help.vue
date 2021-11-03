@@ -14,21 +14,30 @@
         <v-card
           class="mx-auto text-left"
         >
-          <v-list
-            three-line
+          <v-card-title
+            ref="help-title"
+            data-cy="help-title"
           >
-            <amb-list-item
-              id="help-title"
-              icon-name="help-circle-outline"
-              title="Need Help with Ambianic?"
-              subtitle="Please reference our online docs or connect on Twitter."
-              ref="help-title"
-            />
-          </v-list>
+            <v-icon
+              large
+              left
+            >
+              mdi-help-circle-outline
+            </v-icon>
+            <span>Need Help with Ambianic?</span>
+          </v-card-title>
+          <v-card-text
+            data-cy="help-text"
+          >
+            <span>
+              Please reference our online docs and forum discussions for common issues. You can also chat with us on Slack.
+            </span>
+          </v-card-text>
           <v-card-actions>
             <v-btn
               id="btn-docs"
               ref="btn-docs"
+              data-cy="btn-docs"
               text
               href="https://docs.ambianic.ai"
               target="_blank"
@@ -39,21 +48,38 @@
               >
                 mdi-file-document-box-check-outline
               </v-icon>
-              Documentation
+              <span>Docs</span>
             </v-btn>
             <v-btn
-              id="btn-community"
+              id="btn-forum"
+              ref="btn-forum"
+              data-cy="btn-forum"
               text
-              href="https://twitter.com/ambianicai"
+              href="https://github.com/ambianic/ambianic-ui/discussions"
               target="_blank"
             >
               <v-icon
                 left
                 dark
               >
-                mdi-twitter
+                mdi-forum
               </v-icon>
-              Twitter
+              <span>Forum</span>
+            </v-btn>
+            <v-btn
+              id="btn-community"
+              data-cy="btn-community"
+              text
+              href="https://join.slack.com/t/ambianicai/shared_invite/zt-eosk4tv5-~GR3Sm7ccGbv1R7IEpk7OQ"
+              target="_blank"
+            >
+              <v-icon
+                left
+                dark
+              >
+                mdi-slack
+              </v-icon>
+              <span>Slack</span>
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -65,7 +91,6 @@
 
 export default {
   components: {
-    AmbListItem: () => import('@/components/shared/ListItem.vue'),
     AmbAppFrame: () => import('@/components/AppFrame.vue')
   }
 }

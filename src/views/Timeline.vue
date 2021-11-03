@@ -2,10 +2,45 @@
   <amb-app-frame>
     <v-row
       align="start"
-      justify="space-around"
+      justify="center"
+      dense
+      v-if="!isEdgeConnected"
+    >
+      <v-col :style="maxWidth">
+        <v-card>
+          <v-card-title
+            data-cy="title-disconnected"
+          >
+            Connect to a device
+          </v-card-title>
+          <v-card-subtitle>
+            Timeline view requires device connection.
+          </v-card-subtitle>
+          <v-card-text
+            color="warning"
+          >
+            <p>Connect to an Ambianic Edge device and come back to this page to see its timeline of events.</p>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn
+              data-cy="btn-settings"
+              to="settings"
+            >
+              <span>Settings</span>
+              <v-icon>settings</v-icon>
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row
+      align="start"
+      justify="center"
+      dense
+      v-else
     >
       <v-col
-        style="max-width: 400px;"
+        :style="maxWidth"
         align="center"
         justify="center"
         cols="12"
@@ -41,7 +76,7 @@
                 alt="Detection Event"
                 contain
                 @load="setImageLoaded(index)"
-                lazy-src="/img/lazy-load-bg.gif"
+                lazy-src="/img/image-icon.png"
               >
                 <template #placeholder>
                   <div>
@@ -236,7 +271,10 @@ export default {
       imageURL: {}, // map[id, fullURL] - maps unique event id to their full thumbnail URLs
       isImageLoaded: [],
       on: true,
-      isTopSpinnerVisible: false // flags whether the timeline is in the process of loading data
+      isTopSpinnerVisible: false, // flags whether the timeline is in the process of loading data
+      // maxWidth responsively controls the maximum width for the timeline component.
+      // The goal is to keep it slim and centered similar to other social timeline views that users are accustomed to.
+      maxWidth: ''
     }
   },
   created () {
@@ -250,6 +288,10 @@ export default {
         this.isTopSpinnerVisible = true // enable auto refresh
       }
     })
+  },
+  mounted () {
+    const maxPixels = window.innerWidth < 600 ? window.innerWidth : 600
+    this.maxWidth = `max-width: ${maxPixels}px;`
   },
   beforeDestroy () {
     this.pnpUnsubscribe()

@@ -4,7 +4,7 @@ import {
   REMOTE_PEER_ID_REMOVED,
   PEER_CONNECTED,
   PEER_DISCONNECTED,
-  EDGE_DEVICE_DETAILS,
+  EDGE_API,
   PNP_SERVICE_CONNECTED,
   PNP_SERVICE_DISCONNECTED
 } from '../../../src/store/mutation-types'
@@ -26,42 +26,41 @@ import {
 const edgePeerId = '917d5f0a-6469-4d33-b5c2-efd858118b74'
 
 function _fakeConnect (cy, win, options) {
-      // block auto discovery
-      win.__store__.state.pnp.peerDiscover = cy.stub()
-      // set a fake initial remote peer ID that doesn't exist
-      win.__store__.commit(NEW_REMOTE_PEER_ID, edgePeerId)
-      // fake edge connected
-      win.__store__.commit(PNP_SERVICE_CONNECTED)
-      win.__store__.commit(PEER_CONNECTED)    
-      // inject a PeerJS mock object
-      win.__store__.state.pnp.peer = fakePeer
-      // fake cached edge version
-      let edgeDetails
-      if (!options || !options.edgeDetails) { 
-        edgeDetails = {
-          version: '1.2.testing',
-          display_name: 'Cached Edge Device'
-        }
-      } else {
-        edgeDetails = options.edgeDetails
-      }
-      win.__store__.commit(EDGE_DEVICE_DETAILS, edgeDetails)      
-      // fake peerFetch instance
-      const fakePeerFetch = cy.stub()
-      fakePeerFetch.request = cy.stub().callsFake( (config) => {
-        if (config.url.endsWith('status')) {
-          return {
-            content: {
-              status: 'OK',
-              version: '1.3.testing',
-              display_name: 'Kitchen Monitor'
-            }
-          }
-        }
-      })
-      fakePeerFetch.jsonify = cy.stub().callsFake( (data) => data )
-      // fake pnp connect action
-      win.__store__.state.pnp.peerConnect = cy.stub()
+  console.debug('_fakeConnect start')
+  // block auto discovery
+  win.__store__.state.pnp.peerDiscover = cy.stub()
+  // set a fake initial remote peer ID that doesn't exist
+  win.__store__.commit(NEW_REMOTE_PEER_ID, edgePeerId)
+  // fake edge connected
+  win.__store__.commit(PNP_SERVICE_CONNECTED)
+  win.__store__.commit(PEER_CONNECTED)
+  win.__store__.dispatch('myDevices/setCurrent', edgePeerId)
+  // inject a PeerJS mock object
+  win.__store__.state.pnp.peer = fakePeer
+  // fake cached edge version
+  let edgeDetails
+  if (!options || !options.edgeDetails) {
+    edgeDetails = {
+      peerID: edgePeerId,
+      version: '1.2.testing',
+      display_name: 'Cached Edge Device'
+    }
+  } else {
+    edgeDetails = options.edgeDetails
+  }
+  win.__store__.dispatch('myDevices/updateFromRemote', edgeDetails)
+  // mockup EdgeAPI
+  const edgeAPI = cy.stub()
+  edgeAPI.getEdgeStatus = cy.stub().callsFake( () => {
+    return edgeDetails
+  })
+  edgeAPI.auth = cy.stub().callsFake( () => {
+    return 'Ambianic'
+  })
+  // fake pnp connect action
+  win.__store__.state.pnp.peerConnect = cy.stub()
+  win.__store__.commit(EDGE_API, edgeAPI)
+  console.debug('_fakeConnect done')
 }
 
 context('Settings', () => {
@@ -76,29 +75,15 @@ context('Settings', () => {
       win.__store__.commit(REMOTE_PEER_ID_REMOVED)
       win.__store__.commit(PNP_SERVICE_DISCONNECTED)
       win.__store__.commit(PEER_DISCONNECTED)
-      win.__store__.commit(EDGE_DEVICE_DETAILS, undefined)
     })
   })
 
   it('Should have a title card', () => {
-    cy.get('[data-cy=titlecard]').contains('Ambianic Edge connection details')
+    cy.get('[data-cy=device-card-title]').contains('Select a device')
   })
 
-  it('Should have a local ambianic edge title card', () => {
-    cy.get('[data-cy=localtitlecard]').contains('Pair with local Ambianic Edge device')
-  })
-
-  it('Should have a remote ambianic edge title card', () => {
-    cy.get('[data-cy=remotetitlecard]').contains('Pair with remote Ambianic Edge device')
-  })
-
-  it('Should have remote connection button disabled', () => {
-    cy.get('[data-cy=sendRemotePeerID]').should('be.disabled')
-  })
-
-  it('Should have remote connection button enabled', () => {
-    cy.get('[data-cy=remotePeerID]').type('917d5f0a-6469-4d33-b5c2-efd858118b74')
-    cy.get('[data-cy=sendRemotePeerID]').should('be.enabled')
+  it('Should have My Devices button', () => {
+    cy.get('[data-cy=mydevices-btn]').contains('My Devices')
   })
 
   it('Should display edge device peer ID', () => {
@@ -108,7 +93,7 @@ context('Settings', () => {
         cy.get('[data-cy=list-item-edgePeerID]').should('exist')
           .find('[data-cy=input-title-sensitive]').should('be.visible')
           .should('have.value', edgePeerId)
-      })          
+      })
     })
   })
 
@@ -146,46 +131,52 @@ context('Settings', () => {
     })
   })
 
-  it('Should display skeleton loader for unavailable edge version info', () => {
+  it('DeviceCard Should display skeleton loader for unavailable edge version info', () => {
     cy.window().then(win => {
       // no cached device details
       const edgeDetails = {
+        peerID: edgePeerId,
         version: undefined,
         display_name: undefined
       }
       _fakeConnect(cy, win, { edgeDetails })
-      cy.get('[data-cy=list-item-edgeVersion]').should('exist').within(($listItem) => {
+      cy.get('[data-cy=btn-details]').click()
+        .get('[data-cy=list-item-edgeVersion]').should('exist').within(($listItem) => {
         // version number should not be available for a non-existant edge device ID
         cy.get('[data-cy=title-loader]').should('exist')
       })
     })
   })
 
-  it('Should display error message for unavailable edge status API', () => {
+  it('DeviceCard Should display error message for unavailable edge status API', () => {
     cy.window().then(win => {
       const edgeDetails = {
+        peerID: edgePeerId,
         version: undefined,
         display_name: undefined
-      }      
+      }
       _fakeConnect(cy, win, { edgeDetails })
-      cy.get('[data-cy=list-item-edgeVersion]').should('exist')
+      cy.get('[data-cy=btn-details]').click()
+        .get('[data-cy=list-item-edgeVersion]').should('exist')
         // version number should not be available for a non-existant edge device ID
         .find('[data-cy=title-loader]').should('exist')
       // error banner should show up when remote status API call times out and fails
       cy.get('[data-cy=edge-device-error]')
         .should('exist')
-        .contains('Edge device API offline or unreachable.')
+        .contains('Edge device requires update.')
     })
   })
 
-  it('Should display edge version when available', () => {
+  it('DeviceCard Should display edge version when available', () => {
     cy.window().then(win => {
       const edgeDetails = {
+        peerID: edgePeerId,
         version: '1.2.3.test',
         display_name: undefined
-      }      
+      }
       _fakeConnect(cy, win, { edgeDetails })
-      cy.get('[data-cy=list-item-edgeVersion]').should('exist').within(($listItem) => {
+      cy.get('[data-cy=btn-details]').click()
+        .get('[data-cy=list-item-edgeVersion]').should('exist').within(($listItem) => {
         cy.get('[data-cy=title-text-read-only]')
           .should('exist')
           .contains('1.2.3.test')

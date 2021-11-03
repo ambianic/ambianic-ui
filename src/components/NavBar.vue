@@ -6,90 +6,86 @@
   >
     <v-app-bar
       app
-      color="blue darken-3"
+      hide-on-scroll
+      absolute
+      dense
+      flat
+      ref="app-bar"
     >
-      <v-toolbar-title
-        style="width: 300px"
-        class="ml-0 pl-4"
+      <v-app-bar-nav-icon
+        id="drawer"
+        ref="menu-btn"
+        @click.stop="drawer = !drawer"
+      />
+
+      <v-app-bar-title
+        class="text-center"
+        ref="app-bar-title"
       >
-        <v-app-bar-nav-icon
-          id="drawer"
-          @click.stop="drawer = !drawer"
-        />
-        <span class="hidden-sm-and-down">Ambianic</span>
-      </v-toolbar-title>
+        <span v-if="edgeDisplayName">{{ edgeDisplayName }}</span>
+        <span
+          v-if="edgeDisplayName"
+          class="hidden-sm-and-down"
+        > - </span>
+        <span class="hidden-sm-and-down">{{ $route.meta.title }}</span>
+      </v-app-bar-title>
+
       <v-spacer />
 
-      <nav-button
-        data-cy="timeline-icon"
-        icon="history"
-        to="timeline"
-      />
-
-      <div>
-        <v-tooltip bottom>
-          <template
-            #activator="{ on : cloudIconOn, attrs }"
-          >
-            <div
-              v-bind="attrs"
-              v-on="cloudIconOn"
-            >
-              <nav-button
-                :id="connectionStatusIcon"
-                data-cy="connection-status"
-                :icon="connectionStatusIcon"
-                :color="connectionIconColor"
-                :to="connectionIconLink"
-                v-bind="attrs"
-                v-on="cloudIconOn"
-              />
-            </div>
-          </template>
-          <span>{{ connectionStatusTooltipText }}</span>
-        </v-tooltip>
-      </div>
-
-      <!-- Future navbar icons
-      <v-text-field
-        id="searchbar"
-        flat
-        solo-inverted
-        hide-details
-        prepend-inner-icon="search"
-        label="Search"
-        class="hidden-sm-and-down"
-      />
-      <v-spacer />
-      <nav-button
-        with-badge
-        data-cy="heart"
-        icon="heart"
-        :badge-content="newFavorites"
-        :badge-value="newFavorites"
-      />
-      <nav-button
-        with-badge
-        data-cy="bell"
-        icon="bell"
-        :badge-content="newAlerts"
-        :badge-value="newAlerts"
-      />
-      -->
-
-      <nav-button
-        data-cy="about"
-        to="about"
-      >
-        <v-avatar
-          item
+      <v-tooltip bottom>
+        <template
+          #activator="{ on: timelineBtnEvents, attrs: timelineBtnAttrs }"
         >
-          <v-img
-            src="@/assets/logo5.svg"
-            alt="Ambianic.ai logo"
-          />
-        </v-avatar>
-      </nav-button>
+          <v-btn
+            icon
+            data-cy="timeline-btn"
+            ref="timeline-btn"
+            to="timeline"
+            v-bind="timelineBtnAttrs"
+            v-on="timelineBtnEvents"
+          >
+            <v-icon>history</v-icon>
+          </v-btn>
+        </template>
+        <span>Event Timeline</span>
+      </v-tooltip>
+
+      <v-tooltip bottom>
+        <template
+          #activator="{ on: connectionBtnEvents, attrs: connectionBtnAttrs }"
+        >
+          <v-btn
+            v-bind="connectionBtnAttrs"
+            v-on="connectionBtnEvents"
+            icon
+            data-cy="connection-status"
+            ref="connection-status-btn"
+            :color="connectionIconColor"
+            :to="connectionIconLink"
+          >
+            <v-icon>mdi-{{ connectionStatusIcon }}</v-icon>
+          </v-btn>
+        </template>
+        <span>{{ connectionStatusTooltipText }}</span>
+      </v-tooltip>
+
+      <v-tooltip bottom>
+        <template
+          #activator="{ on: settingsBtnEvents, attrs: settingsBtnAttrs }"
+        >
+          <v-btn
+            v-bind="settingsBtnAttrs"
+            v-on="settingsBtnEvents"
+            icon
+            data-cy="settings-btn"
+            ref="settings-btn"
+            to="settings"
+          >
+            <v-icon>settings</v-icon>
+          </v-btn>
+        </template>
+        <span>Settings</span>
+      </v-tooltip>
     </v-app-bar>
 
     <!-- drawer -->
@@ -101,7 +97,7 @@
       expand-on-hover
     >
       <v-list dense>
-        <template v-for="item in items">
+        <template v-for="item in menuItems">
           <v-row
             v-if="item.heading"
             :key="item.heading"
@@ -112,15 +108,6 @@
               <v-subheader v-if="item.heading">
                 {{ item.heading }}
               </v-subheader>
-            </v-col>
-            <v-col
-              cols="6"
-              class="text-center"
-            >
-              <a
-                href="#!"
-                class="body-2 black--text"
-              >EDIT</a>
             </v-col>
           </v-row>
           <v-list-group
@@ -182,12 +169,8 @@
 <script>
 import { mapState } from 'vuex'
 import { PEER_CONNECTED } from '@/store/mutation-types'
-import { PEER_DISCOVER } from '../store/action-types'
 export default {
   name: 'NavBar',
-  components: {
-    NavButton: () => import('./shared/Button.vue')
-  },
   data: () => ({
     connectionStatusIcon: 'cloud-off-outline',
     dialog: false,
@@ -198,8 +181,8 @@ export default {
     newAlerts: 2,
     connectionIconColor: 'warning',
     connectionIconLink: '/settings',
-    logo: '../assets/logo5.svg',
-    items: [
+    edgeDisplayName: '',
+    menuItems: [
       { icon: 'history', text: 'Timeline', link: '/timeline' },
       // { icon: 'mdi-account-heart-outline', text: 'People', link: '/people' },
       // class: 'hidden-sm-and-down' ensures that an item is not shown
@@ -235,7 +218,7 @@ export default {
     ]
   }),
   methods: {
-    setConnectionTooltipText () {
+    setConnectionStatusTooltipText () {
       this.connectionIconLink = '/settings'
       this.connectionIconColor = 'info'
 
@@ -260,19 +243,27 @@ export default {
         )
         return state.pnp.peerConnectionStatus === PEER_CONNECTED
       },
-      peerConnectionStatus: state => state.pnp.peerConnectionStatus
+      peerConnectionStatus: state => state.pnp.peerConnectionStatus,
+      currentDeviceCard: state => state.myDevices.currentDeviceCard
     })
   },
   created () {
-    if (!this.isEdgeConnected) {
-      this.$store.dispatch(PEER_DISCOVER)
-    }
-
-    this.setConnectionTooltipText()
+    this.setConnectionStatusTooltipText()
+  },
+  mounted () {
+    this.edgeDisplayName = this.$store.state.myDevices.currentDeviceCard ? this.$store.state.myDevices.currentDeviceCard.displayName : ''
   },
   watch: {
     peerConnectionStatus: function () {
-      this.setConnectionTooltipText()
+      this.setConnectionStatusTooltipText()
+    },
+    currentDeviceCard: async function (newVal, oldVal) {
+      if (newVal) {
+        console.debug('Current Edge Device Card changed:', { newVal, oldVal })
+        this.edgeDisplayName = newVal.displayName
+      } else {
+        this.edgeDisplayName = ''
+      }
     }
   }
 }

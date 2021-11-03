@@ -142,7 +142,7 @@ test('PeerFetch _dataConnection.on("data", ...)', async () => {
   expect(cdebug2).toHaveBeenCalledWith('Received web server final response header', expect.anything())
   cdebug2.mockReset()
   let pair = peerFetch._requestMap.get(ticket)
-  expect(pair.response.receivedAll).toBeFalse()
+  expect(pair.response.receivedAll).toBeFalsy()
   // test sub-use case: response packet with content arrives
   const cdebug3 = jest.spyOn(console, 'debug').mockImplementation(() => {})
   onDataCallback('some content')

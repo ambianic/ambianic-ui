@@ -72,6 +72,9 @@ jobs:
       with:
         name: test-coverage
         path: ./coverage
+    - name: Check if coverage meets minimum threshold
+      run:
+        npx nyc check-coverage --lines 84 --functions 77 --branches 63
     - name: Build PWA distribution for production
       run: |
           npm run build --if-present

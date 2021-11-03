@@ -5,6 +5,7 @@ import VueX from 'vuex'
 import VueRouter from 'vue-router'
 import NavBar from '@/components/NavBar.vue'
 import { pnpStoreModule } from '@/store/pnp'
+import { myDevicesStoreModule } from '@/store/mydevices'
 import { PEER_CONNECTING, PEER_DISCONNECTED, PEER_CONNECTED } from '@/store/mutation-types'
 
 describe('NavBar', () => {
@@ -25,7 +26,8 @@ describe('NavBar', () => {
   beforeEach(() => {
     store = new VueX.Store({
       modules: {
-        pnp: pnpStoreModule
+        pnp: pnpStoreModule,
+        myDevices: myDevicesStoreModule
       }
     })
 
@@ -43,15 +45,16 @@ describe('NavBar', () => {
   })
 
   test('should load app bar', () => {
-    const bar = wrapper.find('.v-app-bar')
-    expect(bar.find('.v-toolbar__title').text()).toBe('Ambianic')
+    const bar = wrapper.findComponent({ ref: 'app-bar' })
     expect(bar.exists()).toBe(true)
   })
 
-  test('should load 4 buttons in nav bar: menu, timeline, connection and about', () => {
-    const btns = wrapper.findAll('.v-btn')
-    // we expect timeline, about, menu and connection buttons in nav bar
-    expect(btns.length).toBe(4)
+  test('should show navbar buttons:: menu, timeline, connection status and settings', () => {
+    expect(wrapper.findComponent({ ref: 'menu-btn' }).exists()).toBe(true)
+    expect(wrapper.findComponent({ ref: 'timeline-btn' }).exists()).toBe(true)
+    expect(wrapper.findComponent({ ref: 'connection-status-btn' }).exists()).toBe(true)
+    expect(wrapper.findComponent({ ref: 'settings-btn' }).exists()).toBe(true)
+    expect(wrapper.findComponent({ ref: 'blah-blah-btn' }).exists()).toBe(false)
   })
 
   test('should load navigation drawer', () => {
@@ -62,28 +65,30 @@ describe('NavBar', () => {
     expect(item.length).toBe(5)
   })
 
-  test('`peerConnectionStatus` changes ConnectionStatusIcon icon', () => {
-    store.state.pnp.peerConnectionStatus = PEER_DISCONNECTED
-    expect(wrapper.find('#cloud-off-outline').exists()).toBeTruthy()
+  test('`peerConnectionStatus` ConnectionStatusIcon shows off when disonnected', async () => {
+    wrapper.vm.$store.commit(PEER_DISCONNECTED)
+    await wrapper.vm.$nextTick()
+    const btn = wrapper.findComponent({ ref: 'connection-status-btn' })
+    const cloudIconClasses = btn.find('i').classes()
+    expect(cloudIconClasses.includes('mdi-cloud-off-outline')).toBeTruthy()
+  })
 
-    store.state.pnp.peerConnectionStatus = PEER_CONNECTING
-    const newComponent = wrapper = mount(NavBar, {
-      localVue,
-      vuetify,
-      router,
-      store
-    })
+  test('`peerConnectionStatus` ConnectionStatusIcon shows sync when connecting', async () => {
+    wrapper.vm.$store.commit(PEER_CONNECTING)
+    await wrapper.vm.$nextTick()
+    const btn = wrapper.findComponent({ ref: 'connection-status-btn' })
+    const cloudIconClasses = btn.find('i').classes()
+    expect(cloudIconClasses.includes('mdi-cloud-off-outline')).toBeFalsy()
+    expect(cloudIconClasses.includes('mdi-cloud-sync-outline')).toBeTruthy()
+  })
 
-    expect(newComponent.find('#cloud-sync-outline').exists()).toBeTruthy()
-
-    store.state.pnp.peerConnectionStatus = PEER_CONNECTED
-    const connectedComponent = wrapper = mount(NavBar, {
-      localVue,
-      vuetify,
-      router,
-      store
-    })
-
-    expect(connectedComponent.find('#cloud-check-outline').exists()).toBeTruthy()
+  test('`peerConnectionStatus` ConnectionStatusIcon shows checkmark when connected', async () => {
+    wrapper.vm.$store.commit(PEER_CONNECTED)
+    await wrapper.vm.$nextTick()
+    const btn = wrapper.findComponent({ ref: 'connection-status-btn' })
+    const cloudIconClasses = btn.find('i').classes()
+    expect(cloudIconClasses.includes('mdi-cloud-sync-outline')).toBeFalsy()
+    expect(cloudIconClasses.includes('mdi-cloud-off-outline')).toBeFalsy()
+    expect(cloudIconClasses.includes('mdi-cloud-check-outline')).toBeTruthy()
   })
 })

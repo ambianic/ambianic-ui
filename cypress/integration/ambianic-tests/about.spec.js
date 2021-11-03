@@ -4,19 +4,23 @@ context('AboutPage', () => {
     cy.visit('/about')
   })
 
-  it('Loads title and subtitle', () => {
-    cy.get('#about-title > .v-list-item__content > .v-list-item__title')
-      .should('contain.text', 'Safer Home')
+  it('Loads logo', () => {
+      cy.get('[data-cy=logo-image]').should('exist')
+  })
 
-    cy.get('#about-title > .v-list-item__content > .v-list-item__subtitle')
-      .should('contain.text', 'via Ambient Intelligence')
+  it('Loads title and subtitle', () => {
+    cy.get('[data-cy=subtitle-one]')
+      .should('contain', 'Safer Home')
+
+    cy.get('[data-cy=subtitle-two]')
+      .should('contain', 'Privacy Preserving. Decentralized.')
   })
 
   it('Loads timeline button', () => {
-    cy.get('#btn-timeline')
+    cy.get('[data-cy=btn-timeline]')
       .should('have.attr', 'href', '/timeline')
       .get('.v-btn__content')
-      .contains('View Timeline', { matchCase: false })
+      .contains('Timeline', { matchCase: false })
   })
 
   it('Loads settings button', () => {
@@ -27,7 +31,7 @@ context('AboutPage', () => {
   })
 
   it('Loads version info', () => {
-    cy.get('#version-info > .v-list-item__content > .v-list-item__subtitle')
+    cy.get('[data-cy=version-info]')
       .should('contain.text', 'UI App Version')
 
       const versionNumber = require('../../../package.json').version

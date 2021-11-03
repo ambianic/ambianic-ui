@@ -1,5 +1,5 @@
 <template>
-  <div id="ConnectionStatusSnack-ctn">
+  <div id="ConnectionStatusSnackbar-ctn">
     <v-snackbar
       v-model="visibility"
       data-cy="snackbar"
@@ -26,19 +26,15 @@
 
 <script>
 import { mapState } from 'vuex'
-import AmbButton from '@/components/shared/Button'
 import { PEER_CONNECTED_NOTIFICATION, PEER_DISCONNECTED_NOTIFICATION, PEER_CONNECTING_NOTIFICATION } from '@/components/utils'
 import { LAST_PEER_CONNECTION_STATUS } from '@/store/mutation-types'
 
 export default {
-  name: 'ConnectionStatusSnack',
+  name: 'ConnectionStatusSnackbar',
   data: () => ({
     visibility: false,
     message: 'Connecting to Ambianic Edge device'
   }),
-  components: {
-    Button: AmbButton
-  },
   created () {
     this.setConnectionStatusNotification()
   },

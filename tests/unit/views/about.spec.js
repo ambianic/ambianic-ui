@@ -5,6 +5,7 @@ import VueX from 'vuex'
 import VueRouter from 'vue-router'
 import About from '@/views/About.vue'
 import { pnpStoreModule } from '../../../src/store/pnp'
+import { myDevicesStoreModule } from '@/store/mydevices'
 import snackBarModule from '@/store/status-snackbar'
 import { clone } from 'lodash'
 import { PEER_DISCOVER } from '@/store/action-types'
@@ -31,7 +32,8 @@ describe('About Page', () => {
 
     const modules = {
       pnp: clone(pnpStoreModule),
-      snackBar: clone(snackBarModule)
+      snackBar: clone(snackBarModule),
+      myDevices: clone(myDevicesStoreModule)
     }
 
     const getters = {

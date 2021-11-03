@@ -4,30 +4,65 @@ image:
 
 tasks:
   - init: |
+      touch /tmp/.npm-lock
       npm install
       npm run prepare
       npm update
       npm audit fix
       npm install -g @vue/cli
-  - command: |
+      rm /tmp/.npm-lock
+  - init: |
+      echo "Waiting for npm install to complete"
+      sleep 1 && while [ -f /tmp/.npm-lock ]; do sleep 1; done
+    command: |
       echo "Starting Ambianic UI in dev mode:"
       npm run serve
-  - command: |
-      echo "Waiting for npm install to finish"
-      npm install cypress
-      gp await-port 8080 && gp preview $(gp url 8080)/index.html
+  - init: |
+      echo "Waiting for npm install to complete"
+      sleep 1 && while [ -f /tmp/.npm-lock ]; do sleep 1; done
+      # echo "Waiting for Ambianic UI to start..."
+      # gp await-port 8080 && gp preview $(gp url 8080)/index.html
+    command: |
       echo "Starting Ambianic PWA testsuite"
+      # need to install cypress here because
+      # it needs system dirs that gitpod deletes on workspace restart
+      # https://community.gitpod.io/t/gitpod-and-cypress-disagree-on-cache/5535
+      npm install -g cypress
       npm run test
-  - command: |
+  - init: |
+      echo "Waiting for npm install to complete"
+      sleep 1 && while [ -f /tmp/.npm-lock ]; do sleep 1; done
+      # echo "Waiting for Ambianic UI to start.."
+      # gp await-port 8080 && gp preview $(gp url 8080)/index.html
+    command: |
+      echo "Starting Cypress in Interactive Mode"
+      npm install -g cypress
+      npm run cy:open
+  - init: |
+      echo "Waiting for npm install to complete"
+      sleep 1 && while [ -f /tmp/.npm-lock ]; do sleep 1; done
+    command: |
       echo "Starting http server for local HTML file preview"
-      npx browser-sync start -s -w
+      npm install -g browser-sync
+      npx browser-sync start --watch --directory --server
 
 # vscode:
 #  extensions:
 #    - octref.vetur@0.31.3:QHyAEoimIBiRDoL6WtEoRg==
 
 ports:
-  - port: 8080
+  - port: 8080 # Ambianic UI App
+    onOpen: open-browser
+  - port: 6080 # Cypress Interactive Mode
+    onOpen: open-browser
+  - port: 3000 # Static file serve via Browsersync
+  - port: 3001 # Browsersync dashboard
+  - port: 8888 # Dependencies chart
+  - port: 10000
+    onOpen: ignore
+  - port: 5900
+    onOpen: ignore
+
 
 github:
   prebuilds:

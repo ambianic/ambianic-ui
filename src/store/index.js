@@ -1,9 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { pnpStoreModule } from './pnp.js'
-import edgeDevice from './edge-device'
-// import { INITIALIZE_PNP } from './action-types.js'
-import { UPDATE_AVAILABLE } from './mutation-types'
+import { pnpStoreModule } from '@/store/pnp'
+import { myDevicesStoreModule } from '@/store/mydevices'
+import { UPDATE_AVAILABLE } from '@/store/mutation-types'
 import snackBarModule from '@/store/status-snackbar'
 
 Vue.use(Vuex)
@@ -22,18 +21,9 @@ const store = new Vuex.Store({
   },
   modules: {
     pnp: pnpStoreModule,
-    edgeDevice: edgeDevice,
+    myDevices: myDevicesStoreModule,
     snackBar: snackBarModule
   }
 })
-
-/**
- *
- * UPDATE (Aug 2021): turning off auto-init due to Lighthouse performance issues for PWA home screen.
- *
- * Begin connection attempt to Ambianic Edge as soon as the app is created.
-
-  store.dispatch(INITIALIZE_PNP)
-*/
 
 export default store

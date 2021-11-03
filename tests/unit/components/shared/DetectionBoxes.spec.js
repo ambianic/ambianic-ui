@@ -19,10 +19,10 @@ describe('DetectionBoxes', () => {
   })
 
   it('should show 2 detection boxes', async () => {
-    const div = document.createElement('div')
-    document.body.appendChild(div)
-    wrapper = await shallowMount(DetectionBoxes, {
-      attachTo: div,
+    const rootDiv = document.createElement('div')
+    document.body.appendChild(rootDiv)
+    wrapper = shallowMount(DetectionBoxes, {
+      attachTo: rootDiv,
       localVue,
       vuetify,
       propsData: {
@@ -33,13 +33,17 @@ describe('DetectionBoxes', () => {
       }
     })
     await wrapper.vm.$nextTick()
-    console.debug('HTML', wrapper.html())
-    expect(wrapper.find('div').exists()).toBeTrue()
+    console.debug('HTML:\n', wrapper.html())
+    const div = await wrapper.find('div')
+    console.debug({ div })
+    console.debug('div HTML:\n', div.html())
+    expect(div.exists()).toBeTruthy()
+    expect(div.isVisible()).toBeTruthy()
     const rects = wrapper.findAllComponents({ ref: 'rects' })
-    expect(rects.at(0).exists()).toBeTrue()
-    expect(rects.at(0).isVisible()).toBeTrue()
-    expect(rects.at(1).exists()).toBeTrue()
-    expect(rects.at(1).isVisible()).toBeTrue()
+    expect(rects.at(0).exists()).toBeTruthy()
+    expect(rects.at(0).isVisible()).toBeTruthy()
+    expect(rects.at(1).exists()).toBeTruthy()
+    expect(rects.at(1).isVisible()).toBeTruthy()
     expect(rects).toHaveLength(2)
   })
 })

@@ -17,6 +17,7 @@ module.exports = {
         preventFullImport: false
       }
     }],
-    'istanbul'
+    'istanbul',
+    '@babel/plugin-proposal-class-properties'
   ]
 }

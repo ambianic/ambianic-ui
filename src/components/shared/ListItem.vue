@@ -1,164 +1,166 @@
 <template>
-  <v-list-item :two-line="twoLine">
-    <v-list-item-icon>
-      <v-icon>
-        mdi-{{ iconName }}
-      </v-icon>
-    </v-list-item-icon>
-    <v-list-item-content>
-      <v-list-item-title
-        v-if="isEditing"
-      >
-        <v-text-field
-          v-model="inputTitleEditValue"
-          :type="sensitive ? 'password' : 'text'"
-          @keyup.enter="saveEdit"
-          :rules="rules"
-          data-cy="input-title-edit"
-          ref="inputTitleEdit"
-        />
-      </v-list-item-title>
-      <v-skeleton-loader
-        v-else-if="!inputTitleEditValue"
-        v-bind="attrs"
-        data-cy="title-loader"
-        type="list-item-two-line"
-      />
-      <v-list-item-title
-        v-else-if="sensitiveField"
-      >
-        <v-text-field
-          v-model="inputTitleEditValue"
-          disabled
-          id="peerId-container"
-          :type="sensitive ? 'password' : 'text'"
-          data-cy="input-title-sensitive"
-        />
-      </v-list-item-title>
-      <v-list-item-title
-        v-else
-        data-cy="title-text-read-only"
-        ref="title-read-only"
-      >
-        {{ inputTitleEditValue }}
-      </v-list-item-title>
-
-      <v-list-item-subtitle
-        ref="subtitle-label"
-      >
-        {{ subtitle }}
-      </v-list-item-subtitle>
-
-      <v-list-item-subtitle
-        v-if="error"
-        data-cy="item-error"
-        class="warning"
-      >
-        {{ error }}
-      </v-list-item-subtitle>
-    </v-list-item-content>
-    <v-list-item-action>
-      <v-tooltip
-        v-if="sensitiveField"
-        bottom
-      >
-        <template
-          #activator="{ on, eyeOffAttr }"
+  <v-list>
+    <v-list-item :two-line="twoLine">
+      <v-list-item-icon>
+        <v-icon>
+          mdi-{{ iconName }}
+        </v-icon>
+      </v-list-item-icon>
+      <v-list-item-content>
+        <v-list-item-title
+          v-if="isEditing"
         >
-          <v-icon
-            v-if="sensitive"
-            id="toggle-visibility"
-            @click="sensitive = false"
-            data-cy="icon-sensitive-on"
-            v-bind="eyeOffAttr"
-            v-on="on"
-          >
-            mdi-eye
-          </v-icon>
-          <v-icon
-            v-else
-            @click="sensitive = true"
-            v-bind="eyeOffAttr"
-            v-on="on"
-          >
-            mdi-eye-off-outline
-          </v-icon>
-        </template>
-        <span>Show/Hide cleartext</span>
-      </v-tooltip>
-      <v-tooltip bottom>
-        <template
-          #activator="{ on, attrs : copyIcon }"
+          <v-text-field
+            v-model="inputTitleEditValue"
+            :type="sensitive ? 'password' : 'text'"
+            @keyup.enter="saveEdit"
+            :rules="rules"
+            data-cy="input-title-edit"
+            ref="inputTitleEdit"
+          />
+        </v-list-item-title>
+        <v-skeleton-loader
+          v-else-if="!inputTitleEditValue"
+          data-cy="title-loader"
+          type="list-item-two-line"
+        />
+        <v-list-item-title
+          v-else-if="sensitiveField"
         >
-          <v-icon
-            v-if="copyOption"
-            id="toggle-copy-option"
-            @click="doCopy"
-            data-cy="icon-copy-on"
-            v-bind="copyIcon"
-            v-on="on"
+          <v-text-field
+            v-model="inputTitleEditValue"
+            disabled
+            id="peerId-container"
+            :type="sensitive ? 'password' : 'text'"
+            data-cy="input-title-sensitive"
+            ref="input-title-sensitive"
+          />
+        </v-list-item-title>
+        <v-list-item-title
+          v-else
+          data-cy="title-text-read-only"
+          ref="title-read-only"
+        >
+          {{ inputTitleEditValue }}
+        </v-list-item-title>
+        <v-list-item-subtitle
+          v-if="error"
+          data-cy="item-error"
+          class="warning"
+        >
+          {{ error }}
+        </v-list-item-subtitle>
+        <v-list-item-subtitle
+          ref="subtitle-label"
+          v-else
+        >
+          {{ subtitle }}
+        </v-list-item-subtitle>
+      </v-list-item-content>
+      <v-list-item-action>
+        <v-tooltip
+          v-if="sensitiveField"
+          bottom
+        >
+          <template
+            #activator="{ on, eyeOffAttr }"
           >
-            content_copy
-          </v-icon>
-        </template>
-        <span>Copy to clipboard</span>
-      </v-tooltip>
-      <v-tooltip
-        bottom
-        v-if="editOption && !isEditing"
-      >
-        <template #activator="{ on, copyIcon }">
-          <v-icon
-            id="toggle-edit-option"
-            @click="startEdit"
-            data-cy="icon-start-edit"
-            ref="icon-start-edit"
-            v-bind="copyIcon"
-            v-on="on"
+            <v-icon
+              v-if="sensitive"
+              id="toggle-visibility"
+              @click="sensitive = false"
+              data-cy="icon-sensitive-on"
+              ref="icon-sensitive-on"
+              v-bind="eyeOffAttr"
+              v-on="on"
+            >
+              mdi-eye
+            </v-icon>
+            <v-icon
+              v-else
+              @click="sensitive = true"
+              v-bind="eyeOffAttr"
+              v-on="on"
+            >
+              mdi-eye-off-outline
+            </v-icon>
+          </template>
+          <span>Show/Hide cleartext</span>
+        </v-tooltip>
+        <v-tooltip bottom>
+          <template
+            #activator="{ on, attrs : copyIcon }"
           >
-            edit
-          </v-icon>
-        </template>
-        <span>Edit field value.</span>
-      </v-tooltip>
-      <v-tooltip
-        bottom
-        v-if="editOption && isEditing"
-      >
-        <template #activator="{ on, attrs : toggleIcon }">
-          <v-icon
-            id="toggle-edit-option"
-            @click="saveEdit"
-            data-cy="icon-save-edit"
-            ref="icon-save-edit"
-            v-bind="toggleIcon"
-            v-on="on"
-          >
-            done
-          </v-icon>
-        </template>
-        <span>Save changes</span>
-      </v-tooltip>
-      <v-tooltip
-        bottom
-        v-if="editOption && isEditing"
-      >
-        <template #activator="{ on, attrs : editIcon }">
-          <v-icon
-            id="toggle-edit-option"
-            @click="cancelEdit"
-            data-cy="icon-cancel-edit"
-            ref="icon-cancel-edit"
-            v-bind="editIcon"
-            v-on="on"
-          >
-            clear
-          </v-icon>
-        </template>
-        <span>Cancel edit</span>
-      </v-tooltip>
-    </v-list-item-action>
-  </v-list-item>
+            <v-icon
+              v-if="copyOption"
+              id="toggle-copy-option"
+              @click="doCopy"
+              data-cy="icon-copy-on"
+              v-bind="copyIcon"
+              v-on="on"
+            >
+              content_copy
+            </v-icon>
+          </template>
+          <span>Copy to clipboard</span>
+        </v-tooltip>
+        <v-tooltip
+          bottom
+          v-if="editOption && !isEditing"
+        >
+          <template #activator="{ on, copyIcon }">
+            <v-icon
+              id="toggle-edit-option"
+              @click="startEdit"
+              data-cy="icon-start-edit"
+              ref="icon-start-edit"
+              v-bind="copyIcon"
+              v-on="on"
+            >
+              edit
+            </v-icon>
+          </template>
+          <span>Edit field value.</span>
+        </v-tooltip>
+        <v-tooltip
+          bottom
+          v-if="editOption && isEditing"
+        >
+          <template #activator="{ on, attrs : toggleIcon }">
+            <v-icon
+              id="toggle-edit-option"
+              @click="saveEdit"
+              data-cy="icon-save-edit"
+              ref="icon-save-edit"
+              v-bind="toggleIcon"
+              v-on="on"
+            >
+              done
+            </v-icon>
+          </template>
+          <span>Save changes</span>
+        </v-tooltip>
+        <v-tooltip
+          bottom
+          v-if="editOption && isEditing"
+        >
+          <template #activator="{ on, attrs : editIcon }">
+            <v-icon
+              id="toggle-edit-option"
+              @click="cancelEdit"
+              data-cy="icon-cancel-edit"
+              ref="icon-cancel-edit"
+              v-bind="editIcon"
+              v-on="on"
+            >
+              clear
+            </v-icon>
+          </template>
+          <span>Cancel edit</span>
+        </v-tooltip>
+      </v-list-item-action>
+    </v-list-item>
+  </v-list>
 </template>
 
 <script>

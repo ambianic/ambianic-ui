@@ -27,14 +27,37 @@
             </v-list-item-content>
           </v-list-item>
 
-          <v-img
-            src="@/assets/home-screen-logo.png"
-            ref="logo-image"
-          />
-
-          <v-card-text id="welcome-text">
-            <v-list-item-subtitle class="center">
-              Safer Home via Ambient Intelligence
+          <v-card-text
+            id="welcome-text"
+            class="text-center"
+          >
+            <v-avatar
+              rounded
+              size="200"
+            >
+              <v-img
+                v-if="this.$vuetify.theme.dark"
+                src="@/assets/home-screen-logo-dark.png"
+                ref="logo-image"
+              />
+              <v-img
+                v-else
+                src="@/assets/home-screen-logo-light.png"
+                ref="logo-image"
+              />
+            </v-avatar>
+            <p />
+            <v-list-item-subtitle
+              class="center"
+              data-cy="subtitle-one"
+            >
+              Safer Home via Ambient Intelligence.
+            </v-list-item-subtitle>
+            <v-list-item-subtitle
+              class="center"
+              data-cy="subtitle-two"
+            >
+              Privacy Preserving. Decentralized.
             </v-list-item-subtitle>
           </v-card-text>
 
@@ -46,30 +69,13 @@
                 rounded
                 color="pink darken-4"
                 dark
-                data-cy="button-beginSetup"
+                data-cy="btn-continue"
                 class="ma-2 white--text"
-                to="onboarding"
-                id="btn-setup"
-                ref="btn-setup"
-                v-if="!hasSetupSystem"
-              >
-                Begin Setup
-                <v-icon right>
-                  mdi-arrow-right
-                </v-icon>
-              </v-btn>
-              <v-btn
-                rounded
-                color="pink darken-4"
-                dark
-                data-cy="timeline"
-                class="ma-2 white--text"
-                to="timeline"
+                to="settings"
                 id="btn-dashboard"
-                ref="btn-timeline"
-                v-else
+                ref="btn-continue"
               >
-                View Timeline
+                Continue
                 <v-icon right>
                   mdi-arrow-right
                 </v-icon>
@@ -83,27 +89,13 @@
 </template>
 
 <script>
-import { STORAGE_KEY } from '@/store/pnp'
 export default {
   name: 'Home',
   data () {
     return {
-      hasSetupSystem: false
     }
   },
   created () {
-    const setupStatus = window.localStorage.getItem('hasCompletedOnboarding')
-    // Accessing directly to minimize load time to meet Lighthouse performance benchmark.
-    // When using vuex store, the dependencies push above the lighthouse PWA response time budget.
-    const remotePeerId = window.localStorage.getItem(`${STORAGE_KEY}.remotePeerId`)
-
-    // If the user has already setup an edge device connection
-    // via recent version of the app or
-    // an edge device was setup via an earlier app version
-    // then this app is not a new install.
-    if (setupStatus || remotePeerId) {
-      this.hasSetupSystem = true
-    }
   }
 }
 </script>
@@ -119,7 +111,6 @@ export default {
 }
 .body {
   display: flex;
-  background: rgba(233, 241, 251, 0.81);
   justify-content: center;
   align-items : center;
   width : 100%;
