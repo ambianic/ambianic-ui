@@ -1,7 +1,6 @@
 /// <reference types="cypress" />
 import {
     PEER_CONNECTED,
-    EDGE_DEVICE_DETAILS,
     PNP_SERVICE_CONNECTED,
     EDGE_API,
     NEW_REMOTE_PEER_ID
@@ -47,7 +46,6 @@ context('RemoteConnections',    () => {
         const remotePeerID = '917d5f0a-6469-4d33-b5c2-efd858118b74'
         // inject a PeerJS mock object
         win.__store__.state.pnp.peer = fakePeer
-        // fake cached edge version
         // mockup EdgeAPI
         const edgeAPI = cy.stub()
         edgeAPI.getEdgeStatus = cy.stub().callsFake( () => {

@@ -16,7 +16,7 @@ context('HelpPage', () => {
     cy.get('[data-cy=btn-docs]')
       .should('have.attr', 'href', 'https://docs.ambianic.ai')
       .get('.v-btn__content')
-      .contains('Documentation', { matchCase: false })
+      .contains('Docs', { matchCase: false })
   })
 
   it('Check forum button', () => {

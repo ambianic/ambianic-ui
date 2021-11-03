@@ -11,6 +11,12 @@ context('Timeline', () => {
     cy.url().should('include', '/timeline')
   })
 
+  it('Should ask for connection', () => {
+    cy.get('[data-cy=title-disconnected]').contains('Connect to a device')
+      .get('[data-cy=btn-settings][href="/settings"]')
+  })
+
+
 
   // Try to get this to work once we have mock data
 

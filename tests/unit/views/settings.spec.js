@@ -6,7 +6,7 @@ import VueRouter from 'vue-router'
 import Settings from '@/views/Settings.vue'
 import { PEER_DISCOVER } from '@/store/action-types'
 import { PEER_CONNECTED, PEER_DISCONNECTED, NEW_REMOTE_PEER_ID }
-  from '@/store/mutation-types'
+from '@/store/mutation-types'
 import AmbListItem from '@/components/shared/ListItem.vue'
 import { cloneDeep } from 'lodash'
 import { pnpStoreModule } from '@/store/pnp'

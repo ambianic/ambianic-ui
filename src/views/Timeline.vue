@@ -8,7 +8,9 @@
     >
       <v-col :style="maxWidth">
         <v-card>
-          <v-card-title>
+          <v-card-title
+            data-cy="title-disconnected"
+          >
             Connect to a device
           </v-card-title>
           <v-card-subtitle>
@@ -21,6 +23,7 @@
           </v-card-text>
           <v-card-actions>
             <v-btn
+              data-cy="btn-settings"
               to="settings"
             >
               <span>Settings</span>
