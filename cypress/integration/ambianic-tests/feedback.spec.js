@@ -5,17 +5,17 @@ context('FeedbackPage', () => {
   })
 
   it('Look at page title and subtitle', () => {
-    cy.get('#feedback-title > .v-list-item__content > .v-list-item__title')
+    cy.get('[data-cy=feedback-title]')
       .contains('Send Feedback', { matchCase: false })
 
-    cy.get('#feedback-title > .v-list-item__content > .v-list-item__subtitle')
-      .contains('We currently use github to gather user feedbaack', { matchCase: false })
+    cy.get('[data-cy=feedback-text]')
+      .contains('Your feedback helps us focus.', { matchCase: false })
   })
 
   it('Check feedback button', () => {
-    cy.get('#btn-feedback')
-      .should('have.attr', 'href', 'https://github.com/ambianic/ambianic-ui/issues')
+    cy.get('[data-cy=btn-feedback]')
+      .should('have.attr', 'href', 'https://github.com/ambianic/ambianic-ui/discussions/categories/feedback')
       .get('.v-btn__content')
-      .contains('Open Feedback Page', { matchCase: false })
+      .contains('Feedback Forum', { matchCase: false })
   })
 })

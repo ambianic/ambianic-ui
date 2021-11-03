@@ -14,7 +14,10 @@
         <v-card
           class="mx-auto text-left"
         >
-          <v-card-title ref="help-title">
+          <v-card-title
+            ref="help-title"
+            data-cy="help-title"
+          >
             <v-icon
               large
               left
@@ -23,7 +26,9 @@
             </v-icon>
             <span>Need Help with Ambianic?</span>
           </v-card-title>
-          <v-card-text>
+          <v-card-text
+            data-cy="help-text"
+          >
             <span>
               Please reference our online docs and forum discussions for common issues. You can also chat with us on Slack.
             </span>
@@ -32,6 +37,7 @@
             <v-btn
               id="btn-docs"
               ref="btn-docs"
+              data-cy="btn-docs"
               text
               href="https://docs.ambianic.ai"
               target="_blank"
@@ -47,6 +53,7 @@
             <v-btn
               id="btn-forum"
               ref="btn-forum"
+              data-cy="btn-forum"
               text
               href="https://github.com/ambianic/ambianic-ui/discussions"
               target="_blank"
@@ -61,6 +68,7 @@
             </v-btn>
             <v-btn
               id="btn-community"
+              data-cy="btn-community"
               text
               href="https://join.slack.com/t/ambianicai/shared_invite/zt-eosk4tv5-~GR3Sm7ccGbv1R7IEpk7OQ"
               target="_blank"

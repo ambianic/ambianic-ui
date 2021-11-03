@@ -7,21 +7,16 @@ context('HomePage', () => {
   })
 
   it('Loads title and subtitle', () => {
-    cy.get('.v-list-item__subtitle')
-      .should('contain.text', 'Safer Home via Ambient Intelligence')
+    cy.get('[data-cy=subtitle-one]')
+      .should('contain.text', 'Safer Home via Ambient Intelligence.')
+
+    cy.get('[data-cy=subtitle-two]')
+      .should('contain.text', 'Privacy Preserving. Decentralized.')
   })
 
-  it('Ensures returning users are taken directly to timeline', () => {
-    cy.window().should('have.property', '__store__')
-    cy.window().then((win) => {
-      win.__store__.dispatch(CHANGE_REMOTE_PEER_ID, '917d5f0a-6469-4d33-b5c2-efd858118b74')
-      // cy.wait(1000)
-      // reload to use new values for testing
-      // cy.reload()
-      cy.get('#btn-dashboard > .v-btn__content')
-        .should('contain.text', 'View Timeline')
-        .click()
-        .url().should('include', '/timeline')
-    })
+  it('looks at continue button', () => {
+    cy.get('[data-cy=btn-continue]')
+      .get('.v-btn__content')
+      .contains('Continue', { matchCase: false })
   })
 })

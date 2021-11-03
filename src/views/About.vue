@@ -30,10 +30,16 @@
               />
             </v-avatar>
             <p />
-            <v-list-item-subtitle class="center">
+            <v-list-item-subtitle
+              class="center"
+              data-cy="subtitle-one"
+            >
               Safer Home via Ambient Intelligence.
             </v-list-item-subtitle>
-            <v-list-item-subtitle class="center">
+            <v-list-item-subtitle
+              class="center"
+              data-cy="subtitle-two"
+            >
               Privacy Preserving. Decentralized.
             </v-list-item-subtitle>
           </v-card-text>
@@ -60,8 +66,9 @@
               color="info"
               :to="'timeline'"
               id="btn-timeline"
+              data-cy="btn-timeline"
             >
-              View Timeline
+              Timeline
             </v-btn>
             <v-spacer />
             <v-btn
@@ -69,6 +76,7 @@
               color="info"
               :to="'settings'"
               id="btn-settings"
+              data-cy="btn-timeline"
             >
               Settings
             </v-btn>

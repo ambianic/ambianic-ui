@@ -42,8 +42,10 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.16.0",
     "@cypress/code-coverage": "^3.9.11",
     "@cypress/webpack-dev-server": "^1.6.0",
+    "@cypress/webpack-preprocessor": "^5.9.1",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/commit-analyzer": "^8.0.1",
     "@semantic-release/exec": "^5.0.0",

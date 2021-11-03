@@ -90,6 +90,7 @@
                     text
                     color="info"
                     to="devicecard"
+                    data-cy="btn-details"
                   >
                     <span>Details</span>
                     <v-icon>info</v-icon>

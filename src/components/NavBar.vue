@@ -38,7 +38,7 @@
         >
           <v-btn
             icon
-            data-cy="timeline-icon"
+            data-cy="timeline-btn"
             ref="timeline-btn"
             to="timeline"
             v-bind="timelineBtnAttrs"
@@ -77,7 +77,7 @@
             v-bind="settingsBtnAttrs"
             v-on="settingsBtnEvents"
             icon
-            data-cy="settings-icon"
+            data-cy="settings-btn"
             ref="settings-btn"
             to="settings"
           >

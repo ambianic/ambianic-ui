@@ -207,6 +207,7 @@ async function discoverRemotePeerIds ({ state, commit }) {
   console.debug('Fetched roomMembers', roomMembers)
   const peerIds = roomMembers.clientsIds
   console.debug('myRoom members', peerIds)
+  console.debug('typeof peerIds', typeof peerIds)
   // find all peerIds that are different than this PWA peer ID
   var remotePeerIds = peerIds.filter(pid => pid !== state.myPeerId)
   console.debug(`remotePeerIds: ${remotePeerIds} found among myRoom members: ${peerIds}`)

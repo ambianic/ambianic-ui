@@ -73,12 +73,14 @@
                       </v-card-text>
                       <v-card-actions>
                         <v-btn
+                          data-cy="btn-local"
                           @click="chooseDiscoverLocal"
                         >
                           Local
                         </v-btn>
                         <v-spacer />
                         <v-btn
+                          data-cy="btn-remote"
                           @click="chooseRemoteConnection"
                         >
                           Remote
@@ -128,6 +130,7 @@
                         <v-btn
                           :disabled="selectedLocalDevice < 0"
                           @click="clickConnectToDiscoveredDevice"
+                          data-cy="btn-connect-discovered"
                         >
                           Connect
                         </v-btn>
@@ -152,12 +155,13 @@
                           outlined
                           dense
                           class="mt-4"
-                          data-cy="remotePeerID"
+                          data-cy="input-remotePeerID"
                           :rules="[rules.required, rules.validPeerID]"
                         />
                       </v-card-text>
                       <v-card-actions>
                         <v-btn
+                          data-cy="btn-connect-remote"
                           @click="clickConnectToRemoteDevice"
                           :disabled="!isPeerIdValid"
                         >
@@ -188,7 +192,9 @@
                   </v-stepper-step>
                   <v-stepper-content step="4">
                     <v-card>
-                      <v-card-title>
+                      <v-card-title
+                        data-cy="title-success"
+                      >
                         <v-icon
                           x-large
                           left
@@ -213,6 +219,7 @@
                         <v-spacer />
                         <v-btn
                           to="devicecard"
+                          data-cy="btn-settings"
                         >
                           Settings
                         </v-btn>
@@ -299,7 +306,8 @@ export default {
       addDeviceCard: 'myDevices/add',
       updateDeviceCard: 'myDevices/update',
       setCurrentDevice: 'myDevices/setCurrent',
-      updateFromRemote: 'myDevices/updateFromRemote'
+      updateFromRemote: 'myDevices/updateFromRemote',
+      peerDiscover: PEER_DISCOVER
     }),
     /**
      * User clicked Connect to a discovered local device
@@ -336,7 +344,7 @@ export default {
       this.edgePeerId = undefined
       console.debug('discoverLocalEdgeDevice() called')
       console.debug('removing any existing peer connection')
-      await this.$store.dispatch(PEER_DISCOVER)
+      await this.peerDiscover()
       console.debug('discoverLocalEdgeDevice() ended')
     },
     /**
@@ -383,12 +391,14 @@ export default {
         if (!details || !details.version) {
           this.edgeDeviceError = 'Edge device requires update.'
         } else {
+          console.debug('this.edgePeerId', this.edgePeerId)
           details.peerID = this.edgePeerId
           await this.updateFromRemote(details)
         }
         return details
       } catch (e) {
         this.edgeDeviceError = 'Edge device API offline or unreachable.'
+        console.debug(this.edgeDeviceError, e)
       }
     }
   },

@@ -60,6 +60,7 @@
       <v-spacer />
       <v-btn
         color="accent"
+        data-cy="btn-add-device"
         @click="addDeviceDialog = true"
       >
         <v-icon>mdi-plus</v-icon> Add Device
@@ -83,6 +84,7 @@
         <v-card-actions>
           <v-btn
             to="adddevice"
+            data-cy="btn-confirm-add-device"
           >
             Continue
           </v-btn>

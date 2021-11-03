@@ -47,10 +47,16 @@
               />
             </v-avatar>
             <p />
-            <v-list-item-subtitle class="center">
+            <v-list-item-subtitle
+              class="center"
+              data-cy="subtitle-one"
+            >
               Safer Home via Ambient Intelligence.
             </v-list-item-subtitle>
-            <v-list-item-subtitle class="center">
+            <v-list-item-subtitle
+              class="center"
+              data-cy="subtitle-two"
+            >
               Privacy Preserving. Decentralized.
             </v-list-item-subtitle>
           </v-card-text>
@@ -63,7 +69,7 @@
                 rounded
                 color="pink darken-4"
                 dark
-                data-cy="continue"
+                data-cy="btn-continue"
                 class="ma-2 white--text"
                 to="settings"
                 id="btn-dashboard"

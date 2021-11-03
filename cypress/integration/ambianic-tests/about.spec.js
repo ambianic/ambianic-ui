@@ -9,18 +9,18 @@ context('AboutPage', () => {
   })
 
   it('Loads title and subtitle', () => {
-    cy.get('#about-title > .v-list-item__content > .v-list-item__subtitle')
-      .should('contain.text', 'Safer Home')
+    cy.get('[data-cy=subtitle-one]')
+      .should('contain', 'Safer Home')
 
-    cy.get('#about-title > .v-list-item__content > .v-list-item__subtitle')
-      .should('contain.text', 'Privacy Preserving. Decentralized.')
+    cy.get('[data-cy=subtitle-two]')
+      .should('contain', 'Privacy Preserving. Decentralized.')
   })
 
   it('Loads timeline button', () => {
-    cy.get('#btn-timeline')
+    cy.get('[data-cy=btn-timeline]')
       .should('have.attr', 'href', '/timeline')
       .get('.v-btn__content')
-      .contains('View Timeline', { matchCase: false })
+      .contains('Timeline', { matchCase: false })
   })
 
   it('Loads settings button', () => {

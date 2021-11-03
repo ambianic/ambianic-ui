@@ -44,7 +44,7 @@ export class PeerRoom {
       const msg = `REST call failed for ${path}`
       console.error(msg, error)
       console.error('Response: ', response)
-      throw new Error(msg, error)
+      throw new Error(msg, response, error)
     }
   }
 

@@ -16,7 +16,10 @@
         <v-card
           class="mx-auto text-left"
         >
-          <v-card-title ref="feedback-title">
+          <v-card-title
+            ref="feedback-title"
+            data-cy="feedback-title"
+          >
             <v-icon
               large
               left
@@ -25,15 +28,18 @@
             </v-icon>
             <span>Send Feedback</span>
           </v-card-title>
-          <v-card-text>
+          <v-card-text
+            data-cy="feedback-text"
+          >
             <span>
-              Your feedback helps us focus. Go to our community feedback forum and share your thoughts.
+              Your feedback helps us focus. Share your thoughts on our community forum.
             </span>
           </v-card-text>
           <v-card-actions>
             <v-btn
               id="btn-feedback"
               ref="btn-feedback"
+              data-cy="btn-feedback"
               text
               href="https://github.com/ambianic/ambianic-ui/discussions/categories/feedback"
               target="_blank"

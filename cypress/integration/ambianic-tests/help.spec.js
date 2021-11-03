@@ -5,24 +5,31 @@ context('HelpPage', () => {
   })
 
   it('Look at page title and subtitle', () => {
-    cy.get('#help-title > .v-list-item__content > .v-list-item__title')
+    cy.get('[data-cy=help-title]')
       .contains('Need Help with Ambianic?', { matchCase: false })
 
-    cy.get('#help-title > .v-list-item__content > .v-list-item__subtitle')
-      .contains('Please reference our online docs or connect on Twitter', { matchCase: false })
+    cy.get('[data-cy=help-text]')
+      .contains('Please reference our online docs', { matchCase: false })
   })
 
   it('Check docs button', () => {
-    cy.get('#btn-docs')
+    cy.get('[data-cy=btn-docs]')
       .should('have.attr', 'href', 'https://docs.ambianic.ai')
       .get('.v-btn__content')
       .contains('Documentation', { matchCase: false })
   })
 
-  it('Check community button', () => {
-    cy.get('#btn-community')
-      .should('have.attr', 'href', 'https://twitter.com/ambianicai')
+  it('Check forum button', () => {
+    cy.get('[data-cy=btn-forum]')
+      .should('have.attr', 'href', 'https://github.com/ambianic/ambianic-ui/discussions')
       .get('.v-btn__content')
-      .contains('Twitter', { matchCase: false })
+      .contains('Forum', { matchCase: false })
+  })
+
+  it('Check community button', () => {
+    cy.get('[data-cy=btn-community]')
+      .should('have.attr', 'href', 'https://join.slack.com/t/ambianicai/shared_invite/zt-eosk4tv5-~GR3Sm7ccGbv1R7IEpk7OQ')
+      .get('.v-btn__content')
+      .contains('Slack', { matchCase: false })
   })
 })
