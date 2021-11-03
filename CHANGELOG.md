@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [2.21.0](https://github.com/ambianic/ambianic-ui/compare/v2.20.0...v2.21.0) (2021-11-03)
+
+
+### Features
+
+* manage multiple edge devices in PWA ([#757](https://github.com/ambianic/ambianic-ui/issues/757)) ([72f72ba](https://github.com/ambianic/ambianic-ui/commit/72f72ba63e6014216aac693575c36d053402f551)), closes [#758](https://github.com/ambianic/ambianic-ui/issues/758) [#753](https://github.com/ambianic/ambianic-ui/issues/753) [#741](https://github.com/ambianic/ambianic-ui/issues/741) [#711](https://github.com/ambianic/ambianic-ui/issues/711) [#705](https://github.com/ambianic/ambianic-ui/issues/705) [#660](https://github.com/ambianic/ambianic-ui/issues/660) [#659](https://github.com/ambianic/ambianic-ui/issues/659) [#601](https://github.com/ambianic/ambianic-ui/issues/601) [#595](https://github.com/ambianic/ambianic-ui/issues/595) [#589](https://github.com/ambianic/ambianic-ui/issues/589) [#563](https://github.com/ambianic/ambianic-ui/issues/563) [#408](https://github.com/ambianic/ambianic-ui/issues/408) [#370](https://github.com/ambianic/ambianic-ui/issues/370) [#329](https://github.com/ambianic/ambianic-ui/issues/329) [#327](https://github.com/ambianic/ambianic-ui/issues/327) [#302](https://github.com/ambianic/ambianic-ui/issues/302) [#299](https://github.com/ambianic/ambianic-ui/issues/299)
+
 # [2.20.0](https://github.com/ambianic/ambianic-ui/compare/v2.19.5...v2.20.0) (2021-10-11)
 
 
