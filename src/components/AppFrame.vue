@@ -12,7 +12,7 @@
 
     <v-main>
       <v-container
-        id="container"
+        id="app-container"
         class="pa-0 ma-0"
         fluid
       >

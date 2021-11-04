@@ -7,6 +7,7 @@
     <v-app-bar
       app
       hide-on-scroll
+      scroll-target="#app-container"
       absolute
       dense
       flat
