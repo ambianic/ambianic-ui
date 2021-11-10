@@ -35,7 +35,7 @@
         justify="center"
         class="pb-5"
         align="center"
-        v-if="edgePeerId"
+        v-if="isEdgeConnected"
       >
         <v-card
           :loading="isLoading"
@@ -54,21 +54,11 @@
                 class="pa-0 ma-0 fill-height"
               >
                 <amb-banner
-                  v-if="isEdgeConnected"
                   banner-class="text-left"
                   icon="cloud-check-outline"
                   text="Device connected!"
                   data-cy="edge-device-connected"
                   ref="edge-device-connected"
-                />
-                <amb-banner
-                  v-else
-                  banner-class="text-left"
-                  icon="cloud-off-outline"
-                  icon-color="info"
-                  text="Device disconnected."
-                  data-cy="edge-device-disconnected"
-                  ref="edge-device-disconnected"
                 />
                 <v-card
                   class="mx-auto text-left"
@@ -78,67 +68,39 @@
                     two-line
                   >
                     <amb-list-item
-                      ref="list-item-edgeDeviceName"
-                      data-cy="list-item-edgeDeviceName"
-                      :title="edgeDisplayName"
-                      subtitle="Friendly Name"
-                      icon-name="tag"
-                      :edit-option="isEdgeConnected"
-                      :on-submit="onDisplayNameChanged"
-                      :rules="[rules.required, rules.counter]"
+                      ref="list-item-notificationsProvider"
+                      data-cy="list-item-notificationsProvider"
+                      title="IFTTT"
+                      subtitle="Service Provider"
+                      icon-name="api"
+                    />
+                    <amb-list-item
+                      ref="list-item-apiKey"
+                      data-cy="list-item-apiKey"
+                      title="__MY__KEY__"
+                      subtitle="Enter Your IFTTT API Key"
+                      :edit-option="true"
+                      :sensitive-field="true"
+                      icon-name="key"
+                    />
+                    <amb-list-item
+                      ref="list-item-apiTarget"
+                      data-cy="list-item-apiTarget"
+                      title="ambianic-notification"
+                      subtitle="Event Name to Trigger"
+                      edit-option="true"
+                      icon-name="target"
                     />
                     <v-list-item>
-                      <!-- Notifications list item -->
-                      <v-list-item-avatar>
-                        <v-icon>
-                          mdi-bell-outline
-                        </v-icon>
-                      </v-list-item-avatar>
                       <v-list-item-content>
-                        <v-switch
-                          v-model="enableNotifications"
-                          :label="`Notifications ${ enableNotifications ? &quot;On&quot; : &quot;Off&quot; }`"
-                          :disabled="!isEdgeConnected"
-                        />
+                          <a
+                            href="https://docs.ambianic.ai/users/ifttt/"
+                            target="_new_window"
+                          >
+                            How to configure notifications?
+                          </a>
                       </v-list-item-content>
-                      <v-list-item-action
-                        v-if="isEdgeConnected"
-                      >
-                        <v-tooltip
-                          bottom
-                        >
-                          <template #activator="{ onNotificationsConfigEvents, notificationsConfigProps }">
-                            <v-icon
-                              @click="notificationsConfigClicked"
-                              data-cy="icon-notifications-config"
-                              ref="icon-notifications-config"
-                              v-bind="notificationsConfigProps"
-                              v-on="onNotificationsConfigEvents"
-                            >
-                              tune
-                            </v-icon>
-                          </template>
-                          <span>Configure notifications.</span>
-                        </v-tooltip>
-                      </v-list-item-action>
                     </v-list-item>
-                    <amb-list-item
-                      :title="edgePeerId"
-                      subtitle="Peer ID"
-                      icon-name="identifier"
-                      :sensitive-field="true"
-                      :copy-option="true"
-                      ref="list-item-edgePeerID"
-                      data-cy="list-item-edgePeerID"
-                    />
-                    <amb-list-item
-                      ref="list-item-edgeVersion"
-                      :title="edgeVersion"
-                      id="version-element"
-                      subtitle="Edge Software Version"
-                      icon-name="alpha-v-circle-outline"
-                      data-cy="list-item-edgeVersion"
-                    />
                   </v-list>
                 </v-card>
               </v-col>
@@ -148,60 +110,26 @@
             <v-btn
               @click="connectToEdgeDevice"
               :disabled="isEdgeConnecting"
-              v-if="!isEdgeConnected"
+              color="primary"
             >
-              Connect
-            </v-btn>
-            <v-btn
-              to="timeline"
-              v-else
-            >
-              Timeline
+              Test
             </v-btn>
             <v-spacer />
             <v-btn
-              @click="forgetDeviceDialog = true"
-              :disabled="isEdgeDisconnecting"
-              text
+              @click="connectToEdgeDevice"
+              :disabled="isEdgeConnecting"
               color="warning"
             >
-              Forget This Device
+              Update
+            </v-btn>
+            <v-btn
+              @click="forgetDeviceDialog = true"
+              :disabled="isEdgeConnecting"
+            >
+              Cancel
             </v-btn>
           </v-card-actions>
         </v-card>
-        <v-dialog
-          v-model="forgetDeviceDialog"
-          width="344"
-        >
-          <v-card>
-            <v-card-title>
-              Forget Device?
-            </v-card-title>
-
-            <v-card-text>
-              Are you sure you want to forget this device?
-              It will no longer show in the list of managed devices.
-              However you can still add it back later.
-            </v-card-text>
-
-            <v-divider />
-
-            <v-card-actions>
-              <v-btn
-                @click="forgetDeviceDialog = false"
-              >
-                Cancel
-              </v-btn>
-              <v-spacer />
-              <v-btn
-                @click="forgetEdgeDevice"
-                color="warning"
-              >
-                Forget Device
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
       </v-row>
       <v-row
         justify="center"
@@ -213,16 +141,16 @@
           <v-card-title
             data-cy="titlecard"
           >
-            No device selected
+            No device connection
           </v-card-title>
           <v-card-text grid-list-sm>
-            Go ahead and pick a device to connect to.
+            Go ahead and connect to a device.
           </v-card-text>
           <v-card-actions>
             <v-btn
-              to="selectdevice"
+              to="/settings"
             >
-              My Devices
+              Settings
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -263,12 +191,16 @@ export default {
         {
           text: 'Settings',
           disabled: false,
-          to: 'settings'
+          to: '/settings'
         },
         {
           text: 'Device Card',
-          disabled: true,
-          to: 'devicecard'
+          disabled: false,
+          to: '/devicecard'
+        },
+        {
+          text: 'Notifications Config',
+          disabled: true
         }
       ]
     }
@@ -343,9 +275,6 @@ export default {
       // close forget device dialog
       this.forgetDeviceDialog = false
       await this.$router.replace({ name: 'settings' })
-    },
-    async notificationsConfigClicked () {
-      await this.$router.replace({ name: 'deviceNotificationsConfig' })
     }
   },
   computed: {
