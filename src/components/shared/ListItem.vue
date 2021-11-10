@@ -1,11 +1,11 @@
 <template>
   <v-list>
     <v-list-item :two-line="twoLine">
-      <v-list-item-icon>
+      <v-list-item-avatar>
         <v-icon>
           mdi-{{ iconName }}
         </v-icon>
-      </v-list-item-icon>
+      </v-list-item-avatar>
       <v-list-item-content>
         <v-list-item-title
           v-if="isEditing"

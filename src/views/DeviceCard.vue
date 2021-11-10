@@ -43,7 +43,7 @@
         >
           <v-card-text grid-list-sm>
             <v-row
-              align="start"
+              align="center"
               justify="space-around"
             >
               <v-col
@@ -87,6 +87,40 @@
                       :on-submit="onDisplayNameChanged"
                       :rules="[rules.required, rules.counter]"
                     />
+                    <v-list-item> <!-- Notifications list item -->
+                      <v-list-item-avatar>
+                        <v-icon>
+                          mdi-bell-outline
+                        </v-icon>
+                      </v-list-item-avatar>
+                      <v-list-item-content>
+                          <v-switch
+                            v-model="enableNotifications"
+                            :label='`Notifications ${ enableNotifications ? "On" : "Off" }`'
+                            :disabled="!isEdgeConnected"
+                          ></v-switch>
+                      </v-list-item-content>
+                      <v-list-item-action
+                        v-if="isEdgeConnected"
+                      >
+                        <v-tooltip
+                          bottom
+                        >
+                          <template #activator="{ onNotificationsConfigEvents, notificationsConfigProps }">
+                            <v-icon
+                              @click="notificationsConfigClicked"
+                              data-cy="icon-notifications-config"
+                              ref="icon-notifications-config"
+                              v-bind="notificationsConfigProps"
+                              v-on="onNotificationsConfigEvents"
+                            >
+                              tune
+                            </v-icon>
+                          </template>
+                          <span>Configure notifications.</span>
+                        </v-tooltip>
+                      </v-list-item-action>
+                    </v-list-item>
                     <amb-list-item
                       :title="edgePeerId"
                       subtitle="Peer ID"
@@ -104,6 +138,7 @@
                       icon-name="alpha-v-circle-outline"
                       data-cy="list-item-edgeVersion"
                     />
+
                   </v-list>
                 </v-card>
               </v-col>
@@ -223,6 +258,7 @@ export default {
         counter: value => (!!value && value.length >= 5 && value.length <= 20) || 'Min 5 and Max 20 characters'
       },
       forgetDeviceDialog: false,
+      enableNotifications: false,
       breadcrumbs: [
         {
           text: 'Settings',
@@ -307,6 +343,9 @@ export default {
       // close forget device dialog
       this.forgetDeviceDialog = false
       this.$router.replace({ name: 'settings' })
+    },
+    notificationsConfigClicked () {
+      // go to device notifications config page
     }
   },
   computed: {
