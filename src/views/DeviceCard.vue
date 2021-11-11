@@ -289,7 +289,8 @@ export default {
       forgetDeviceCard: 'myDevices/forget',
       updateDisplayName: 'myDevices/updateDisplayName',
       updateFromRemote: 'myDevices/updateFromRemote',
-      setCurrentDevice: 'myDevices/setCurrent'
+      setCurrentDevice: 'myDevices/setCurrent',
+      peerConnect: PEER_CONNECT
     }),
     async fetchEdgeDetails () {
       try {
@@ -332,7 +333,7 @@ export default {
       return updated
     },
     async connectToEdgeDevice () {
-      await this.$store.dispatch(PEER_CONNECT, this.edgePeerId)
+      await this.peerConnect(this.edgePeerId)
     },
     async forgetEdgeDevice () {
       // remove from local db and vuex state

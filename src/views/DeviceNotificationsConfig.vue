@@ -83,22 +83,14 @@
                       :sensitive-field="true"
                       icon-name="key"
                     />
-                    <amb-list-item
-                      ref="list-item-apiTarget"
-                      data-cy="list-item-apiTarget"
-                      title="ambianic-notification"
-                      subtitle="Event Name to Trigger"
-                      edit-option="true"
-                      icon-name="target"
-                    />
                     <v-list-item>
                       <v-list-item-content>
-                          <a
-                            href="https://docs.ambianic.ai/users/ifttt/"
-                            target="_new_window"
-                          >
-                            How to configure notifications?
-                          </a>
+                        <a
+                          href="https://docs.ambianic.ai/users/ifttt/"
+                          target="_new_window"
+                        >
+                          How to configure notifications?
+                        </a>
                       </v-list-item-content>
                     </v-list-item>
                   </v-list>

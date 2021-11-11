@@ -29,7 +29,10 @@
       <v-row
         justify="center"
       >
-        <v-card>
+        <v-card
+          :loading="isLoading"
+          :disabled="isLoading"
+        >
           <v-card-title
             data-cy="device-card-title"
             ref="device-card-title"
@@ -78,23 +81,28 @@
                   </v-icon>
                 </v-list-item-avatar>
                 <v-list-item-content>
-                  <v-list-item-title v-if="isEdgeConnected">
-                    Connected.
-                  </v-list-item-title>
-                  <v-list-item-title v-else>
-                    Not connected.
-                  </v-list-item-title>
+                  <v-switch
+                    v-model="connectToEdgeSwitch"
+                    :label="`${ isEdgeConnected ? &quot;Connected&quot; : &quot;Disconnected&quot; }`"
+                  />
                 </v-list-item-content>
                 <v-list-item-action>
-                  <v-btn
-                    text
-                    color="info"
-                    to="devicecard"
-                    data-cy="btn-details"
+                  <v-tooltip
+                    bottom
                   >
-                    <span>Details</span>
-                    <v-icon>info</v-icon>
-                  </v-btn>
+                    <template #activator="{ onDeviceConfigEvents, deviceConfigProps }">
+                      <v-icon
+                        @click="{{ $router.replace('/devicecard') }}"
+                        data-cy="btn-device-config"
+                        ref="btn-device-config"
+                        v-bind="deviceConfigProps"
+                        v-on="onDeviceConfigEvents"
+                      >
+                        tune
+                      </v-icon>
+                    </template>
+                    <span>Device Settings.</span>
+                  </v-tooltip>
                 </v-list-item-action>
               </v-list-item>
               <amb-list-item
@@ -133,6 +141,10 @@ import {
   PEER_DISCONNECTING,
   PEER_AUTHENTICATING
 } from '@/store/mutation-types'
+import {
+  PEER_CONNECT,
+  PEER_DISCONNECT
+} from '@/store/action-types'
 
 export default {
   components: {
@@ -143,20 +155,24 @@ export default {
     return {
       edgeAddress: undefined,
       edgeDeviceError: null,
-      syncing: false, // is the UI in the process of syncing with remote device data
+      connectToEdgeSwitch: false,
       edgeDisplayName: this.$store.state.myDevices.currentDeviceCard ? this.$store.state.myDevices.currentDeviceCard.displayName : ''
     }
   },
   created () {
   },
   mounted () {
+    this.connectToEdgeSwitch = this.isEdgeConnected
   },
   methods: {
     ...mapActions({
-      setCurrentDevice: 'myDevices/setCurrent'
+      setCurrentDevice: 'myDevices/setCurrent',
+      peerConnect: PEER_CONNECT,
+      peerDisconnect: PEER_DISCONNECT
     })
   },
   computed: {
+    isLoading: function () { return this.isEdgeConnecting || this.isEdgeDisconnecting },
     ...mapState({
       peerConnectionStatus: state => state.pnp.peerConnectionStatus,
       isPeerConnectionError: state => state.pnp.peerConnectionStatus === PEER_CONNECTION_ERROR,
@@ -189,6 +205,16 @@ export default {
       console.debug('Current Edge Device Card changed:', { newVal, oldVal })
       this.edgeVersion = newVal.version
       this.edgeDisplayName = newVal.displayName
+    },
+    isEdgeConnected: async function (newVal, oldVal) {
+      this.connectToEdgeSwitch = newVal
+    },
+    connectToEdgeSwitch: async function (newVal, oldVal) {
+      if (newVal === true) {
+        await this.peerConnect(this.edgePeerId)
+      } else {
+        await this.peerDisconnect()
+      }
     }
   }
 }
