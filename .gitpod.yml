@@ -52,9 +52,7 @@ ports:
   - port: 8080 # Ambianic UI App
     onOpen: open-browser
   - port: 6080 # Cypress Interactive Mode
-    onOpen: open-browser
   - port: 3000 # Static file serve via Browsersync
-    onOpen: open-browser
   - port: 3001 # Browsersync dashboard
   - port: 8888 # Dependencies chart
   - port: 10000

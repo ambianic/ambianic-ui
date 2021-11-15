@@ -77,11 +77,13 @@
                     <amb-list-item
                       ref="list-item-apiKey"
                       data-cy="list-item-apiKey"
-                      title="__MY__KEY__"
-                      subtitle="Enter Your IFTTT API Key"
+                      title="__ENTER_NEW_KEY__"
+                      subtitle="IFTTT Webhooks API Key"
                       :edit-option="true"
                       :sensitive-field="true"
                       icon-name="key"
+                      :on-submit="onIftttKeyChanged"
+                      :rules="[rules.required, rules.counter]"
                     />
                     <v-list-item>
                       <v-list-item-content>
@@ -89,7 +91,7 @@
                           href="https://docs.ambianic.ai/users/ifttt/"
                           target="_new_window"
                         >
-                          How to configure notifications?
+                          How does this work?
                         </a>
                       </v-list-item-content>
                     </v-list-item>
@@ -100,26 +102,13 @@
           </v-card-text>
           <v-card-actions>
             <v-btn
-              @click="connectToEdgeDevice"
+              @click="testNotifications"
               :disabled="isEdgeConnecting"
               color="primary"
             >
               Test
             </v-btn>
             <v-spacer />
-            <v-btn
-              @click="connectToEdgeDevice"
-              :disabled="isEdgeConnecting"
-              color="warning"
-            >
-              Update
-            </v-btn>
-            <v-btn
-              @click="forgetDeviceDialog = true"
-              :disabled="isEdgeConnecting"
-            >
-              Cancel
-            </v-btn>
           </v-card-actions>
         </v-card>
       </v-row>
@@ -159,7 +148,6 @@ import {
   PEER_AUTHENTICATING,
   PEER_CONNECTION_ERROR
 } from '@/store/mutation-types'
-import { PEER_CONNECT, REMOVE_REMOTE_PEER_ID } from '../store/action-types'
 
 export default {
   components: {
@@ -175,10 +163,10 @@ export default {
       isSyncing: false, // is the UI in the process of syncing with remote device data
       rules: {
         required: value => !!value || 'Required.',
-        counter: value => (!!value && value.length >= 5 && value.length <= 20) || 'Min 5 and Max 20 characters'
+        counter: value => (!!value && value.length >= 5 && value.length <= 50) || 'Min 5 and Max 50 characters'
       },
       forgetDeviceDialog: false,
-      enableNotifications: false,
+      notificationsEnabled: false,
       breadcrumbs: [
         {
           text: 'Settings',
@@ -200,73 +188,35 @@ export default {
   created () {
   },
   async mounted () {
-    // If a connection to the edge device is already established
-    // let's pull the latest info from it in case there are changes
-    // this UI client does not know about yet.
-    if (this.isEdgeConnected) {
-      await this.fetchEdgeDetails()
-    }
   },
   methods: {
     ...mapActions({
-      deleteCurrentDeviceConnection: REMOVE_REMOTE_PEER_ID,
-      forgetDeviceCard: 'myDevices/forget',
-      updateDisplayName: 'myDevices/updateDisplayName',
-      updateFromRemote: 'myDevices/updateFromRemote',
-      setCurrentDevice: 'myDevices/setCurrent'
     }),
-    async fetchEdgeDetails () {
-      try {
-        const details = await this.pnp.edgeAPI.getEdgeStatus()
-        console.debug('Edge device details fetched:', { details })
-        if (!details || !details.version) {
-          this.edgeDeviceError = 'Edge device requires update.'
-        } else {
-          // save device details in local db
-          details.peerID = this.edgePeerId
-          await this.updateFromRemote(details)
-        }
-      } catch (err) {
-        this.edgeDeviceError = 'Edge device API offline or unreachable.'
-        console.error('Error while fetching remote device status', { err })
-      }
-    },
-    async onDisplayNameChanged (newDisplayName) {
-      console.debug(`newDisplayName: ${newDisplayName}`)
+    async onIftttKeyChanged (newIftttKey) {
+      console.debug(`onIftttKeyChanged(): ${newIftttKey}`)
       let updated = false
-      if (newDisplayName) {
+      if (newIftttKey) {
         try {
-          console.debug(`New device display name: ${newDisplayName}`)
+          console.debug(`New IFTTT Key: ${newIftttKey}`)
           // trigger edit change callback
           //    show blocking dialog with spinner https://vuetifyjs.com/en/components/dialogs/#loader
           //    await dispatch to push new device display name: 1. to device, 2. to local device store
           this.isSyncing = true
           // send changes to remote edge device
-          await this.pnp.edgeAPI.setDeviceDisplayName(newDisplayName)
-          // save changes to localdb
-          await this.updateDisplayName({ peerID: this.edgePeerId, displayName: newDisplayName })
+          await this.pnp.edgeAPI.setIftttKey(newIftttKey)
           updated = true
         } catch (e) {
-          this.edgeDeviceError = 'Error updating display name. Edge device offline or has outdated API.'
-          console.error('Exception calling updateDisplayName()', { e })
+          this.edgeDeviceError = 'Error updating IFTTT Key. Edge device offline or has outdated API.'
+          console.error('Exception calling setIftttKey()', { e })
         } finally {
           this.isSyncing = false
         }
       }
       return updated
     },
-    async connectToEdgeDevice () {
-      await this.$store.dispatch(PEER_CONNECT, this.edgePeerId)
-    },
-    async forgetEdgeDevice () {
-      // remove from local db and vuex state
-      console.debug('forgetDeviceCard', this.edgePeerId)
-      await this.forgetDeviceCard(this.edgePeerId)
-      // delete peer connection to curren device
-      await this.deleteCurrentDeviceConnection()
-      // close forget device dialog
-      this.forgetDeviceDialog = false
-      await this.$router.replace({ name: 'settings' })
+    async testNotifications () {
+      // TODO
+      // remote API call to edge device: /api/notifications/test
     }
   },
   computed: {
@@ -288,11 +238,6 @@ export default {
     })
   },
   watch: {
-    isEdgeConnected: async function (isConnected) {
-      if (isConnected) {
-        await this.fetchEdgeDetails()
-      }
-    },
     isPeerConnectionError: async function (isError) {
       console.debug('watch peerConnectionError triggered. New value', { isError })
       if (isError) {
@@ -302,18 +247,6 @@ export default {
         // clear the user friendly error message
         this.edgeDeviceError = undefined
         console.debug('isPeerConnectionError FALSE. Error message:', this.edgeDeviceError)
-      }
-    },
-    currentDeviceCard: async function (newVal, oldVal) {
-      console.debug('Current Edge Device Card changed:', { newVal, oldVal })
-      if (newVal) {
-        this.edgeVersion = newVal.version
-        this.edgeDisplayName = newVal.displayName
-      } else {
-        // right after the user requests to "Forget" a device
-        // there is no current device selected
-        this.edgeVersion = ''
-        this.edgeDisplayName = ''
       }
     }
   }

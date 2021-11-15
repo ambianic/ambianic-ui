@@ -395,6 +395,9 @@ export default {
         this.edgeVersion = ''
         this.edgeDisplayName = ''
       }
+    },
+    enableNotifications: async function (newVal, oldVal) {
+      await this.pnp.edgeAPI.enableNotifications(newVal)
     }
   }
 }

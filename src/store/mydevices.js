@@ -86,6 +86,9 @@ const actions = {
       if (edgeDetails.display_name) {
         deviceCard.displayName = edgeDetails.display_name
       }
+      if (edgeDetails.notifications_enabled) {
+        deviceCard.notificationsEnabled = edgeDetails.notifications_enabled
+      }
       // use Dexie put instead of update
       // in order to cover the case when a device card is not found in indexeddb
       console.debug('Putting localdb device card: ', { deviceCard })

@@ -237,7 +237,6 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
-import { EdgeDeviceCard } from '@/store/localdb'
 import {
   PEER_DISCOVERING_DONE,
   PEER_CONNECTED,
@@ -360,26 +359,8 @@ export default {
      */
     async connectStepCompleted () {
       console.debug('connectStepCompleted() called')
-      // fetch device info
-      const deviceDetails = await this.fetchEdgeDetails()
-      const newCard = new EdgeDeviceCard()
-      newCard.peerID = this.edgePeerId
-      newCard.displayName = deviceDetails.display_name
-      newCard.version = deviceDetails.version
-      // check if device is already known
-      const knownDevice = this.allDeviceCards.get(newCard.peerID)
-      console.debug('Is this a known device?', { knownDevice })
-      if (knownDevice) {
-        console.debug('Known device card. Already in localdb', { newCard })
-        // its a known device, let's just update its card
-        this.updateDeviceCard(newCard)
-        console.debug('Updated device card in localdb.')
-      } else {
-        // Not a known device. Add its card to db.
-        console.debug('Adding new device card to localdb', { newCard })
-        await this.addDeviceCard(newCard)
-        console.debug('Added new device card to localdb', { newCard })
-      }
+      // fetch device info and update vuex state
+      await this.fetchEdgeDetails()
       // switch current device reference in UI state (vuex store)
       await this.setCurrentDevice(this.edgePeerId)
       this.addDeviceStep++

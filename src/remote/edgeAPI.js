@@ -118,6 +118,30 @@ export class EdgeAPI {
     return response
   }
 
+  async setIftttKey (newKey) {
+    const apiRoot = this._getRootURL()
+    const esc = encodeURIComponent
+    const urlEncodedKey = esc(newKey)
+    const request = {
+      url: `${apiRoot}integrations/ifttt/api_key/${urlEncodedKey}`
+    }
+    const response = await this._putJSON(request)
+    console.debug('setIftttKey() received response', { request }, { response })
+    return response
+  }
+
+  async enableNotifications (newState) {
+    const apiRoot = this._getRootURL()
+    const esc = encodeURIComponent
+    const urlEncodedState = esc(newState)
+    const request = {
+      url: `${apiRoot}notifications/enable/${urlEncodedState}`
+    }
+    const response = await this._putJSON(request)
+    console.debug('enableNotifications() received response', { request }, { response })
+    return response
+  }
+
   async auth () {
     console.debug('PEER_AUTHENTICATE auth() start')
     const authURL = `${API_SCHEMA}://${API_HOST}:${API_PORT}/`
