@@ -96,9 +96,10 @@
                       </v-list-item-avatar>
                       <v-list-item-content>
                         <v-switch
-                          v-model="enableNotifications"
-                          :label="`Notifications ${ enableNotifications ? &quot;On&quot; : &quot;Off&quot; }`"
+                          v-model="notificationsEnabled"
+                          :label="`Notifications ${ notificationsEnabled ? &quot;On&quot; : &quot;Off&quot; }`"
                           :disabled="!isEdgeConnected"
+                          @change="onEnableNotifications"
                         />
                       </v-list-item-content>
                       <v-list-item-action
@@ -258,7 +259,7 @@ export default {
         counter: value => (!!value && value.length >= 5 && value.length <= 20) || 'Min 5 and Max 20 characters'
       },
       forgetDeviceDialog: false,
-      enableNotifications: false,
+      notificationsEnabled: false,
       breadcrumbs: [
         {
           text: 'Settings',
@@ -279,6 +280,7 @@ export default {
     // If a connection to the edge device is already established
     // let's pull the latest info from it in case there are changes
     // this UI client does not know about yet.
+    this.notificationsEnabled = this.currentDeviceCard.notificationsEnabled
     if (this.isEdgeConnected) {
       await this.fetchEdgeDetails()
     }
@@ -288,6 +290,7 @@ export default {
       deleteCurrentDeviceConnection: REMOVE_REMOTE_PEER_ID,
       forgetDeviceCard: 'myDevices/forget',
       updateDisplayName: 'myDevices/updateDisplayName',
+      updateNotificationsEnabled: 'myDevices/updateNotificationsEnabled',
       updateFromRemote: 'myDevices/updateFromRemote',
       setCurrentDevice: 'myDevices/setCurrent',
       peerConnect: PEER_CONNECT
@@ -332,6 +335,18 @@ export default {
       }
       return updated
     },
+    async onEnableNotifications () {
+      try {
+        this.isSyncing = true
+        await this.pnp.edgeAPI.enableNotifications(this.notificationsEnabled)
+        await this.updateNotificationsEnabled({ peerID: this.edgePeerId, enabled: this.notificationsEnabled })
+      } catch (e) {
+        this.edgeDeviceError = 'Error updating notifications settings. Edge device offline or has outdated API.'
+        console.error('Exception calling onEnableNotifications()', { e })
+      } finally {
+        this.isSyncing = false
+      }
+    },
     async connectToEdgeDevice () {
       await this.peerConnect(this.edgePeerId)
     },
@@ -371,6 +386,7 @@ export default {
     isEdgeConnected: async function (isConnected) {
       if (isConnected) {
         await this.fetchEdgeDetails()
+        this.notificationsEnabled = this.currentDeviceCard.notificationsEnabled
       }
     },
     isPeerConnectionError: async function (isError) {
@@ -395,9 +411,6 @@ export default {
         this.edgeVersion = ''
         this.edgeDisplayName = ''
       }
-    },
-    enableNotifications: async function (newVal, oldVal) {
-      await this.pnp.edgeAPI.enableNotifications(newVal)
     }
   }
 }

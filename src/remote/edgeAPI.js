@@ -142,6 +142,16 @@ export class EdgeAPI {
     return response
   }
 
+  async testNotifications () {
+    const apiRoot = this._getRootURL()
+    const request = {
+      url: `${apiRoot}notifications/test`
+    }
+    const response = await this._getJSON(request)
+    console.debug('testNotifications() received response', { request }, { response })
+    return response
+  }
+
   async auth () {
     console.debug('PEER_AUTHENTICATE auth() start')
     const authURL = `${API_SCHEMA}://${API_HOST}:${API_PORT}/`

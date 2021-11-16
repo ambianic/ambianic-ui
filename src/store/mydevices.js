@@ -102,10 +102,17 @@ const actions = {
     console.debug('Updating display name: ', { peerID, displayName })
     if (displayName) {
       await localdb.myDevices.update(peerID, { displayName: displayName })
-      console.debug('saved new display name for peer ID', { peerID, displayName })
+      console.debug('saved localdb new display name for peer ID', { peerID, displayName })
     } else {
       throw new Error('Device Display Name cannot have an empty value')
     }
+    // refresh vuex state
+    await dispatch('syncState')
+  },
+  async updateNotificationsEnabled ({ state, dispatch }, { peerID, enabled }) {
+    console.debug('Updating notifications enabled state: ', { peerID, enabled })
+    await localdb.myDevices.update(peerID, { notificationsEnabled: enabled })
+    console.debug('saved in localdb new notifications enabled state for peer ID', { peerID, enabled })
     // refresh vuex state
     await dispatch('syncState')
   },

@@ -53,13 +53,6 @@
                 cols="12"
                 class="pa-0 ma-0 fill-height"
               >
-                <amb-banner
-                  banner-class="text-left"
-                  icon="cloud-check-outline"
-                  text="Device connected!"
-                  data-cy="edge-device-connected"
-                  ref="edge-device-connected"
-                />
                 <v-card
                   class="mx-auto text-left"
                   flat
@@ -67,6 +60,22 @@
                   <v-list
                     two-line
                   >
+                    <v-list-item>
+                      <!-- Notifications list item -->
+                      <v-list-item-avatar>
+                        <v-icon>
+                          mdi-bell-outline
+                        </v-icon>
+                      </v-list-item-avatar>
+                      <v-list-item-content>
+                        <v-switch
+                          v-model="notificationsEnabled"
+                          :label="`Notifications ${ notificationsEnabled ? &quot;On&quot; : &quot;Off&quot; }`"
+                          :disabled="!isEdgeConnected"
+                          @change="onEnableNotifications"
+                        />
+                      </v-list-item-content>
+                    </v-list-item>
                     <amb-list-item
                       ref="list-item-notificationsProvider"
                       data-cy="list-item-notificationsProvider"
@@ -102,12 +111,20 @@
           </v-card-text>
           <v-card-actions>
             <v-btn
-              @click="testNotifications"
-              :disabled="isEdgeConnecting"
+              @click="onTestNotifications"
+              :disabled="!notificationsEnabled"
               color="primary"
             >
               Test
             </v-btn>
+            <v-fade-transition>
+              <v-icon
+                large
+                v-if="testSent"
+              >
+                check
+              </v-icon>
+            </v-fade-transition>
             <v-spacer />
           </v-card-actions>
         </v-card>
@@ -151,7 +168,6 @@ import {
 
 export default {
   components: {
-    AmbBanner: () => import('@/components/shared/Banner.vue'),
     AmbListItem: () => import('@/components/shared/ListItem.vue'),
     AmbAppFrame: () => import('@/components/AppFrame.vue')
   },
@@ -167,6 +183,7 @@ export default {
       },
       forgetDeviceDialog: false,
       notificationsEnabled: false,
+      testSent: false,
       breadcrumbs: [
         {
           text: 'Settings',
@@ -188,9 +205,11 @@ export default {
   created () {
   },
   async mounted () {
+    this.notificationsEnabled = this.currentDeviceCard.notificationsEnabled
   },
   methods: {
     ...mapActions({
+      updateNotificationsEnabled: 'myDevices/updateNotificationsEnabled'
     }),
     async onIftttKeyChanged (newIftttKey) {
       console.debug(`onIftttKeyChanged(): ${newIftttKey}`)
@@ -207,16 +226,37 @@ export default {
           updated = true
         } catch (e) {
           this.edgeDeviceError = 'Error updating IFTTT Key. Edge device offline or has outdated API.'
-          console.error('Exception calling setIftttKey()', { e })
+          console.error('Exception thrown by setIftttKey()', { e })
         } finally {
           this.isSyncing = false
         }
       }
       return updated
     },
-    async testNotifications () {
-      // TODO
-      // remote API call to edge device: /api/notifications/test
+    async onTestNotifications () {
+      try {
+        this.isSyncing = true
+        await this.pnp.edgeAPI.testNotifications()
+      } catch (e) {
+        this.edgeDeviceError = 'Problem occured while sending test notification.'
+        console.error('Exception thrown by testNotifications()', { e })
+      } finally {
+        this.isSyncing = false
+        this.testSent = true
+        setTimeout(() => { this.testSent = false }, 1000)
+      }
+    },
+    async onEnableNotifications () {
+      try {
+        this.isSyncing = true
+        await this.pnp.edgeAPI.enableNotifications(this.notificationsEnabled)
+        await this.updateNotificationsEnabled({ peerID: this.edgePeerId, enabled: this.notificationsEnabled })
+      } catch (e) {
+        this.edgeDeviceError = 'Error updating notifications settings. Edge device offline or has outdated API.'
+        console.error('Exception thrown by onEnableNotifications()', { e })
+      } finally {
+        this.isSyncing = false
+      }
     }
   },
   computed: {
