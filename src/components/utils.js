@@ -2,7 +2,7 @@ export const PEER_CONNECTING_NOTIFICATION = 'Connecting to Ambianic Edge device'
 export const PEER_CONNECTED_NOTIFICATION = 'Connected to Ambianic Edge device'
 export const PEER_DISCONNECTED_NOTIFICATION = 'Disconnected from Ambianic Edge device'
 
-export const setTimelineEventIcon = (inf) => {
+export const getTimelineEventIcon = (inf) => {
   let topLabel = 'none'
 
   if (inf.length > 0) {
@@ -29,7 +29,7 @@ export const setTimelineEventIcon = (inf) => {
   return icon
 }
 
-export const setTimelineEventColor = (priority) => {
+export const getTimelineEventColor = (priority) => {
   let color = 'primary'
 
   switch (priority) {

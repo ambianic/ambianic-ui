@@ -62,172 +62,17 @@
           <v-list-item
             ref="timeline-data"
             data-cy="timelinedata"
-            v-for="(sample, index) in timeline"
+            v-for="(eventData, index) in timeline"
             :key="index"
             class="pa-0 ma-0"
           >
             <v-list-item-content
               class="pa-0 ma-0"
             >
-              <v-img
-                v-if="sample.args.thumbnail_file_name"
-                :src="imageURL[sample.args.id]"
-                class="white--text align-start"
-                alt="Detection Event"
-                contain
-                @load="setImageLoaded(index)"
-                lazy-src="/img/image-icon.png"
-              >
-                <template #placeholder>
-                  <div>
-                    <br>
-                    <v-row
-                      class="fill-height ma-0"
-                      align="center"
-                      justify="center"
-                    >
-                      <v-progress-circular
-                        indeterminate
-                        color="info lighten-2"
-                      />
-                    </v-row>
-                  </div>
-                </template>
-                <v-row
-                  class="fill-height ma-0"
-                  align="start"
-                  justify="start"
-                >
-                  <template v-if="isImageLoaded[index]">
-                    <detection-boxes
-                      :detections="sample.args.inference_result"
-                    />
-                    <event-icon :data="sample" />
-                  </template>
-                </v-row>
-              </v-img>
-              <v-timeline
-                align-top
-                clipped
-                dense
-              >
-                <v-timeline-item
-                  hide-dot
-                  v-if="sample.args.inference_result.length > 0"
-                >
-                  <v-row
-                    class="pt-1"
-                  >
-                    <v-col cols="7">
-                      <v-tooltip bottom>
-                        <template #activator="{ on: tooltip }">
-                          <v-btn
-                            v-on="tooltip"
-                            fab
-                            color="success lighten-2"
-                            class="mx-2"
-                          >
-                            <v-icon>mdi-check</v-icon>
-                          </v-btn>
-                        </template>
-                        <span>Looks fine</span>
-                      </v-tooltip>
-                      <v-tooltip bottom>
-                        <template #activator="{ on: tooltip }">
-                          <v-btn
-                            v-on="tooltip"
-                            color="error lighten-2"
-                            fab
-                            class="mx-2"
-                          >
-                            <v-icon>mdi-bell</v-icon>
-                          </v-btn>
-                        </template>
-                        <span>Mark as Suspicious</span>
-                      </v-tooltip>
-                    </v-col>
-                    <v-col cols="1">
-                      <v-tooltip bottom>
-                        <template #activator="{ on: tooltip }">
-                          <v-btn
-                            icon
-                            v-on="tooltip"
-                          >
-                            <v-icon>mdi-heart</v-icon>
-                          </v-btn>
-                        </template>
-                        <span>Save to Favorites</span>
-                      </v-tooltip>
-                      <v-tooltip bottom>
-                        <template #activator="{ on: tooltip }">
-                          <v-btn
-                            icon
-                            v-on="tooltip"
-                          >
-                            <v-icon>mdi-pen</v-icon>
-                          </v-btn>
-                        </template>
-                        <span>Edit event details</span>
-                      </v-tooltip>
-                      <v-tooltip bottom>
-                        <template #activator="{ on: tooltip }">
-                          <v-btn
-                            icon
-                            v-on="tooltip"
-                          >
-                            <v-icon>mdi-share-variant</v-icon>
-                          </v-btn>
-                        </template>
-                        <span>Share event</span>
-                      </v-tooltip>
-                    </v-col>
-                  </v-row>
-                </v-timeline-item>
-                <v-timeline-item
-                  :color="eventColor(sample)"
-                  small
-                >
-                  <v-row class="pt-1">
-                    <v-col cols="3">
-                      <strong>{{ friendlyTime(sample.args.datetime) }}</strong>
-                    </v-col>
-                    <v-col>
-                      <div class="subtitle-2">
-                        {{ sample.message }}
-                      </div>
-                      <div class="body-2">
-                        {{ sample.pipeline_display_name }} -
-                        {{ sample.args.inference_meta.display }}
-                      </div>
-                    </v-col>
-                  </v-row>
-                </v-timeline-item>
-
-                <v-timeline-item
-                  color="teal lighten-3"
-                  small
-                  v-for="(inf, inf_index) in sample.args.inference_result"
-                  :key="inf_index"
-                  :data-num="inf_index + 1"
-                >
-                  <v-row class="pt-1">
-                    <v-col cols="3">
-                      <strong>{{ inf.label }}</strong>
-                    </v-col>
-                    <v-col>
-                      <strong>{{ asPercentage(inf.confidence) }} confidence</strong>
-                    </v-col>
-                  </v-row>
-                </v-timeline-item>
-                <v-timeline-item
-                  hide-dot
-                  v-if="sample.args.inference_result.length > 0"
-                >
-                  <v-row class="pt-1">
-                    <v-col cols="1" />
-                  </v-row>
-                </v-timeline-item>
-              </v-timeline>
+              <event-card
+                :data="eventData"
+                ref="event-card"
+              />
             </v-list-item-content>
           </v-list-item>
           <infinite-loading
@@ -257,7 +102,6 @@ import {
   PEER_CONNECTED,
   NEW_REMOTE_PEER_ID
 } from '@/store/mutation-types'
-import moment from 'moment'
 
 Vue.use(VueObserveVisibility)
 const PAGE_SIZE = 5
@@ -268,8 +112,6 @@ export default {
       connectionBarVisibility: false,
       timeline: [],
       clearTimeline: true, // flag to clear timeline when Edge Peer ID changes
-      imageURL: {}, // map[id, fullURL] - maps unique event id to their full thumbnail URLs
-      isImageLoaded: [],
       on: true,
       isTopSpinnerVisible: false, // flags whether the timeline is in the process of loading data
       // maxWidth responsively controls the maximum width for the timeline component.
@@ -297,10 +139,9 @@ export default {
     this.pnpUnsubscribe()
   },
   components: {
-    DetectionBoxes: () => import('@/components/DetectionBoxes.vue'),
     InfiniteLoading: () => import('vue-infinite-loading'),
-    EventIcon: () => import('@/components/EventIcon.vue'),
-    AmbAppFrame: () => import('@/components/AppFrame.vue')
+    AmbAppFrame: () => import('@/components/AppFrame.vue'),
+    EventCard: () => import('@/components/EventCard')
   },
   computed: {
     ...mapState({
@@ -314,16 +155,6 @@ export default {
     })
   },
   methods: {
-    setImageLoaded (index) {
-      this.$set(this.isImageLoaded, index, true)
-      // eslint-disable-next-line
-      // console.log(`isImageLoaded[${index}]: ${this.isImageLoaded[index]}`)
-    },
-    updateImageURL (relDir, fileName, id) {
-      this.pnp.edgeAPI.getImageURL(relDir, fileName).then(fullImageURL => {
-        this.$set(this.imageURL, id, fullImageURL)
-      })
-    },
     async fetchTimelinePageUntilSuccess (pageno) {
       // keep trying to fetch a timeline page until success
       var timelineEvents
@@ -379,12 +210,6 @@ export default {
                     Date.parse(event.args.datetime)
             )
           }
-          // update full image URLs
-          newEvents.forEach(
-            (sample, index) =>
-              this.updateImageURL(sample.args.rel_dir,
-                sample.args.thumbnail_file_name, sample.args.id)
-          )
           this.timeline = newEvents.concat(this.timeline)
           $state.loaded()
         } else {
@@ -412,12 +237,6 @@ export default {
           // console.debug('new timeline events: ', data.timeline.length)
           // eslint-disable-next-line
           // console.log('timeline slice: ' + JSON.stringify(data.timeline))
-          // update full image URLs
-          data.timeline.forEach(
-            (sample, index) =>
-              this.updateImageURL(sample.args.rel_dir,
-                sample.args.thumbnail_file_name, sample.args.id)
-          )
           this.timeline = this.timeline.concat(data.timeline)
           $state.loaded()
           if (this.timeline.length / PAGE_SIZE === 10 ||
@@ -440,40 +259,6 @@ export default {
         // eslint-disable-next-line
         console.error(error)
       }
-    },
-    eventColor (event) {
-      let color = 'primary'
-      switch (event.priority) {
-        case 'INFO':
-          color = 'accent'
-          break
-        case 'WARNING':
-          color = 'warning'
-          break
-        case 'CRITICAL':
-          color = 'error'
-          break
-      }
-      color = 'white--text ' + color + ' lighten-2'
-      // eslint-disable-next-line
-      // console.log('color: ' + color)
-      return color
-    },
-    friendlyTime (datetime) {
-      const dt = new Date()
-      var tz = dt.getTimezoneOffset()
-      // eslint-disable-next-line
-      console.debug('event time before local timezone adjustment', { datetime })
-      // eslint-disable-next-line
-      console.debug('timezone offset', { tz })
-      const adjustedLocalTime = moment.utc(datetime).local().calendar()
-      // eslint-disable-next-line
-      console.debug('local timezone adjusted time of event', { adjustedLocalTime })
-      return adjustedLocalTime
-    },
-    asPercentage (number) {
-      const p = Number(number).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 0 })
-      return p
     }
   }
 }

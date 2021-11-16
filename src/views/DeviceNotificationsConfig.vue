@@ -1,159 +1,157 @@
 <template>
   <amb-app-frame>
-    <v-container>
-      <v-row
-        dense
+    <v-row
+      dense
+    >
+      <v-col class="ma-0 pa-0">
+        <v-breadcrumbs :items="breadcrumbs" />
+      </v-col>
+    </v-row>
+    <v-row
+      align="center"
+    >
+      <v-col
+        cols="12"
+        class="ma-0 pa-0"
       >
-        <v-col class="ma-0 pa-0">
-          <v-breadcrumbs :items="breadcrumbs" />
-        </v-col>
-      </v-row>
-      <v-row
-        align="center"
-      >
-        <v-col
-          cols="12"
-          class="ma-0 pa-0"
+        <v-alert
+          v-if="this.edgeDeviceError"
+          outlined
+          type="warning"
+          dense
+          align-self="center"
+          class="text-center"
+          transition="scale-transition"
+          dismissible
+          data-cy="edge-device-error"
+          ref="edge-device-error"
         >
-          <v-alert
-            v-if="this.edgeDeviceError"
-            outlined
-            type="warning"
-            dense
-            align-self="center"
-            class="text-center"
-            transition="scale-transition"
-            dismissible
-            data-cy="edge-device-error"
-            ref="edge-device-error"
+          {{ this.edgeDeviceError }}
+        </v-alert>
+      </v-col>
+    </v-row>
+    <v-row
+      justify="center"
+      class="pb-5"
+      align="center"
+      v-if="isEdgeConnected"
+    >
+      <v-card
+        :loading="isLoading"
+        :disabled="isLoading"
+      >
+        <v-card-text grid-list-sm>
+          <v-row
+            align="center"
+            justify="space-around"
           >
-            {{ this.edgeDeviceError }}
-          </v-alert>
-        </v-col>
-      </v-row>
-      <v-row
-        justify="center"
-        class="pb-5"
-        align="center"
-        v-if="isEdgeConnected"
-      >
-        <v-card
-          :loading="isLoading"
-          :disabled="isLoading"
-        >
-          <v-card-text grid-list-sm>
-            <v-row
+            <v-col
+              style="max-width: 420px;"
               align="center"
-              justify="space-around"
+              justify="center"
+              cols="12"
+              class="pa-0 ma-0 fill-height"
             >
-              <v-col
-                style="max-width: 420px;"
-                align="center"
-                justify="center"
-                cols="12"
-                class="pa-0 ma-0 fill-height"
+              <v-card
+                class="mx-auto text-left"
+                flat
               >
-                <v-card
-                  class="mx-auto text-left"
-                  flat
+                <v-list
+                  two-line
                 >
-                  <v-list
-                    two-line
-                  >
-                    <v-list-item>
-                      <!-- Notifications list item -->
-                      <v-list-item-avatar>
-                        <v-icon>
-                          mdi-bell-outline
-                        </v-icon>
-                      </v-list-item-avatar>
-                      <v-list-item-content>
-                        <v-switch
-                          v-model="notificationsEnabled"
-                          :label="`Notifications ${ notificationsEnabled ? &quot;On&quot; : &quot;Off&quot; }`"
-                          :disabled="!isEdgeConnected"
-                          @change="onEnableNotifications"
-                        />
-                      </v-list-item-content>
-                    </v-list-item>
-                    <amb-list-item
-                      ref="list-item-notificationsProvider"
-                      data-cy="list-item-notificationsProvider"
-                      title="IFTTT"
-                      subtitle="Service Provider"
-                      icon-name="api"
-                    />
-                    <amb-list-item
-                      ref="list-item-apiKey"
-                      data-cy="list-item-apiKey"
-                      title="__ENTER_NEW_KEY__"
-                      subtitle="IFTTT Webhooks API Key"
-                      :edit-option="true"
-                      :sensitive-field="true"
-                      icon-name="key"
-                      :on-submit="onIftttKeyChanged"
-                      :rules="[rules.required, rules.counter]"
-                    />
-                    <v-list-item>
-                      <v-list-item-content>
-                        <a
-                          href="https://docs.ambianic.ai/users/ifttt/"
-                          target="_new_window"
-                        >
-                          How does this work?
-                        </a>
-                      </v-list-item-content>
-                    </v-list-item>
-                  </v-list>
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn
-              @click="onTestNotifications"
-              :disabled="!notificationsEnabled"
-              color="primary"
-            >
-              Test
-            </v-btn>
-            <v-fade-transition>
-              <v-icon
-                large
-                v-if="testSent"
-              >
-                check
-              </v-icon>
-            </v-fade-transition>
-            <v-spacer />
-          </v-card-actions>
-        </v-card>
-      </v-row>
-      <v-row
-        justify="center"
-        class="pb-5"
-        align="center"
-        v-else
-      >
-        <v-card>
-          <v-card-title
-            data-cy="titlecard"
+                  <v-list-item>
+                    <!-- Notifications list item -->
+                    <v-list-item-avatar>
+                      <v-icon>
+                        mdi-bell-outline
+                      </v-icon>
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                      <v-switch
+                        v-model="notificationsEnabled"
+                        :label="`Notifications ${ notificationsEnabled ? &quot;On&quot; : &quot;Off&quot; }`"
+                        :disabled="!isEdgeConnected"
+                        @change="onEnableNotifications"
+                      />
+                    </v-list-item-content>
+                  </v-list-item>
+                  <amb-list-item
+                    ref="list-item-notificationsProvider"
+                    data-cy="list-item-notificationsProvider"
+                    title="IFTTT"
+                    subtitle="Service Provider"
+                    icon-name="api"
+                  />
+                  <amb-list-item
+                    ref="list-item-apiKey"
+                    data-cy="list-item-apiKey"
+                    title="__ENTER_NEW_KEY__"
+                    subtitle="IFTTT Webhooks API Key"
+                    :edit-option="true"
+                    :sensitive-field="true"
+                    icon-name="key"
+                    :on-submit="onIftttKeyChanged"
+                    :rules="[rules.required, rules.counter]"
+                  />
+                  <v-list-item>
+                    <v-list-item-content>
+                      <a
+                        href="https://docs.ambianic.ai/users/ifttt/"
+                        target="_new_window"
+                      >
+                        How does this work?
+                      </a>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+            @click="onTestNotifications"
+            :disabled="!notificationsEnabled"
+            color="primary"
           >
-            No device connection
-          </v-card-title>
-          <v-card-text grid-list-sm>
-            Go ahead and connect to a device.
-          </v-card-text>
-          <v-card-actions>
-            <v-btn
-              to="/settings"
+            Test
+          </v-btn>
+          <v-fade-transition>
+            <v-icon
+              large
+              v-if="testSent"
             >
-              Settings
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-row>
-    </v-container>
+              check
+            </v-icon>
+          </v-fade-transition>
+          <v-spacer />
+        </v-card-actions>
+      </v-card>
+    </v-row>
+    <v-row
+      justify="center"
+      class="pb-5"
+      align="center"
+      v-else
+    >
+      <v-card>
+        <v-card-title
+          data-cy="titlecard"
+        >
+          No device connection
+        </v-card-title>
+        <v-card-text grid-list-sm>
+          Go ahead and connect to a device.
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+            to="/settings"
+          >
+            Settings
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-row>
   </amb-app-frame>
 </template>
 <script>

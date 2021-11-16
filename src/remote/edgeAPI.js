@@ -75,10 +75,11 @@ export class EdgeAPI {
   }
 
   /**
-    Return full image URL given an image file name and a relative directory.
-
+    Given an image file name and a relative directory on a remote edge device,
+    download the image, create a browser local blob with it
+    and return the URL to the local blob.
   */
-  async getImageURL (relDir, imageName) {
+  async getLocalImageURL (relDir, imageName) {
     const apiRoot = this._getRootURL()
     const edgeImageUrl = apiRoot + 'data/' + relDir + '/' + imageName
     const request = {
