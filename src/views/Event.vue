@@ -24,26 +24,22 @@
       </v-col>
     </v-row>
     <v-row
-      align="start"
+      align="center"
       justify="center"
-      dense
+      class="ma-5 pa-5"
     >
-      <v-col
-        :style="maxWidth"
-        align="center"
-        justify="center"
-        cols="12"
-        class="pa-0 ma-0 fill-height"
-      >
+      <v-card>
         <event-card
           v-if="isEdgeConnected"
           :data="eventData"
           ref="event-card"
         />
         <v-progress-circular
+          v-else
+          size="50"
           indeterminate
         />
-      </v-col>
+      </v-card>
     </v-row>
   </amb-app-frame>
 </template>
@@ -56,7 +52,7 @@
 /* eslint no-console: ["error", { allow: ["warn", "error", "debug", "info"] }] */
 import { mapState } from 'vuex'
 import {
-  PEER_CONNECTED,
+  PEER_CONNECTED
 } from '@/store/mutation-types'
 
 export default {
