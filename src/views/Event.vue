@@ -28,17 +28,21 @@
       justify="center"
       class="ma-5 pa-5"
     >
-      <v-card>
+      <v-card class="text-center">
         <event-card
           v-if="isEdgeConnected"
           :data="eventData"
           ref="event-card"
         />
-        <v-progress-circular
+        <v-card-text
           v-else
-          size="50"
-          indeterminate
-        />
+        >
+          <v-progress-circular
+            size="50"
+            indeterminate
+          />
+          Loading event info...
+        </v-card-text>
       </v-card>
     </v-row>
   </amb-app-frame>
@@ -50,14 +54,19 @@
 </style>
 <script>
 /* eslint no-console: ["error", { allow: ["warn", "error", "debug", "info"] }] */
-import { mapState } from 'vuex'
+import sjcl from 'sjcl'
+import { mapActions, mapState } from 'vuex'
 import {
   PEER_CONNECTED
 } from '@/store/mutation-types'
+import {
+  PEER_CONNECT
+} from '@/store/action-types'
 
 export default {
   data () {
     return {
+      eventData: undefined,
       maxWidth: '',
       edgeDeviceError: null
     }
@@ -69,6 +78,28 @@ export default {
     this.maxWidth = `max-width: ${maxPixels}px;`
     // TODO
     // decrypt remote edge device peer id from event URL params and establish peer connection
+    const urlParams = this.$route.query
+    console.debug('URL params', urlParams)
+    const peeridHash = this.$route.query.peerid_hash
+    let argsString = this.$route.query.args
+    argsString = argsString.replaceAll("'", '"')
+    console.debug(`type of args is ${typeof argsString}`, { argsString })
+    const args = JSON.parse(argsString)
+    const eventID = args.id
+    console.debug({ peeridHash, args, eventID })
+    const eventOriginatingDevicePeerID = this.decryptPeerID({ peeridHash, eventID })
+    console.debug({ eventOriginatingDevicePeerID })
+    if (!eventOriginatingDevicePeerID) {
+      this.eventData = undefined
+      this.edgeDeviceError = 'Event hash does not match any of your saved devices.'
+    } else {
+      this.eventData = {
+        priority: this.$route.query.priority,
+        message: this.$route.query.message,
+        args
+      }
+      this.connectToDevice(eventOriginatingDevicePeerID)
+    }
   },
   beforeDestroy () {
   },
@@ -82,10 +113,32 @@ export default {
         state.pnp.peerConnectionStatus === PEER_CONNECTED,
       edgePeerId: state => state.pnp.remotePeerId,
       peerFetch: state => state.pnp.peerFetch,
-      pnp: state => state.pnp
+      pnp: state => state.pnp,
+      allDeviceCards: state => state.myDevices.allDeviceCards
     })
   },
   methods: {
+    ...mapActions({
+      setCurrentDevice: 'myDevices/setCurrent',
+      peerConnect: PEER_CONNECT
+    }),
+    decryptPeerID ({ peeridHash, eventID }) {
+      const allPeerIDs = Array.from(this.allDeviceCards.keys())
+      const matchingPeerID = allPeerIDs.find(pid => {
+        const myString = pid + eventID
+        const myBitArray = sjcl.hash.sha256.hash(myString)
+        const myHash = sjcl.codec.hex.fromBits(myBitArray)
+        console.debug({ pid, eventID, myHash, peeridHash })
+        if (myHash === peeridHash) {
+          return pid
+        }
+      })
+      return matchingPeerID
+    },
+    async connectToDevice (peerID) {
+      await this.peerConnect(peerID)
+      await this.setCurrentDevice(peerID)
+    }
   },
   watch: {
     isPeerConnectionError: async function (isError) {

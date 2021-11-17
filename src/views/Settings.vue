@@ -166,7 +166,6 @@ export default {
   },
   methods: {
     ...mapActions({
-      setCurrentDevice: 'myDevices/setCurrent',
       peerConnect: PEER_CONNECT,
       peerDisconnect: PEER_DISCONNECT
     })
