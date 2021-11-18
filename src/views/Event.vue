@@ -37,11 +37,13 @@
         <v-card-text
           v-else
         >
+          <p>
+            Loading event info...
+          </p>
           <v-progress-circular
             size="50"
             indeterminate
           />
-          Loading event info...
         </v-card-text>
       </v-card>
     </v-row>
@@ -76,30 +78,7 @@ export default {
   mounted () {
     const maxPixels = window.innerWidth < 600 ? window.innerWidth : 600
     this.maxWidth = `max-width: ${maxPixels}px;`
-    // TODO
-    // decrypt remote edge device peer id from event URL params and establish peer connection
-    const urlParams = this.$route.query
-    console.debug('URL params', urlParams)
-    const peeridHash = this.$route.query.peerid_hash
-    let argsString = this.$route.query.args
-    argsString = argsString.replaceAll("'", '"')
-    console.debug(`type of args is ${typeof argsString}`, { argsString })
-    const args = JSON.parse(argsString)
-    const eventID = args.id
-    console.debug({ peeridHash, args, eventID })
-    const eventOriginatingDevicePeerID = this.decryptPeerID({ peeridHash, eventID })
-    console.debug({ eventOriginatingDevicePeerID })
-    if (!eventOriginatingDevicePeerID) {
-      this.eventData = undefined
-      this.edgeDeviceError = 'Event hash does not match any of your saved devices.'
-    } else {
-      this.eventData = {
-        priority: this.$route.query.priority,
-        message: this.$route.query.message,
-        args
-      }
-      this.connectToDevice(eventOriginatingDevicePeerID)
-    }
+    this.decryptQuery()
   },
   beforeDestroy () {
   },
@@ -119,11 +98,44 @@ export default {
   },
   methods: {
     ...mapActions({
+      syncState: 'myDevices/syncState',
       setCurrentDevice: 'myDevices/setCurrent',
       peerConnect: PEER_CONNECT
     }),
+    /**
+     * Decrypt remote edge device peer id from event URL params and establish peer connection
+     */
+    async decryptQuery () {
+      // first make sure vuex is synced with localdb
+      // otherwise allDeviceCards may be empty
+      await this.syncState()
+      const urlParams = this.$route.query
+      console.debug('URL params', urlParams)
+      const peeridHash = this.$route.query.peerid_hash
+      let argsString = this.$route.query.args
+      argsString = argsString.replaceAll("'", '"')
+      console.debug(`type of args is ${typeof argsString}`, { argsString })
+      const args = JSON.parse(argsString)
+      const eventID = args.id
+      console.debug({ peeridHash, args, eventID })
+      const eventOriginatingDevicePeerID = this.decryptPeerID({ peeridHash, eventID })
+      console.debug({ eventOriginatingDevicePeerID })
+      if (!eventOriginatingDevicePeerID) {
+        this.eventData = undefined
+        this.edgeDeviceError = 'Event hash does not match any of your saved devices.'
+      } else {
+        this.edgeDeviceError = undefined
+        this.eventData = {
+          priority: this.$route.query.priority,
+          message: this.$route.query.message,
+          args
+        }
+        await this.connectToDevice(eventOriginatingDevicePeerID)
+      }
+    },
     decryptPeerID ({ peeridHash, eventID }) {
       const allPeerIDs = Array.from(this.allDeviceCards.keys())
+      console.debug({ allPeerIDs })
       const matchingPeerID = allPeerIDs.find(pid => {
         const myString = pid + eventID
         const myBitArray = sjcl.hash.sha256.hash(myString)
