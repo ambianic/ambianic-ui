@@ -72,6 +72,7 @@
                         :label="`Notifications ${ notificationsEnabled ? &quot;On&quot; : &quot;Off&quot; }`"
                         :disabled="!isEdgeConnected"
                         @change="onEnableNotifications"
+                        ref="notifications-enabled-switch"
                       />
                     </v-list-item-content>
                   </v-list-item>
@@ -113,6 +114,7 @@
             @click="onTestNotifications"
             :disabled="!notificationsEnabled"
             color="primary"
+            ref="test-btn"
           >
             Test
           </v-btn>
@@ -134,9 +136,12 @@
       align="center"
       v-else
     >
-      <v-card>
+      <v-card
+        ref="no-connection-card"
+      >
         <v-card-title
           data-cy="titlecard"
+          ref="card-title"
         >
           No device connection
         </v-card-title>

@@ -30,6 +30,31 @@ describe('Single Event View Page', () => {
   let vuetify
   let router
 
+  // event URL query parameter
+  const args = JSON.stringify({
+    datetime: '2020-05-10T19:05:45.577145',
+    id: 'dde10cb4c3d74e828c473aa183cc8d80',
+    image_file_name: '20200510-190545.577145-image.jpg',
+    inference_meta: {
+      display: 'Object Detection'
+    },
+    inference_result: [
+      {
+        box: {
+          xmax: 0.7228575944900513,
+          xmin: 0.3868940770626068,
+          ymax: 1,
+          ymin: 0.12535724414170846
+        },
+        confidence: 0.9921875,
+        label: 'person'
+      }
+    ],
+    json_file_name: '20200510-190545.577145-inference.json',
+    rel_dir: 'detections/20200510-190544.936209',
+    thumbnail_file_name: '20200510-190545.577145-thumbnail.jpg'
+  })
+
   beforeEach(() => {
     vuetify = new Vuetify()
 
@@ -69,8 +94,7 @@ describe('Single Event View Page', () => {
     await Vue.nextTick()
     await flushPromises()
 
-    const html = wrapper.html()
-
+    // const html = wrapper.html()
     // console.debug('Event.vue HTML:', { html })
 
     const eventCard = wrapper.findComponent({ ref: 'event-card' })
@@ -93,49 +117,24 @@ describe('Single Event View Page', () => {
       priority: 'INFO',
       message: 'Test Event',
       peerid_hash: 'aa6b7832a0ae6c47e9e7c6d58d6d39b0f083f673bb1f3baa870f14e08a3061ea',
-      args: '{ \
-        "datetime": "2020-05-10T19:05:45.577145", \
-        "id": "dde10cb4c3d74e828c473aa183cc8d80", \
-        "image_file_name": "20200510-190545.577145-image.jpg", \
-        "inference_meta": { \
-          "display": "Object Detection" \
-        }, \
-        "inference_result": [ \
-          { \
-            "box": { \
-              "xmax": 0.7228575944900513, \
-              "xmin": 0.3868940770626068, \
-              "ymax": 1, \
-              "ymin": 0.12535724414170846 \
-            }, \
-            "confidence": 0.9921875, \
-            "label": "person" \
-          } \
-        ], \
-        "json_file_name": "20200510-190545.577145-inference.json", \
-        "rel_dir": "detections/20200510-190544.936209", \
-        "thumbnail_file_name": "20200510-190545.577145-thumbnail.jpg" \
-      }',
-      "created": 1589137545.6190686,
-      "id": "dde10cb4c3d74e828c473aa183cc8d80",
-      "message": "Detection Event",
-      "priority": "INFO",
-      "source_code": {
-        "funcName": "_save_sample",
-        "lineno": 117,
-        "pathname": "/workspace/src/ambianic/pipeline/store.py"
+      args,
+      created: 1589137545.6190686,
+      id: 'dde10cb4c3d74e828c473aa183cc8d80',
+      source_code: {
+        funcName: '_save_sample',
+        lineno: 117,
+        pathname: '/workspace/src/ambianic/pipeline/store.py'
       }
     }
 
     store.state.pnp.edgeAPI = jest.fn()
     store.state.pnp.edgeAPI.getLocalImageURL = jest.fn()
 
-
     store.state.myDevices.allDeviceCards = new Map()
-    store.state.myDevices.allDeviceCards.set("cdbb3227-dabd-4f6f-9cae-a820079f2165", {
-        peerID: "cdbb3227-dabd-4f6f-9cae-a820079f2165",
-        displayName: "Test Device",
-        version: "2021.11.18"
+    store.state.myDevices.allDeviceCards.set('cdbb3227-dabd-4f6f-9cae-a820079f2165', {
+      peerID: 'cdbb3227-dabd-4f6f-9cae-a820079f2165',
+      displayName: 'Test Device',
+      version: '2021.11.18'
     })
 
     await router.push({ path: '/event', query })
@@ -147,7 +146,7 @@ describe('Single Event View Page', () => {
       store,
       vuetify,
       localVue,
-      attachTo: div,
+      attachTo: div
     })
 
     // wait for the view to load async data and finish rendering
@@ -171,49 +170,24 @@ describe('Single Event View Page', () => {
       priority: 'INFO',
       message: 'Test Event',
       peerid_hash: 'Not_a_matching_event_hash',
-      args: '{ \
-        "datetime": "2020-05-10T19:05:45.577145", \
-        "id": "dde10cb4c3d74e828c473aa183cc8d80", \
-        "image_file_name": "20200510-190545.577145-image.jpg", \
-        "inference_meta": { \
-          "display": "Object Detection" \
-        }, \
-        "inference_result": [ \
-          { \
-            "box": { \
-              "xmax": 0.7228575944900513, \
-              "xmin": 0.3868940770626068, \
-              "ymax": 1, \
-              "ymin": 0.12535724414170846 \
-            }, \
-            "confidence": 0.9921875, \
-            "label": "person" \
-          } \
-        ], \
-        "json_file_name": "20200510-190545.577145-inference.json", \
-        "rel_dir": "detections/20200510-190544.936209", \
-        "thumbnail_file_name": "20200510-190545.577145-thumbnail.jpg" \
-      }',
-      "created": 1589137545.6190686,
-      "id": "dde10cb4c3d74e828c473aa183cc8d80",
-      "message": "Detection Event",
-      "priority": "INFO",
-      "source_code": {
-        "funcName": "_save_sample",
-        "lineno": 117,
-        "pathname": "/workspace/src/ambianic/pipeline/store.py"
+      args,
+      created: 1589137545.6190686,
+      id: 'dde10cb4c3d74e828c473aa183cc8d80',
+      source_code: {
+        funcName: '_save_sample',
+        lineno: 117,
+        pathname: '/workspace/src/ambianic/pipeline/store.py'
       }
     }
 
     store.state.pnp.edgeAPI = jest.fn()
     store.state.pnp.edgeAPI.getLocalImageURL = jest.fn()
 
-
     store.state.myDevices.allDeviceCards = new Map()
-    store.state.myDevices.allDeviceCards.set("cdbb3227-dabd-4f6f-9cae-a820079f2165", {
-        peerID: "cdbb3227-dabd-4f6f-9cae-a820079f2165",
-        displayName: "Test Device",
-        version: "2021.11.18"
+    store.state.myDevices.allDeviceCards.set('cdbb3227-dabd-4f6f-9cae-a820079f2165', {
+      peerID: 'cdbb3227-dabd-4f6f-9cae-a820079f2165',
+      displayName: 'Test Device',
+      version: '2021.11.18'
     })
 
     await router.push({ path: '/event', query })
@@ -223,7 +197,7 @@ describe('Single Event View Page', () => {
       store,
       vuetify,
       localVue,
-      attachTo: div,
+      attachTo: div
     })
 
     // wait for the view to load async data and finish rendering
