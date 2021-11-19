@@ -14,7 +14,7 @@
     "codecov": "codecov -r ./coverage/",
     "coverage:merge": "cp coverage/jest/coverage-final.json coverage/jest-coverage-final.json && npx nyc merge coverage/ .nyc_output/out.json",
     "coverage": "npm run coverage:merge && npx nyc report --reporter html --reporter text -t coverage --report-dir coverage/summary",
-    "test:unit": "jest",
+    "test:unit": "jest --useStderr",
     "test:e2e": "npm_config_yes=true npx browserslist@latest --update-db && npx cypress run",
     "test": "npm run test:unit && npm run test:e2e && npm run coverage",
     "cy:open": "npx cypress open"

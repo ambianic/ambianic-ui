@@ -3,18 +3,18 @@ import { mount, createLocalVue } from '@vue/test-utils'
 import Vuetify from 'vuetify'
 import VueX from 'vuex'
 import VueRouter from 'vue-router'
-import DeviceCard from '@/views/DeviceCard.vue'
+import DeviceNotificationsConfig from '@/views/DeviceNotificationsConfig'
 import { PEER_DISCOVER } from '@/store/action-types'
 import { PEER_CONNECTED, NEW_REMOTE_PEER_ID, PEER_DISCONNECTED } from '@/store/mutation-types'
 import { cloneDeep } from 'lodash'
 import { myDevicesStoreModule } from '@/store/mydevices'
-import { pnpStoreModule } from '../../../src/store/pnp'
+import { pnpStoreModule } from '@/store/pnp'
 import snackBarModule from '@/store/status-snackbar'
-import { EdgeDeviceCard } from '../../../src/store/localdb'
+import { EdgeDeviceCard } from '@/store/localdb'
 import flushPromises from 'flush-promises'
 import sleep from 'sleep-promise'
 
-describe('Device Card tests', () => {
+describe('Device Notifications Config View tests', () => {
   // global
   let wrapper
 
@@ -78,7 +78,7 @@ describe('Device Card tests', () => {
     // mock edgeAPI instance
     store.state.pnp.edgeAPI = jest.fn()
     store.state.pnp.edgeAPI.setDeviceDisplayName = jest.fn()
-    wrapper = await mount(DeviceCard, options)
+    wrapper = await mount(DeviceNotificationsConfig, options)
     await Vue.nextTick()
     expect(state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
     const remotePeerId = '0da0d142-9859-4371-96b7-decb180fcd37'
@@ -130,7 +130,7 @@ describe('Device Card tests', () => {
         display_name: 'Remote Device'
       }
     })
-    wrapper = await mount(DeviceCard, options)
+    wrapper = await mount(DeviceNotificationsConfig, options)
     await Vue.nextTick()
     const remotePeerId = '0da0d142-9859-4371-96b7-decb180fcd37'
     const newDeviceCard = new EdgeDeviceCard()
@@ -219,7 +219,7 @@ describe('Device Card tests', () => {
     const newDeviceCard = new EdgeDeviceCard()
     newDeviceCard.peerID = remotePeerId
     const deviceName = 'Remote Device Name'
-    wrapper = await mount(DeviceCard, options)
+    wrapper = await mount(DeviceNotificationsConfig, options)
     await Vue.nextTick()
     wrapper.vm.$store.commit(NEW_REMOTE_PEER_ID, remotePeerId)
     await wrapper.vm.$store.dispatch('myDevices/add', newDeviceCard)
@@ -279,7 +279,7 @@ describe('Device Card tests', () => {
       // emulate older edge device whose status API does not include version info
       status: 'OK'
     })
-    wrapper = await mount(DeviceCard, options)
+    wrapper = await mount(DeviceNotificationsConfig, options)
     await Vue.nextTick()
 
     await wrapper.vm.fetchEdgeDetails()
