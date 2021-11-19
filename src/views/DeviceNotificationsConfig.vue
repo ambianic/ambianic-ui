@@ -97,7 +97,7 @@
                   <v-list-item>
                     <v-list-item-content>
                       <a
-                        href="https://docs.ambianic.ai/users/ifttt/"
+                        href="https://docs.ambianic.ai/users/notifications/"
                         target="_new_window"
                       >
                         How does this work?
