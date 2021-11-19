@@ -67,7 +67,6 @@ describe('Timeline', () => {
     wrapper.vm.$store.state.pnp.edgeAPI = jest.fn()
     wrapper.vm.$store.state.pnp.edgeAPI.getLocalImageURL = jest.fn()
 
-
     // wait for the view to load async data and finish rendering
     await Vue.nextTick()
 
