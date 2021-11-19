@@ -30,6 +30,7 @@ import {
   PNP_SERVICE_RECONNECT,
   PEER_DISCOVER,
   PEER_CONNECT,
+  PEER_DISCONNECT,
   PEER_AUTHENTICATE,
   REMOVE_REMOTE_PEER_ID,
   CHANGE_REMOTE_PEER_ID,
@@ -560,12 +561,9 @@ const actions = {
     await dispatch(PEER_CONNECT, remotePeerId)
   },
   /**
-  * Remove remote peer id from local store.
-  * Maybe the edge device is damaged and its id cannot be recovered.
-  * In such cases the user will request removal of the existing device
-  * association and after request local device discovery or direct connection to a new edge device id.
+  * Disconnect from remote peer id.
   */
-  async [REMOVE_REMOTE_PEER_ID] ({ state, commit, dispatch }) {
+  async [PEER_DISCONNECT] ({ state, commit, dispatch }) {
     if (state.peerConnectionStatus !== PEER_DISCONNECTED) {
       commit(PEER_DISCONNECTING)
       const conn = state.peerConnection
@@ -574,11 +572,17 @@ const actions = {
           console.debug('Closing Peer DataConnection.', { conn })
           await conn.close()
         } catch (err) {
-          console.debug('Error while closing peer DataConnection.', err)
+          console.info('Error while closing peer DataConnection.', err)
         }
       }
       commit(PEER_DISCONNECTED)
     }
+  },
+  /**
+  * Disconnect and Remove remote peer id from local store.
+  */
+  async [REMOVE_REMOTE_PEER_ID] ({ state, commit, dispatch }) {
+    await dispatch(PEER_DISCONNECT)
     commit(REMOTE_PEER_ID_REMOVED)
   },
   async [HANDLE_PEER_CONNECTION_ERROR] ({ state, commit, dispatch }, { peerConnection, errMsg }) {

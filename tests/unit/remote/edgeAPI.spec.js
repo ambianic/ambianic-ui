@@ -141,11 +141,11 @@ describe('PeerRoom class coverage - p2p communication layer', () => {
     expect(response).toEqual('{ status: "OK",  version: "1.14.7"}')
   })
 
-  test('EdgeAPI.getImageURL()', async () => {
+  test('EdgeAPI.getLocalImageURL()', async () => {
     window.URL.createObjectURL = jest.fn().mockReturnValue('http://localstore')
     pnp.state.peerFetch.request = jest.fn().mockReturnValue({ content: 'binary_image_data' })
     const edgeAPI = new EdgeAPI(pnp)
-    const localImageURL = await edgeAPI.getImageURL('detection123', 'snapshot.png')
+    const localImageURL = await edgeAPI.getLocalImageURL('detection123', 'snapshot.png')
     expect(pnp.state.peerFetch.request).toHaveBeenCalledTimes(1)
     expect(pnp.state.peerFetch.request).toHaveBeenCalledWith({
       method: 'GET',
@@ -154,7 +154,7 @@ describe('PeerRoom class coverage - p2p communication layer', () => {
     expect(localImageURL).toMatch('http://localstore')
   })
 
-  test('EdgeAPI.getImageURL() throws exception', async () => {
+  test('EdgeAPI.getLocalImageURL() throws exception', async () => {
     window.URL.createObjectURL = jest.fn().mockImplementation(
       (blob) => { throw new Error('Failed to create local image from blob') }
     )
@@ -165,7 +165,7 @@ describe('PeerRoom class coverage - p2p communication layer', () => {
       }
     )
     const edgeAPI = new EdgeAPI(pnp)
-    const localImageURL = await edgeAPI.getImageURL('detection123', 'snapshot.png')
+    const localImageURL = await edgeAPI.getLocalImageURL('detection123', 'snapshot.png')
     expect(localImageURL).toBeUndefined()
   })
 })

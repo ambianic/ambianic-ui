@@ -1,5 +1,8 @@
 FROM gitpod/workspace-full-vnc
 
+# ref: https://community.gitpod.io/t/gitpod-and-cypress-disagree-on-cache
+ENV CYPRESS_CACHE_FOLDER=/workspace/.cypress-cache
+
 USER root
 # Install custom tools, runtime, etc.
 
@@ -17,13 +20,6 @@ RUN apt-get update \
    xauth \
    xvfb \
  && sudo rm -rf /var/lib/apt/lists/* \
-
-
-# RUN apt-get update && \
-#        DEBIAN_FRONTEND=noninteractive apt-get -qq install \
-#        libgtk2.0-0 libgtk-3-0 libgbm-dev \
-#        libnotify-dev libgconf-2-4  libnss3 libxss1 libasound2 libxtst6 xauth xvfb \
-#        && apt-get clean && rm -rf /var/cache/apt/* && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
 
 USER gitpod
 # Apply user-specific settings

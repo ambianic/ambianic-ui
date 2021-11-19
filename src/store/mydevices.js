@@ -86,6 +86,9 @@ const actions = {
       if (edgeDetails.display_name) {
         deviceCard.displayName = edgeDetails.display_name
       }
+      if (edgeDetails.notifications_enabled) {
+        deviceCard.notificationsEnabled = edgeDetails.notifications_enabled
+      }
       // use Dexie put instead of update
       // in order to cover the case when a device card is not found in indexeddb
       console.debug('Putting localdb device card: ', { deviceCard })
@@ -99,10 +102,17 @@ const actions = {
     console.debug('Updating display name: ', { peerID, displayName })
     if (displayName) {
       await localdb.myDevices.update(peerID, { displayName: displayName })
-      console.debug('saved new display name for peer ID', { peerID, displayName })
+      console.debug('saved localdb new display name for peer ID', { peerID, displayName })
     } else {
       throw new Error('Device Display Name cannot have an empty value')
     }
+    // refresh vuex state
+    await dispatch('syncState')
+  },
+  async updateNotificationsEnabled ({ state, dispatch }, { peerID, enabled }) {
+    console.debug('Updating notifications enabled state: ', { peerID, enabled })
+    await localdb.myDevices.update(peerID, { notificationsEnabled: enabled })
+    console.debug('saved in localdb new notifications enabled state for peer ID', { peerID, enabled })
     // refresh vuex state
     await dispatch('syncState')
   },

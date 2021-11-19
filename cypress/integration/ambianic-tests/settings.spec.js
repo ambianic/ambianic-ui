@@ -140,7 +140,7 @@ context('Settings', () => {
         display_name: undefined
       }
       _fakeConnect(cy, win, { edgeDetails })
-      cy.get('[data-cy=btn-details]').click()
+      cy.get('[data-cy=btn-device-config]').click()
         .get('[data-cy=list-item-edgeVersion]').should('exist').within(($listItem) => {
         // version number should not be available for a non-existant edge device ID
         cy.get('[data-cy=title-loader]').should('exist')
@@ -156,7 +156,7 @@ context('Settings', () => {
         display_name: undefined
       }
       _fakeConnect(cy, win, { edgeDetails })
-      cy.get('[data-cy=btn-details]').click()
+      cy.get('[data-cy=btn-device-config]').click()
         .get('[data-cy=list-item-edgeVersion]').should('exist')
         // version number should not be available for a non-existant edge device ID
         .find('[data-cy=title-loader]').should('exist')
@@ -175,7 +175,7 @@ context('Settings', () => {
         display_name: undefined
       }
       _fakeConnect(cy, win, { edgeDetails })
-      cy.get('[data-cy=btn-details]').click()
+      cy.get('[data-cy=btn-device-config]').click()
         .get('[data-cy=list-item-edgeVersion]').should('exist').within(($listItem) => {
         cy.get('[data-cy=title-text-read-only]')
           .should('exist')

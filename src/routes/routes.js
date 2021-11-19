@@ -21,6 +21,15 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "timeline" */ '../views/Timeline.vue')
   },
+  {
+    path: '/event',
+    name: 'event',
+    meta: { title: 'Event View' },
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "event" */ '../views/Event.vue')
+  },
   // {
   // This might be connected again once we have better UX design
   //   path: '/edge-connect',
@@ -66,6 +75,15 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "devicecard" */ '../views/DeviceCard.vue')
+  },
+  {
+    path: '/device/notifications/config',
+    name: 'deviceNotificationsConfig',
+    meta: { title: 'Device Notifications Config' },
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "deviceNotificationsConfig" */ '../views/DeviceNotificationsConfig.vue')
   },
   {
     path: '/feedback',

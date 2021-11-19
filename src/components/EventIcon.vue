@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { setTimelineEventIcon, setTimelineEventColor } from './utils'
+import { getTimelineEventIcon, getTimelineEventColor } from './utils'
 
 export default {
   name: 'EventIcon',
@@ -39,10 +39,10 @@ export default {
   },
   methods: {
     eventIcon (inferenceResult) {
-      return setTimelineEventIcon(inferenceResult)
+      return getTimelineEventIcon(inferenceResult)
     },
     eventColor (priority) {
-      return setTimelineEventColor(priority)
+      return getTimelineEventColor(priority)
     }
   }
 }

@@ -18,5 +18,6 @@ localdb.version(1).stores({
 export var EdgeDeviceCard = localdb.myDevices.defineClass({
   peerID: String,
   displayName: String,
+  notificationsEnabled: Boolean,
   version: String
 })

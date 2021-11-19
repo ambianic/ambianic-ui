@@ -7,6 +7,7 @@
     <v-app-bar
       app
       hide-on-scroll
+      scroll-target="#app-container"
       absolute
       dense
       flat
@@ -40,7 +41,7 @@
             icon
             data-cy="timeline-btn"
             ref="timeline-btn"
-            to="timeline"
+            to="/timeline"
             v-bind="timelineBtnAttrs"
             v-on="timelineBtnEvents"
           >
@@ -79,7 +80,7 @@
             icon
             data-cy="settings-btn"
             ref="settings-btn"
-            to="settings"
+            to="/settings"
           >
             <v-icon>settings</v-icon>
           </v-btn>

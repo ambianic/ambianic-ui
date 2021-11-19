@@ -75,10 +75,11 @@ export class EdgeAPI {
   }
 
   /**
-    Return full image URL given an image file name and a relative directory.
-
+    Given an image file name and a relative directory on a remote edge device,
+    download the image, create a browser local blob with it
+    and return the URL to the local blob.
   */
-  async getImageURL (relDir, imageName) {
+  async getLocalImageURL (relDir, imageName) {
     const apiRoot = this._getRootURL()
     const edgeImageUrl = apiRoot + 'data/' + relDir + '/' + imageName
     const request = {
@@ -115,6 +116,40 @@ export class EdgeAPI {
     }
     const response = await this._putJSON(request)
     console.debug('setDeviceDisplayName() received response', { request }, { response })
+    return response
+  }
+
+  async setIftttKey (newKey) {
+    const apiRoot = this._getRootURL()
+    const esc = encodeURIComponent
+    const urlEncodedKey = esc(newKey)
+    const request = {
+      url: `${apiRoot}integrations/ifttt/api_key/${urlEncodedKey}`
+    }
+    const response = await this._putJSON(request)
+    console.debug('setIftttKey() received response', { request }, { response })
+    return response
+  }
+
+  async enableNotifications (newState) {
+    const apiRoot = this._getRootURL()
+    const esc = encodeURIComponent
+    const urlEncodedState = esc(newState)
+    const request = {
+      url: `${apiRoot}notifications/enable/${urlEncodedState}`
+    }
+    const response = await this._putJSON(request)
+    console.debug('enableNotifications() received response', { request }, { response })
+    return response
+  }
+
+  async testNotifications () {
+    const apiRoot = this._getRootURL()
+    const request = {
+      url: `${apiRoot}notifications/test`
+    }
+    const response = await this._getJSON(request)
+    console.debug('testNotifications() received response', { request }, { response })
     return response
   }
 

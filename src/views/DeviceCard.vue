@@ -1,198 +1,232 @@
 <template>
   <amb-app-frame>
-    <v-container>
-      <v-row
-        dense
+    <v-row
+      dense
+    >
+      <v-col class="ma-0 pa-0">
+        <v-breadcrumbs :items="breadcrumbs" />
+      </v-col>
+    </v-row>
+    <v-row
+      align="center"
+    >
+      <v-col
+        cols="12"
+        class="ma-0 pa-0"
       >
-        <v-col class="ma-0 pa-0">
-          <v-breadcrumbs :items="breadcrumbs" />
-        </v-col>
-      </v-row>
-      <v-row
-        align="center"
-      >
-        <v-col
-          cols="12"
-          class="ma-0 pa-0"
+        <v-alert
+          v-if="this.edgeDeviceError"
+          outlined
+          type="warning"
+          dense
+          align-self="center"
+          class="text-center"
+          transition="scale-transition"
+          dismissible
+          data-cy="edge-device-error"
+          ref="edge-device-error"
         >
-          <v-alert
-            v-if="this.edgeDeviceError"
-            outlined
-            type="warning"
-            dense
-            align-self="center"
-            class="text-center"
-            transition="scale-transition"
-            dismissible
-            data-cy="edge-device-error"
-            ref="edge-device-error"
+          {{ this.edgeDeviceError }}
+        </v-alert>
+      </v-col>
+    </v-row>
+    <v-row
+      justify="center"
+      class="pb-5"
+      align="center"
+      v-if="edgePeerId"
+    >
+      <v-card
+        :loading="isLoading"
+        :disabled="isLoading"
+      >
+        <v-card-text grid-list-sm>
+          <v-row
+            align="center"
+            justify="space-around"
           >
-            {{ this.edgeDeviceError }}
-          </v-alert>
-        </v-col>
-      </v-row>
-      <v-row
-        justify="center"
-        class="pb-5"
-        align="center"
-        v-if="edgePeerId"
-      >
-        <v-card
-          :loading="isLoading"
-          :disabled="isLoading"
-        >
-          <v-card-text grid-list-sm>
-            <v-row
-              align="start"
-              justify="space-around"
+            <v-col
+              style="max-width: 420px;"
+              align="center"
+              justify="center"
+              cols="12"
+              class="pa-0 ma-0 fill-height"
             >
-              <v-col
-                style="max-width: 420px;"
-                align="center"
-                justify="center"
-                cols="12"
-                class="pa-0 ma-0 fill-height"
+              <amb-banner
+                v-if="isEdgeConnected"
+                banner-class="text-left"
+                icon="cloud-check-outline"
+                text="Device connected!"
+                data-cy="edge-device-connected"
+                ref="edge-device-connected"
+              />
+              <amb-banner
+                v-else
+                banner-class="text-left"
+                icon="cloud-off-outline"
+                icon-color="info"
+                text="Device disconnected."
+                data-cy="edge-device-disconnected"
+                ref="edge-device-disconnected"
+              />
+              <v-card
+                class="mx-auto text-left"
+                flat
               >
-                <amb-banner
-                  v-if="isEdgeConnected"
-                  banner-class="text-left"
-                  icon="cloud-check-outline"
-                  text="Device connected!"
-                  data-cy="edge-device-connected"
-                  ref="edge-device-connected"
-                />
-                <amb-banner
-                  v-else
-                  banner-class="text-left"
-                  icon="cloud-off-outline"
-                  icon-color="info"
-                  text="Device disconnected."
-                  data-cy="edge-device-disconnected"
-                  ref="edge-device-disconnected"
-                />
-                <v-card
-                  class="mx-auto text-left"
-                  flat
+                <v-list
+                  two-line
                 >
-                  <v-list
-                    two-line
-                  >
-                    <amb-list-item
-                      ref="list-item-edgeDeviceName"
-                      data-cy="list-item-edgeDeviceName"
-                      :title="edgeDisplayName"
-                      subtitle="Friendly Name"
-                      icon-name="tag"
-                      :edit-option="isEdgeConnected"
-                      :on-submit="onDisplayNameChanged"
-                      :rules="[rules.required, rules.counter]"
-                    />
-                    <amb-list-item
-                      :title="edgePeerId"
-                      subtitle="Peer ID"
-                      icon-name="identifier"
-                      :sensitive-field="true"
-                      :copy-option="true"
-                      ref="list-item-edgePeerID"
-                      data-cy="list-item-edgePeerID"
-                    />
-                    <amb-list-item
-                      ref="list-item-edgeVersion"
-                      :title="edgeVersion"
-                      id="version-element"
-                      subtitle="Edge Software Version"
-                      icon-name="alpha-v-circle-outline"
-                      data-cy="list-item-edgeVersion"
-                    />
-                  </v-list>
-                </v-card>
-              </v-col>
-            </v-row>
+                  <amb-list-item
+                    ref="list-item-edgeDeviceName"
+                    data-cy="list-item-edgeDeviceName"
+                    :title="edgeDisplayName"
+                    subtitle="Friendly Name"
+                    icon-name="tag"
+                    :edit-option="isEdgeConnected"
+                    :on-submit="onDisplayNameChanged"
+                    :rules="[rules.required, rules.counter]"
+                  />
+                  <v-list-item>
+                    <!-- Notifications list item -->
+                    <v-list-item-avatar>
+                      <v-icon>
+                        mdi-bell-outline
+                      </v-icon>
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                      <v-switch
+                        v-model="notificationsEnabled"
+                        :label="`Notifications ${ notificationsEnabled ? &quot;On&quot; : &quot;Off&quot; }`"
+                        :disabled="!isEdgeConnected"
+                        @change="onEnableNotifications"
+                      />
+                    </v-list-item-content>
+                    <v-list-item-action
+                      v-if="isEdgeConnected"
+                    >
+                      <v-tooltip
+                        bottom
+                      >
+                        <template #activator="{ onNotificationsConfigEvents, notificationsConfigProps }">
+                          <v-icon
+                            @click="notificationsConfigClicked"
+                            data-cy="icon-notifications-config"
+                            ref="icon-notifications-config"
+                            v-bind="notificationsConfigProps"
+                            v-on="onNotificationsConfigEvents"
+                          >
+                            tune
+                          </v-icon>
+                        </template>
+                        <span>Configure notifications.</span>
+                      </v-tooltip>
+                    </v-list-item-action>
+                  </v-list-item>
+                  <amb-list-item
+                    :title="edgePeerId"
+                    subtitle="Peer ID"
+                    icon-name="identifier"
+                    :sensitive-field="true"
+                    :copy-option="true"
+                    ref="list-item-edgePeerID"
+                    data-cy="list-item-edgePeerID"
+                  />
+                  <amb-list-item
+                    ref="list-item-edgeVersion"
+                    :title="edgeVersion"
+                    id="version-element"
+                    subtitle="Edge Software Version"
+                    icon-name="alpha-v-circle-outline"
+                    data-cy="list-item-edgeVersion"
+                  />
+                </v-list>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+            @click="connectToEdgeDevice"
+            :disabled="isEdgeConnecting"
+            v-if="!isEdgeConnected"
+          >
+            Connect
+          </v-btn>
+          <v-btn
+            to="timeline"
+            v-else
+          >
+            Timeline
+          </v-btn>
+          <v-spacer />
+          <v-btn
+            @click="forgetDeviceDialog = true"
+            :disabled="isEdgeDisconnecting"
+            text
+            color="warning"
+          >
+            Forget This Device
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+      <v-dialog
+        v-model="forgetDeviceDialog"
+        width="344"
+      >
+        <v-card>
+          <v-card-title>
+            Forget Device?
+          </v-card-title>
+
+          <v-card-text>
+            Are you sure you want to forget this device?
+            It will no longer show in the list of managed devices.
+            However you can still add it back later.
           </v-card-text>
+
+          <v-divider />
+
           <v-card-actions>
             <v-btn
-              @click="connectToEdgeDevice"
-              :disabled="isEdgeConnecting"
-              v-if="!isEdgeConnected"
+              @click="forgetDeviceDialog = false"
             >
-              Connect
-            </v-btn>
-            <v-btn
-              to="timeline"
-              v-else
-            >
-              Timeline
+              Cancel
             </v-btn>
             <v-spacer />
             <v-btn
-              @click="forgetDeviceDialog = true"
-              :disabled="isEdgeDisconnecting"
-              text
+              @click="forgetEdgeDevice"
               color="warning"
             >
-              Forget This Device
+              Forget Device
             </v-btn>
           </v-card-actions>
         </v-card>
-        <v-dialog
-          v-model="forgetDeviceDialog"
-          width="344"
+      </v-dialog>
+    </v-row>
+    <v-row
+      justify="center"
+      class="pb-5"
+      align="center"
+      v-else
+    >
+      <v-card>
+        <v-card-title
+          data-cy="titlecard"
         >
-          <v-card>
-            <v-card-title>
-              Forget Device?
-            </v-card-title>
-
-            <v-card-text>
-              Are you sure you want to forget this device?
-              It will no longer show in the list of managed devices.
-              However you can still add it back later.
-            </v-card-text>
-
-            <v-divider />
-
-            <v-card-actions>
-              <v-btn
-                @click="forgetDeviceDialog = false"
-              >
-                Cancel
-              </v-btn>
-              <v-spacer />
-              <v-btn
-                @click="forgetEdgeDevice"
-                color="warning"
-              >
-                Forget Device
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-row>
-      <v-row
-        justify="center"
-        class="pb-5"
-        align="center"
-        v-else
-      >
-        <v-card>
-          <v-card-title
-            data-cy="titlecard"
+          No device selected
+        </v-card-title>
+        <v-card-text grid-list-sm>
+          Go ahead and pick a device to connect to.
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+            to="selectdevice"
           >
-            No device selected
-          </v-card-title>
-          <v-card-text grid-list-sm>
-            Go ahead and pick a device to connect to.
-          </v-card-text>
-          <v-card-actions>
-            <v-btn
-              to="selectdevice"
-            >
-              My Devices
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-row>
-    </v-container>
+            My Devices
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-row>
   </amb-app-frame>
 </template>
 <script>
@@ -223,6 +257,7 @@ export default {
         counter: value => (!!value && value.length >= 5 && value.length <= 20) || 'Min 5 and Max 20 characters'
       },
       forgetDeviceDialog: false,
+      notificationsEnabled: false,
       breadcrumbs: [
         {
           text: 'Settings',
@@ -243,6 +278,7 @@ export default {
     // If a connection to the edge device is already established
     // let's pull the latest info from it in case there are changes
     // this UI client does not know about yet.
+    this.notificationsEnabled = this.currentDeviceCard.notificationsEnabled
     if (this.isEdgeConnected) {
       await this.fetchEdgeDetails()
     }
@@ -252,8 +288,10 @@ export default {
       deleteCurrentDeviceConnection: REMOVE_REMOTE_PEER_ID,
       forgetDeviceCard: 'myDevices/forget',
       updateDisplayName: 'myDevices/updateDisplayName',
+      updateNotificationsEnabled: 'myDevices/updateNotificationsEnabled',
       updateFromRemote: 'myDevices/updateFromRemote',
-      setCurrentDevice: 'myDevices/setCurrent'
+      setCurrentDevice: 'myDevices/setCurrent',
+      peerConnect: PEER_CONNECT
     }),
     async fetchEdgeDetails () {
       try {
@@ -295,8 +333,20 @@ export default {
       }
       return updated
     },
+    async onEnableNotifications () {
+      try {
+        this.isSyncing = true
+        await this.pnp.edgeAPI.enableNotifications(this.notificationsEnabled)
+        await this.updateNotificationsEnabled({ peerID: this.edgePeerId, enabled: this.notificationsEnabled })
+      } catch (e) {
+        this.edgeDeviceError = 'Error updating notifications settings. Edge device offline or has outdated API.'
+        console.error('Exception calling onEnableNotifications()', { e })
+      } finally {
+        this.isSyncing = false
+      }
+    },
     async connectToEdgeDevice () {
-      await this.$store.dispatch(PEER_CONNECT, this.edgePeerId)
+      await this.peerConnect(this.edgePeerId)
     },
     async forgetEdgeDevice () {
       // remove from local db and vuex state
@@ -306,7 +356,10 @@ export default {
       await this.deleteCurrentDeviceConnection()
       // close forget device dialog
       this.forgetDeviceDialog = false
-      this.$router.replace({ name: 'settings' })
+      await this.$router.replace({ name: 'settings' })
+    },
+    async notificationsConfigClicked () {
+      await this.$router.replace({ name: 'deviceNotificationsConfig' })
     }
   },
   computed: {
@@ -331,6 +384,7 @@ export default {
     isEdgeConnected: async function (isConnected) {
       if (isConnected) {
         await this.fetchEdgeDetails()
+        this.notificationsEnabled = this.currentDeviceCard.notificationsEnabled
       }
     },
     isPeerConnectionError: async function (isError) {

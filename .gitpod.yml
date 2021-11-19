@@ -27,7 +27,6 @@ tasks:
       # need to install cypress here because
       # it needs system dirs that gitpod deletes on workspace restart
       # https://community.gitpod.io/t/gitpod-and-cypress-disagree-on-cache/5535
-      npm install -g cypress
       npm run test
   - init: |
       echo "Waiting for npm install to complete"
@@ -36,7 +35,6 @@ tasks:
       # gp await-port 8080 && gp preview $(gp url 8080)/index.html
     command: |
       echo "Starting Cypress in Interactive Mode"
-      npm install -g cypress
       npm run cy:open
   - init: |
       echo "Waiting for npm install to complete"
@@ -54,7 +52,6 @@ ports:
   - port: 8080 # Ambianic UI App
     onOpen: open-browser
   - port: 6080 # Cypress Interactive Mode
-    onOpen: open-browser
   - port: 3000 # Static file serve via Browsersync
   - port: 3001 # Browsersync dashboard
   - port: 8888 # Dependencies chart

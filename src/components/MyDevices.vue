@@ -57,7 +57,7 @@
         <span>Switch</span>
         <v-icon>alt_route</v-icon>
       </v-btn>
-      <v-spacer />
+      <v-spacer class="mx-5" />
       <v-btn
         color="accent"
         data-cy="btn-add-device"

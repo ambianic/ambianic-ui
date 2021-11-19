@@ -14,7 +14,7 @@ import { EdgeDeviceCard } from '../../../src/store/localdb'
 import flushPromises from 'flush-promises'
 import sleep from 'sleep-promise'
 
-describe('More Settings View tests', () => {
+describe('Device Card tests', () => {
   // global
   let wrapper
 

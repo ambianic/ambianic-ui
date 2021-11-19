@@ -24,13 +24,14 @@ export default {
       currentDeviceCard: state => state.myDevices.currentDeviceCard
     })
   },
-  async created () {
+  created () {
     // sync vuex state with localdb on app init
-    await this.syncState()
-    if (this.edgePeerId) {
-      this.setCurrentDevice(this.edgePeerId)
-    }
-    console.debug('App created. Edge PeerID, currentDeviceCard:', this.edgePeerId, this.currentDeviceCard)
+    this.syncState().then(() => {
+      if (this.edgePeerId) {
+        this.setCurrentDevice(this.edgePeerId)
+      }
+      console.debug('App created. Edge PeerID, currentDeviceCard:', this.edgePeerId, this.currentDeviceCard)
+    })
   }
 }
 </script>

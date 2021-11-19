@@ -6,7 +6,7 @@ import VueRouter from 'vue-router'
 import EventIcon from '@/components/EventIcon.vue'
 import MockData from '@/assets/mock-data/timeline.json'
 
-import { setTimelineEventColor, setTimelineEventIcon } from '../../../src/components/utils'
+import { getTimelineEventColor, getTimelineEventIcon } from '../../../src/components/utils'
 
 describe('EventIcon', () => {
   // global
@@ -66,36 +66,36 @@ describe('EventIcon', () => {
   })
 
   test('timeline event color function returns expected color values', () => {
-    let iconColor = setTimelineEventColor()
+    let iconColor = getTimelineEventColor()
     expect(iconColor).toBe('white--text primary lighten-2')
 
-    iconColor = setTimelineEventColor('INFO')
+    iconColor = getTimelineEventColor('INFO')
     expect(iconColor).toBe('white--text accent lighten-2')
 
-    iconColor = setTimelineEventColor('WARNING')
+    iconColor = getTimelineEventColor('WARNING')
     expect(iconColor).toBe('white--text warning lighten-2')
 
-    iconColor = setTimelineEventColor('CRITICAL')
+    iconColor = getTimelineEventColor('CRITICAL')
     expect(iconColor).toBe('white--text error lighten-2')
   })
 
   test('timeline event icon function return expected icon', () => {
-    let icon = setTimelineEventIcon(MockData[1].args.inference_result)
+    let icon = getTimelineEventIcon(MockData[1].args.inference_result)
     expect(icon).toBe('mdi-human')
 
-    icon = setTimelineEventIcon(MockData[2].args.inference_result)
+    icon = getTimelineEventIcon(MockData[2].args.inference_result)
     expect(icon).toBe('mdi-face')
 
-    icon = setTimelineEventIcon(MockData[3].args.inference_result)
+    icon = getTimelineEventIcon(MockData[3].args.inference_result)
     expect(icon).toBe('mdi-car')
 
-    icon = setTimelineEventIcon(MockData[4].args.inference_result)
+    icon = getTimelineEventIcon(MockData[4].args.inference_result)
     expect(icon).toBe('mdi-cat')
 
-    icon = setTimelineEventIcon(MockData[5].args.inference_result)
+    icon = getTimelineEventIcon(MockData[5].args.inference_result)
     expect(icon).toBe('mdi-dog')
 
-    icon = setTimelineEventIcon('')
+    icon = getTimelineEventIcon('')
     expect(icon).toBe('mdi-crosshairs-question')
   })
 })
