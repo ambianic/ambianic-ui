@@ -23,7 +23,7 @@
     "@vue/babel-preset-app": "^4.5.10",
     "compression-webpack-plugin": "^6.1.1",
     "dexie": "^3.0.3",
-    "idb": "^6.1.4",
+    "idb": "^7.0.0",
     "konva": "^7.2.5",
     "moment": "^2.26.0",
     "node": "^16.10.0",
