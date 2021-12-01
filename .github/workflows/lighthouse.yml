@@ -20,7 +20,7 @@ jobs:
       uses: jakepartusch/wait-for-netlify-action@v1
       id: get-netlify-url
       with:
-        site_name: "ambianic-pwa-dist"
+        site_name: ${{ secrets.NETLIFY_SITE_NAME }}
         max_timeout: 180
     - name: Run Lighthouse PWA check against Netlify PR Preview
       uses: treosh/lighthouse-ci-action@v8
@@ -31,7 +31,7 @@ jobs:
         temporaryPublicStorage: true # upload lighthouse report to the temporary storage
         # budgetPath: '.github/lighthouse/budget.json' # performance budgets
         configPath: '.github/lighthouse/lighthouserc-netlify-preview.json' # PWA checks
-    - name: Run Lighthouse PWA sanity check against Netlify production deployment
+    - name: Run Lighthouse PWA sanity check against the existing Netlify production deployment
       uses: treosh/lighthouse-ci-action@v8
       with:
         urls: |
