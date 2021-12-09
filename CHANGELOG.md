@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [2.22.0](https://github.com/ambianic/ambianic-ui/compare/v2.21.0...v2.22.0) (2021-11-19)
+
+
+### Features
+
+* configure instant notifications via IFTTT ([#773](https://github.com/ambianic/ambianic-ui/issues/773)) ([caf1f63](https://github.com/ambianic/ambianic-ui/commit/caf1f63ade6971eb38d9224720cd03993a337cdd)), closes [#704](https://github.com/ambianic/ambianic-ui/issues/704)
+
 # [2.21.0](https://github.com/ambianic/ambianic-ui/compare/v2.20.0...v2.21.0) (2021-11-03)
 
 
