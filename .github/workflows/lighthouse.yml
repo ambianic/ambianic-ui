@@ -2,9 +2,11 @@
 
 name: Lighthouse PWA CI
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
-on: [pull_request]
+on:
+  # Netlify pre-deploy only works on pull_request
+  pull_request:
+#    branches:
+#      - master
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -17,11 +19,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Wait for Netlify preview deployment of this git branch
+      if: github.repository_owner == 'ambianic'
       uses: jakepartusch/wait-for-netlify-action@v1
       id: get-netlify-url
       with:
         site_name: "ambianic-pwa-dist"
-        max_timeout: 180
     - name: Run Lighthouse PWA check against Netlify PR Preview
       uses: treosh/lighthouse-ci-action@v8
       with:
@@ -31,7 +33,7 @@ jobs:
         temporaryPublicStorage: true # upload lighthouse report to the temporary storage
         # budgetPath: '.github/lighthouse/budget.json' # performance budgets
         configPath: '.github/lighthouse/lighthouserc-netlify-preview.json' # PWA checks
-    - name: Run Lighthouse PWA sanity check against Netlify production deployment
+    - name: Run Lighthouse PWA sanity check against the existing Netlify production deployment
       uses: treosh/lighthouse-ci-action@v8
       with:
         urls: |

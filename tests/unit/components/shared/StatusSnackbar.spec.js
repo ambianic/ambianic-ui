@@ -36,20 +36,22 @@ describe('Snack Notification Component', () => {
     wrapper.destroy()
   })
 
-  it('It should contain a `p` element and close icon', () => {
+  it('It should contain a `p` element and close icon', async () => {
+    await Vue.nextTick()
     expect(wrapper.find('#snack-message').exists()).toBeTruthy()
-    expect(wrapper.find('#close-icon').exists()).toBeTruthy()
+    expect(wrapper.findComponent({ ref: 'close-btn' }).exists()).toBeTrue()
+    expect(wrapper.findComponent({ ref: 'close-btn' }).text()).toEqual('Close')
   })
 
-  it('Displayed text changes with `peerConnectionStatus` state', () => {
+  it('Displayed text changes with `peerConnectionStatus` state', async () => {
     store.state.pnp.peerConnectionStatus = PEER_CONNECTING
     const connectingComp = mount(StatusSnackbar, {
       localVue,
       vuetify,
       store
     })
+    await Vue.nextTick()
     expect(connectingComp.find('#snack-message').text()).toBe(PEER_CONNECTING_NOTIFICATION)
-
     store.state.pnp.peerConnectionStatus = PEER_CONNECTED
     const connectedComp = mount(StatusSnackbar, {
       localVue,
@@ -65,17 +67,14 @@ describe('Snack Notification Component', () => {
       store
     })
     expect(disconnectedComp.find('#snack-message').text()).toBe(PEER_DISCONNECTED_NOTIFICATION)
+    expect(wrapper.findComponent({ ref: 'close-btn' }).exists()).toBeTrue()
+    expect(wrapper.findComponent({ ref: 'close-btn' }).text()).toEqual('Close')
   })
 
-  it('`peerConnectionStatus` status controls StatusSnackbar visibility', () => {
+  it('`peerConnectionStatus` status controls StatusSnackbar visibility', async () => {
     store.state.pnp.peerConnectionStatus = PEER_CONNECTED
 
-    const newComponent = mount(StatusSnackbar, {
-      localVue,
-      vuetify,
-      store
-    })
-
-    expect(newComponent.find('#snack-message').exists()).toBeTruthy()
+    expect(wrapper.findComponent({ ref: 'close-btn' }).exists()).toBeTrue()
+    expect(wrapper.findComponent({ ref: 'close-btn' }).text()).toEqual('Close')
   })
 })

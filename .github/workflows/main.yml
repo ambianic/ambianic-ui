@@ -1,8 +1,7 @@
 name: CI for Ambianic UI
 
 on:
-  # Trigger the workflow on push or pull request,
-  # but only for the master branch
+  # Trigger the workflow on push and pull requests
   push:
 #    branches:
 #      - master

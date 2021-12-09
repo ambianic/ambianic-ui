@@ -11,13 +11,12 @@
       <template #action="{ attrs }">
         <div
           v-bind="attrs"
-          id="close-icon"
+          ref="close-btn"
           @click="handleClose"
         >
-          <Button
-            icon="close"
-            color="white"
-          />
+          <v-btn>
+            Close
+          </v-btn>
         </div>
       </template>
     </v-snackbar>
