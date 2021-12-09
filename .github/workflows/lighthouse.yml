@@ -19,8 +19,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Wait for Netlify preview deployment of this git branch
+      if: github.repository_owner == 'ambianic'
       uses: jakepartusch/wait-for-netlify-action@v1
       id: get-netlify-url
+      with:
+        site_name: "ambianic-pwa-dist"
     - name: Run Lighthouse PWA check against Netlify PR Preview
       uses: treosh/lighthouse-ci-action@v8
       with:
