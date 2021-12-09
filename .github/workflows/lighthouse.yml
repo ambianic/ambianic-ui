@@ -3,10 +3,7 @@
 name: Lighthouse PWA CI
 
 on:
-  # Trigger the workflow on push and pull requests
-  push:
-#    branches:
-#      - master
+  # Netlify pre-deploy only works on pull_request
   pull_request:
 #    branches:
 #      - master
@@ -24,8 +21,6 @@ jobs:
     - name: Wait for Netlify preview deployment of this git branch
       uses: jakepartusch/wait-for-netlify-action@v1
       id: get-netlify-url
-      with:
-        site_name: ${{ secrets.NETLIFY_SITE_NAME }}
     - name: Run Lighthouse PWA check against Netlify PR Preview
       uses: treosh/lighthouse-ci-action@v8
       with:
