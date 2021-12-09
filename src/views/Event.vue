@@ -24,29 +24,37 @@
       </v-col>
     </v-row>
     <v-row
-      align="center"
+      align="start"
       justify="center"
-      class="ma-5 pa-5"
+      dense
     >
-      <v-card class="text-center">
-        <event-card
-          v-if="isEdgeConnected"
-          :data="eventData"
-          ref="event-card"
-        />
-        <v-card-text
-          ref="loading-card"
-          v-else
-        >
-          <p>
-            Loading event info...
-          </p>
-          <v-progress-circular
-            size="50"
-            indeterminate
+      <v-col
+        :style="maxWidth"
+        align="center"
+        justify="center"
+        cols="12"
+        class="pa-0 ma-0 fill-height"
+      >
+        <v-card class="text-center">
+          <event-card
+            v-if="isEdgeConnected"
+            :data="eventData"
+            ref="event-card"
           />
-        </v-card-text>
-      </v-card>
+          <v-card-text
+            ref="loading-card"
+            v-else
+          >
+            <p>
+              Loading event info...
+            </p>
+            <v-progress-circular
+              size="50"
+              indeterminate
+            />
+          </v-card-text>
+        </v-card>
+      </v-col>
     </v-row>
   </amb-app-frame>
 </template>
