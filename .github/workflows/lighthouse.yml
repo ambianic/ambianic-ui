@@ -26,7 +26,6 @@ jobs:
       id: get-netlify-url
       with:
         site_name: ${{ secrets.NETLIFY_SITE_NAME }}
-        max_timeout: 180
     - name: Run Lighthouse PWA check against Netlify PR Preview
       uses: treosh/lighthouse-ci-action@v8
       with:
