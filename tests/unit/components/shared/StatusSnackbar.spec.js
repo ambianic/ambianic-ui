@@ -74,12 +74,6 @@ describe('Snack Notification Component', () => {
   it('`peerConnectionStatus` status controls StatusSnackbar visibility', async () => {
     store.state.pnp.peerConnectionStatus = PEER_CONNECTED
 
-    const newComponent = mount(StatusSnackbar, {
-      localVue,
-      vuetify,
-      store
-    })
-
     expect(wrapper.findComponent({ ref: 'close-btn' }).exists()).toBeTrue()
     expect(wrapper.findComponent({ ref: 'close-btn' }).text()).toEqual('Close')
   })
