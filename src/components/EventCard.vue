@@ -42,6 +42,7 @@
       clipped
       dense
     >
+      <!-- TODO: Implement event actions
       <v-timeline-item
         hide-dot
         v-if="data.args.inference_result.length > 0"
@@ -114,6 +115,7 @@
           </v-col>
         </v-row>
       </v-timeline-item>
+      -->
       <v-timeline-item
         :color="eventColor(data.priority)"
         small
@@ -122,19 +124,44 @@
           <v-col cols="3">
             <strong>{{ friendlyTime(data.args.datetime) }}</strong>
           </v-col>
-          <v-col>
-            <div class="subtitle-2">
+          <v-col
+            v-if="data.args.inference_result && data.args.inference_result.length > 0"
+          >
+            <div
+              class="subtitle-2"
+              ref="event-title"
+            >
               {{ data.message }}
             </div>
-            <div class="body-2">
-              {{ data.pipeline_display_name }} -
+            <div
+              class="body-2"
+              ref="event-display-name"
+            >
+              {{ data.pipeline_display_name ? data.pipeline_display_name + ' - ' : '' }}
               {{ data.args.inference_meta.display }}
+            </div>
+          </v-col>
+          <v-col
+            v-else
+          >
+            <div
+              class="subtitle-2"
+              ref="event-title"
+            >
+              Idle Snapshot
+            </div>
+            <div
+              class="body-2"
+              ref="event-display-name"
+            >
+              No {{ data.args.inference_meta.display }}
             </div>
           </v-col>
         </v-row>
       </v-timeline-item>
 
       <v-timeline-item
+        ref="inf-item"
         color="teal lighten-3"
         small
         v-for="(inf, inf_index) in data.args.inference_result"
@@ -143,10 +170,10 @@
       >
         <v-row class="pt-1">
           <v-col cols="3">
-            <strong>{{ inf.label }}</strong>
+            <strong data-testid="inf-label">{{ inf.label }}</strong>
           </v-col>
           <v-col>
-            <strong>{{ asPercentage(inf.confidence) }} confidence</strong>
+            <strong data-testid="inf-score">{{ asPercentage(inf.confidence) }} confidence</strong>
           </v-col>
         </v-row>
       </v-timeline-item>

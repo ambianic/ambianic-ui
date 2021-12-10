@@ -103,7 +103,7 @@ describe('Single Event View Page', () => {
     expect(deviceError.exists()).toBeTrue()
     expect(deviceError.text()).toEqual('Event query parameters missing.')
     const loadingCard = wrapper.findComponent({ ref: 'loading-card' })
-    expect(loadingCard.exists()).toBeTrue()
+    expect(loadingCard.exists()).toBeFalse()
   })
 
   test('Event page loads detections when PEER is connected', async () => {
@@ -212,6 +212,6 @@ describe('Single Event View Page', () => {
     expect(deviceError.exists()).toBeTrue()
     expect(deviceError.text()).toEqual('Event hash does not match any of your saved devices.')
     const loadingCard = wrapper.findComponent({ ref: 'loading-card' })
-    expect(loadingCard.exists()).toBeTrue()
+    expect(loadingCard.exists()).toBeFalse()
   })
 })

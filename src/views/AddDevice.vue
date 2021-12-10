@@ -206,8 +206,7 @@
                       </v-card-title>
                       <v-card-text>
                         <p class="text-left">
-                          Device successfully added to your list of managed devices.
-                          Continue to device timeline or configure settings.
+                          Device information saved.
                         </p>
                       </v-card-text>
                       <v-card-actions>

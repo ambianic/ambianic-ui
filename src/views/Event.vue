@@ -1,14 +1,13 @@
 <template>
   <amb-app-frame>
     <v-row
-      align="center"
+      align="start"
+      v-if="this.edgeDeviceError"
     >
       <v-col
         cols="12"
-        class="ma-0 pa-0"
       >
         <v-alert
-          v-if="this.edgeDeviceError"
           outlined
           type="warning"
           dense
@@ -27,6 +26,7 @@
       align="start"
       justify="center"
       dense
+      v-else
     >
       <v-col
         :style="maxWidth"
