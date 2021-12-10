@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.22.1](https://github.com/ambianic/ambianic-ui/compare/v2.22.0...v2.22.1) (2021-12-09)
+
+
+### Bug Fixes
+
+* polish UI. Event page view. Add status snackbar close button. ([#785](https://github.com/ambianic/ambianic-ui/issues/785)) ([1fa5f87](https://github.com/ambianic/ambianic-ui/commit/1fa5f87f337ebda235f6b85f186f19f94d853c3e))
+
 # [2.22.0](https://github.com/ambianic/ambianic-ui/compare/v2.21.0...v2.22.0) (2021-11-19)
 
 

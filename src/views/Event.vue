@@ -33,7 +33,7 @@
         align="center"
         justify="center"
         cols="12"
-        class="pa-0 ma-0 fill-height fill-width"
+        class="pa-0 ma-0 fill-height"
       >
         <v-card class="text-center">
           <event-card
