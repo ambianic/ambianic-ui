@@ -6,17 +6,17 @@ module.exports = {
   },
 
   extends: [
-    'plugin:vue/strongly-recommended',
-    '@vue/standard'
+    'plugin:vue/strongly-recommended'
   ],
 
   rules: {
     'no-console': 'off',
-    'no-debugger': 'off'
+    'no-debugger': 'off',
+    'vue/multi-word-component-names': 'off'
   },
 
   parserOptions: {
-    parser: 'babel-eslint'
+    parser: '@babel/eslint-parser'
   },
 
   overrides: [
