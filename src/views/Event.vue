@@ -1,14 +1,13 @@
 <template>
   <amb-app-frame>
     <v-row
-      align="center"
+      align="start"
+      v-if="this.edgeDeviceError"
     >
       <v-col
         cols="12"
-        class="ma-0 pa-0"
       >
         <v-alert
-          v-if="this.edgeDeviceError"
           outlined
           type="warning"
           dense
@@ -27,13 +26,14 @@
       align="start"
       justify="center"
       dense
+      v-else
     >
       <v-col
         :style="maxWidth"
         align="center"
         justify="center"
         cols="12"
-        class="pa-0 ma-0 fill-height"
+        class="pa-0 ma-0 fill-height fill-width"
       >
         <v-card class="text-center">
           <event-card

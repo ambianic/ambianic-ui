@@ -10,8 +10,9 @@
     <v-main>
       <v-container
         id="app-container"
-        class="pa-0 ma-0"
         fluid
+        dense
+        class="pa-0 ma-0"
       >
         <slot>
           <p>App page content goes here...</p>
