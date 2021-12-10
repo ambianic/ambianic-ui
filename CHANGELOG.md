@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.22.3](https://github.com/ambianic/ambianic-ui/compare/v2.22.2...v2.22.3) (2021-12-10)
+
+
+### Bug Fixes
+
+* upgrade vue and other 3rd party dependencies ([#792](https://github.com/ambianic/ambianic-ui/issues/792)) ([3cd7874](https://github.com/ambianic/ambianic-ui/commit/3cd7874480f1fbc58e1fe1a2a0a8227647b3d7c8))
+
 ## [2.22.2](https://github.com/ambianic/ambianic-ui/compare/v2.22.1...v2.22.2) (2021-12-10)
 
 
