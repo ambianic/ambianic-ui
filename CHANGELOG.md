@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.22.2](https://github.com/ambianic/ambianic-ui/compare/v2.22.1...v2.22.2) (2021-12-10)
+
+
+### Bug Fixes
+
+* polish UI; cleaner render of idle snapshots - no detection. ([#791](https://github.com/ambianic/ambianic-ui/issues/791)) ([bb29dcc](https://github.com/ambianic/ambianic-ui/commit/bb29dccc7a62d027769b46472143c00947f1a8b3))
+
 ## [2.22.1](https://github.com/ambianic/ambianic-ui/compare/v2.22.0...v2.22.1) (2021-12-09)
 
 
