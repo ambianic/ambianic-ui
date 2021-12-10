@@ -12,6 +12,7 @@ module.exports = {
     '^.+\\.js$': 'babel-jest',
     '.*\\.vue$': 'vue-jest'
   },
+  transformIgnorePatterns: ["node_modules/(?!(konva)/)"],
   collectCoverage: true,
   coverageDirectory: './coverage/jest/',
   coverageReporters: ['json', 'text'],

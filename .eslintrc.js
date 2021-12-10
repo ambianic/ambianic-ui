@@ -6,8 +6,7 @@ module.exports = {
   },
 
   extends: [
-    'plugin:vue/strongly-recommended',
-    '@vue/standard'
+    'plugin:vue/strongly-recommended'
   ],
 
   rules: {
@@ -16,7 +15,7 @@ module.exports = {
   },
 
   parserOptions: {
-    parser: 'babel-eslint'
+    parser: '@babel/eslint-parser'
   },
 
   overrides: [
