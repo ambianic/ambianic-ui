@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.22.4](https://github.com/ambianic/ambianic-ui/compare/v2.22.3...v2.22.4) (2021-12-13)
+
+
+### Bug Fixes
+
+* improve NAT traversal; add TURN routing ([#795](https://github.com/ambianic/ambianic-ui/issues/795)) ([f88a01d](https://github.com/ambianic/ambianic-ui/commit/f88a01d0931df8a65547123b8f0c7727fbf72634))
+
 ## [2.22.3](https://github.com/ambianic/ambianic-ui/compare/v2.22.2...v2.22.3) (2021-12-10)
 
 
