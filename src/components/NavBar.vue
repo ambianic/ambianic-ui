@@ -19,7 +19,7 @@
         @click.stop="drawer = !drawer"
       />
 
-      <v-app-bar-title
+      <v-toolbar-title
         class="text-center"
         ref="app-bar-title"
       >
@@ -29,7 +29,7 @@
           class="hidden-sm-and-down"
         > - </span>
         <span class="hidden-sm-and-down">{{ $route.meta.title }}</span>
-      </v-app-bar-title>
+      </v-toolbar-title>
 
       <v-spacer />
 

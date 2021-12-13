@@ -10,5 +10,11 @@ export const ambianicConf = {
   AMBIANIC_EDGE_API_ROOT: 'api',
   AMBIANIC_PNP_HOST: 'ambianic-pnp.herokuapp.com', // 'localhost'
   AMBIANIC_PNP_PORT: 443, // 9779
-  AMBIANIC_PNP_SECURE: true // false
+  AMBIANIC_PNP_SECURE: true, // false
+  ICE_CONFIG: {
+    'iceServers': [
+      { url: 'stun:stun.l.google.com:19302' },
+      { url: 'turn:numb.viagenie.ca', credential: 'DAEidbG!xHavEX7', username: 'turn@ambianic.ai' }
+    ]
+  } /* Default STUN and TURN servers */
 }
