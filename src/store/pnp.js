@@ -361,6 +361,7 @@ const actions = {
           host: ambianicConf.AMBIANIC_PNP_HOST,
           port: ambianicConf.AMBIANIC_PNP_PORT,
           secure: ambianicConf.AMBIANIC_PNP_SECURE,
+          config: ambianicConf.ICE_CONFIG,
           debug: 3
         }
       )
