@@ -14,7 +14,42 @@ export const ambianicConf = {
   ICE_CONFIG: {
     'iceServers': [
       { url: 'stun:stun.l.google.com:19302' },
-      { url: 'turn:numb.viagenie.ca', credential: 'DAEidbG!xHavEX7', username: 'turn@ambianic.ai' }
-    ]
+      { url: 'stun:stun1.l.google.com:19302' },
+      { url: 'stun:stun2.l.google.com:19302' },
+      { url: 'stun:stun3.l.google.com:19302' },
+      { url: 'stun:stun4.l.google.com:19302' },
+      { url: 'turn:numb.viagenie.ca', credential: 'DAEidbG!xHavEX7', username: 'turn@ambianic.ai' },
+      {
+        "username":"1639539168:prj_2OPKFTM1cuVGO0uq4CmBWa",
+        "credential":"BdT+ctWfSdy9h1xqFf/jN1OM5Wc=",
+        "url":"turn:globalturn.subspace.com:3478?transport=udp",
+        "urls":"turn:globalturn.subspace.com:3478?transport=udp"
+      },
+      {
+        "username":"1639539168:prj_2OPKFTM1cuVGO0uq4CmBWa",
+        "credential":"BdT+ctWfSdy9h1xqFf/jN1OM5Wc=",
+        "url":"turn:globalturn.subspace.com:3478?transport=tcp",
+        "urls":"turn:globalturn.subspace.com:3478?transport=tcp"
+      },
+      {
+        "username":"1639539168:prj_2OPKFTM1cuVGO0uq4CmBWa",
+        "credential":"BdT+ctWfSdy9h1xqFf/jN1OM5Wc=",
+        "url":"turns:globalturn.subspace.com:5349?transport=udp",
+        "urls":"turns:globalturn.subspace.com:5349?transport=udp"
+      },
+      {
+        "username":"1639539168:prj_2OPKFTM1cuVGO0uq4CmBWa",
+        "credential":"BdT+ctWfSdy9h1xqFf/jN1OM5Wc=",
+        "url":"turns:globalturn.subspace.com:5349?transport=tcp",
+        "urls":"turns:globalturn.subspace.com:5349?transport=tcp"
+      },
+      {
+        "username":"1639539168:prj_2OPKFTM1cuVGO0uq4CmBWa",
+        "credential":"BdT+ctWfSdy9h1xqFf/jN1OM5Wc=",
+        "url":"turns:globalturn.subspace.com:443?transport=tcp",
+        "urls":"turns:globalturn.subspace.com:443?transport=tcp"
+      }
+    ],
+    "ttl":86400
   } /* Default STUN and TURN servers */
 }
