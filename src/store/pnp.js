@@ -590,7 +590,7 @@ const actions = {
     console.info('######>>>>>>> p2p connection error', errMsg)
     console.info('Error while connecting to remote peer ID:', peerConnection.peer)
     commit(USER_MESSAGE, errMsg)
-    commit(PEER_CONNECTION_ERROR, errMsg)
+    commit(PEER_CONNECTION_ERROR)
   }
 }
 
