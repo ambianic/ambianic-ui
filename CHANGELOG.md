@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [2.22.5](https://github.com/ambianic/ambianic-ui/compare/v2.22.4...v2.22.5) (2021-12-14)
+
+
+### Bug Fixes
+
+* add subspace TURN service ([#796](https://github.com/ambianic/ambianic-ui/issues/796)) ([e54b7f9](https://github.com/ambianic/ambianic-ui/commit/e54b7f9c26178de672bfc2dae5d04cafe7d526d2))
+
 ## [2.22.4](https://github.com/ambianic/ambianic-ui/compare/v2.22.3...v2.22.4) (2021-12-13)
 
 
