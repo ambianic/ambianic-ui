@@ -77,7 +77,9 @@
     "jest": "^26",
     "jest-extended": "^1.2.0",
     "jest-fetch-mock": "^3.0.3",
+    "json-schema": ">=0.4.0",
     "lodash": "^4.17.21",
+    "merge": ">=2.1.1",
     "nyc": "^15.0.1",
     "sass": "^1.42.1",
     "sass-loader": "^10.2.0",
@@ -90,8 +92,7 @@
     "vue-template-compiler": "^2.6.14",
     "vuetify-loader": "^1.7.3",
     "webpack": "^4.46.0",
-    "webpack-bundle-analyzer": "^4.5",
-    "merge": ">=2.1.1"
+    "webpack-bundle-analyzer": "^4.5"
   },
   "engines": {
     "node": ">=14"
