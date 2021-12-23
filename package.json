@@ -72,6 +72,7 @@
     "fake-indexeddb": "^3.1.7",
     "flush-promises": "^1.0.2",
     "fs-vacuum": "^1.2.10",
+    "glob-parent": ">=5.1.2",
     "husky": "^7.0.2",
     "istanbul-lib-coverage": "^3.0.0",
     "jest": "^26",
