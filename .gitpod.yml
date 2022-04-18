@@ -4,22 +4,23 @@ image:
 
 tasks:
   - init: |
-      touch /tmp/.npm-lock
+      # bring in secret access tokens from gitpod user dashboard
+      eval $(gp env -e)
       npm install
       npm run prepare
       npm update
       npm audit fix
       npm install -g @vue/cli
-      rm /tmp/.npm-lock
+      gp sync-done install
   - init: |
       echo "Waiting for npm install to complete"
-      sleep 1 && while [ -f /tmp/.npm-lock ]; do sleep 1; done
+      gp sync-await install
     command: |
       echo "Starting Ambianic UI in dev mode:"
       npm run serve
   - init: |
       echo "Waiting for npm install to complete"
-      sleep 1 && while [ -f /tmp/.npm-lock ]; do sleep 1; done
+      gp sync-await install
       # echo "Waiting for Ambianic UI to start..."
       # gp await-port 8080 && gp preview $(gp url 8080)/index.html
     command: |
@@ -30,23 +31,19 @@ tasks:
       npm run test
   - init: |
       echo "Waiting for npm install to complete"
-      sleep 1 && while [ -f /tmp/.npm-lock ]; do sleep 1; done
+      gp sync-await install
       # echo "Waiting for Ambianic UI to start.."
-      # gp await-port 8080 && gp preview $(gp url 8080)/index.html
+      gp await-port 8080 && gp preview $(gp url 8080)/index.html
     command: |
       echo "Starting Cypress in Interactive Mode"
       npm run cy:open
   - init: |
       echo "Waiting for npm install to complete"
-      sleep 1 && while [ -f /tmp/.npm-lock ]; do sleep 1; done
+      gp sync-await install
     command: |
       echo "Starting http server for local HTML file preview"
       npm install -g browser-sync
       npx browser-sync start --watch --directory --server
-
-# vscode:
-#  extensions:
-#    - octref.vetur@0.31.3:QHyAEoimIBiRDoL6WtEoRg==
 
 ports:
   - port: 8080 # Ambianic UI App

@@ -86,7 +86,16 @@ context('Settings', () => {
     cy.get('[data-cy=mydevices-btn]').contains('My Devices')
   })
 
-  it('Should display edge device peer ID', () => {
+  it('Should have Timeline button after connecting', () => {
+    cy.window().then(win => {
+      cy.get('[data-cy=timeline-btn]').should('not.exist').then( ($el) => {
+        _fakeConnect(cy, win)
+        cy.get('[data-cy=timeline-btn]').should('exist').contains('Timeline')
+      })
+    })
+  })
+
+  it('Should display edge device peer ID after connecting', () => {
     cy.window().then(win => {
       cy.get('[data-cy=list-item-edgePeerID]').should('not.exist').then( ($el) => {
         _fakeConnect(cy, win)
