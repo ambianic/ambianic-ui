@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [2.23.0](https://github.com/ambianic/ambianic-ui/compare/v2.22.5...v2.23.0) (2022-04-18)
+
+
+### Features
+
+* show timeline button in device settings when connected ([cf3ab61](https://github.com/ambianic/ambianic-ui/commit/cf3ab6105380dccac34f85f2798ae204ea8d3f65))
+
 ## [2.22.5](https://github.com/ambianic/ambianic-ui/compare/v2.22.4...v2.22.5) (2021-12-14)
 
 
