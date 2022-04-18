@@ -117,6 +117,13 @@
             </v-list>
           </v-card-text>
           <v-card-actions>
+            <v-btn
+              to="timeline"
+              v-if="isEdgeConnected"
+              data-cy="timeline-btn"
+            >
+              Timeline
+            </v-btn>
             <v-spacer />
             <v-btn
               ref="mydevices-btn"
