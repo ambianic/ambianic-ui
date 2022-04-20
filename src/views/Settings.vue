@@ -83,6 +83,7 @@
                 <v-list-item-content>
                   <v-switch
                     v-model="connectToEdgeSwitch"
+                    ref="connect-switch"
                     :label="`${ isEdgeConnected ? &quot;Connected&quot; : &quot;Disconnected&quot; }`"
                   />
                 </v-list-item-content>

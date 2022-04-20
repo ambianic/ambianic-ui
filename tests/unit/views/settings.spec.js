@@ -4,8 +4,14 @@ import Vuetify from 'vuetify'
 import VueX from 'vuex'
 import VueRouter from 'vue-router'
 import Settings from '@/views/Settings.vue'
-import { PEER_DISCOVER } from '@/store/action-types'
-import { PEER_CONNECTED, PEER_DISCONNECTED, NEW_REMOTE_PEER_ID }
+import {
+  PEER_DISCOVER,
+  HANDLE_PEER_CONNECTION_ERROR
+ } from '@/store/action-types'
+import {
+  PEER_CONNECTED,
+  PEER_DISCONNECTED,
+  NEW_REMOTE_PEER_ID}
 from '@/store/mutation-types'
 import AmbListItem from '@/components/shared/ListItem.vue'
 import { cloneDeep } from 'lodash'
@@ -194,5 +200,86 @@ describe('Settings View', () => {
     console.debug('idLabel.html(): ', idLabel.html())
     expect(idLabel.props('disabled')).toBe(true)
     expect(idLabel.props('type')).toBe('text')
+  })
+
+  test('Connect to an accessible edge device', async () => {
+    expect(state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
+    const remotePeerId = '0da0d142-9859-4371-96b7-decb180fcd37'
+    const newDeviceCard = new EdgeDeviceCard()
+    newDeviceCard.peerID = remotePeerId
+    wrapper = await mount(Settings, options)
+    await Vue.nextTick()
+    wrapper.vm.$store.commit(NEW_REMOTE_PEER_ID, remotePeerId)
+    await wrapper.vm.$store.dispatch('myDevices/add', newDeviceCard)
+    await wrapper.vm.$store.dispatch('myDevices/setCurrent', remotePeerId)
+    await Vue.nextTick()
+    await flushPromises()
+    console.debug('state.myDevices.allDeviceCards: ', state.myDevices.allDeviceCards)
+    console.debug('state.myDevices.currentDeviceCard: ', state.myDevices.currentDeviceCard)
+    console.debug('wrapper.vm.edgePeerId:', wrapper.vm.edgePeerId)
+    const connectSwitch = wrapper.findComponent({ ref: 'connect-switch' })
+    expect(connectSwitch.exists()).toBeTrue()
+    expect(wrapper.vm.connectToEdgeSwitch).toBeFalse()
+    expect(connectSwitch.props('label')).toEqual('Disconnected')
+    wrapper.vm.peerConnect = jest.fn().mockImplementation(
+      async function (peerID) {
+        wrapper.vm.$store.commit(PEER_CONNECTED)
+      }
+    )
+    // console.debug('connectSwitch before click HTML:[', connectSwitch.html(), ']')
+    // Switch on connect button
+    await connectSwitch.vm.$emit('change', true)
+    await Vue.nextTick()
+    await flushPromises()
+    await sleep(100)
+    // console.debug('connectSwitch after click HTML:[', connectSwitch.html(), ']')
+    expect(wrapper.vm.peerConnect).toHaveBeenCalledTimes(1)
+    expect(wrapper.vm.connectToEdgeSwitch).toBeTrue()
+    expect(connectSwitch.props('label')).toEqual('Connected')
+  })
+
+
+  test('Error connecting to an offline edge device', async () => {
+    expect(state.pnp.peerConnectionStatus).toBe(PEER_DISCONNECTED)
+    const remotePeerId = '0da0d142-9859-4371-96b7-decb180fcd37'
+    const newDeviceCard = new EdgeDeviceCard()
+    newDeviceCard.peerID = remotePeerId
+    wrapper = await mount(Settings, options)
+    await Vue.nextTick()
+    wrapper.vm.$store.commit(NEW_REMOTE_PEER_ID, remotePeerId)
+    await wrapper.vm.$store.dispatch('myDevices/add', newDeviceCard)
+    await wrapper.vm.$store.dispatch('myDevices/setCurrent', remotePeerId)
+    await Vue.nextTick()
+    await flushPromises()
+    console.debug('state.myDevices.allDeviceCards: ', state.myDevices.allDeviceCards)
+    console.debug('state.myDevices.currentDeviceCard: ', state.myDevices.currentDeviceCard)
+    console.debug('wrapper.vm.edgePeerId:', wrapper.vm.edgePeerId)
+    const connectSwitch = wrapper.findComponent({ ref: 'connect-switch' })
+    expect(connectSwitch.exists()).toBeTrue()
+    expect(wrapper.vm.connectToEdgeSwitch).toBeFalse()
+    expect(connectSwitch.props('label')).toEqual('Disconnected')
+    const errMsg = 'Device Offline?'
+    wrapper.vm.peerConnect = jest.fn().mockImplementation(
+      async function (peerID) {
+        // mock connection error
+        const peerConnection = jest.fn()
+        peerConnection.peer = jest.fn()
+        await wrapper.vm.$store.dispatch(HANDLE_PEER_CONNECTION_ERROR, { peerConnection, errMsg })
+      }
+    )
+    // console.debug('connectSwitch before click HTML:[', connectSwitch.html(), ']')
+    // Switch on connect button
+    await connectSwitch.vm.$emit('change', true)
+    await Vue.nextTick()
+    await flushPromises()
+    await sleep(100)
+    // console.debug('connectSwitch after click HTML:[', connectSwitch.html(), ']')
+    expect(wrapper.vm.peerConnect).toHaveBeenCalledTimes(1)
+    expect(wrapper.vm.connectToEdgeSwitch).toBeTrue()
+    expect(connectSwitch.props('label')).toEqual('Disconnected')
+    expect(wrapper.vm.edgeDeviceError).toEqual(errMsg)
+    const alert = wrapper.findComponent({ ref: 'edge-device-error'})
+    expect(alert.isVisible()).toBeTrue()
+    expect(alert.text()).toEqual(errMsg)
   })
 })
