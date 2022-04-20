@@ -1,5 +1,24 @@
 # Semantic Versioning Changelog
 
+## [2.23.1](https://github.com/ambianic/ambianic-ui/compare/v2.23.0...v2.23.1) (2022-04-20)
+
+
+### Bug Fixes
+
+* add close button to connection status snackbar ([68d6a64](https://github.com/ambianic/ambianic-ui/commit/68d6a645828ff9a5cdae1160134670604f7e2ee6))
+* add close button to connection status snackbar ([5f6c222](https://github.com/ambianic/ambianic-ui/commit/5f6c222b07d50211315ad4862368df5d80a2346a))
+* add subspace TURN service ([91e3462](https://github.com/ambianic/ambianic-ui/commit/91e346237b52a675727bc4863e748ee7d4cbfe9f))
+* add subspace TURN service ([a5aa9f6](https://github.com/ambianic/ambianic-ui/commit/a5aa9f6eaf0d35a0962653a428570c0efb978be1))
+* app bar scroll issue ([5388e86](https://github.com/ambianic/ambianic-ui/commit/5388e8635adf04e14d67486e93ed2873345a7a14))
+* event display layout ([bb2d7f0](https://github.com/ambianic/ambianic-ui/commit/bb2d7f0699779620124de50c21fa6be4fd25a2ef))
+* improve NAT traversal ([12b09f6](https://github.com/ambianic/ambianic-ui/commit/12b09f6ee69b6c1052953358c797b900f0b2a89c))
+* improve NAT traversal; add TURN routing ([2e6baf3](https://github.com/ambianic/ambianic-ui/commit/2e6baf3cf30e58af912d63ef26bdf7794c1d3046))
+* polish UI. Cleaner render of idle snapshots / no detection. ([ad02193](https://github.com/ambianic/ambianic-ui/commit/ad02193bd8c78f2e2603b1b824e92ac985383185))
+* polish UI. Cleaner render of idle snapshots / no detection. ([b61b971](https://github.com/ambianic/ambianic-ui/commit/b61b9718a0106eccedea4105e95310b644d5dee0))
+* polish UI. Cleaner render of idle snapshots / no detection. ([21c32c9](https://github.com/ambianic/ambianic-ui/commit/21c32c956d6ecb39c8173a6cc9de37e22e21fe12))
+* spacing between buttons ([9f9cf31](https://github.com/ambianic/ambianic-ui/commit/9f9cf31b49b93da90186d24decfb6d13c6ea1357))
+* update package dependencies ([043684e](https://github.com/ambianic/ambianic-ui/commit/043684e594419f3a1e8ba76d0820acea73220a20))
+
 # [2.23.0](https://github.com/ambianic/ambianic-ui/compare/v2.22.5...v2.23.0) (2022-04-18)
 
 
