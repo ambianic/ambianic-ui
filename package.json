@@ -49,7 +49,7 @@
     "@cypress/webpack-dev-server": "^1.6.0",
     "@cypress/webpack-preprocessor": "^5.10",
     "@vue/cli": "^4.5.15",
-    "@vue/cli-plugin-babel": "^4.5.15",
+    "@vue/cli-plugin-babel": "^5.0.6",
     "@vue/cli-plugin-eslint": "^4.5.15",
     "@vue/cli-plugin-pwa": "^4.5.15",
     "@vue/cli-plugin-router": "^4.5.15",
