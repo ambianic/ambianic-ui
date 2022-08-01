@@ -20,7 +20,7 @@
     "cy:open": "npx cypress open"
   },
   "dependencies": {
-    "@vue/babel-preset-app": "^4.5.10",
+    "@vue/babel-preset-app": "^5.0.8",
     "compression-webpack-plugin": "^6.1",
     "dexie": "^3.0.3",
     "idb": "^6.1.4",
