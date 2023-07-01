@@ -30,7 +30,7 @@
     "register-service-worker": "^1.7.1",
     "sjcl": "^1.0.8",
     "update": "^0.7.4",
-    "vue": "^2.6.14",
+    "vue": "^3.3.4",
     "vue-clipboard2": "^0.3.3",
     "vue-infinite-loading": "^2.4.5",
     "vue-konva": "^2.1.7",
