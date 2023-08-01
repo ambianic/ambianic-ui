@@ -61,7 +61,7 @@
     "babel-plugin-transform-imports": "^2.0.0",
     "cache-loader": "^4.1.0",
     "codecov": "^3.8.1",
-    "cypress": "^9.1",
+    "cypress": "^12.17",
     "eslint": "^7",
     "eslint-plugin-cypress": "^2.12",
     "eslint-plugin-import": "^2.25",
