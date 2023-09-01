@@ -84,7 +84,7 @@
     "sass": "^1.42.1",
     "sass-loader": "^10.2.0",
     "sleep-promise": "^9.1.0",
-    "stylus": "^0.54.7",
+    "stylus": "^0.60.0",
     "stylus-loader": "^3.0.2",
     "vue-cli-plugin-vuetify": "^2.4.5",
     "vue-cli-plugin-webpack-bundle-analyzer": "~4.0.0",
